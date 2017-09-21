@@ -1,0 +1,114 @@
+@import 'corpora/static/corpora/css/_colors';
+
+
+// Circle Buttons CSS
+$lg-bg-circle-size: 160px;
+$lg-fg-circle-inset: 18px;
+
+$sm-bg-circle-size: 110px;
+$sm-fg-circle-inset: 12px;
+
+.circle {
+	border-radius: 50%;
+}
+
+.background-circle {
+	width: $lg-bg-circle-size;
+	height: $lg-bg-circle-size;
+	background: $dark;
+	position: relative;
+	display: inline-block;
+	
+}
+
+.foreground-circle {
+	background: $default;
+	position: absolute;
+	right: $lg-fg-circle-inset;
+	left: $lg-fg-circle-inset;
+	top: $lg-fg-circle-inset;
+	bottom: $lg-fg-circle-inset;
+}
+
+.unclicked-circle {
+	box-shadow: 0 0 10px black;
+	transition: all 0.1s ease-in-out;
+}
+
+.unclicked-circle:hover {
+	transform: scale(1.05, 1.05);
+	box-shadow: 0 0 15px black;
+}
+
+.clicked-circle {
+	box-shadow: inset 0 0 20px black;
+}
+
+.circle-text {
+	color: $darker;
+	font-size: 45px;
+
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100%;
+	text-align: center;
+}
+
+.circle-button-container {
+	text-align: center;
+}
+
+.stop-square {
+	background-color: $darker;
+	width: 50%;
+	height: 50%;
+
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.play-triangle {
+	width: 0;
+	height: 0;
+	margin-top: 50%;
+	margin-left: 50%;
+	transform: translate(-35%, -50%);
+
+	border-top: $lg-bg-circle-size/4 solid transparent;
+	border-left: $lg-bg-circle-size/3 solid $darker;
+	border-bottom: $lg-bg-circle-size/4 solid transparent;
+}
+
+#play-button {
+	display: none;
+}
+
+
+// Small device css settings
+@media(max-width: 768px) {
+	.background-circle {
+		width: $sm-bg-circle-size;
+		height: $sm-bg-circle-size;
+	}
+
+	.foreground-circle {
+		right: $sm-fg-circle-inset;
+		left: $sm-fg-circle-inset;
+		top: $sm-fg-circle-inset;
+		bottom: $sm-fg-circle-inset;
+	}
+
+	.circle-text {
+		font-size: 30px;
+	}
+
+	.play-triangle {
+		border-top: $sm-bg-circle-size/4 solid transparent;
+		border-left: $sm-bg-circle-size/3 solid $darker;
+		border-bottom: $sm-bg-circle-size/4 solid transparent;
+	}
+}

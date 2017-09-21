@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
+
+{% block account_content %}
+<h1>{% trans "Sign Up Closed" %}</h1>
+
+<p>{% blocktrans %}We're not taking sign ups. If you're keen to get involved please <a href="mailto:info@tehiku.nz?subject=corpora.io">contact</a> us. {% endblocktrans %}</p>
+<br>
+<p>
+back to <a href="/">corpora.io</a>
+</p>
+
+{% endblock account_content %}

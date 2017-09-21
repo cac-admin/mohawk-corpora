@@ -1,0 +1,361 @@
+{% extends 'corpus/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+
+{% block content %}
+{% addtoblock "css" %}
+{% endaddtoblock %}
+
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+.content{
+  margin-top: 30px;
+}
+
+.disabled{
+  display: none;
+}
+.sentence-block{
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  div > div{
+    margin-top: 15px;
+  }
+  .sentence{
+    text-align: left;
+    font-size: 1.4em;
+    font-weight: 400;
+    @include media-breakpoint-down(md) {
+      padding-bottom: 15px;
+    }
+
+    .text-area{
+      width: 100%;
+    }
+
+  }
+  .actions{
+    text-align: left;
+    @include media-breakpoint-down(md) {
+      text-align: center;
+    }
+    a{
+      display: inline-block;
+      padding: 15px;
+      border: 1px solid red;
+      border-radius: 4px;
+      text-shadow: 0px 1px 1px rgba($brand_darkest,0);
+    }
+    a:hover{
+
+    }
+    a:active{
+      text-shadow: 0px 0px 1px rgba($brand_darkest,0);
+    }
+
+    i{
+      font-size: 2em;
+      font-weight: 100;
+      
+    }
+
+    a.good{
+      color: $brand_dark;
+      border-color: $brand_dark;
+
+      i{
+        color: $brand_dark;
+      }
+    }
+    a.good:active{
+      background-color: rgba($brand_dark, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }
+    a.bad{
+      border-color: $brand_darker;
+      color: $brand_darker;
+    }
+    a.bad:active{
+      background-color: rgba($brand_darker, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }    
+    
+    a.approve{
+      border-color: $green;
+      color: $green;
+    }
+    a.approve:active{
+      background-color: rgba($green, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }    
+    a.save{
+      border-color: $blue;
+      color: $blue;
+    }
+    a.save:active{
+      background-color: rgba($blue, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }       
+    a.disabled, a.disabled:hover, a.disabled:active{
+      border-color: rgba(gray,.5);
+      background-color: $background_light;
+      cursor: default;
+      i{
+        color: rgba(gray,.5);
+      }
+    }
+    a.off{
+      display: none;
+    }
+
+  }
+
+}
+
+</style>
+{% endaddtoblock %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Sentences</h1>
+    </div>
+  </div>
+
+  <div class="row sentence-block disabled">
+    <div class="col-lg-8 sentence"></div>
+    <div class="col-lg-4 actions">
+      {% if user.can_approve %}
+      <a href="#" class="save disabled"
+        data-toggle="popover" 
+        data-trigger="hover" 
+        title="Save" 
+        data-content="Save changes."
+        ><i class="fa fa-save fa-fw"></i></a>      
+      <a href="#" class="approve"
+        data-toggle="popover" 
+        data-trigger="hover" 
+        title="Approve" 
+        data-content="Approve for recording?"
+        ><i class="fa fa-check-circle-o fa-fw"></i></a>
+      {% else %}
+      <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
+      {% endif %}
+      <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>      
+
+    </div>
+  </div>
+
+</div>
+
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}
+<script type="text/javascript">
+
+$('a.approve').popover({})
+
+var csrftoken = Cookies.get('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+var sentence_block = $('.sentence-block').get(0);
+
+
+
+
+class Sentences{
+  constructor(){
+    this.objects = null
+    this.sentence = null
+    this.base_url = '/api/sentences/'
+    this.base_quality_url = '/api/qualitycontrol/'
+    this.base_sentence_url = '/api/sentences/'
+    this.next_url = null
+  }
+
+  get_sentences(){
+    var self = this;
+    console.log('Fetching more sentences')
+    $.ajax({
+        url: ((this.next_url==null) ? this.base_url : this.next_url)
+        }).done(function(d){
+          self.objects = d.results
+          self.next_url = d.next
+          self.next()
+    })
+  }
+
+  reload(){
+    var self = this
+    $.ajax({
+        url: this.base_sentence_url+this.sentence.id+'/'
+        }).done(function(d){
+          console.log(d)
+          self.sentence.quality_control = d.quality_control
+          self.show_next_sentence()
+    })    
+  }
+
+  next(){
+    if (this.objects == null || this.objects.length==0){
+      this.get_sentences()
+    } else{
+      this.sentence = this.objects.pop()
+      this.show_next_sentence()
+    }
+  }
+
+  show_next_sentence(){
+    var self = this;
+    if (this.sentence){
+      $(sentence_block).removeClass('disabled')
+      $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
+      $(sentence_block).find('.sentence .text-area').remove()
+      {% if user.can_approve %}
+      var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="3">');
+      {% else %}
+      var input_elm = $('<span class="text-area"></span>');
+      {% endif %}
+      $(input_elm).val(this.sentence.text);
+      $(input_elm).text(this.sentence.text);
+      $(sentence_block).find('.sentence').append(input_elm)
+      $(sentence_block).find('.approve').off().on('click', function(e){
+        $(e.currentTarget).addClass('disabled').off()
+        console.log('clicked')
+        self.approve();
+      })
+
+      $(sentence_block).find('.good').off().on('click', function(e){
+        $(e.currentTarget).addClass('disabled').off()
+        console.log('clicked')
+        self.up_vote();
+      })   
+
+      $(sentence_block).find('.bad').off().on('click', function(e){
+        $(e.currentTarget).addClass('disabled').off()
+        console.log('clicked')
+        self.down_vote();
+      })
+
+      $(input_elm).on('change', function(){
+        self.edit_sentence()
+      })
+
+      $(input_elm).on('keyup', function(event){
+        self.check_sentence_changed(event)
+      })
+
+    }
+  }
+
+  check_sentence_changed(event){
+    if ($(event.currentTarget).val() != this.sentence.text){
+      this.edit_sentence()
+    }
+  }
+
+  edit_sentence(){
+    var self = this
+    $(sentence_block).find('.approve, .good, .bad').addClass('disabled')
+    $(sentence_block).find('.save').removeClass('off').removeClass('disabled')
+    $(sentence_block).find('.save').off().on('click', function(e){
+        $(e.currentTarget).addClass('disabled').off()
+        self.save_sentence($(sentence_block).find('.text-area').val());
+    })     
+  }
+
+  post_qc(data){
+    var self = this
+    $.ajax({
+      type: "PUT",
+      data: this.sentence.quality_control,
+      url: this.base_quality_url+this.sentence.quality_control.id+'/',
+      dataType: 'json',
+      error: function(e){
+        console.log(e.responseText)
+      }
+    }).done(function(){
+      self.next();
+    }).fail(function(){
+      console.log('Failed.')
+    })
+    return true;    
+  }
+
+  save_sentence(text){
+    var self=this
+    var data = this.sentence
+    delete data.quality_control
+    data.text = text
+    console.log(data)
+    $.ajax({
+      type: "PUT",
+      data: this.sentence,
+      url: this.base_sentence_url+this.sentence.id+'/',
+      dataType: 'json',
+      error: function(e){
+        console.log(e.responseText)
+      }
+    }).done(function(){
+      console.log('Saved')
+      self.reload();
+    }).fail(function(){
+      console.log('Failed.')
+    })
+  }
+
+  approve(){
+    this.sentence.quality_control.approved = true
+    this.post_qc();
+  }
+  up_vote(){
+    this.sentence.quality_control.good += 1
+    this.post_qc();
+  }
+
+  down_vote(){
+    this.sentence.quality_control.bad += 1
+    this.post_qc();
+  }
+
+
+
+}
+
+
+sentences = new Sentences();
+sentences.next()
+
+</script>
+{% endaddtoblock %}
+{% endblock %}

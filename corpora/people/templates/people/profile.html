@@ -1,0 +1,52 @@
+{% extends "people/base.html" %}
+{% load account %}
+{% load i18n %}
+{% load account %}
+{% load socialaccount %}
+{% load sekizai_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h2>{% trans 'Hello' %}{% if person %} {{ person.full_name }}{% endif %}.</h2>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <h2>{% trans 'Recordings' %}</h2>
+            {% if recordings %}
+            {% for recording in recordings %}
+            <div class="recording">
+                {{recording.sentence}} <br>
+                <audio preload='none' controls><source src="{{recording.audio_file.url}}" ></audio>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>{% blocktrans %}You haven't recorded any corpus yet.{% endblocktrans %}</p>
+            <a class="btn btn-default btn-sm button" href="/record">
+                <i class="fa fa-fw fa-microphone"></i>
+                {% trans 'Start Recording' %}
+            </a>
+            {% endif %}
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 sentences">
+            <h2>{% trans 'Sentences' %}</h2>
+            {% if sentences %}
+            <div class="row">
+            {% for sentence in sentences %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sentence">
+                    <a href="/record?sentence={{sentence.pk}}" class="btn btn-default btn-sm"><i class="fa fa-fw fa-microphone"></i>{% trans 'Record'%}</a> {{sentence.text}} 
+                </div>
+            {% endfor %}   
+            </div>
+            {% else %}
+            <p>{% blocktrans %}All done! You've recorded a corpus for all sentnces.{% endblocktrans %}</p>     
+            {% endif %}
+        </div>    
+    </div>
+</div>
+{% endblock %}

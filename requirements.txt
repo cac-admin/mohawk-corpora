@@ -1,0 +1,46 @@
+# pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
+
+Django==1.10.8
+boto
+Pillow
+celery
+flower #used to monitor Celery
+django-compressor
+# django-sass-processor
+django-libsass
+libsass
+django-sekizai
+gunicorn
+psycopg2
+pycrypto
+pytz
+django-storages
+django-bower
+
+# changing social auth app
+# certifi==2015.04.28
+certifi
+requests
+django-allauth
+
+# django-ckeditor==4.5.1 # When upgrading to v5 need to read this: https://github.com/django-ckeditor/django-ckeditor
+
+simplejson
+
+# Search
+django-haystack
+pysolr
+celery-haystack
+
+# Bindings for Memchaced
+pylibmc 
+
+# Django wrapper for AWS SES (Simple Email Service)
+django-ses
+
+# Used to turn CSS to inline styles
+# lxml
+# premailer
+
+# API
+djangorestframework

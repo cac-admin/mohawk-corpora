@@ -1,0 +1,49 @@
+@import '_colors';
+
+div.formset-form{
+	margin-bottom: 15px;
+	font-size: 18px;
+}
+
+
+
+.formset-form-wrapper{
+	// background-color: $light;
+	padding: 10px;
+}
+
+.add-inline-item-icon{
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+}
+
+.add-inline-item-icon p{
+	font-size: .7em;
+}
+
+.add-inline-item-icon i{
+	font-size: 4em;
+	text-shadow: 0px 2px 1px $shadow_dark;
+}
+
+.add-inline-item-icon:hover i{
+	font-size: 4em;
+	text-shadow: 0px 3px 2px $shadow_dark;
+	margin-top: -1px;
+	transition: transform .1s;
+	-webkit-transition: .1s;
+}
+
+.add-inline-item-icon:hover p{
+	margin-top: 1px;
+}
+
+.add-inline-item-icon:active i{
+	text-shadow: 0px 3px 2px $shadow_dark;
+	margin-top: 0px;
+}
+
+.add-inline-item-icon:active p{
+	margin-top: 0px;
+}

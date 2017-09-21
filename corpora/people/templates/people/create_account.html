@@ -1,0 +1,111 @@
+{% extends 'corpora/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+
+{% block content %}
+	<div class="container">
+		<div class="pt-perspective">
+			
+			<div class="row pt-page pt-page-current" id="user-creation-container">
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>
+				<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+					Create Account<br>
+					Set full-name, username, and password (create user model)
+
+
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<a href="javascript:void(0)" id="next-user-creation">
+							<div class="button">
+								Next
+							</div>
+						</a>
+					</div>
+
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>	
+			</div>
+
+			<div class="row pt-page" id="demographic-container">
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>
+				<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+					Create Account<br>
+					Set demographics (create demographics model)
+
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<a href="javascript:void(0)" id="back-demographic-creation">
+							<div class="button">
+								Back
+							</div>
+						</a>
+					</div>
+
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<a href="javascript:void(0)" id="next-demographic-creation">
+							<div class="button">
+								Next
+							</div>
+						</a>
+					</div>
+
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>	
+			</div>
+
+			<div class="row pt-page" id="language-container">
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>
+				<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+					Create Account<br>
+					Choose language and set proficiency
+
+
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<a href="javascript:void(0)" id="back-language-settings">
+							<div class="button">
+								Back
+							</div>
+						</a>
+					</div>
+
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<a href="javascript:void(0)" id="next-language-settings">
+							<div class="button">
+								Next
+							</div>
+						</a>
+					</div>
+
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1"></div>	
+			</div>
+
+		</div>
+	</div>
+
+
+	{% addtoblock "js" %}
+		<script>
+			// When "Next" is clicked on Recorder page, slide transition to Player page
+			$('#next-user-creation').click(function() {
+				nextPageTransition($('#user-creation-container'), $('#demographic-container'));
+			});
+
+			$('#back-demographic-creation').click(function() {
+				prevPageTransition($('#demographic-container'), $('#user-creation-container'));
+			});
+
+			$('#next-demographic-creation').click(function() {
+				nextPageTransition($('#demographic-container'), $('#language-container'));
+			});
+
+			$('#back-language-settings').click(function() {
+				prevPageTransition($('#language-container'), $('#demographic-container'));
+			});
+
+		</script>
+
+	{% endaddtoblock %}
+{% endblock %}

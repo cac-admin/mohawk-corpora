@@ -1,0 +1,60 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block account_content %}
+
+  <h1>{% trans 'Sign In' %}</h1>
+
+  {% get_providers as socialaccount_providers %}
+
+  <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'people:profile' %}" />
+    {% endif %}
+
+    <a class="secondaryAction" href="{% url 'account_reset_password' %}">
+      <h3 style="opacity: 0.5">{% trans "Forgot Password?" %}</h3>
+    </a>
+    
+    <button class="primaryAction button" type="submit" style="max-width: 200px;">
+        {% trans "Sign In" %}
+    </button>
+
+  </form>
+
+
+
+  {% if socialaccount_providers %}
+  <p class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</p>
+
+  <div class="socialaccount_ballot">
+
+    <ul class="socialaccount_providers">
+      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    </ul>
+
+  </div>
+
+  <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
+  {% endblocktrans %}</p>
+
+  {% include "socialaccount/snippets/login_extra.html" %}
+
+  {% else %}
+  <p>{% blocktrans %}If you have not created an account yet, then please
+  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+  {% endif %}
+
+{% endblock account_content %}

@@ -1,0 +1,53 @@
+@import '_colors';
+@import '_text';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+.navbar{
+    .container{
+
+    }
+    .navbar-brand{
+      font-size: 1.2em;
+      @include media-breakpoint-down(sm) {
+        font-size: .9em;
+      }
+    }
+
+    background-color: $brand_primary;
+
+  .nav-item > .nav-link{
+    text-align: center;
+    font-size: .9em;
+
+  @include media-breakpoint-down(sm) {
+    font-size: .7em;
+  }
+
+
+    i{
+      display: inline-block;
+    }
+    div{
+      display: inline-block;
+      font-size: .8em;
+    }
+  }
+
+
+  .dropdown-menu{
+
+    a{
+        color: $brand_dark;
+        font-size: .8em;
+     }
+     li{
+      margin-left: 15px;
+      margin-right: 15px;
+     }
+  }
+
+
+
+}

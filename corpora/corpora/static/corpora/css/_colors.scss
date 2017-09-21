@@ -1,0 +1,124 @@
+
+
+$brand_primary: #DC2250 !default;	
+
+
+@function set-text-color($color) {
+  @if (lightness($color) > 20) {
+    @return scale-color($color, $lightness:-90%  ); // Lighter backgorund, return dark color
+  } @else {
+    @return scale-color($color, $lightness:90% ); // Darker background, return light color
+  }
+}
+
+
+$brand_light: scale-color($brand_primary, $lightness: 30%);
+$brand_light_text: set-text-color($brand_light);
+
+$brand_lighter: scale-color($brand_primary, $lightness:60%);
+$brand_lighter_text: set-text-color($brand_lighter);
+
+$brand_lightest: scale-color($brand_primary, $lightness:90%);
+$brand_lightest_text: set-text-color($brand_lightest);
+
+$brand_dark: scale-color($brand_primary, $lightness:-30%);
+$brand_dark_text: set-text-color($brand_dark);
+
+$brand_darker: scale-color($brand_primary, $lightness:-60%);
+$brand_darker_text: set-text-color($brand_darker);
+
+$brand_darkest: scale-color($brand_primary, $lightness:-90%);
+$brand_darkest_text: set-text-color($brand_darkest);
+
+/* Do these need to change to scale questionmark */
+
+$brand_saturated: saturate($brand_primary, 38.2%);
+$brand_saturated_text: set-text-color($brand_saturated);
+
+$brand_desaturated: desaturate($brand_primary, 38.2%);
+$brand_desaturated_text: set-text-color($brand_desaturated);
+
+$brand_complement:      complement(     $brand_primary);
+$brand_complement_text: set-text-color( $brand_complement);
+
+$brand_secondary:       adjust_hue(     $brand_primary, 120);
+$brand_secondary_text:  set-text-color( $brand_secondary);
+
+$brand_tertiary:        adjust_hue(     $brand_primary, -120);
+$brand_tertiary_text:   set-text-color( $brand_tertiary);
+
+$brand_complement_light:         scale-color(    $brand_complement, $lightness: 30%);
+$brand_complement_light_text:    set-text-color( $brand_complement_light);
+$brand_complement_lighter:       scale-color(    $brand_complement, $lightness: 60%);
+$brand_complement_lighter_text:  set-text-color( $brand_complement_lighter);
+$brand_complement_lightest:      scale-color(    $brand_complement, $lightness: 90%);
+$brand_complement_lightest_text: set-text-color( $brand_complement_lightest);
+
+$brand_complement_dark:         scale-color(    $brand_complement, $lightness:-30%);
+$brand_complement_dark_text:    set-text-color( $brand_complement_dark);
+$brand_complement_darker:       scale-color(    $brand_complement, $lightness:-60%);
+$brand_complement_darker_text:  set-text-color( $brand_complement_darker);
+$brand_complement_darkest:      scale-color(    $brand_complement, $lightness:-90%);
+$brand_complement_darkest_text: set-text-color( $brand_complement_darkest);
+
+$brand_complement_saturated:        saturate(   $brand_complement, 38.2%);
+$brand_complement_saturated_text:   set-text-color( $brand_complement_saturated);
+$brand_complement_desaturated:      desaturate( $brand_complement, 38.2%);
+$brand_complement_desaturated_text: set-text-color( $brand_complement_desaturated);
+
+$brand_secondary_light:         scale-color(    $brand_secondary, $lightness: 30%);
+$brand_secondary_light_text:    set-text-color( $brand_secondary_light);
+$brand_secondary_lighter:       scale-color(    $brand_secondary, $lightness: 60%);
+$brand_secondary_lighter_text:  set-text-color( $brand_secondary_lighter);
+$brand_secondary_lightest:      scale-color(    $brand_secondary, $lightness: 90%);
+$brand_secondary_lightest_text: set-text-color( $brand_secondary_lightest);
+
+$brand_secondary_dark:         scale-color(    $brand_secondary, $lightness:-30%);
+$brand_secondary_dark_text:    set-text-color( $brand_secondary_dark);
+$brand_secondary_darker:       scale-color(    $brand_secondary, $lightness:-60%);
+$brand_secondary_darker_text:  set-text-color( $brand_secondary_darker);
+$brand_secondary_darkest:      scale-color(    $brand_secondary, $lightness:-90%);
+$brand_secondary_darkest_text: set-text-color( $brand_secondary_darkest);
+
+$brand_secondary_saturated:        saturate(  $brand_secondary, 38.2%);
+$brand_secondary_saturated_text:   set-text-color( $brand_secondary_saturated);
+$brand_secondary_desaturated:      desaturate($brand_secondary, 38.2%);
+$brand_secondary_desaturated_text: set-text-color( $brand_secondary_desaturated);
+
+$brand_tertiary_light:         scale-color(    $brand_tertiary, $lightness: 30%);
+$brand_tertiary_light_text:    set-text-color( $brand_tertiary_light);
+$brand_tertiary_lighter:       scale-color(    $brand_tertiary, $lightness: 60%);
+$brand_tertiary_lighter_text:  set-text-color( $brand_tertiary_lighter);
+$brand_tertiary_lightest:      scale-color(    $brand_tertiary, $lightness: 90%);
+$brand_tertiary_lightest_text: set-text-color( $brand_tertiary_lightest);
+
+$brand_tertiary_dark:         scale-color(    $brand_tertiary, $lightness:-30%);
+$brand_tertiary_dark_text:    set-text-color( $brand_tertiary_dark);
+$brand_tertiary_darker:       scale-color(    $brand_tertiary, $lightness:-60%);
+$brand_tertiary_darker_text:  set-text-color( $brand_tertiary_darker);
+$brand_tertiary_darkest:      scale-color(    $brand_tertiary, $lightness:-90%);
+$brand_tertiary_darkest_text: set-text-color( $brand_tertiary_darkest);
+
+$brand_tertiary_saturated:        saturate(       $brand_tertiary, 38.2%);
+$brand_tertiary_saturated_text:   set-text-color( $brand_tertiary_saturated);
+$brand_tertiary_desaturated:      desaturate(     $brand_tertiary, 38.2%);
+$brand_tertiary_desaturated_text: set-text-color( $brand_tertiary_desaturated);
+
+$shadow_dark:       rgba(0,0,0,0.5);
+$shadow_dark_text:  set-text-color( $shadow_dark);
+$shadow_light:      rgba($brand_lighter,0.5);
+$shadow_light_text: set-text-color( $shadow_light);
+
+$default: $brand_primary;
+$brand: $brand_primary;
+$dark: $brand_dark;
+$darker: $brand_darker;
+$darkest: $brand_darkest;
+$light: $brand_light;
+$lighter: $brand_lightest;
+$lightest: $brand_lightest;
+
+$background_light: lighten($lightest, 10%);
+$background_dark: darken($darkest, 10%);
+
+

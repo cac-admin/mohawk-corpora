@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>{% trans "Welcome to People!"%}</h1>
+        <p>{% blocktrans %}This is a long welcome message.{% endblocktrans %}</p>
+        <p>language_cookie: {{language}} <br> request.language_code: {{request.LANGUAGE_CODE}}
+        <br>
+        Variable string translated: {{output}}
+        </p>
+        <p>
+        Next Sentence to Record: {{sentence}}
+        </p>
+      </div>
+    </div>
+</div>
+
+{% endblock %}

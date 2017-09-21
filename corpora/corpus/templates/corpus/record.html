@@ -1,0 +1,122 @@
+{% extends 'corpus/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+
+{% block content %}
+{% addtoblock "css" %}
+    <link href="{% sass_src 'corpus/css/record.scss' %}" rel="stylesheet" type="text/css" />
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'corpora/css/text';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+.visualizer{
+  width: 100%;
+  height: 80px;
+  border-radius: 4px;
+  background-color: white;
+  border:0px solid $brand_primary;
+  margin-top: 30px;
+}
+span.sentence{
+  font-size: 2em;
+}
+a.btn{
+  display: inline-block;
+}
+</style>
+{% endaddtoblock %}
+
+<div class="container">
+  <div class="row">
+    <div class="col" style="margin-top:30px;">
+    </div>
+  </div>
+  <div class="row align-items-center" id="recorder-container">
+    <div class="col-12" style="display: none;">
+      <div id="status-message" class="error-message" style="display: none;"><h2></h2></div>
+    </div>
+    <div class="col-12 col-md-7 col-lg-8">
+      <div class="row">
+        <div class="col-12">
+          <span class="sentence">{{sentence.text}}</span>
+        </div>
+        <div class="col-12">
+          <canvas class="visualizer" style=""></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-5 col-lg-4"> 
+
+      <div class="row">
+        <div class="col-12">
+          <div class="circle-button-container">
+            <div class="circle background-circle">
+                <a href="javascript:void(0)" id="record-button">
+                    <div class="circle foreground-circle unclicked-circle record">
+                        <div class="circle-text record">REC</div>
+                        <div class="stop-square"></div>
+                    </div>
+                </a>
+
+                <a href="javascript:void(0)" id="play-button">
+                    <div class="circle foreground-circle unclicked-circle play">
+                        <div class="play-triangle"></div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" style="text-align: center;" >
+          <a href="javascript:void(0)" id="redo" class="btn btn-default disabled redo">
+            <i class="fa fa-undo fw"></i> Redo
+          </a>
+          <a href="javascript:void(0)" id="save" class="btn btn-default disabled save">
+            <i class="fa fa-save fw"></i> Save
+          </a>
+          <a href="{{request.path}}" id="next" class="btn btn-default  next">
+            <i class="fa fa-step-forward fw"></i> Skip
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %}
+<small> Does this recording sound accurate? If so, press Next. If not, go back and fix it with Back.</small>
+
+<a href="{% url 'corpus:submit_recording' %}">
+    <div class="button submit-audio">
+        Submit
+    </div>
+</a>
+{% endcomment %}
+
+    
+    
+    <audio id="play-audio" style="display: none; width: 0px; height: 0px">
+    </audio>
+
+    {% addtoblock "js" %}
+        <script>
+            var person_pk = "{{person.pk}}";
+            var sentence_pk = "{{sentence.pk}}";
+            var encoder_path = "{% static 'opus-recorderjs/build/encoderWorker.min.js' %}";
+        </script>
+
+        <script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'corpora/js/recorder.storepage.js' %}"></script>
+        <script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>
+        <script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>
+
+    {% endaddtoblock %}
+{% endblock %}

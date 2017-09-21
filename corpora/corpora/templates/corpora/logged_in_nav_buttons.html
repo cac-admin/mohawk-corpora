@@ -1,0 +1,128 @@
+{% load account i18n socialaccount sekizai_tags static language %}
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+    
+.navbar{
+    a{
+        color: white;
+    }
+}
+
+</style>
+{% endaddtoblock %}
+<nav class="navbar navbar-expand">
+  <div class="container">
+  <a class="navbar-brand" href="/">corpora.io</a>
+  
+  <ul class="navbar-nav ml-auto ">
+    {% if request.user.is_authenticated %}
+
+
+    <li class="nav-item">
+      <a href="{% url 'corpus:record' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-microphone"></i>
+        <div >{% trans 'Record' %}</div>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'corpus:sentence-list' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-font"></i>
+        <div >{% trans 'Sentences' %}</div>
+      </a>
+    </li>    
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'people:profile' %}" >
+        <i class="fa fa-lg fa-fw fa-user"></i>
+        <div >{% trans 'Profile' %}</div>
+      </a>
+    </li>
+
+    {% if request.user.is_staff %}
+    <li class="nav-item">
+      <a class="nav-link" href="/admin" >
+        <i class="fa fa-lg fa-fw fa-cogs"></i>
+        <div>{% trans 'Admin' %}</div>
+      </a>
+    </li>
+    {% endif %}
+
+
+<!-- <div>
+<a href="#" class="">
+    <i class="fa fa-fw fa-lg fa-edit"></i>
+    <div >{% trans 'Edit Info' %}</div>
+</a>
+</div> -->
+
+
+    <li class="dropdown nav-item">
+    {% get_current_language request as current_language %}
+    {% get_known_languages request as known_languages %}
+    {% if known_languages %}
+    <!-- <div class="btn-group"> -->
+      <a href="#" role="button" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-fw fa-lg fa-language"></i>
+        <div>
+        {% get_language_info for current_language as lang %}
+        {% trans 'Language' %} <span class="caret"></span>
+        </div>
+      </a>
+
+      <ul class="dropdown-menu">
+        {% comment %}Instead we'll want to get the KnownLanguages for the Person {% endcomment %}
+        {% get_language_info_list for known_languages as languages %}
+        {% for lang in languages %}
+            <li><a href="#" onclick="$('form[id=language_selector_form] input[name=language]').val('{{lang.code}}');$('form[id=language_selector_form]').submit();">
+            {% if lang.code == current_language %}<i class="fa fa-fw fa-check"></i>{% endif %}
+            {{ lang.name_translated }}</a></li>
+        {% endfor %}
+            <li><a href="{% url 'people:choose_language' %}?next=people:profile">Add/Edit Language</a></li>
+      </ul>
+
+    {% endif %}
+    </li>
+    
+
+    <li class="nav-item">
+      <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
+        <i class="fa fa-fw fa-lg fa-sign-out"></i>
+        <div>{% trans 'Log Out' %}</div>
+      </a>        
+    </li>
+
+{% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >
+        <i class="fa fa-fw fa-lg fa-sign-in"></i>
+        <div>{% trans 'Log In' %}</div>
+      </a>        
+    </li>
+{% endif %}
+
+  </ul>
+  
+
+  <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
+      
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+      
+  </form>
+  <form class="hidden" action="{% url 'people:set_language' %}" method="post" id="language_selector_form" >
+      
+          {% csrf_token %}
+          <input name="language" type="hidden" value="{{current_language}}" />
+      
+  </form>
+
+
+
+</div>
+</nav>

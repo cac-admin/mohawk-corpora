@@ -1,0 +1,28 @@
+{% extends "people/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+  <link href="{% sass_src 'people/css/account.scss' %}" rel="stylesheet" type="text/css" />
+{% endaddtoblock %}
+
+<div class="container" style="text-align: center;">
+  <div class="row">
+    <div class="col-xs-12 col-sm-1 col-md-2 col-lg-2"></div>
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+        {% block account_content %}
+        {% endblock account_content %}
+    </div>
+    <div class="col-xs-12 col-sm-1 col-md-2 col-lg-2"></div>
+  </div>
+</div>
+
+{% endblock content%}
+

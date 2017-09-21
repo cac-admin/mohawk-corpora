@@ -1,0 +1,52 @@
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>corpora.io</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa:300,400,700|Open+Sans|Poiret+One&amp;subset=latin-ext" rel="stylesheet">
+	{# Uses sekizai to load all css at start of page & compressor to minify it #}
+	{% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
+
+	{# CSS files to load & combine #}
+	{% addtoblock "css" %}
+		<link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% sass_src 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />
+		<link href="{% sass_src 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/css" />
+	{% endaddtoblock %}
+
+
+	{% addtoblock "js" %}
+		<script type="text/javascript" src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+		<script type="text/javascript" src='{% static 'jquery-ui/jquery-ui.min.js' %}'></script>
+		<script type="text/javascript" src='{% static 'corpora/js/transitions.js' %}'></script>
+	{% endaddtoblock %}
+	
+</head>
+
+<body>
+
+	<div class="col-lg-6 col-md-5 col-sm-5 col-xs-6 navbuttons">
+		{% block navbuttons %}
+		{% endblock %}    
+	</div>
+
+
+	<div class="content">
+		{% block content %}
+		{% endblock %}
+	</div>
+	{# Uses sekizai to load all js at end of page #}
+	{% render_block "js" %}
+</body>
+
+</html>

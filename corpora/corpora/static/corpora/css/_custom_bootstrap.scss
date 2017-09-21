@@ -1,0 +1,47 @@
+@import '_colors';
+
+.jumbotron{
+	background-color: $brand_primary;
+	margin-bottom: 5px;
+	border-radius: 0px;
+}
+
+.jumbotron h1{
+	color: $lightest;
+}
+
+// .navbar-default{
+// 	border: 0px;
+// 	background-color: $default;
+//     box-shadow: 0px 2px 10px black;
+// }
+
+// .navbar-default .navbar-brand {
+// 	color: $lightest;
+// 	font-family: $title-font;
+// }
+
+// .navbar-default .navbar-brand:hover {
+// 	color: $lighter;
+// }
+
+// .navbar-default .navbar-nav>li{
+// 	color: $lightest;
+// }
+// .navbar-default .navbar-nav>li>a{
+// 	color: $lightest;
+// 	font-size: 12px;
+// 	text-align: center;
+// 	padding-bottom: 5px;
+// 	padding-top: 5px;
+// }
+
+// .navbar-default .navbar-nav>li>a:hover{
+// 	color: $lighter;
+// }
+
+// .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
+// 	background-color: $darker;
+// 	color: $lighter;
+// }
+

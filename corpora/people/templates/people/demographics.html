@@ -1,0 +1,50 @@
+{% extends 'corpora/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+
+{% block content %}
+
+	<div class="container" style="text-align: center;">
+		<div class="row">
+			<div class="col-xs-12 col-sm-1 col-md-3 col-lg-3"></div>
+			<div class="col-xs-12 col-sm-10 col-md-6 col-lg-6 demographics">
+
+				<form method="post"> {%csrf_token%}
+					{% for field in form %}
+					    <div class="fieldWrapper">
+					        {{ field.errors }}
+					        {{ field.label_tag }} {{ field }}
+					        {% if field.help_text %}
+					        <h3><p class="help">{{ field.help_text|safe }}</p></h3>
+					        {% endif %}
+					    </div>
+					{% endfor %}
+					<input type="submit" value="Submit" class="button">
+				</form>
+
+
+				{% comment %}
+
+				<a href="javascript:void(0)" id="skip">
+					<div class="button">
+						Skip
+					</div>
+				</a>
+
+				
+				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="skip" style="display: none;">
+					<a href="javascript:void(0)">
+						<div class="button">
+							Skip
+						</div>
+					</a>
+				</div>
+				{% endcomment %}
+			</div>
+			<div class="col-xs-12 col-sm-1 col-md-3 col-lg-3"></div>
+		</div>
+	</div>
+{% endblock %}

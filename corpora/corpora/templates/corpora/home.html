@@ -1,0 +1,126 @@
+{% extends 'corpora/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load sass_tags %}
+{% load i18n %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% sass_src 'corpora/css/home.scss' %}" rel="stylesheet" type="text/css" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+  .actions{
+    text-align: center;
+    div[class*='col']{
+      margin-top: 15px;
+    }
+  }
+  .intro{
+    margin-top: 15px;
+  }
+
+</style>
+{% endaddtoblock %}
+<div class="jumbotron">
+  <div class="container"><div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <h1>corpora.io</h1>
+      <h3 class="sub-header-text">{% blocktrans %}teaching computers indigenous languages{% endblocktrans %}</h3>
+    </div>
+  </div></div>
+</div>
+
+<div class="content">
+  <div class="container">
+
+    <div class="row justify-content-center actions"> 
+      <div class="col-12 col-md-4 col-lg-3" >
+        <a href="#" class="btn btn-default btn-lg disabled" >
+          <i class="fa fa-comment fa-fw"></i>Share You Voice</a>
+      </div>
+      <div class="col-12 col-md-4 col-lg-3">
+        <a href="/sentences" class="btn btn-default btn-lg " >
+          <i class="fa fa-check fa-fw"></i>Verify Sentences</a>
+      </div>
+      <div class="col-12 col-md-4 col-lg-3">
+        <a href="#" class="btn btn-default btn-lg disabled" >
+          <i class="fa fa-check fa-fw"></i>Verify Recordings</a>           
+      </div>
+    </div> 
+
+    <div class="row intro">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left-card">
+        <p class="dropcase">{% blocktrans %}Corpora.io is an opensource app designed to collect spoken 
+        corpora&mdash;vocal recordings&mdash;to train computers to understand 
+        spoken languages through machine learning. This project started in an effort
+        to automate the transcription of thousands of hours of te reo Māori archives
+        available at <a href="https://tehiku.nz">tehiku.nz</a> and to enhance access 
+        to Māori media. We also wanted to bring te reo Māori, and other indigenous languages,
+        to voice operated digital assistants like Siri.{% endblocktrans %}</p>
+
+        <div>
+          <h2>{% trans "Available Languages" %}</h2>
+          <p>{% blocktrans %}Translations for corpora.io are provided in the following langauges:{% endblocktrans %}</p>
+          <ul>
+          {% for lang_code in languages %}
+          {% get_language_info for lang_code as lang %}
+          <li>{{ lang.name_translated }}</li>
+          {% endfor %}
+          </ul>
+
+          <p>Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.</p>
+          </div>
+
+      </div>
+
+
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 right-card">
+        <span></span>
+        <p></p>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <div class="row"> 
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+          <h4>Site Map</h4>
+          <p><a href="{% url 'account_login' %}">Login</a></p>
+          <!-- <p><a href="{% url 'account_signup' %}">Sign-Up</a></p>
+          <p><a href="{% url 'people:profile' %}">Profile</a></p>
+          <p><a href="{% url 'corpus:record' %}">Record</a></p> -->
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+          <h4>Get Involved</h4>
+          <p><a href="https://github.com/TeHikuMedia/corpora">GitHub</a></p>
+          <p><a href="https://github.com/TeHikuMedia/corpora/tree/translate">Translate</a></p>
+          <p>Wānanga</p>        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+          <h4>Supporters</h4>
+          <p><a href="https://tehiku.nz">Te Hiku Media</a></p>
+          <p><a href="https://www.dragonfly.co.nz/">Dragonfly Data Science</a></p>
+          <p><a href="http://www.tepunahamatatini.ac.nz/">Te Punaha Matatini</a></p>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+          <h4>Powered by</h4>
+          <p><a href="https://www.djangoproject.com/">Django</a></p>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% addtoblock "js" %}
+
+{% endaddtoblock %}
+{% endblock %}
+
