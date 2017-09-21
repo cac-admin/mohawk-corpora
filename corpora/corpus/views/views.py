@@ -11,7 +11,7 @@ from django.views.generic.list import ListView
 from corpus.models import Recording, Sentence
 from people.models import Person
 from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person_from_user
+from people.helpers import get_or_create_person
 
 import logging
 logger = logging.getLogger('corpora')
@@ -29,22 +29,12 @@ class SentenceListView(ListView):
         user = self.request.user
         user.can_approve = user.is_staff
         context['user'] = user
+        context['uuid'] = self.request.get_signed_cookie('uuid', 'none')
         return context
 
 
-class RecordSentenceListView(ListView):
-    model = Sentence
 
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        return super(RecordSentenceListView, self).get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super(SentenceListView, self).get_context_data(**kwargs)
-        user = self.request.user
-        user.can_approve = user.is_staff
-        context['user'] = user
-        return context
 
 
 def submit_recording(request):
@@ -58,7 +48,7 @@ def record(request):
 
     # if not request.user.is_authenticated(): return redirect(reverse('account_login'))
 
-    person = get_or_create_person_from_user(request.user)
+    person = get_or_create_person(request)
 
     if request.method == 'GET':
         if request.GET.get('sentence',None):
@@ -101,11 +91,16 @@ def record(request):
             response.status_code = 400
 
             return response
-        
-    # Load up the page normally with request and object context
-    context = {'request': request,
-        'person': person,
-        'sentence': sentence
-        }
 
-    return render(request, 'corpus/record.html', context)
+    # Load up the page normally with request and object context
+
+    context = {'request': request,
+               'person': person,
+               'sentence': sentence,
+               'uuid': request.get_signed_cookie('uuid', 'none')}
+
+    response = render(request, 'corpus/record.html', context)
+    response.set_signed_cookie('uuid', person.uuid, max_age=60*60*24*365)
+
+    return response
+

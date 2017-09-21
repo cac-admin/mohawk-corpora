@@ -38,4 +38,4 @@ class DemographicForm(forms.ModelForm):
 
     class Meta:
         model = Demographic
-        fields = ('birthday', 'sex')
+        fields = ('age', 'sex')

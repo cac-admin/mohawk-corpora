@@ -336,6 +336,7 @@ class Sentences{
 
   approve(){
     this.sentence.quality_control.approved = true
+    this.sentence.quality_control.approved_by = {{request.user.id}}
     this.post_qc();
   }
   up_vote(){

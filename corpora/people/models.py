@@ -15,6 +15,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 
 from django.core.exceptions import ObjectDoesNotExist
+import uuid
+
+
+def get_uuid():
+    return str(uuid.uuid4())
 
 
 class Tribe(models.Model):
@@ -26,15 +31,16 @@ class Tribe(models.Model):
 
 
 class Person(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    full_name = models.CharField(help_text=_('Full Name'), max_length=200)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(help_text=_('Full Name'), max_length=200, blank=True)
+    uuid = models.CharField(max_length=64, default=get_uuid, editable=False, unique=True)
 
     class Meta:
         verbose_name = _('Person')
         verbose_name_plural = _('People')
 
     def __unicode__(self):
-        return self.full_name
+        return self.full_name + " | " + self.uuid
 
 
 class Demographic(models.Model):
@@ -47,12 +53,14 @@ class Demographic(models.Model):
         ('A', _('Asexual'))
     )
 
-    birthday = models.DateField(help_text=_('When were you born?'), null=True, blank=True)
+    # birthday = models.DateField(help_text=_('When were you born?'), null=True, blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True, help_text=_('How old are you?'))
     sex = models.CharField(help_text=_('Gender'), choices=SEX_CHOICES, max_length=2, null=True, blank=True)
     person = models.OneToOneField(Person, on_delete=models.CASCADE, null=True, unique=True)
 
     # tribe
     # ethnicities
+
 
 class KnownLanguage(models.Model):
     PROFICIENCIES = (

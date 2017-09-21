@@ -36,9 +36,11 @@ a.btn{
 
 <div class="container">
   <div class="row">
-    <div class="col" style="margin-top:30px;">
+    <div class="col" >
     </div>
   </div>
+
+  {% if sentence %}
   <div class="row align-items-center" id="recorder-container">
     <div class="col-12" style="display: none;">
       <div id="status-message" class="error-message" style="display: none;"><h2></h2></div>
@@ -119,4 +121,7 @@ a.btn{
         <script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>
 
     {% endaddtoblock %}
+
+
+    {% endif %}
 {% endblock %}

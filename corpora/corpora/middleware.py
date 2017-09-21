@@ -3,7 +3,36 @@
 from django.utils import translation
 from django.conf import settings
 
-from people.helpers import get_current_language
+from people.helpers import get_current_language, get_or_create_person
+
+
+class PersonMiddleware(object):
+    '''
+    This middleware sets a uuid cookie so we can collect data immidiately
+    without users signing in. it also allows us to later associate the
+    uuid with a user account when/if the user creates an account.
+    '''
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        person = get_or_create_person(request)
+        response = self.get_response(request)
+        response.set_signed_cookie(
+                'uuid',
+                person.uuid,
+                max_age=365 * 24 * 60 * 60,
+                domain=settings.SESSION_COOKIE_DOMAIN,
+                secure=settings.SESSION_COOKIE_SECURE or None
+            )
+        # Code to be executed for each request/response after
+        # the view is called.
+        return response
+
 
 class LanguageMiddleware(object):
     def __init__(self, get_response):
@@ -42,7 +71,6 @@ class LanguageMiddleware(object):
 
         # Code to be executed for each request/response after
         # the view is called.
-        
+
         translation.deactivate() # Deactivates our langauge after we've processed the request.
         return response
-

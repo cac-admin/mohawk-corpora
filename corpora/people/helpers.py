@@ -4,25 +4,43 @@ from django.utils import translation
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Person, KnownLanguage
-
 import logging
 logger = logging.getLogger('corpora')
 
-def get_or_create_person_from_user(user):
+
+def get_or_create_person(request):
+    user = request.user
     if user.is_anonymous:
-        return None
+        # Check if a session cookie exists
+        uuid = request.get_signed_cookie('uuid', None)
+        if uuid is not None:
+            # get person from uuid
+            person, created = Person.objects.get_or_create(uuid=uuid)
+            logger.info("Created new person, {0}".format(person))
+        else:
+            # Create person and set uuid
+            person = Person.objects.create()
+        request.session['uuid'] = person.uuid
+        return person
     else:
         try:
             person = Person.objects.get(user=user)
         except ObjectDoesNotExist:
+            uuid = request.get_signed_cookie('uuid', None)
+            if uuid is not None:
+                person = Person.objects.get(uuid=uuid)
+                person.user = user
+            else:
+                person = Person.objects.create(user=user)
             first = '' if not user.first_name else user.first_name
             last = '' if not user.last_name else user.last_name
-            if first=='' and last=='':
+            if first == '' and last == '':
                 full_name = user.username
             else:
                 full_name = '{0} {1}'.format(first, last)
-            person = Person.objects.create(user=user, full_name=full_name)
+            person.full_name = full_name
             person.save()
+        request.session['uuid'] = person.uuid
         return person
 
 def set_language_cookie(response, language):
@@ -43,7 +61,7 @@ def set_current_language_for_person(person, language):
 
 def get_current_language(request):
     if request.user.is_authenticated():
-        person = get_or_create_person_from_user(request.user)
+        person = get_or_create_person(request)
         try:
             active_language = KnownLanguage.objects.get(person=person, active=True)
         except ObjectDoesNotExist:

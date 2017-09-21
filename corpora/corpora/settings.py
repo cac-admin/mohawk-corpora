@@ -76,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corpora.middleware.PersonMiddleware',
 ]
 
 ROOT_URLCONF = 'corpora.urls'
@@ -169,8 +170,8 @@ SOCIALACCOUNT_PROVIDERS = \
             'birthday'],
     }
     }
-ACCOUNT_AUTHENTICATION_METHOD="username_email"
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
 
 # These email settings should change for a production environment. Right now we're using G Suite.
 # EMAIL_HOST=os.environ['EMAIL_HOST']

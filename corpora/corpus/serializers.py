@@ -29,7 +29,7 @@ class QualityControlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QualityControl
-        fields = ('id', 'good', 'bad', 'approved', 'object_id', 'content_type',
+        fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'object_id', 'content_type',
                   'content_object', 'updated')
 
 

@@ -7,7 +7,7 @@ from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
 
-from people.helpers import get_current_language, get_num_supported_languages, get_or_create_person_from_user, get_unknown_languages, set_current_language_for_person, set_language_cookie
+from people.helpers import get_current_language, get_num_supported_languages, get_or_create_person, get_unknown_languages, set_current_language_for_person, set_language_cookie
 from corpus.helpers import get_next_sentence, get_sentences
 
 from people.models import Person, KnownLanguage, Demographic
@@ -79,7 +79,7 @@ def person(request, uuid):
 
 
 def choose_language(request):
-    person = get_or_create_person_from_user(request.user)
+    person = get_or_create_person(request)
     if not person:
         return redirect(reverse('account_login'))
 
@@ -169,7 +169,7 @@ def set_language(request):
 
         if request.POST.get('language','') != '':
             user_language = request.POST.get('language','')
-            person = get_or_create_person_from_user(request.user)
+            person = get_or_create_person(request)
             set_current_language_for_person(person, user_language)
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
@@ -186,7 +186,7 @@ def set_language(request):
 def create_demographics(request):
     if request.method == "POST":
         form = DemographicForm(request.POST)
-        person = get_or_create_person_from_user(request.user)
+        person = get_or_create_person(request)
 
         if form.is_valid():
             demographic = form.save(commit=False)

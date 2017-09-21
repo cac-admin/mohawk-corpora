@@ -8,7 +8,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 from .models import Person, Demographic
-from .helpers import get_or_create_person_from_user
+from .helpers import get_or_create_person
 from datetime import datetime
 
 import logging
@@ -20,11 +20,12 @@ class PersonAccountAdapter(DefaultAccountAdapter):
 
         user = super(PersonAccountAdapter, self).save_user(request, user, form)
 
+        request.user = user
         # Create a People Object with User Information
-        person = get_or_create_person_from_user(user)
+        person = get_or_create_person(request)
 
     def is_open_for_signup(self, request):
-        return False
+        return True
 
 
 class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -34,7 +35,8 @@ class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
         user = super(PersonSocialAccountAdapter, self).save_user(request, sociallogin, form=None)
 
         # Create a People Object with User Information
-        person = get_or_create_person_from_user(user)
+        request.user = user
+        person = get_or_create_person(request)
 
         if user.birthday or user.gender:
             gender = user.gender
