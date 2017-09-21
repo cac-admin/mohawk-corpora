@@ -57,7 +57,10 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
         if len(parts[i]) < 6:  # This is arbitrary
             continue
         else:
-            instance.text = parts[0]+'.'
+            if parts[0][-1] in '!?.;':
+                instance.text = parts[0]
+            else:
+                instance.text = parts[0]+'.'
             new_sentence = Sentence.objects.create(
                 text=parts[i]+'.',
                 language=instance.language)
