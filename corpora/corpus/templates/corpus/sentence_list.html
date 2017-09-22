@@ -191,8 +191,6 @@ $.ajaxSetup({
 var sentence_block = $('.sentence-block').get(0);
 
 
-
-
 class Sentences{
   constructor(){
     this.objects = null
@@ -202,6 +200,7 @@ class Sentences{
     this.base_sentence_url = '/api/sentences/'
     this.url_filter_query = {% if user.can_approve %}'?quality_control__approved=False'{% else %}''{% endif %}
     this.next_url = null
+    $(sentence_block).slideUp(0);
   }
 
   get_sentences(){
@@ -212,7 +211,13 @@ class Sentences{
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
-          self.next()
+          if (self.objects.length == 0){
+            console.log('No more sentences')
+            self.all_done()
+          }
+          else{
+            self.next()
+          }
     })
   }
 
@@ -237,6 +242,11 @@ class Sentences{
     }
   }
 
+  all_done(){
+    $(sentence_block).text('All done.')
+    $(sentence_block).slideDown('disabled')
+  }
+
   show_next_sentence(){
     var self = this;
     if (this.sentence){
@@ -251,6 +261,7 @@ class Sentences{
       $(input_elm).val(this.sentence.text);
       $(input_elm).text(this.sentence.text);
       $(sentence_block).find('.sentence').append(input_elm)
+      $(sentence_block).slideDown('fast');
       $(sentence_block).find('.approve').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()
         console.log('clicked')
@@ -307,6 +318,7 @@ class Sentences{
         console.log(e.responseText)
       }
     }).done(function(){
+      $(sentence_block).slideUp('fast');
       self.next();
     }).fail(function(){
       console.log('Failed.')
