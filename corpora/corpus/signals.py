@@ -65,3 +65,15 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
                 text=parts[i]+'.',
                 language=instance.language)
             print "Created {0}".format(new_sentence)
+
+
+@receiver(models.signals.pre_save, sender=Sentence)
+def prevent_sentence_from_changing_when_recordings_exist(
+        sender, instance, **kwargs):
+    recordings = Recording.objects.filter(sentence=instance)
+    if len(recordings) > 0:
+        try:
+            old_sentence = Sentence.objects.get(pk=instance.pk)
+            instance.text = old_sentence.text
+        except ObjectDoesNotExist:
+            pass

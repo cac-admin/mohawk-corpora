@@ -200,6 +200,7 @@ class Sentences{
     this.base_url = '/api/sentences/'
     this.base_quality_url = '/api/qualitycontrol/'
     this.base_sentence_url = '/api/sentences/'
+    this.url_filter_query = {% if user.can_approve %}'?quality_control__approved=False'{% else %}''{% endif %}
     this.next_url = null
   }
 
@@ -207,7 +208,7 @@ class Sentences{
     var self = this;
     console.log('Fetching more sentences')
     $.ajax({
-        url: ((this.next_url==null) ? this.base_url : this.next_url)
+        url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
@@ -222,6 +223,7 @@ class Sentences{
         }).done(function(d){
           console.log(d)
           self.sentence.quality_control = d.quality_control
+          self.sentence = d
           self.show_next_sentence()
     })    
   }
