@@ -22,7 +22,7 @@ class DemographicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Demographic
-        fields = ('person', 'birthday', 'sex')
+        fields = ('person', 'age', 'sex')
 
 
 class KnownLanguageSerializer(serializers.HyperlinkedModelSerializer):

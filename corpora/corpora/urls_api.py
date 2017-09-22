@@ -7,17 +7,17 @@ from rest_framework import routers
 from rest_framework.authtoken import views
 
 router = routers.DefaultRouter()
-router.register(r'groups', corpora_api.GroupViewSet)
-router.register(r'users', corpora_api.UserViewSet)
+# router.register(r'groups', corpora_api.GroupViewSet)
+# router.register(r'users', corpora_api.UserViewSet)
 
 router.register(r'qualitycontrol', corpus_api.QualityControlViewSet)
 router.register(r'sentences', corpus_api.SentenceViewSet)
 router.register(r'recordings', corpus_api.RecordingViewSet)
 
-router.register(r'tribes', people_api.TribeViewSet)
-router.register(r'demographics', people_api.DemographicViewSet)
-router.register(r'persons', people_api.PersonViewSet)
-router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
+# router.register(r'tribes', people_api.TribeViewSet)
+# router.register(r'demographics', people_api.DemographicViewSet)
+# router.register(r'persons', people_api.PersonViewSet)
+# router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 
 urlpatterns = [
 
@@ -30,5 +30,5 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    url(r'^api-token-auth/', views.obtain_auth_token)
+    url(r'^api-token-auth/', views.obtain_auth_token),
 ]

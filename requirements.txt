@@ -44,3 +44,7 @@ django-ses
 
 # API
 djangorestframework
+# API Docs
+django-coreapi
+pygments
+markdown

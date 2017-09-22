@@ -43,6 +43,35 @@ def get_or_create_person(request):
         request.session['uuid'] = person.uuid
         return person
 
+
+def get_person(request):
+    user = request.user
+    if user.is_anonymous:
+        # Check if a session cookie exists
+        uuid = request.get_signed_cookie('uuid', None)
+        if uuid is not None:
+            # get person from uuid
+            try:
+                person = Person.objects.get(uuid=uuid)
+            except ObjectDoesNotExist:
+                return None
+        else:
+            return None
+        return person
+    else:
+        try:
+            person = Person.objects.get(user=user)
+        except ObjectDoesNotExist:
+            uuid = request.get_signed_cookie('uuid', None)
+            if uuid is not None:
+                person = Person.objects.get(uuid=uuid)
+                person.user = user
+            else:
+                return None
+            person.save()
+        return person
+
+
 def set_language_cookie(response, language):
     response.set_cookie(
         settings.LANGUAGE_COOKIE_NAME,
@@ -70,8 +99,10 @@ def get_current_language(request):
     else:
         return translation.get_language()
 
+
 def get_num_supported_languages():
     return len(settings.LANGUAGES)
+
 
 def get_known_languages(person):
     if not isinstance(person,Person):
@@ -82,6 +113,7 @@ def get_known_languages(person):
     ''' Returns a list of language codes known by person '''
     known_languages = [i.language for i in KnownLanguage.objects.filter(person=person) ]
     return known_languages
+
 
 def get_unknown_languages(person):
     if isinstance(person,User):
@@ -103,4 +135,3 @@ def get_unknown_languages(person):
         if settings.LANGUAGES[i][0] not in known_languages:
             alter_choices.append(settings.LANGUAGES[i][0])
     return alter_choices
-

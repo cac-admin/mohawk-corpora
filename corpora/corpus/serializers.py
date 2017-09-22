@@ -43,7 +43,7 @@ class QualityControRelatedField(serializers.RelatedField):
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
     quality_control = QualityControRelatedField(
         many=False,
-        read_only=True
+        read_only=True,
     )
 
     class Meta:

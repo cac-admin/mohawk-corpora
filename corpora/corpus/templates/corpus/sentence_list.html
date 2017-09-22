@@ -230,7 +230,7 @@ class Sentences{
     if (this.objects == null || this.objects.length==0){
       this.get_sentences()
     } else{
-      this.sentence = this.objects.pop()
+      this.sentence = this.objects.shift()
       this.show_next_sentence()
     }
   }

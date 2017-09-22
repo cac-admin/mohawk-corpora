@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 
 from corpora.views import views
+from rest_framework.documentation import include_docs_urls
 
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 
     url(r'^', include('corpora.urls_api', namespace='api') ),
+    url(r'^docs/', include_docs_urls(title='Corpora API'))
+
 
 ]
 
