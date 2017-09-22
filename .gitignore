@@ -46,8 +46,8 @@ coverage.xml
 .hypothesis/
 
 # Translations
-*.mo
-*.pot
+#*.mo   need to build this if we don't include it!
+#*.pot
 
 # Django stuff:
 *.log
