@@ -29,7 +29,13 @@ def get_or_create_person(request):
             uuid = request.get_signed_cookie('uuid', None)
             if uuid is not None:
                 person = Person.objects.get(uuid=uuid)
-                person.user = user
+                if person.user is not None:
+                    if person.user is not user:
+                        # Another user has signed in
+                        # and this user needs a person!
+                        person = Person.objects.create(user=user)
+                else:
+                    person.user = user
             else:
                 person = Person.objects.create(user=user)
             first = '' if not user.first_name else user.first_name
