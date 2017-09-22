@@ -57,6 +57,7 @@ class Recording(models.Model):
     audio_file = models.FileField()
     quality_control = GenericRelation(QualityControl, related_query_name='recording')
     updated = models.DateTimeField(auto_now=True)
+    sentence_text = models.CharField(max_length=250, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Recording'

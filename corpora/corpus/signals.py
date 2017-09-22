@@ -77,3 +77,10 @@ def prevent_sentence_from_changing_when_recordings_exist(
             instance.text = old_sentence.text
         except ObjectDoesNotExist:
             pass
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def set_sentence_text_when_recording_created(sender, instance, created, **kwargs):
+    if created:
+        instance.sentence_text = instance.sentence.text
+        instance.save()
