@@ -126,7 +126,6 @@ class RecordingFileView(RedirectView):
         u = request.user
         logger.debug(m.audio_file.name)
         logger.debug(m.audio_file.url)
-        logger.debug(m.audio_file.path)
         if u.is_authenticated() and u.is_staff:
             try:
                 url = self.get_redirect_url(filepath=m.audio_file.name)
