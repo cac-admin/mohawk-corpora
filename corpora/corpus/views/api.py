@@ -117,6 +117,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows recordings to be viewed or edited.
     """
-    queryset = Recording.objects.all()
+    queryset = Recording.objects.all().order_by('-updated')
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)
