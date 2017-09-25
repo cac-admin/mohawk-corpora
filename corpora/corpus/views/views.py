@@ -134,8 +134,6 @@ class RecordingFileView(RedirectView):
                 except:
                     url = m.audio_file.url
 
-
-
             if url:
                 if self.permanent:
                     return http.HttpResponsePermanentRedirect(url)
