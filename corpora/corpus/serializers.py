@@ -35,9 +35,13 @@ class QualityControlSerializer(serializers.ModelSerializer):
 
 class QualityControRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        qc = value.all()[0]  # Length should always be 1!
-        serializer = QualityControlSerializer(qc, context=self.parent.context)
-        return serializer.data
+        try:
+            qc = value.all()[0]  # Length should always be 1!
+            serializer = QualityControlSerializer(qc, context=self.parent.context)
+            return serializer.data
+        except:
+            pass
+        return None
 
 
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
