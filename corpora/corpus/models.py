@@ -2,12 +2,24 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey,\
                                                GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 from django.contrib.auth.models import User
 from corpora.settings import LANGUAGES, LANGUAGE_CODE
+
+from uuid import uuid4
+
+
+def upload_directory(instance, filename):
+    d = timezone.now()
+    i = str(uuid4())
+    return '{0}/{1}.{2}'.format(
+        d.strftime('%Y/%m/%d/%H/%M'),
+        i,
+        filename.split('.')[-1])
 
 
 class QualityControl(models.Model):
@@ -54,7 +66,7 @@ class Sentence(models.Model):
 class Recording(models.Model):
     person = models.ForeignKey('people.Person')
     sentence = models.ForeignKey('Sentence')
-    audio_file = models.FileField()
+    audio_file = models.FileField(upload_to=upload_directory)
     quality_control = GenericRelation(QualityControl, related_query_name='recording')
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
