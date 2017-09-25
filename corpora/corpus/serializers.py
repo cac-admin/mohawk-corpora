@@ -62,9 +62,12 @@ class RecordingSerializer(serializers.ModelSerializer):
     )
     quality_control = QualityControRelatedField(
         many=False,
-        read_only=True
+        read_only=True,
+
     )
+    audio_file_url = serializers.CharField(source='get_recording_file_url',
+                                           read_only=True)
 
     class Meta:
         model = Recording
-        fields = ('person', 'sentence', 'audio_file', 'quality_control')
+        fields = ('person', 'sentence', 'audio_file_url', 'quality_control', 'id')

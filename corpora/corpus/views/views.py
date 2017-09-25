@@ -12,6 +12,13 @@ from corpus.models import Recording, Sentence
 from people.models import Person
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person
+from django.conf import settings
+
+from django import http
+from django.shortcuts import get_object_or_404
+from django.views.generic import RedirectView
+
+from boto.s3.connection import S3Connection
 
 import logging
 logger = logging.getLogger('corpora')
@@ -31,10 +38,6 @@ class SentenceListView(ListView):
         context['user'] = user
         context['uuid'] = self.request.get_signed_cookie('uuid', 'none')
         return context
-
-
-
-
 
 
 def submit_recording(request):
@@ -104,3 +107,43 @@ def record(request):
 
     return response
 
+
+class RecordingFileView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, **kwargs):
+        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID,
+                          settings.AWS_SECRET_ACCESS_KEY,
+                          is_secure=True)
+        # Create a URL valid for 60 seconds.
+        return s3.generate_url(60, 'GET',
+                               bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                               key=kwargs['filepath'],
+                               force_http=True)
+
+    def get(self, request, *args, **kwargs):
+        m = get_object_or_404(Recording, pk=kwargs['pk'])
+        u = request.user
+
+        if u.is_authenticated() and u.is_staff:
+            try:
+                logger.debug(m.audio_file.filename)
+                logger.debug(m.audio_file.path)
+                url = self.get_redirect_url(filepath=m.audio_file.path)
+            except:
+                url = m.audio_file.url
+
+            if url:
+                if self.permanent:
+                    return http.HttpResponsePermanentRedirect(url)
+                else:
+                    return http.HttpResponseRedirect(url)
+            else:
+                logger.warning('Gone: %s', self.request.path,
+                               extra={
+                                'status_code': 410,
+                                'request': self.request
+                               })
+                return http.HttpResponseGone()
+        else:
+            raise http.Http404

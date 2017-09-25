@@ -78,3 +78,11 @@ class Recording(models.Model):
 
     def __unicode__(self):
         return self.sentence.text + " by " + self.person.full_name
+
+    def get_recording_file_url(self):
+        from django.urls import reverse
+        from django.contrib.sites.models import Site
+        current_site = Site.objects.get_current()
+        return "https://{1}{0}".format(
+            reverse('corpus:recording_file', kwargs={'pk': self.pk}),
+            current_site.domain)
