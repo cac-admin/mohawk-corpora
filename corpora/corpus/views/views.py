@@ -112,8 +112,8 @@ class RecordingFileView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, **kwargs):
-        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID,
-                          settings.AWS_SECRET_ACCESS_KEY,
+        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
+                          settings.AWS_SECRET_ACCESS_KEY_S3,
                           is_secure=True)
         # Create a URL valid for 60 seconds.
         return s3.generate_url(60, 'GET',

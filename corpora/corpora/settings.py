@@ -109,6 +109,9 @@ AWS_SECRET_ACCESS_KEY =     os.environ['AWS_SECRET']
 AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 
+# S3 only access
+AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
+AWS_SECRET_ACCESS_KEY_S3 =     os.environ['AWS_SECRET_S3']
 
 
 # Database
