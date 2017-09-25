@@ -22,7 +22,7 @@
             {% for recording in recordings %}
             <div class="recording">
                 {{recording.sentence}} <br>
-                <audio preload='none' controls><source src="{{recording.audio_file.url}}" ></audio>
+                <audio preload='none' controls><source src="{% url 'corpus:recording_file' recording.pk %}" ></audio>
             </div>
             {% endfor %}
             {% else %}

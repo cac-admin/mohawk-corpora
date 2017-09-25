@@ -124,13 +124,17 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        logger.debug(m.audio_file.name)
-        logger.debug(m.audio_file.url)
         if u.is_authenticated() and u.is_staff:
             try:
-                url = self.get_redirect_url(filepath=m.audio_file.name)
-            except:
+                url = m.audio_file.path
                 url = m.audio_file.url
+            except:
+                try:
+                    url = self.get_redirect_url(filepath=m.audio_file.name)
+                except:
+                    url = m.audio_file.url
+
+
 
             if url:
                 if self.permanent:
