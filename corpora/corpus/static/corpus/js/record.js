@@ -54,11 +54,11 @@ if (!Recorder.isRecordingSupported()) {
 			// Stop recorder if active and set recording state to false
 			recording = false
 			recorder.stop();
-
+			
 			$('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
 			$('.circle-text.record').show();
 			$('.stop-square').hide();
-
+			$('.redo').removeClass('disabled');
 			$('#play-button').show();
 			$('#record-button').hide();
 		}
