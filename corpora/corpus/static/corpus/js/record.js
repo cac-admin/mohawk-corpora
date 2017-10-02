@@ -150,14 +150,7 @@ if (!Recorder.isRecordingSupported()) {
 }
 
 // visualiser setup - create web audio api context and canvas
-var canvas = document.querySelector('.visualizer');
-var audioCtx = new (window.AudioContext || webkitAudioContext)();
-var canvasCtx = canvas.getContext("2d");
-
 // pinched from https://github.com/mdn/web-dictaphone/blob/gh-pages/scripts/app.js
-
-
-
 var audioCTX = new (window.AudioContext || webkitAudioContext)();
 var canvas = document.querySelector('.visualizer');
 var canvacCTX = canvas.getContext("2d");
@@ -215,11 +208,21 @@ function visualize2(stream){
 }
 
 
+if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
+    // if (browserRatio >=1.5) {
+    //     $container.css('min-height', '360px');
+    // } else {
+    //     $container.css('min-height', '555px');
+    // }
+
+} else {
 	navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
-					function(mediaStream){
-						visualize2(mediaStream);
-					}
-				);
+		function(mediaStream){
+			visualize2(mediaStream);
+			}
+	);
+}
+
 
 
