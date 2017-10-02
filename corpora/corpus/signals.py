@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import Sentence, Recording, QualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-
+from corpus.tasks import set_recording_length
 
 @receiver(models.signals.post_save, sender=Sentence)
 @receiver(models.signals.post_save, sender=Recording)
@@ -80,7 +80,15 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
 
 
 @receiver(models.signals.post_save, sender=Recording)
-def set_sentence_text_when_recording_created(sender, instance, created, **kwargs):
+def set_sentence_text_when_recording_created(
+        sender, instance, created, **kwargs):
     if created:
         instance.sentence_text = instance.sentence.text
         instance.save()
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def set_recording_length_on_save(sender, instance, created, **kwargs):
+    if instance.audio_file:
+        if instance.duration <= 0:
+            set_recording_length.apply_async(args=[instance.pk], countdown=10)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 08:19+0000\n"
+"POT-Creation-Date: 2017-10-02 10:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,23 +61,27 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:49
+#: corpora/templates/corpora/logged_in_nav_buttons.html:48
+msgid "Stats"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:56
 msgid "Admin"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:58
+#: corpora/templates/corpora/logged_in_nav_buttons.html:65
 msgid "Edit Info"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:72
+#: corpora/templates/corpora/logged_in_nav_buttons.html:79
 msgid "Language"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:95
+#: corpora/templates/corpora/logged_in_nav_buttons.html:102
 msgid "Log Out"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:103
+#: corpora/templates/corpora/logged_in_nav_buttons.html:110
 msgid "Log In"
 msgstr ""
 

@@ -402,3 +402,47 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10
 }
+
+
+# CELERY #
+# taken from
+# https://github.com/celery/celery/blob/3.1/examples/django/proj/settings.py
+# Celery settings
+#             transport://userid:password@hostname:port/virtual_host
+CELERY_BROKER_URL = 'amqp://%s:%s@%s:%s/%s' % (
+    os.environ['CELERY_USER'],
+    os.environ['CELERY_PASSWORD'],
+    os.environ['CELERY_HOST'],
+    os.environ['CELERY_PORT'],
+    os.environ['CELERY_VHOST'])
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# two bottom properties are for logging,
+# http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html#using-celery-with-django
+# CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'cache+memcached://%s:%s/' % (
+    os.environ['DJANGO_MEMCACHED_IP'],
+    os.environ['DJANGO_MEMCACHED_PORT'])
+
+# CELERY_RESULT_BACKEND = 'amqp'
+CELERY_TASK_RESULT_EXPIRES = 21600  # 6 hours.
+# CELERY_ROUTES = {
+#     'media.tasks.create_media_item_version_async': {
+#         'queue': os.environ['CELERY_MEDIA_QUEUE']
+#     },
+#     # 'media.tasks.check_all_media_items_async': {
+#    'queue': os.environ['CELERY_MEDIA_QUEUE']},
+# }
+CELERY_TIMEZONE = TIME_ZONE
+
+# if 'media' in os.environ['SERVER_TYPE']:
+#     CELERYD_PREFETCH_MULTIPLIER = 1
+#     CELERYD_TASK_SOFT_TIME_LIMIT = 60*60*4
+
+# from media.scheduled_tasks import *
+# from company.scheduled_tasks import *

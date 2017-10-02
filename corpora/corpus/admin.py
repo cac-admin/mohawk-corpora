@@ -54,4 +54,6 @@ class SentenceAdmin(admin.ModelAdmin):
     num_recordings.admin_order_field = 'recording__count'
 
 
-admin.site.register(Recording)
+@admin.register(Recording)
+class RecordingAdmin(admin.ModelAdmin):
+    readonly_fields = ('duration',)
