@@ -1,0 +1,41 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress sass_tags i18n %}
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+</style>
+{% endaddtoblock %}
+  
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>{% trans "Stats" %}</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h4>Recordings:</h4>
+        <ul>
+          <li>Number: {{num_recordings}}</li>
+          <li>Length: {{total_seconds}} seconds</li>
+        </ul>
+      <h4>Sentences</h4>
+        <ul>
+          <li>Number: {{num_sentences}}</li>
+          <li>Approved: {{approved_sentences}}</li>
+        </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
+{% endblock %}

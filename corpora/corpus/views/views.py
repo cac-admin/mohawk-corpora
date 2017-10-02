@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 import json
 from django.views.generic.list import ListView
 
-from corpus.models import Recording, Sentence
+from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person
@@ -19,6 +19,10 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
+
+import wave
+import contextlib
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -148,3 +152,35 @@ class RecordingFileView(RedirectView):
                 return http.HttpResponseGone()
         else:
             raise http.Http404
+
+
+class StatsView(ListView):
+    model = QualityControl
+
+    def get_context_data(self, **kwargs):
+        context = super(StatsView, self).get_context_data(**kwargs)
+        user = self.request.user
+
+        # qc = self.get_queryset()
+        # qc_s = qc.filter(content_type='sentence')
+        # qc_r = qc.filter(content_type='recording')
+
+        sentences = Sentence.objects.all()
+        recordings = Recording.objects.all()
+
+        length = 0
+        for recording in recordings:
+            with contextlib.closing(wave.open(recording.audio_file, 'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                length = length + frames / float(rate)
+
+        approved_sentences = sentences.filter(quality_control__approved=True)
+
+        context['user'] = user
+        context['num_recordings'] = len(recordings)
+        context['num_sentences'] = len(sentences)
+        context['approved_sentences'] = len(approved_sentences)
+        context['total_seconds'] = int(length)
+
+        return context
