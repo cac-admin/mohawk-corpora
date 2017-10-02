@@ -38,7 +38,6 @@ if (!Recorder.isRecordingSupported()) {
 	var recorder = new Recorder({
 		// encoderPath: '/static/corpora/js/encodeWaveWorker.js',
 		encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
-		leaveStreamOpen: true,
 		encoderSampleRate: sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
 	});
 	
@@ -96,6 +95,10 @@ if (!Recorder.isRecordingSupported()) {
 		recorder.stop();
 		recorder.clearStream();
 		recorder.initStream();
+
+		audio.pause();
+
+
 		$('#play-button').hide();
 		$('#record-button').show();
 		$('.redo').addClass('disabled');
