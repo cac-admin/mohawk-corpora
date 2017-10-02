@@ -1,7 +1,9 @@
 @import '_colors.scss';
 @import '_text.scss';
 
-
+.jumbotron{
+	margin: 0px;
+}
 
 .jumbotron div[class*='col']{
 	text-align: center;
@@ -61,23 +63,4 @@ div[class*='-card']  .button{
 	margin-top: 0px;
 }
 
-
-.footer{
-	background-color: darken($darker, 10%);
-	color: $lighter;
-	font-size: 14px;
-	padding: 30px 0px 30px 0px;
-}
-
-.footer h4{
-	color: lighten($lightest, 20%);
-}
-
-.footer a{
-	color: $lighter;
-}
-
-.footer a:hover{
-	text-decoration: underline;
-}
 

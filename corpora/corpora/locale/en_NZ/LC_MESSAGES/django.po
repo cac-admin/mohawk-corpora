@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 02:46+0000\n"
+"POT-Creation-Date: 2017-10-02 00:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,70 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/settings.py:230
+#: corpora/settings.py:250
 msgid "Maori"
 msgstr ""
 
-#: corpora/settings.py:231
-msgid "New Zealand English"
+#: corpora/templates/corpora/home.html:15
+msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/urls.py:37
-msgid "^people/"
+#: corpora/templates/corpora/home.html:60
+msgid ""
+"Corpora.io is an opensource app designed to collect spoken \n"
+"      corpora&mdash;vocal recordings&mdash;to train computers to "
+"understand \n"
+"      spoken languages through machine learning. This project started in an "
+"effort\n"
+"      to automate the transcription of thousands of hours of te reo Māori "
+"archives\n"
+"      available at <a href=\"https://tehiku.nz\">tehiku.nz</a> and to "
+"enhance access \n"
+"      to Māori media. We also wanted to bring te reo Māori, and other "
+"indigenous languages,\n"
+"      to voice operated digital assistants like Siri."
 msgstr ""
+
+#: corpora/templates/corpora/home.html:69
+msgid "Available Languages"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:70
+msgid "Translations for corpora.io are provided in the following langauges:"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:27
+msgid "Record"
+msgstr "Rekoata"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:34
+msgid "Sentences"
+msgstr "Ngā Rerenga Kōrero"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:41
+msgid "Profile"
+msgstr "Whakaritenga"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:49
+msgid "Admin"
+msgstr "Whakahaere"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:58
+msgid "Edit Info"
+msgstr "Whakarerekē"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:72
+msgid "Language"
+msgstr "Reo"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:95
+msgid "Log Out"
+msgstr "Takiputa"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:103
+msgid "Log In"
+msgstr "Takiuru"
+
+#: corpora/urls.py:26
+msgid "^people/"
+msgstr "tangata"

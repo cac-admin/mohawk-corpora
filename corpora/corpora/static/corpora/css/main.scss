@@ -4,12 +4,8 @@
 @import '_browser_style_changes';
 
 body {
-	background-color: $background_light;
+	background-color: $darkest;
 	color: $darkest
-}
-
-div.content{
-	margin-top: 30px;
 }
 a {
 	text-decoration: none;
@@ -17,9 +13,18 @@ a {
 }
 
 a:visited, a:active, a:hover {
-
 	text-decoration: none;
 }
+
+a:hover {
+	color: $brand_light;
+}
+
+div.content{
+	background-color: $background_light;
+	padding: 30px 0px 30px 0px;
+}
+
 
 // Buttons
 .banner {
@@ -33,12 +38,10 @@ a:visited, a:active, a:hover {
 	text-align: center;
 	text-decoration: none;
 	border: none;
-	padding: 3px 0px 3px 0px;
+	padding: 8px 15px;
 	margin-top: 20px;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
-	transition: all 0.1s ease-in-out;
 	outline: none;
-	padding: 15px;
 }
 
 .btn-default {
@@ -47,7 +50,6 @@ a:visited, a:active, a:hover {
 	outline: none;
 	border-color: $brand_complement_dark;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
-	transition: all 0.1s ease-in-out;
 }
 
 
@@ -57,7 +59,6 @@ a:visited, a:active, a:hover {
 	outline: none;
 	border-color: $dark;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
-	transition: all 0.1s ease-in-out;
 }
 
 
@@ -89,12 +90,13 @@ a:visited, a:active, a:hover {
 }
 
 .error-message, .errorlist {
-	animation: error-flash 1s ease-in-out both;
+	animation: error-flash .5s ease-in;
+	color: $light;
 }
 
 @keyframes error-flash {
-	from { background-color: $lighter; color: $darker }
-	to { background-color: none; color: $lighter }
+	from { background-color: $lightest; color: $lighter; }
+	to { background-color: none; color: $light; }
 }
 
 
@@ -109,11 +111,11 @@ input[type="text"], input[type="password"], input[type="email"] {
 	padding: 20px 20px 2px 5px;
 
 
-	border-bottom: solid 2px $light;
+	border-bottom: solid 2px $dark;
 	transition: border 0.2s;
 	
 	font-size: 20px;
-	color: $light;
+	color: $dark;
 }
 
 .input-form:focus,
@@ -129,7 +131,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 }
 
 @mixin placeholder(){
-   color: $lighter;
+   color: $light;
    opacity: 0.5;
 }
 

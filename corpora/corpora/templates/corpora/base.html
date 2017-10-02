@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width" />
 
-  <title>corpora.io</title>
+  <title>{% block title %}corpora.io{% endblock %}</title>
 
   {# Uses sekizai to load all css at start of page & compressor to minify it #}
   {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
@@ -34,17 +34,15 @@
 
 <body>
 
-  
   {% block navbuttons %}{% endblock %}
-
-  <div class="content">
-    {% block content %}
-    {% endblock%}
-  </div>
+  <div class="header">{% block header %}{% endblock %}</div>
+  <div class="content">{% block content %}{% endblock %}</div>
+  <div class="footer">{% block footer %}{% endblock %}</div>
 
   {# Uses sekizai to load all js at end of page #}
   {% render_block "js" %}
   {% render_block "js-end" %}
+
 </body>
 
 </html>
