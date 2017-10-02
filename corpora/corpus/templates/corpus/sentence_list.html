@@ -1,15 +1,8 @@
 {% extends 'corpus/base.html' %}
-
-{% load static %}
-{% load sekizai_tags %}
-{% load compress %}
-{% load sass_tags %}
+{% load static sekizai_tags compress sass_tags i18n %}
 
 
 {% block content %}
-{% addtoblock "css" %}
-{% endaddtoblock %}
-
 
 {% addtoblock "css" %}
 <style type="text/x-scss">
@@ -18,13 +11,20 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 
-.content{
-  margin-top: 30px;
+div.content{
+  padding: 60px 0px 60px 0px;
 }
+
+.footer{}
 
 .disabled{
   display: none;
 }
+
+.container.sentence{
+  min-height: 500px;  
+}
+
 .sentence-block{
   text-align: center;
   margin-top: 30px;
@@ -134,11 +134,11 @@
 
 </style>
 {% endaddtoblock %}
-
-<div class="container">
+  
+<div class="container sentence">
   <div class="row">
     <div class="col">
-      <h1>Sentences</h1>
+      <h1>{% trans "Sentences" %}</h1>
     </div>
   </div>
 
@@ -150,13 +150,13 @@
         data-toggle="popover" 
         data-trigger="hover" 
         title="Save" 
-        data-content="Save changes."
+        data-content="{% trans 'Save changes.' %}"
         ><i class="fa fa-save fa-fw"></i></a>      
       <a href="#" class="approve"
         data-toggle="popover" 
         data-trigger="hover" 
         title="Approve" 
-        data-content="Approve for recording?"
+        data-content="{% trans 'Approve for recording?' %}"
         ><i class="fa fa-check-circle-o fa-fw"></i></a>
       {% else %}
       <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
@@ -200,7 +200,7 @@ class Sentences{
     this.base_sentence_url = '/api/sentences/'
     this.url_filter_query = {% if user.can_approve %}'?quality_control__approved=False'{% else %}''{% endif %}
     this.next_url = null
-    $(sentence_block).slideUp(0);
+    $(sentence_block).fadeOut(0);
   }
 
   get_sentences(){
@@ -243,8 +243,8 @@ class Sentences{
   }
 
   all_done(){
-    $(sentence_block).text('All done.')
-    $(sentence_block).slideDown('disabled')
+    $(sentence_block).text('{% trans "All done."%}')
+    $(sentence_block).fadeIn('disabled')
   }
 
   show_next_sentence(){
@@ -261,7 +261,7 @@ class Sentences{
       $(input_elm).val(this.sentence.text);
       $(input_elm).text(this.sentence.text);
       $(sentence_block).find('.sentence').append(input_elm)
-      $(sentence_block).slideDown('fast');
+      $(sentence_block).fadeIn('fast');
       $(sentence_block).find('.approve').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()
         console.log('clicked')
@@ -318,7 +318,7 @@ class Sentences{
         console.log(e.responseText)
       }
     }).done(function(){
-      $(sentence_block).slideUp('fast');
+      // $(sentence_block).fadeOut('fast');
       self.next();
     }).fail(function(){
       console.log('Failed.')

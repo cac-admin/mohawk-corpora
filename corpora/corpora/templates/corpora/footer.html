@@ -1,0 +1,60 @@
+{% load sekizai_tags %}
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+.footer{
+  background-color: $darkest;
+  color: $lighter;
+  font-size: 14px;
+  padding: 30px 0px 30px 0px;
+}
+
+.footer h4{
+  color: lighten($lightest, 20%);
+}
+
+.footer a{
+  color: $lighter;
+}
+
+.footer a:hover{
+  text-decoration: underline;
+}
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+
+  <div class="row"> 
+      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+        <h4>Site Map</h4>
+        <p><a href="{% url 'account_login' %}">Login</a> / <a href="{% url 'account_signup' %}">Sign-Up</a></p>
+        <p><a href="{% url 'corpus:record' %}">Record</a></p>
+        <p><a href="{% url 'corpus:sentence-list' %}">Verify Sentences</a></p>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+        <h4>Get Involved</h4>
+        <p><a href="https://github.com/TeHikuMedia/corpora">GitHub</a></p>
+        <p><a href="https://github.com/TeHikuMedia/corpora/tree/translate">Translate</a></p>
+        <p>Wānanga</p>        </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+        <h4>Supporters</h4>
+        <p><a href="https://tehiku.nz">Te Hiku Media</a></p>
+        <p><a href="https://www.dragonfly.co.nz/">Dragonfly Data Science</a></p>
+        <p><a href="http://www.tepunahamatatini.ac.nz/">Te Punaha Matatini</a></p>
+        <p><a href="https://www.tpk.govt.nz/en/">Te Puni Kōkiri</a></p>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+        <h4>Powered by</h4>
+        <p><a href="https://www.djangoproject.com/">Django</a></p>
+      </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-12" style="text-align: center; padding-top: 15px;">
+      Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content collected at corpora.io falls under our Kaitiaki License.
+    </div>
+  </div>
+
+</div>

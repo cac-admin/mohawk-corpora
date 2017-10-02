@@ -1,13 +1,8 @@
 {% extends "account/base.html" %}
+{% load i18n account socialaccount static sekizai_tags compress sass_tags %}
 
-{% load i18n %}
-{% load account socialaccount %}
-{% load static %}
-{% load sekizai_tags %}
-{% load compress %}
-{% load sass_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block title %}{% trans "Sign In" %}{% endblock %}
 
 {% block account_content %}
 
@@ -15,7 +10,7 @@
 
   {% get_providers as socialaccount_providers %}
 
-  <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;">
+  <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;" id="login_form">
     {% csrf_token %}
 
     {{form.as_p}}
@@ -25,12 +20,12 @@
     {% endif %}
 
     <a class="secondaryAction" href="{% url 'account_reset_password' %}">
-      <h3 style="opacity: 0.5">{% trans "Forgot Password?" %}</h3>
+      {% trans "Forgot Password?" %}<br>
     </a>
     
-    <button class="primaryAction button" type="submit" style="max-width: 200px;">
+    <a class="btn btn-default btn-lg" href="javascript:{}" onclick="document.getElementById('login_form').submit();">
         {% trans "Sign In" %}
-    </button>
+    </a>
 
   </form>
 

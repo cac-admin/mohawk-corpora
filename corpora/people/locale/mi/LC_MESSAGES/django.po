@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 02:46+0000\n"
+"POT-Creation-Date: 2017-10-02 00:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,83 +17,83 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: people/models.py:30
+#: people/models.py:35
 msgid "Full Name"
-msgstr ""
+msgstr "Ingoa"
 
-#: people/models.py:33
+#: people/models.py:39
 msgid "Person"
-msgstr ""
+msgstr "He Tāngata"
 
-#: people/models.py:34
+#: people/models.py:40
 msgid "People"
-msgstr ""
+msgstr "Ngā tāngata"
 
-#: people/models.py:42
+#: people/models.py:48
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:43
+#: people/models.py:49
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:44
+#: people/models.py:50
 msgid "Other"
 msgstr ""
 
-#: people/models.py:45
+#: people/models.py:51
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:46
+#: people/models.py:52
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:47
+#: people/models.py:53
 msgid "Asexual"
-msgstr ""
+msgstr "Kore ai"
 
-#: people/models.py:50
-msgid "When were you born?"
+#: people/models.py:57
+msgid "How old are you?"
 msgstr "Ehia ngā tau?"
 
-#: people/models.py:51
+#: people/models.py:58
 msgid "Gender"
 msgstr ""
 
-#: people/models.py:59
+#: people/models.py:67
 msgid "Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:60
+#: people/models.py:68
 msgid "Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:61
+#: people/models.py:69
 msgid "Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:62
+#: people/models.py:70
 msgid "Near Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:63
+#: people/models.py:71
 msgid "Near Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:64
+#: people/models.py:72
 msgid "Near Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:65
+#: people/models.py:73
 msgid "Second Language Learner - Beginner"
 msgstr ""
 
-#: people/models.py:66
+#: people/models.py:74
 msgid "Second Language Learner - Intermediate"
 msgstr ""
 
-#: people/models.py:67
+#: people/models.py:75
 msgid "Second Language Learner - Advanced"
 msgstr ""
 
@@ -237,34 +237,31 @@ msgid ""
 "\"%(email_url)s\">issue a new e-mail confirmation request</a>."
 msgstr ""
 
-#: people/templates/account/login.html:10
-#: people/templates/account/login.html:14
-#: people/templates/account/login.html:54
+#: people/templates/account/login.html:5 people/templates/account/login.html:9
+#: people/templates/account/login.html:27
 msgid "Sign In"
 msgstr ""
 
-#: people/templates/account/login.html:19
-msgid ""
-"Please sign in with one\n"
-"  of your existing third party accounts: "
+#: people/templates/account/login.html:23
+msgid "Forgot Password?"
+msgstr "Kua wareware kupuhia?"
+
+#: people/templates/account/login.html:35
+msgid "You can also sign in with: "
 msgstr ""
 
-#: people/templates/account/login.html:30
+#: people/templates/account/login.html:45
 #, python-format
 msgid ""
-"Or, <a href=\"%(signup_url)s\">sign up</a>\n"
-"  for a %(site_name)s account and sign in below:"
+"Don't have an account?<br><a href=\"%(signup_url)s\">Sign Up</a>\n"
+"  "
 msgstr ""
 
-#: people/templates/account/login.html:36
+#: people/templates/account/login.html:51
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"
 "  <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
-
-#: people/templates/account/login.html:50
-msgid "Forgot Password?"
 msgstr ""
 
 #: people/templates/account/logout.html:5
@@ -408,7 +405,9 @@ msgid "Sign Up Closed"
 msgstr ""
 
 #: people/templates/account/signup_closed.html:10
-msgid "We are sorry, but the sign up is currently closed."
+msgid ""
+"We're not taking sign ups. If you're keen to get involved please <a href="
+"\"mailto:info@tehiku.nz?subject=corpora.io\">contact</a> us. "
 msgstr ""
 
 #: people/templates/account/snippets/already_logged_in.html:5
@@ -455,32 +454,7 @@ msgid ""
 "mail address</a>."
 msgstr ""
 
-#: people/templates/people/base.html:18
-msgid "Profile"
-msgstr ""
-
-#: people/templates/people/base.html:19
-#: people/templates/people/profile.html:42
-msgid "Record"
-msgstr ""
-
-#: people/templates/people/base.html:30
-msgid "Language"
-msgstr ""
-
-#: people/templates/people/base.html:51
-msgid "Edit Info"
-msgstr ""
-
-#: people/templates/people/base.html:55
-msgid "Admin"
-msgstr ""
-
-#: people/templates/people/base.html:60
-msgid "Log Out"
-msgstr ""
-
-#: people/templates/people/choose_language.html:62
+#: people/templates/people/choose_language.html:57
 msgid "Delete"
 msgstr ""
 
@@ -512,11 +486,18 @@ msgstr ""
 msgid "Sentences"
 msgstr ""
 
+#: people/templates/people/profile.html:42
+msgid "Record"
+msgstr ""
+
 #: people/templates/people/profile.html:47
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr ""
 
-#: people/views.py:75
+#: people/views/views.py:75
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "%(month)s %(day)s i tēnei rā."
+
+#~ msgid "When were you born?"
+#~ msgstr "Ehia ngā tau?"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 02:46+0000\n"
+"POT-Creation-Date: 2017-10-02 00:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,63 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/templates/corpus/base.html:18
-msgid "Profile"
+#: corpus/templates/corpus/record.html:86
+msgid "Redo"
 msgstr ""
 
-#: corpus/templates/corpus/base.html:19
-msgid "Record"
+#: corpus/templates/corpus/record.html:89
+msgid "Save"
 msgstr ""
 
-#: corpus/templates/corpus/base.html:30
-msgid "Language"
+#: corpus/templates/corpus/record.html:92
+msgid "Skip"
 msgstr ""
 
-#: corpus/templates/corpus/base.html:51
-msgid "Edit Info"
+#: corpus/templates/corpus/sentence_list.html:141
+msgid "Sentences"
+msgstr "Ngā Rerenga Kōrero"
+
+#: corpus/templates/corpus/sentence_list.html:153
+msgid "Save changes."
 msgstr ""
 
-#: corpus/templates/corpus/base.html:55
-msgid "Admin"
+#: corpus/templates/corpus/sentence_list.html:159
+msgid "Approve for recording?"
 msgstr ""
 
-#: corpus/templates/corpus/base.html:60
-msgid "Log Out"
+#: corpus/templates/corpus/sentence_list.html:246
+msgid "All done."
+msgstr ""
+
+#: corpus/views/api.py:19
+#, python-brace-format
+msgid "Only staff can {0}."
+msgstr ""
+
+#: corpus/views/api.py:26
+msgid "POST not allowed."
+msgstr ""
+
+#: corpus/views/api.py:65
+msgid "Only staff can post/put sentences."
+msgstr ""
+
+#: corpus/views/api.py:93
+msgid "Only staff can read recording lists."
+msgstr ""
+
+#: corpus/views/api.py:99
+msgid "Reading recording lists not allowed."
+msgstr ""
+
+#: corpus/views/api.py:104
+msgid "Only staff can read recordings."
+msgstr ""
+
+#: corpus/views/api.py:110
+msgid "You're not allowed to edit this recording."
+msgstr ""
+
+#: corpus/views/api.py:112
+msgid "Reading recording is not allowed."
 msgstr ""

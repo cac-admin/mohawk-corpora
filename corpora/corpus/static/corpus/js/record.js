@@ -28,12 +28,16 @@ if (!Recorder.isRecordingSupported()) {
 	// leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream
 
 	// create an audio context then close it so we can detect microphpne sample rate
-	var dummy_ac = new AudioContext();
-	var sample_rate = dummy_ac.sampleRate;
-	dummy_ac.close();
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	window.audioContext = new AudioContext();
+	// var dummy_ac = new AudioContext();
+	var sample_rate = window.audioContext.sampleRate;
+	console.log(sample_rate)
+	window.audioContext.close();
 
 	var recorder = new Recorder({
-		encoderPath: '/static/corpora/js/encodeWaveWorker.js',
+		// encoderPath: '/static/corpora/js/encodeWaveWorker.js',
+		encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
 		leaveStreamOpen: true,
 		encoderSampleRate: sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
 	});
@@ -45,7 +49,7 @@ if (!Recorder.isRecordingSupported()) {
 			// Start recorder if inactive and set recording state to true
 			recording = true
 			setTimeout(function(){recorder.start()},200);
-			visualize2(recorder.stream)
+
 
 			$('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
 			$('.circle-text.record').hide();
@@ -89,6 +93,9 @@ if (!Recorder.isRecordingSupported()) {
 	});
 
 	$(".redo").click(function() {
+		recorder.stop();
+		recorder.clearStream();
+		recorder.initStream();
 		$('#play-button').hide();
 		$('#record-button').show();
 		$('.redo').addClass('disabled');
@@ -148,58 +155,6 @@ var audioCtx = new (window.AudioContext || webkitAudioContext)();
 var canvasCtx = canvas.getContext("2d");
 
 // pinched from https://github.com/mdn/web-dictaphone/blob/gh-pages/scripts/app.js
-function visualize(stream) {
-  var source = audioCtx.createMediaStreamSource(stream);
-
-  var analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  var bufferLength = analyser.frequencyBinCount;
-  var dataArray = new Uint8Array(bufferLength);
-
-  source.connect(analyser);
-  //analyser.connect(audioCtx.destination);
-
-  draw()
-
-  function draw() {
-    WIDTH = canvas.width
-    HEIGHT = canvas.height;
-
-    requestAnimationFrame(draw);
-
-    analyser.getByteTimeDomainData(dataArray);
-
-    canvasCtx.fillStyle = 'rgb(255,255,255)';
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0,0,0)';
-
-    canvasCtx.beginPath();
-
-    var sliceWidth = WIDTH * 1.0 / bufferLength;
-    var x = 0;
-
-
-    for(var i = 0; i < bufferLength; i++) {
- 
-      var v = dataArray[i] / 128.0;
-      var y = v * HEIGHT/2;
-
-      if(i === 0) {
-        canvasCtx.moveTo(x, y);
-      } else {
-        canvasCtx.lineTo(x, y);
-      }
-
-      x += sliceWidth;
-    }
-
-    canvasCtx.lineTo(canvas.width, canvas.height/2);
-    canvasCtx.stroke();
-
-  }
-}
 
 
 
@@ -258,3 +213,13 @@ function visualize2(stream){
 
     renderFrame();  
 }
+
+
+
+	navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
+					function(mediaStream){
+						visualize2(mediaStream);
+					}
+				);
+
+
