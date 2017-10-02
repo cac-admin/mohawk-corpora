@@ -20,9 +20,7 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-import wave
-import contextlib
-
+from django.db.models import Sum
 
 import logging
 logger = logging.getLogger('corpora')
@@ -168,19 +166,14 @@ class StatsView(ListView):
         sentences = Sentence.objects.all()
         recordings = Recording.objects.all()
 
-        length = 0
-        for recording in recordings:
-            with contextlib.closing(wave.open(recording.audio_file, 'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                length = length + frames / float(rate)
+        length = Recording.objects.aggregate(Sum('duration'))
 
         approved_sentences = sentences.filter(quality_control__approved=True)
 
         context['user'] = user
-        context['num_recordings'] = len(recordings)
-        context['num_sentences'] = len(sentences)
-        context['approved_sentences'] = len(approved_sentences)
-        context['total_seconds'] = int(length)
+        context['num_recordings'] = recordings.count()
+        context['num_sentences'] = sentences.count()
+        context['approved_sentences'] = approved_sentences.count()
+        context['total_seconds'] = "{:0.1f}".format(length['duration__sum'])
 
         return context
