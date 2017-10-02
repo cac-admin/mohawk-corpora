@@ -30,3 +30,10 @@ def set_recording_length(recording_pk):
 
     recording.duration = length
     recording.save()
+
+
+@shared_task
+def set_all_recording_durations():
+    recordings = Recording.objects.filter(duration__lte=0)
+    for recording in recordings:
+        set_recording_length(recording.pk)

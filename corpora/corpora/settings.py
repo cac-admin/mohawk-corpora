@@ -444,5 +444,5 @@ CELERY_TIMEZONE = TIME_ZONE
 #     CELERYD_PREFETCH_MULTIPLIER = 1
 #     CELERYD_TASK_SOFT_TIME_LIMIT = 60*60*4
 
-# from media.scheduled_tasks import *
+from corpus.tasks_scheduled import *
 # from company.scheduled_tasks import *

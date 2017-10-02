@@ -91,4 +91,4 @@ def set_sentence_text_when_recording_created(
 def set_recording_length_on_save(sender, instance, created, **kwargs):
     if instance.audio_file:
         if instance.duration <= 0:
-            set_recording_length.apply_async(args=[instance.pk], countdown=10)
+            set_recording_length.apply_async(args=[instance.pk], countdown=3)
