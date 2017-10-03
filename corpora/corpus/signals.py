@@ -6,8 +6,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length
 
-@receiver(models.signals.post_save, sender=Sentence)
-@receiver(models.signals.post_save, sender=Recording)
+
+# @receiver(models.signals.post_save, sender=Sentence)
+# @receiver(models.signals.post_save, sender=Recording)
 def create_quality_control_instance_when_object_created(
         sender, instance, **kwargs):
     qc, created = QualityControl.objects.get_or_create(
@@ -28,16 +29,15 @@ def clear_quality_control_instance_when_object_modified(
         try:
             old_sentence = Sentence.objects.get(pk=instance.pk)
 
-            if not (old_sentence.text == instance.text and \
+            if not (old_sentence.text == instance.text and
                     old_sentence.language == instance.language):
-                qc, qc_created = QualityControl.objects.get_or_create(
-                        object_id=instance.pk,
-                        content_type=ContentType.objects.get_for_model(instance)
-                        )
-                if not qc_created:
+                qcs = QualityControl.objects.filter(
+                    object_id=instance.pk,
+                    content_type=ContentType.objects.get_for_model(instance)
+                    )
+                for qc in qcs:
                     print "Clearing quality control"
-                    qc.clear()
-                    qc.save()
+                    qc.delete()
 
         except ObjectDoesNotExist:
             pass

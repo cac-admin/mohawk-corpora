@@ -25,8 +25,8 @@ def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
 app.conf.beat_schedule = {
-    'set_recording_duration': {
-        'task': 'corpus.tasks.set_all_recording_durations',
-        'schedule': crontab(minute='*', day_of_week="*", hour="*"),
-    },
+    # 'set_recording_duration': {
+    #     'task': 'corpus.tasks.set_all_recording_durations',
+    #     'schedule': crontab(minute='*', day_of_week="*", hour="*"),
+    # },
 }

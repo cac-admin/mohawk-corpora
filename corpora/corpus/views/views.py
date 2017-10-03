@@ -7,11 +7,13 @@ from django.urls import reverse, resolve
 from django.core.exceptions import ValidationError
 import json
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView
+from django.contrib.contenttypes.models import ContentType
 
 from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person
 from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person
+from people.helpers import get_or_create_person, get_person
 from django.conf import settings
 
 from django import http
@@ -20,7 +22,7 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 import logging
 logger = logging.getLogger('corpora')
@@ -36,8 +38,12 @@ class SentenceListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(SentenceListView, self).get_context_data(**kwargs)
         user = self.request.user
+        person = get_person(self.request)
         user.can_approve = user.is_staff
+        ct = ContentType.objects.get(model='sentence')
+        context['content_type'] = ct.id
         context['user'] = user
+        context['person'] = person
         context['uuid'] = self.request.get_signed_cookie('uuid', 'none')
         return context
 
@@ -175,5 +181,26 @@ class StatsView(ListView):
         context['num_sentences'] = sentences.count()
         context['approved_sentences'] = approved_sentences.count()
         context['total_seconds'] = "{:0.1f}".format(length['duration__sum'])
+
+        return context
+
+
+class ListenView(TemplateView):
+    template_name = "corpus/listen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ListenView, self).get_context_data(**kwargs)
+        user = self.request.user
+        person = get_person(self.request)
+
+        # Don't fech recordings the person already listened to
+        recordings = Recording.objects\
+            .exclude(quality_control__person=person)\
+            .annotate(num_qc=Count('quality_control'))\
+            .order_by('num_qc')
+
+        context['user'] = user
+        context['person'] = person
+        context['recordings'] = recordings
 
         return context

@@ -136,10 +136,11 @@ div.content{
 {% endaddtoblock %}
   
 <div class="container sentence">
-  <div class="row">
-    <div class="col">
-      <h1>{% trans "Sentences" %}</h1>
-    </div>
+
+  <div>
+    {% for recording in recordings %}
+    <p>{{recording.num_qc}}, {{recording.sentence.text}}, {{recording.person}}</p>
+    {% endfor %}
   </div>
 
   <div class="row sentence-block disabled">
@@ -200,10 +201,7 @@ class Sentences{
     this.base_sentence_url = '/api/sentences/'
     this.url_filter_query = {% if user.can_approve %}'?quality_control__approved=False'{% else %}''{% endif %}
     this.next_url = null
-    this.quality_control = {}
-    this.quality_control.person = {{ person.id }}
-    this.quality_control.content_type = {{content_type}}
-    $(sentence_block).fadeOut(0)
+    $(sentence_block).fadeOut(0);
   }
 
   get_sentences(){
@@ -312,35 +310,16 @@ class Sentences{
 
   post_qc(data){
     var self = this
-    this.quality_control.object_id = this.sentence.id
-    $.ajax({
-      type: "POST",
-      data: this.quality_control,
-      url: this.base_quality_url,
-      dataType: 'json',
-      error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(XMLHttpRequest.status)
-        console.log(XMLHttpRequest.responseText)
-      }
-    }).done(function(){
-      self.next();
-    }).fail(function(){
-      console.log('Failed.')
-    })
-    return true;    
-  }
-
-  put_qc(data){
-    var self = this
     $.ajax({
       type: "PUT",
-      data: data,
-      url: this.base_quality_url+this.quality_control_id+'/',
+      data: this.sentence.quality_control,
+      url: this.base_quality_url+this.sentence.quality_control.id+'/',
       dataType: 'json',
       error: function(e){
         console.log(e.responseText)
       }
     }).done(function(){
+      // $(sentence_block).fadeOut('fast');
       self.next();
     }).fail(function(){
       console.log('Failed.')
@@ -359,10 +338,8 @@ class Sentences{
       data: this.sentence,
       url: this.base_sentence_url+this.sentence.id+'/',
       dataType: 'json',
-      error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(textStatus.responseText)
-        console.log(XMLHttpRequest)
-        console.log(errorThrown)
+      error: function(e){
+        console.log(e.responseText)
       }
     }).done(function(){
       console.log('Saved')
@@ -372,51 +349,22 @@ class Sentences{
     })
   }
 
-  post_put(){
-    var method = 'POST'
-    this.quality_control.object_id = this.sentence.id
-
-    for (let qc of this.sentence.quality_control){
-      if (qc.person == this.quality_control.person){
-        console.log('Found matching qc ')
-        this.quality_control_id = qc.id
-        this.quality_control.bad += qc.bad
-        this.quality_control.good += qc.good
-        method = 'PUT'
-      } else{
-        
-      }
-    }
-
-    if (method=='POST'){
-      this.post_qc(this.quality_control)
-    } else {
-      this.put_qc(this.quality_control)
-    }
-
-  }
-
   approve(){
-    this.quality_control.approved = true;
-    this.quality_control.good = 0
-    this.quality_control.bad = 0    
-    this.quality_control.approved_by = {{ request.user.id }};
-    console.log(this.quality_control);
-    this.post_put();
+    this.sentence.quality_control.approved = true
+    this.sentence.quality_control.approved_by = {{request.user.id}}
+    this.post_qc();
   }
   up_vote(){
-    this.quality_control.good = 1
-    this.quality_control.bad = 0
-    console.log(this.quality_control);
-    this.post_put();
+    this.sentence.quality_control.good += 1
+    this.post_qc();
   }
 
   down_vote(){
-    this.quality_control.bad = 1
-    this.quality_control.good = 0
-    console.log(this.quality_control);
-    this.post_put();
+    this.sentence.quality_control.bad += 1
+    this.post_qc();
   }
+
+
 
 }
 

@@ -24,16 +24,16 @@
     <li class="nav-item">
       <a href="{% url 'corpus:record' %}" class="nav-link" >
         <i class="fa fa-lg fa-fw fa-microphone"></i>
-        <div >{% trans 'Record' %}</div>
+        <div >{% trans 'Speak' %}</div>
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="{% url 'corpus:sentence-list' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-font"></i>
-        <div >{% trans 'Sentences' %}</div>
+      <a href="{% url 'corpus:listen' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-volume-up"></i>
+        <div >{% trans 'Listen' %}</div>
       </a>
-    </li>    
+    </li>  
 
     <li class="nav-item">
       <a class="nav-link" href="{% url 'people:profile' %}" >
@@ -42,14 +42,22 @@
       </a>
     </li>
 
+    {% if request.user.is_staff %}
+
+    <li class="nav-item">
+      <a href="{% url 'corpus:sentence-list' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-font"></i>
+        <div >{% trans 'Sentences' %}</div>
+      </a>
+    </li>      
+
     <li class="nav-item">
       <a class="nav-link" href="{% url 'corpus:stats' %}" >
         <i class="fa fa-lg fa-fw fa-bar-chart"></i>
         <div >{% trans 'Stats' %}</div>
       </a>
     </li>
-
-    {% if request.user.is_staff %}
+    
     <li class="nav-item">
       <a class="nav-link" href="/admin" >
         <i class="fa fa-lg fa-fw fa-cogs"></i>
@@ -103,6 +111,21 @@
     </li>
 
 {% else %}
+
+    <li class="nav-item">
+      <a href="{% url 'corpus:record' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-microphone"></i>
+        <div >{% trans 'Speak' %}</div>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'corpus:listen' %}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-volume-up"></i>
+        <div >{% trans 'Listen' %}</div>
+      </a>
+    </li>  
+
     <li class="nav-item">
       <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >
         <i class="fa fa-fw fa-lg fa-sign-in"></i>
