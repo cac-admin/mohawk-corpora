@@ -1,6 +1,6 @@
 from .models import QualityControl, Sentence, Recording
 from rest_framework import serializers
-from django.contrib.contenttypes.models import ContentType
+from people.helpers import get_person
 
 
 class QualityControlHyperLinkedRelatedField(
@@ -44,15 +44,20 @@ class QualityControlSerializer(serializers.ModelSerializer):
 
 class QualityControRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        data = []
         serializer = QualityControlSerializer(value, context=self.parent.context)
         return serializer.data
 
-        qcs = value.all()  # Length should always be 1!
-        for qc in qcs:
-            serializer = QualityControlSerializer(qc, context=self.parent.context)
-            data.append(serializer.data)
+
+class ListenQualityControRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = QualityControlSerializer(value, context=self.parent.context)
+        person = get_person(self.parent.context['request'])
+        data = serializer.data
         return data
+        if person is data['person']:
+            return serializer.data
+        else:
+            return None
 
 
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,6 +69,13 @@ class SentenceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sentence
         fields = ('id', 'text', 'language', 'quality_control', 'updated')
+
+
+class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Sentence
+        fields = ('id', 'text', 'language',)
 
 
 class RecordingSerializer(serializers.ModelSerializer):
@@ -84,4 +96,25 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recording
-        fields = ('person', 'sentence', 'audio_file_url', 'quality_control', 'id')
+        fields = ('person', 'sentence', 'audio_file_url', 'quality_control', 'id', 'sentence_text')
+
+
+class ListenSerializer(RecordingSerializer):
+    sentence = ReadSentenceSerializer(
+        many=False,
+        read_only=True
+    )
+    person = serializers.PrimaryKeyRelatedField(
+        many=False,
+        read_only=True
+    )
+    quality_control = QualityControRelatedField(
+        many=True,
+        read_only=True,
+    )
+    audio_file_url = serializers.CharField(source='get_recording_file_url',
+                                           read_only=True)
+
+    class Meta:
+        model = Recording
+        fields = ('sentence', 'audio_file_url', 'id', 'sentence_text', 'quality_control')

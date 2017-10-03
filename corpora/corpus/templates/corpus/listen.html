@@ -7,6 +7,7 @@
 {% addtoblock "css" %}
 <style type="text/x-scss">
 @import 'corpora/css/colors';
+@import 'corpus/css/record';
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
@@ -30,9 +31,6 @@ div.content{
   margin-top: 30px;
   margin-bottom: 30px;
 
-  div > div{
-    margin-top: 15px;
-  }
   .sentence{
     text-align: left;
     font-size: 1.4em;
@@ -128,6 +126,11 @@ div.content{
       display: none;
     }
 
+    a.auto-play.auto-play-on{
+      background-color: $brand_primary;
+      color: $brand_lightest;
+    }
+
   }
 
 }
@@ -137,16 +140,35 @@ div.content{
   
 <div class="container sentence">
 
-  <div>
-    {% for recording in recordings %}
-    <p>{{recording.num_qc}}, {{recording.sentence.text}}, {{recording.person}}</p>
-    {% endfor %}
-  </div>
-
   <div class="row sentence-block disabled">
     <div class="col-lg-8 sentence"></div>
+    <div class="col-lg-4 play">
+
+        <div class="col-12">
+          <div class="circle-button-container">
+            <div class="circle background-circle">
+                <a href="javascript:void(0)" id="record-button">
+                    <div class="circle foreground-circle unclicked-circle record">
+                        <div class="circle-text"></div>
+                        <div class="stop-square"></div>
+                    </div>
+                </a>
+
+                <a href="javascript:void(0)" id="play-button">
+                    <div class="circle foreground-circle unclicked-circle play">
+                        <div class="play-triangle"></div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        </div>
+
+
+
+    </div>
     <div class="col-lg-4 actions">
-      {% if user.can_approve %}
+      <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
+      {% if user.is_staff %}
       <a href="#" class="save disabled"
         data-toggle="popover" 
         data-trigger="hover" 
@@ -168,6 +190,8 @@ div.content{
   </div>
 
 </div>
+
+<audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}
@@ -192,28 +216,33 @@ $.ajaxSetup({
 var sentence_block = $('.sentence-block').get(0);
 
 
-class Sentences{
+class Listen{
   constructor(){
     this.objects = null
+    this.recording = null
     this.sentence = null
-    this.base_url = '/api/sentences/'
+    this.base_url = '/api/{% if user.is_staff %}recordings{% else %}listen{%endif%}/'
     this.base_quality_url = '/api/qualitycontrol/'
-    this.base_sentence_url = '/api/sentences/'
-    this.url_filter_query = {% if user.can_approve %}'?quality_control__approved=False'{% else %}''{% endif %}
+    this.base_recording_url = '/api/{% if user.is_staff %}recordings{% else %}listen{%endif%}/'
+    this.url_filter_query = {% if user.is_staff %}'?sort_by=listen'{% else %}''{% endif %}
     this.next_url = null
-    $(sentence_block).fadeOut(0);
+    this.quality_control = {}
+    this.quality_control.person = {{ person.id }}
+    this.audio = document.getElementById('play-audio');
+    this.quality_control.content_type = {{content_type}}
+    $(sentence_block).fadeOut(0)
   }
 
-  get_sentences(){
+  get_recordings(){
     var self = this;
-    console.log('Fetching more sentences')
+    console.log('Fetching more recordings')
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
           if (self.objects.length == 0){
-            console.log('No more sentences')
+            console.log('No more recordings')
             self.all_done()
           }
           else{
@@ -225,21 +254,28 @@ class Sentences{
   reload(){
     var self = this
     $.ajax({
-        url: this.base_sentence_url+this.sentence.id+'/'
+        url: this.base_recording_url+this.recording.id+'/'
         }).done(function(d){
           console.log(d)
-          self.sentence.quality_control = d.quality_control
-          self.sentence = d
-          self.show_next_sentence()
+          self.recording.quality_control = d.quality_control
+          self.recording = d
+          self.sentence = d.sentence
+          self.show_next_recording()
     })    
   }
 
   next(){
     if (this.objects == null || this.objects.length==0){
-      this.get_sentences()
+      this.get_recordings()
     } else{
-      this.sentence = this.objects.shift()
-      this.show_next_sentence()
+      this.recording = this.objects.shift()
+      this.sentence = this.recording.sentence
+
+      if (this.recording.sentence_text == ''){
+        this.recording.sentence_text = this.sentence.text
+      }
+
+      this.show_next_recording()
     }
   }
 
@@ -248,19 +284,20 @@ class Sentences{
     $(sentence_block).fadeIn('disabled')
   }
 
-  show_next_sentence(){
+  show_next_recording(){
     var self = this;
     if (this.sentence){
       $(sentence_block).removeClass('disabled')
       $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
       $(sentence_block).find('.sentence .text-area').remove()
-      {% if user.can_approve %}
+      {% if user.is_staff %}
       var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="3">');
       {% else %}
       var input_elm = $('<span class="text-area"></span>');
       {% endif %}
-      $(input_elm).val(this.sentence.text);
-      $(input_elm).text(this.sentence.text);
+
+      $(input_elm).val(this.recording.sentence_text);
+      $(input_elm).text(this.recording.sentence_text);
       $(sentence_block).find('.sentence').append(input_elm)
       $(sentence_block).fadeIn('fast');
       $(sentence_block).find('.approve').off().on('click', function(e){
@@ -268,6 +305,25 @@ class Sentences{
         console.log('clicked')
         self.approve();
       })
+
+      $('#play-button').show();
+
+      $.ajax({
+        type: "GET",
+        url: this.base_recording_url+this.recording.id+'/',
+        dataType: 'json',
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          console.log(textStatus.responseText)
+          console.log(XMLHttpRequest)
+          console.log(errorThrown)
+        }
+      }).done(function(){
+        console.log('gotted')
+      }).fail(function(){
+        console.log('not gotted.')
+      })
+
+      this.audio.src = self.recording.audio_file_url
 
       $(sentence_block).find('.good').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()
@@ -310,16 +366,35 @@ class Sentences{
 
   post_qc(data){
     var self = this
+    this.quality_control.object_id = this.recording.id
+    $.ajax({
+      type: "POST",
+      data: this.quality_control,
+      url: this.base_quality_url,
+      dataType: 'json',
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        console.log(XMLHttpRequest.status)
+        console.log(XMLHttpRequest.responseText)
+      }
+    }).done(function(){
+      self.next();
+    }).fail(function(){
+      console.log('Failed.')
+    })
+    return true;    
+  }
+
+  put_qc(data){
+    var self = this
     $.ajax({
       type: "PUT",
-      data: this.sentence.quality_control,
-      url: this.base_quality_url+this.sentence.quality_control.id+'/',
+      data: data,
+      url: this.base_quality_url+this.quality_control_id+'/',
       dataType: 'json',
       error: function(e){
         console.log(e.responseText)
       }
     }).done(function(){
-      // $(sentence_block).fadeOut('fast');
       self.next();
     }).fail(function(){
       console.log('Failed.')
@@ -329,17 +404,22 @@ class Sentences{
 
   save_sentence(text){
     var self=this
-    var data = this.sentence
-    delete data.quality_control
-    data.text = text
-    console.log(data)
+    this.recording.sentence_text = text
+
+    var data = {
+      id: this.recording.id,
+      sentence_text: text
+    }
+
     $.ajax({
       type: "PUT",
-      data: this.sentence,
-      url: this.base_sentence_url+this.sentence.id+'/',
+      data: data,
+      url: this.base_recording_url+this.recording.id+'/',
       dataType: 'json',
-      error: function(e){
-        console.log(e.responseText)
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        console.log(textStatus.responseText)
+        console.log(XMLHttpRequest)
+        console.log(errorThrown)
       }
     }).done(function(){
       console.log('Saved')
@@ -349,28 +429,108 @@ class Sentences{
     })
   }
 
+  post_put(){
+    var method = 'POST'
+    this.quality_control.object_id = this.recording.id
+
+    if (this.recording.quality_control){
+      for (let qc of this.recording.quality_control){
+        if (qc.person == this.quality_control.person){
+          console.log('Found matching qc ')
+          this.quality_control_id = qc.id
+          this.quality_control.bad += qc.bad
+          this.quality_control.good += qc.good
+          method = 'PUT'
+        } else{
+          
+        }
+      }
+    }
+
+    if (method=='POST'){
+      this.post_qc(this.quality_control)
+    } else {
+      this.put_qc(this.quality_control)
+    }
+
+  }
+
   approve(){
-    this.sentence.quality_control.approved = true
-    this.sentence.quality_control.approved_by = {{request.user.id}}
-    this.post_qc();
+    this.quality_control.approved = true;
+    this.quality_control.good = 0
+    this.quality_control.bad = 0    
+    this.quality_control.approved_by = {{ request.user.id }};
+    console.log(this.quality_control);
+    this.post_put();
   }
   up_vote(){
-    this.sentence.quality_control.good += 1
-    this.post_qc();
+    this.quality_control.good = 1
+    this.quality_control.bad = 0
+    console.log(this.quality_control);
+    this.post_put();
   }
 
   down_vote(){
-    this.sentence.quality_control.bad += 1
-    this.post_qc();
+    this.quality_control.bad = 1
+    this.quality_control.good = 0
+    console.log(this.quality_control);
+    this.post_put();
   }
-
-
 
 }
 
 
-sentences = new Sentences();
-sentences.next()
+
+class Player {
+  constructor(){
+    this.play_button_selector = '#play-button'
+    this.audio_selector = '#play-audio'
+    this.audio = document.getElementById('play-audio');
+
+    var self = this;
+    $(this.play_button_selector).click(function(){
+      self.audio.play();
+      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+    });    
+
+    // When audio is done playing back, revert button to initial state
+    $(this.audio).bind('ended', function(){
+      $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
+    });
+
+    $('a.auto-play').click(function(event){
+      var obj = event.currentTarget
+
+      if ($(obj).hasClass('auto-play-off')){
+        $(obj).removeClass('auto-play-off')
+        $(obj).addClass('auto-play-on')
+      } else {
+        $(obj).removeClass('auto-play-on')
+        $(obj).addClass('auto-play-off')
+      }
+
+    })
+
+    $(this.audio).bind('loadeddata', function(){
+      if ($('a.auto-play').hasClass('auto-play-on')){
+        self.audio.play();
+      } 
+    });
+
+    $(this.audio).bind('play', function(){
+      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+    });
+
+  }
+    
+
+}
+
+
+listen = new Listen();
+listen.next()
+
+player = new Player();
 
 </script>
 {% endaddtoblock %}

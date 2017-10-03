@@ -5,8 +5,10 @@ from people.helpers import get_person
 from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
-                         RecordingSerializer
+                         RecordingSerializer, \
+                         ListenSerializer
 from rest_framework import generics
+from django.core.cache import cache
 
 
 class PutOnlyStaffReadPermission(permissions.BasePermission):
@@ -46,8 +48,12 @@ class SentenceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAdminUser,)
 
 
-class OneResultPagination(pagination.PageNumberPagination):
+class OneHundredResultPagination(pagination.PageNumberPagination):
     page_size = 100
+
+
+class OneResultPagination(pagination.PageNumberPagination):
+    page_size = 1
 
 
 class IsStaffOrReadOnly(permissions.BasePermission):
@@ -69,7 +75,7 @@ class IsStaffOrReadOnly(permissions.BasePermission):
 
 class SentencesView(generics.ListCreateAPIView):
     serializer_class = SentenceSerializer
-    pagination_class = OneResultPagination
+    pagination_class = OneHundredResultPagination
     permission_classes = (IsStaffOrReadOnly,)
 
     def get_queryset(self):
@@ -130,6 +136,8 @@ class RecordingPermissions(permissions.BasePermission):
             return request.user.is_staff
         else:
             if request.method in ['PUT']:
+                if request.user.is_staff:
+                    return True
                 person = get_person(request)
                 if person is not None:
                     self.message = _("You're not allowed to edit this recording.")
@@ -148,11 +156,60 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Recording.objects.all().order_by('-updated')
-        sort_by = self.request.query_params.get('sort_by', None)
+        sort_by = self.request.query_params.get('sort_by', '')
 
-        if sort_by is 'listen':
+        person = get_person(self.request)
+        if 'listen' in sort_by:
             queryset = queryset\
+                .exclude(quality_control__person=person)\
                 .annotate(num_qc=Count('quality_control'))\
                 .order_by('num_qc')
+
+        return queryset
+
+
+class ListenPermissions(permissions.BasePermission):
+    """
+    Model permission to only allow anyone to get a recording.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            self.message = _("{0} not allowed with this API\
+                             endpoint.".format(request.method))
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+
+            # We can create a short lived token here to allow someone to access
+            # the file URL. We will need to store in the cache framework.
+            person = get_person(request)
+            cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
+            return True
+        else:
+            self.message = _("{0} not allowed with this API\
+                             endpoint.".format(request.method))
+            return False
+
+
+class ListenViewSet(RecordingViewSet):
+    """
+    API endpoint that allows a single recording to be viewed.
+    This api obfuscates extra recording information and only provides the
+    recording file link and the id.
+    """
+    pagination_class = OneResultPagination
+    serializer_class = ListenSerializer
+    permission_classes = (ListenPermissions,)
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        queryset = Recording.objects.exclude(quality_control__person=person)
+        queryset = queryset\
+            .annotate(num_qc=Count('quality_control'))\
+            .order_by('num_qc')
 
         return queryset

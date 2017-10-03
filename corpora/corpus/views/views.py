@@ -23,6 +23,7 @@ from django.views.generic import RedirectView
 from boto.s3.connection import S3Connection
 
 from django.db.models import Sum, Count
+from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
@@ -132,7 +133,11 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        if u.is_authenticated() and u.is_staff:
+        p = get_person(request)
+
+        access = cache.get('{0}:{0}:listen'.format(p.uuid, m.id))
+
+        if (u.is_authenticated() and u.is_staff) or (p is m.person) or (access):
             try:
                 url = m.audio_file.path
                 url = m.audio_file.url
@@ -199,6 +204,8 @@ class ListenView(TemplateView):
             .annotate(num_qc=Count('quality_control'))\
             .order_by('num_qc')
 
+        ct = ContentType.objects.get(model='recording')
+        context['content_type'] = ct.id
         context['user'] = user
         context['person'] = person
         context['recordings'] = recordings
