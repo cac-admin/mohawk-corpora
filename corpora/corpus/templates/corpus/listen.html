@@ -45,7 +45,7 @@ div.content{
 
   }
   .actions{
-    text-align: left;
+    text-align: center;
     @include media-breakpoint-down(md) {
       text-align: center;
     }
@@ -141,9 +141,9 @@ div.content{
 <div class="container sentence">
 
   <div class="row sentence-block disabled">
-    <div class="col-lg-8 sentence"></div>
-    <div class="col-lg-4 play">
-
+    <div class="col-lg-7 sentence"></div>
+    
+    <div class="col-lg-5 play">
         <div class="col-12">
           <div class="circle-button-container">
             <div class="circle background-circle">
@@ -162,11 +162,9 @@ div.content{
             </div>
           </div>
         </div>
-
-
-
     </div>
-    <div class="col-lg-4 actions">
+    <div class="col-lg-7"></div>
+    <div class="col-lg-5 actions">
       <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
       {% if user.is_staff %}
       <a href="#" class="save disabled"
@@ -182,11 +180,11 @@ div.content{
         data-content="{% trans 'Approve for recording?' %}"
         ><i class="fa fa-check-circle-o fa-fw"></i></a>
       {% else %}
-      <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
       {% endif %}
+      <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
       <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>      
-
     </div>
+
   </div>
 
 </div>
@@ -271,8 +269,13 @@ class Listen{
       this.recording = this.objects.shift()
       this.sentence = this.recording.sentence
 
-      if (this.recording.sentence_text == ''){
-        this.recording.sentence_text = this.sentence.text
+      if (this.recording.sentence_text == '' || this.recording.sentence_text==null){
+        if (this.sentence==null){
+          this.recording.sentence_text = 'These arent teh droid your looking for'
+          console.log('error')
+          this.next()
+        } else { this.recording.sentence_text = this.sentence.text }
+        
       }
 
       this.show_next_recording()
@@ -291,7 +294,7 @@ class Listen{
       $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
       $(sentence_block).find('.sentence .text-area').remove()
       {% if user.is_staff %}
-      var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="3">');
+      var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
       {% else %}
       var input_elm = $('<span class="text-area"></span>');
       {% endif %}
@@ -327,12 +330,15 @@ class Listen{
 
       $(sentence_block).find('.good').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()
+        $(sentence_block).find('.bad').addClass('disabled').off()        
         console.log('clicked')
         self.up_vote();
       })   
 
       $(sentence_block).find('.bad').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()
+        $(sentence_block).find('.good').addClass('disabled').off()        
+
         console.log('clicked')
         self.down_vote();
       })
