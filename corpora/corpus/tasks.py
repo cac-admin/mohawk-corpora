@@ -57,7 +57,17 @@ def transcode_audio(recording_pk):
     except ObjectDoesNotExist:
         logger.warning('Tried to get recording that doesn\'t exist')
 
-    return encode_audio(recording)
+    if not recording.audio_file_aac:
+        return encode_audio(recording)
+    else:
+        return "Already encoded"
+
+
+@shared_task
+def transcode_all_audio():
+    recordings = Recording.objects.filter(audio_file_aac__isnull=True)
+    for recording in recordings:
+        transcode_audio(recording.pk)
 
 
 def prepare_temporary_environment(recording, test=False):

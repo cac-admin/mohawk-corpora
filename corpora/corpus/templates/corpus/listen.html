@@ -342,7 +342,7 @@ class Listen{
         }
       }).done(function(){
         console.log('gotted')
-        this.audio.src = self.recording.audio_file_url
+        self.audio.src = self.recording.audio_file_url
       }).fail(function(){
         console.log('not gotted.')
         self.next()

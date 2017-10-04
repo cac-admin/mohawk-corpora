@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:00+0000\n"
+"POT-Creation-Date: 2017-10-04 02:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,18 +246,18 @@ msgstr ""
 msgid "Forgot Password?"
 msgstr ""
 
-#: people/templates/account/login.html:35
+#: people/templates/account/login.html:46
 msgid "You can also sign in with: "
 msgstr ""
 
-#: people/templates/account/login.html:45
+#: people/templates/account/login.html:56
 #, python-format
 msgid ""
 "Don't have an account?<br><a href=\"%(signup_url)s\">Sign Up</a>\n"
 "  "
 msgstr ""
 
-#: people/templates/account/login.html:51
+#: people/templates/account/login.html:62
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"

@@ -135,17 +135,21 @@ class RecordingFileView(RedirectView):
         u = request.user
         p = get_person(request)
 
+        audio_file = m.audio_file
+        if m.audio_file_aac:
+            audio_file = m.audio_file_aac
+
         access = cache.get('{0}:{0}:listen'.format(p.uuid, m.id))
 
         if (u.is_authenticated() and u.is_staff) or (p is m.person) or (access):
             try:
-                url = m.audio_file.path
-                url = m.audio_file.url
+                url = audio_file.path
+                url = audio_file.url
             except:
                 try:
-                    url = self.get_redirect_url(filepath=m.audio_file.name)
+                    url = self.get_redirect_url(filepath=audio_file.name)
                 except:
-                    url = m.audio_file.url
+                    url = audio_file.url
 
             if url:
                 if self.permanent:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:00+0000\n"
+"POT-Creation-Date: 2017-10-04 02:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: corpus/admin.py:69 corpus/models.py:130 corpus/models.py:136
+msgid "None"
+msgstr ""
+
+#: corpus/templates/corpus/listen.html:194
+#: corpus/templates/corpus/sentence_list.html:153
+msgid "Save changes."
+msgstr ""
+
+#: corpus/templates/corpus/listen.html:200
+#: corpus/templates/corpus/sentence_list.html:159
+msgid "Approve for recording?"
+msgstr ""
+
+#: corpus/templates/corpus/listen.html:306
+#: corpus/templates/corpus/sentence_list.html:249
+msgid "All done."
+msgstr ""
+
 #: corpus/templates/corpus/qualitycontrol_list.html:18
 msgid "Stats"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:86
+#: corpus/templates/corpus/record.html:100
 msgid "Redo"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:89
+#: corpus/templates/corpus/record.html:103
 msgid "Save"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:92
+#: corpus/templates/corpus/record.html:106
 msgid "Skip"
 msgstr ""
 
@@ -37,47 +56,59 @@ msgstr ""
 msgid "Sentences"
 msgstr "Ngā Rerenga Kōrero"
 
-#: corpus/templates/corpus/sentence_list.html:153
-msgid "Save changes."
+#: corpus/urls.py:8
+msgid "^record/"
 msgstr ""
 
-#: corpus/templates/corpus/sentence_list.html:159
-msgid "Approve for recording?"
+#: corpus/urls.py:9
+msgid "^listen/"
 msgstr ""
 
-#: corpus/templates/corpus/sentence_list.html:246
-msgid "All done."
+#: corpus/urls.py:15
+#, fuzzy
+#| msgid "Sentences"
+msgid "^sentences/"
+msgstr "Ngā Rerenga Kōrero"
+
+#: corpus/urls.py:17
+msgid "^stats/"
 msgstr ""
 
-#: corpus/views/api.py:19
+#: corpus/views/api.py:22
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr ""
 
-#: corpus/views/api.py:26
-msgid "POST not allowed."
+#: corpus/views/api.py:29
+#, python-brace-format
+msgid "PONIES Method {0} not allowed."
 msgstr ""
 
-#: corpus/views/api.py:65
+#: corpus/views/api.py:72
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:93
+#: corpus/views/api.py:124
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:99
+#: corpus/views/api.py:130
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:104
+#: corpus/views/api.py:135
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:110
+#: corpus/views/api.py:143
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:112
+#: corpus/views/api.py:145
 msgid "Reading recording is not allowed."
+msgstr ""
+
+#: corpus/views/api.py:180 corpus/views/api.py:193
+#, python-brace-format
+msgid "{0} not allowed with this API                             endpoint."
 msgstr ""
