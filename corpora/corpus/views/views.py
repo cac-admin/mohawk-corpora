@@ -40,8 +40,7 @@ class SentenceListView(ListView):
         context = super(SentenceListView, self).get_context_data(**kwargs)
         user = self.request.user
         person = get_person(self.request)
-        user.can_approve = user.is_staff
-        user.is_authenticated = user.is_authenticated()
+        user.can_approve = user.is_staff and user.is_authenticated()
         ct = ContentType.objects.get(model='sentence')
         context['content_type'] = ct.id
         context['user'] = user
@@ -209,6 +208,8 @@ class ListenView(TemplateView):
             .order_by('num_qc')
 
         ct = ContentType.objects.get(model='recording')
+        user.can_approve = user.is_staff and user.is_authenticated()
+
         context['content_type'] = ct.id
         context['user'] = user
         context['person'] = person

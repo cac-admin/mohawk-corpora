@@ -186,7 +186,7 @@ div.content{
     <div class="col-lg-7"></div>
     <div class="col-lg-5 actions">
       <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
-      {% if user.is_staff %}
+      {% if user.can_approve %}
       <a href="#" class="save disabled"
         data-toggle="popover" 
         data-trigger="hover" 
@@ -239,13 +239,14 @@ class Listen{
     this.objects = null
     this.recording = null
     this.sentence = null
-    this.base_url = '/api/{% if user.is_staff %}recordings{% else %}listen{%endif%}/'
+    this.base_url = '/api/{% if user.can_approve %}recordings{% else %}listen{%endif%}/'
     this.base_quality_url = '/api/qualitycontrol/'
-    this.base_recording_url = '/api/{% if user.is_staff %}recordings{% else %}listen{%endif%}/'
-    this.url_filter_query = {% if user.is_staff %}'?sort_by=listen'{% else %}''{% endif %}
+    this.base_recording_url = '/api/{% if user.can_approve %}recordings{% else %}listen{%endif%}/'
+    this.url_filter_query = {% if user.can_approve %}'?sort_by=listen'{% else %}''{% endif %}
     this.next_url = null
     this.quality_control = {}
     this.quality_control.person = {{ person.id }}
+    this.error_loop = 0
     this.audio = document.getElementById('play-audio');
     this.quality_control.content_type = {{content_type}}
     $(sentence_block).fadeOut(0)
@@ -259,11 +260,13 @@ class Listen{
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
-          if (self.objects.length == 0){
+          if (self.objects.length == 0 || self.error_loop>3){
             console.log('No more recordings')
             self.all_done()
           }
           else{
+            console.log(d)
+            console.log(d.results)
             self.next()
           }
     })
@@ -293,6 +296,8 @@ class Listen{
         if (this.sentence==null){
           this.recording.sentence_text = 'These arent teh droid your looking for'
           console.log('error')
+          this.error_loop+=1
+          this.show_next_recording()
           this.next()
         } else { this.recording.sentence_text = this.sentence.text }
         
@@ -313,7 +318,7 @@ class Listen{
       $(sentence_block).removeClass('disabled')
       $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
       $(sentence_block).find('.sentence .text-area').remove()
-      {% if user.is_staff %}
+      {% if user.can_approve %}
       var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
       {% else %}
       var input_elm = $('<span class="text-area"></span>');
