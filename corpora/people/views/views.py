@@ -21,9 +21,8 @@ logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
 
 
-
 def profile(request):
-    
+
     if request.user.is_authenticated():
         sentence = get_next_sentence(request)
         current_language = get_current_language(request)
@@ -43,16 +42,20 @@ def profile(request):
                 raise Http404("Something went wrong. We're working on this...")
 
 
+        recordings = Recording.objects\
+            .filter(
+                person__user=request.user,
+                sentence__language=current_language)\
+            .order_by('-updated')
 
-        recordings = Recording.objects.filter(person__user=request.user, sentence__language=current_language)
         sentences = get_sentences(request, recordings)
         known_languages = [i.language for i in known_languages]
 
-        return render(request, 'people/profile.html', 
-            {'request':request, 
-             'user':request.user, 
-             'sentence':sentence, 
-             'current_language':current_language,
+        return render(request, 'people/profile.html',
+            {'request': request,
+             'user': request.user,
+             'sentence': sentence,
+             'current_language': current_language,
              'person': person,
              'recordings': recordings,
              'sentences': sentences,

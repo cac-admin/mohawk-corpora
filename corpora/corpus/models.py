@@ -49,6 +49,53 @@ class QualityControl(models.Model):
         self.approved_by = None
 
 
+class Source(models.Model):
+    SOURCE_TYPES = (
+        ('W', 'Website'),
+        ('A', 'Article'),
+        ('B', 'Book'),
+        ('I', 'Interview'),
+        ('S', 'Self'),
+        ('D', 'Document'),
+    )
+
+    description = models.TextField(
+        help_text='Any extra info about the source',
+        null=True,
+        blank=True)
+    author = models.CharField(
+        help_text="Author's name",
+        max_length=128,
+        null=True,
+        blank=True)
+    source_type = models.CharField(
+        max_length=1,
+        choices=SOURCE_TYPES,
+        null=True,
+        blank=True)
+    source_name = models.CharField(
+        help_text="Name of the source",
+        max_length=256,
+        null=True,
+        blank=True)
+    added_by = models.ForeignKey(
+        'people.Person',
+        null=True,
+        blank=True)
+    source_url = models.URLField(
+        null=True,
+        blank=True)
+
+    class Meta:
+        verbose_name = 'Source'
+        verbose_name_plural = 'Sources'
+        unique_together = (("added_by", "source_name", "source_type", "author"),)
+
+
+    def __unicode__(self):
+        return "{0} by {1}".format(self.source_name, self.author)
+
+
 class Sentence(models.Model):
     text = models.CharField(
         help_text='The sentence to be spoken.',
@@ -67,6 +114,7 @@ class Sentence(models.Model):
         )
 
     updated = models.DateTimeField(auto_now=True)
+    source = models.ForeignKey('Source', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Sentence'
@@ -93,6 +141,8 @@ class Recording(models.Model):
         QualityControl,
         related_query_name='recording'
         )
+
+    source = models.ForeignKey('Source', null=True, blank=True)
 
     audio_file = models.FileField(upload_to=upload_directory)
     updated = models.DateTimeField(auto_now=True)

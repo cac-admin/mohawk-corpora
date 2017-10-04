@@ -1,4 +1,4 @@
-from .models import QualityControl, Sentence, Recording
+from .models import QualityControl, Sentence, Recording, Source
 from rest_framework import serializers
 from people.helpers import get_person
 
@@ -60,6 +60,22 @@ class ListenQualityControRelatedField(serializers.RelatedField):
             return None
 
 
+class SourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Source
+        fields = ('author',
+                  'added_by',
+                  'id',
+                  'description',
+                  'source_name',
+                  'source_type',
+                  'url',
+                  'source_url')
+        extra_kwargs = {
+            'url': {'view_name': 'api:source-detail'}
+        }
+
+
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
     quality_control = QualityControRelatedField(
         many=True,
@@ -68,7 +84,10 @@ class SentenceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Sentence
-        fields = ('id', 'text', 'language', 'quality_control', 'updated')
+        fields = ('id', 'text', 'language', 'quality_control', 'updated', 'source')
+        extra_kwargs = {
+            'source': {'view_name': 'api:source-detail'}
+        }
 
 
 class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):

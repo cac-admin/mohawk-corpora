@@ -1,12 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
-from corpus.models import QualityControl, Sentence, Recording
+from corpus.models import QualityControl, Sentence, Recording, Source
 from django.db.models import Count, Q, Sum, Case, When, Value, IntegerField
 from people.helpers import get_person
 from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
                          RecordingSerializer, \
-                         ListenSerializer
+                         ListenSerializer, \
+                         SourceSerializer
 from rest_framework import generics
 from django.core.cache import cache
 
@@ -37,6 +38,15 @@ class QualityControlViewSet(viewsets.ModelViewSet):
     queryset = QualityControl.objects.all()
     serializer_class = QualityControlSerializer
     permission_classes = (PutOnlyStaffReadPermission,)
+
+
+class SourceViewSet(viewsets.ModelViewSet):
+    """
+    API enpoint that alows sources to be viewed or edited.
+    """
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+    permission_classes = (permissions.IsAdminUser,)
 
 
 class SentenceViewSet(viewsets.ModelViewSet):

@@ -6,7 +6,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 
 # Register your models here.
 
-from .models import QualityControl, Sentence, Recording
+from .models import QualityControl, Sentence, Recording, Source
 
 
 class QualityControlInline(GenericTabularInline):
@@ -79,3 +79,8 @@ class SentenceAdmin(admin.ModelAdmin):
 @admin.register(Recording)
 class RecordingAdmin(admin.ModelAdmin):
     readonly_fields = ('duration',)
+
+
+@admin.register(Source)
+class SourceAdmin(admin.ModelAdmin):
+    pass
