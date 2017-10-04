@@ -140,7 +140,7 @@ class RecordingFileView(RedirectView):
 
         access = cache.get('{0}:{0}:listen'.format(p.uuid, m.id))
 
-        if (u.is_authenticated() and u.is_staff) or (p is m.person) or (access):
+        if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
             try:
                 url = audio_file.path
                 url = audio_file.url
