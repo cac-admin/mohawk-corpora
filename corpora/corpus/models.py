@@ -114,7 +114,11 @@ class Sentence(models.Model):
         )
 
     updated = models.DateTimeField(auto_now=True)
-    source = models.ForeignKey('Source', null=True, blank=True)
+    source = models.ForeignKey(
+        'Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'Sentence'
@@ -142,7 +146,11 @@ class Recording(models.Model):
         related_query_name='recording'
         )
 
-    source = models.ForeignKey('Source', null=True, blank=True)
+    source = models.ForeignKey(
+        'Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL)
 
     audio_file = models.FileField(upload_to=upload_directory)
     updated = models.DateTimeField(auto_now=True)

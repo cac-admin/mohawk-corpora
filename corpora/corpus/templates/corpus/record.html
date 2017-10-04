@@ -9,6 +9,8 @@
 @import 'corpora/css/colors';
 @import 'corpora/css/text';
 @import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
@@ -34,27 +36,18 @@ a.btn{
   display: inline-block;
 }
 
-.container.name{
-  margin-top: -30px;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(gray, .5);
+
+.circle-button-container{
+
+  @include media-breakpoint-down(lg){
+    padding-top: 15px;
+  }
+
 }
 </style>
 {% endaddtoblock %}
 
-<div class="container name" >
-  <div class="row">
-    <div class="col" >
-      <h4>{{person.full_name}}</h4><small>Not you?
-        {% if user.is_authenticated %}
-          <a href="{% url 'account_logout' %}">Logout</a>
-        {% else %}
-          <a href="{% url 'account_login' %}">Login</a>
-        {% endif %}</small>
-    </div>
-  </div>
-</div>
+{% include 'people/profile_header.html' %}
 
 <div class="container record">
 

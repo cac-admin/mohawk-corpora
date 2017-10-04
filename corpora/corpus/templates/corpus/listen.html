@@ -8,6 +8,8 @@
 <style type="text/x-scss">
 @import 'corpora/css/colors';
 @import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
@@ -44,118 +46,16 @@ div.content{
     }
 
   }
-  .actions{
-    text-align: center;
-    @include media-breakpoint-down(md) {
-      text-align: center;
-    }
-    a{
-      display: inline-block;
-      padding: 15px;
-      border: 1px solid red;
-      border-radius: 4px;
-      text-shadow: 0px 1px 1px rgba($brand_darkest,0);
-    }
-    a:hover{
-
-    }
-    a:active{
-      text-shadow: 0px 0px 1px rgba($brand_darkest,0);
-    }
-
-    i{
-      font-size: 2em;
-      font-weight: 100;
-      
-    }
-
-    a.good{
-      color: $brand_dark;
-      border-color: $brand_dark;
-
-      i{
-        color: $brand_dark;
-      }
-    }
-    a.good:active{
-      background-color: rgba($brand_dark, 1);
-      i{
-        color: lighten($brand_lightest,10%);
-      }
-    }
-    a.bad{
-      border-color: $brand_darker;
-      color: $brand_darker;
-    }
-    a.bad:active{
-      background-color: rgba($brand_darker, 1);
-      i{
-        color: lighten($brand_lightest,10%);
-      }
-    }    
-    
-    a.approve{
-      border-color: $green;
-      color: $green;
-    }
-    a.approve:active{
-      background-color: rgba($green, 1);
-      i{
-        color: lighten($brand_lightest,10%);
-      }
-    }    
-    a.save{
-      border-color: $blue;
-      color: $blue;
-    }
-    a.save:active{
-      background-color: rgba($blue, 1);
-      i{
-        color: lighten($brand_lightest,10%);
-      }
-    }       
-    a.disabled, a.disabled:hover, a.disabled:active{
-      border-color: rgba(gray,.5);
-      background-color: $background_light;
-      cursor: default;
-      i{
-        color: rgba(gray,.5);
-      }
-    }
-    a.off{
-      display: none;
-    }
-
-    a.auto-play.auto-play-on{
-      background-color: $brand_primary;
-      color: $brand_lightest;
-    }
-
-  }
+  
 
 }
-.container.name{
-  margin-top: -30px;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(gray, .5);
-}
+
 </style>
 {% endaddtoblock %}
   
 
-<div class="container name" >
-  <div class="row">
-    <div class="col" >
-      <h4>{{person.full_name}}</h4><small>Not you?
-        {% if user.is_authenticated %}
-          <a href="{% url 'account_logout' %}">Logout</a>
-        {% else %}
-          <a href="{% url 'account_login' %}">Login</a>
-        {% endif %}</small>
-    </div>
-  </div>
-</div>
+{% include 'people/profile_header.html' %}
+
 
 
 <div class="container sentence">
@@ -186,13 +86,7 @@ div.content{
     <div class="col-lg-7"></div>
     <div class="col-lg-5 actions">
       <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
-      {% if user.can_approve %}
-      <a href="#" class="save disabled"
-        data-toggle="popover" 
-        data-trigger="hover" 
-        title="Save" 
-        data-content="{% trans 'Save changes.' %}"
-        ><i class="fa fa-save fa-fw"></i></a>      
+      {% if user.can_approve %}     
       <a href="#" class="approve"
         data-toggle="popover" 
         data-trigger="hover" 

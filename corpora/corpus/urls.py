@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^failed_submit/', views.failed_submit, name='failed_submit'),
     url(_(r'^sentences/'), SentenceListView.as_view(), name='sentence-list'),
 
-    url(_(r'^stats/'), cache_page(60*60*1)(StatsView.as_view()), name='stats'),
+    url(_(r'^stats/'), StatsView.as_view(), name='stats'),
 
     url(r'^recording-file/(?P<pk>[\d]+)/$',
         views.RecordingFileView.as_view(),

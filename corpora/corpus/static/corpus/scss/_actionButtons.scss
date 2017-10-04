@@ -1,0 +1,100 @@
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+.actions{
+    text-align: left;
+    margin-top: 15px;
+    @include media-breakpoint-down(md) {
+      text-align: center;
+    }
+    a{
+      display: inline-block;
+      padding: 12px;
+      border: 1px solid red;
+      border-radius: 4px;
+      text-shadow: 0px 1px 1px rgba($brand_darkest,0);
+      color: $brand_primary;
+    }
+    a:hover{
+      
+    }
+    a:active{
+      text-shadow: 0px 0px 1px rgba($brand_dark,0);
+      background-color: rgba($brand_dark, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }
+
+    i{
+      font-size: 1.5em;
+      font-weight:100;
+      
+    }
+
+    a.good{
+      color: $brand_dark;
+      border-color: $brand_dark;
+      i{
+        color: $brand_dark;
+      }
+    }
+
+    a.good:active{
+      background-color: rgba($brand_dark, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }
+    a.bad{
+      border-color: $brand_darker;
+      color: $brand_darker;
+    }
+    a.bad:active{
+      background-color: rgba($brand_darker, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }    
+    
+    a.approve{
+      border-color: $green;
+      color: $green;
+    }
+    a.approve:active{
+      background-color: rgba($green, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }    
+    a.save{
+      border-color: $blue;
+      color: $blue;
+    }
+    a.save:active{
+      background-color: rgba($blue, 1);
+      i{
+        color: lighten($brand_lightest,10%);
+      }
+    }       
+    a.disabled, a.disabled:hover, a.disabled:active{
+      border-color: rgba(gray,.5);
+      background-color: $background_light;
+      cursor: default;
+      i{
+        color: rgba(gray,.5);
+      }
+    }
+    a.off{
+      display: none;
+    }
+
+    a.auto-play.auto-play-on{
+      background-color: $brand_primary;
+      color: $brand_lightest;
+    }
+
+  }

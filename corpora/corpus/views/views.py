@@ -184,11 +184,16 @@ class StatsView(ListView):
 
         approved_sentences = sentences.filter(quality_control__approved=True)
 
+        seconds = float(length['duration__sum'])
+        hours = int(seconds/(60.0*60))
+        minutes = int((seconds - (60*60.0)*hours)/60.0)
+        seconds = int(seconds - (60*60.0)*hours - 60.0*minutes)
+
         context['user'] = user
         context['num_recordings'] = recordings.count()
         context['num_sentences'] = sentences.count()
         context['approved_sentences'] = approved_sentences.count()
-        context['total_seconds'] = "{:0.1f}".format(length['duration__sum'])
+        context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format( hours, minutes, seconds)
 
         return context
 
