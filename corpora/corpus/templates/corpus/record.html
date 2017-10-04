@@ -5,12 +5,10 @@
 
 {% block content %}
 {% addtoblock "css" %}
-    <link href="{% sass_src 'corpus/css/record.scss' %}" rel="stylesheet" type="text/css" />
-{% endaddtoblock %}
-{% addtoblock "css" %}
 <style type="text/x-scss">
 @import 'corpora/css/colors';
 @import 'corpora/css/text';
+@import 'corpus/css/record';
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
