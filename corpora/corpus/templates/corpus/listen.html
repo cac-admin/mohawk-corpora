@@ -342,11 +342,13 @@ class Listen{
         }
       }).done(function(){
         console.log('gotted')
+        this.audio.src = self.recording.audio_file_url
       }).fail(function(){
         console.log('not gotted.')
+        self.next()
       })
 
-      this.audio.src = self.recording.audio_file_url
+      
 
       $(sentence_block).find('.good').off().on('click', function(e){
         $(e.currentTarget).addClass('disabled').off()

@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from corpora.settings import LANGUAGES, LANGUAGE_CODE
 
 from uuid import uuid4
+import os
 
 
 def upload_directory(instance, filename):
@@ -97,6 +98,7 @@ class Recording(models.Model):
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
+    audio_file_aac = models.FileField(upload_to=upload_directory, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Recording'
@@ -113,6 +115,11 @@ class Recording(models.Model):
         return "https://{1}{0}".format(
             reverse('corpus:recording_file', kwargs={'pk': self.pk}),
             current_site.domain)
+
+    def get_recordign_file_name(self):
+        parts = self.audio_file.name.split('.')
+        parts.pop()
+        return os.path.basename('.'.join(parts))
 
     def get_sentence_text(self):
         if self.sentence_text:

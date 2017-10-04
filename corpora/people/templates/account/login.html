@@ -29,7 +29,18 @@
 
   </form>
 
+  {% addtoblock 'js-end' %}
+  <script type="text/javascript">
 
+    $('input').keypress(function (e) {
+      if (e.which == 13) {
+        $('#login_form').submit();
+        return false;    //<---- Add this line
+      }
+    });
+
+  </script>
+  {% endaddtoblock %}
 
   {% if socialaccount_providers %}
   <p class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</p>

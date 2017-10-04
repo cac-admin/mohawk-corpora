@@ -128,8 +128,7 @@ class RecordingFileView(RedirectView):
         # Create a URL valid for 60 seconds.
         return s3.generate_url(60, 'GET',
                                bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                               key=kwargs['filepath'],
-                               force_http=True)
+                               key=kwargs['filepath'])
 
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])

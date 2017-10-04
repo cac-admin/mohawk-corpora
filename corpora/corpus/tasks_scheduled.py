@@ -7,6 +7,6 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'set_recording_duration': {
         'task': 'corpus.tasks.set_all_recording_durations',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute='59', hour='23', day_of_week='*'),
     },
 }

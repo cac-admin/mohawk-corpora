@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import Sentence, Recording, QualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-from corpus.tasks import set_recording_length
+from corpus.tasks import set_recording_length, transcode_audio
 
 
 # @receiver(models.signals.post_save, sender=Sentence)
@@ -92,3 +92,6 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
     if instance.audio_file:
         if instance.duration <= 0:
             set_recording_length.apply_async(args=[instance.pk], countdown=3)
+
+        if not instance.audio_file_aac:
+            transcode_audio.apply_async(args=[instance.pk], countdown=3)
