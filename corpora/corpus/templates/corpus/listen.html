@@ -134,10 +134,30 @@ div.content{
   }
 
 }
-
+.container.name{
+  margin-top: -30px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(gray, .5);
+}
 </style>
 {% endaddtoblock %}
   
+
+<div class="container name" >
+  <div class="row">
+    <div class="col" >
+      <h4>{{person.full_name}}</h4><small>Not you?
+        {% if user.is_authenticated %}
+          <a href="{% url 'account_logout' %}">Logout</a>
+        {% else %}
+          <a href="{% url 'account_login' %}">Login</a>
+        {% endif %}</small>
+    </div>
+  </div>
+</div>
+
+
 <div class="container sentence">
 
   <div class="row sentence-block disabled">

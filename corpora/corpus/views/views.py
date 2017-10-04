@@ -41,6 +41,7 @@ class SentenceListView(ListView):
         user = self.request.user
         person = get_person(self.request)
         user.can_approve = user.is_staff
+        user.is_authenticated = user.is_authenticated()
         ct = ContentType.objects.get(model='sentence')
         context['content_type'] = ct.id
         context['user'] = user
