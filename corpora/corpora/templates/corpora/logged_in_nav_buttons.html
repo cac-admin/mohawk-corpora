@@ -10,7 +10,9 @@
         color: white;
     }
 }
-
+.dropdown-toggle::after{
+  display: none !important;
+}
 </style>
 {% endaddtoblock %}
 <nav class="navbar navbar-expand">
@@ -82,10 +84,7 @@
     <!-- <div class="btn-group"> -->
       <a href="#" role="button" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-fw fa-lg fa-language"></i>
-        <div>
-        {% get_language_info for current_language as lang %}
-        {% trans 'Language' %} <span class="caret"></span>
-        </div>
+        <div>{% get_language_info for current_language as lang %}{% trans 'Language' %} <i class="fa fa-caret-down"></i></div>
       </a>
 
       <ul class="dropdown-menu">

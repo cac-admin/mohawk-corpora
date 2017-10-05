@@ -106,6 +106,7 @@ a.btn{
           <a href="javascript:void(0)" id="redo" class=" disabled redo">
             <i class="fa fa-undo fw"></i> {% trans "Redo" %}
           </a>
+
           <a href="javascript:void(0)" id="save" class=" disabled save">
             <i class="fa fa-save fw"></i> {% trans "Save" %}
           </a>
@@ -155,8 +156,7 @@ a.btn{
   var sentences = new Sentences(
     '{{person.id}}',
     '{{content_type}}',
-    '?recording=True',
-    {{user.can_approve|lower}})
+    '?recording=True')
   sentences.next()
 
   $('a.next').on('click', function(){

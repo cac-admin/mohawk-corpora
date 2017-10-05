@@ -56,7 +56,14 @@ div.content{
     <div class="col-lg-7"></div>
     <div class="col-lg-5 actions">
       <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
-      {% if user.can_approve %}     
+      {% if user.can_approve %}
+     <a href="#" class="save disabled"
+            data-toggle="popover" 
+            data-trigger="hover" 
+            title="Save" 
+            data-content="{% trans 'Save changes.' %}"
+            ><i class="fa fa-save fa-fw"></i></a>
+
       <a href="#" class="approve"
         data-toggle="popover" 
         data-trigger="hover" 

@@ -19,6 +19,7 @@ class Sentences{
               content_type,
               filter_query='',
               can_approve=false,
+              approver_user_id=null,
               sentence_block_selector='.sentence-block',
               ){
     this.sentence_block = $(sentence_block_selector).get(0);
@@ -31,6 +32,7 @@ class Sentences{
     this.next_url = null
     this.quality_control = {}
     this.quality_control.person = person_id
+    this.quality_control.approved_by = approver_user_id
     this.can_approve = can_approve
     this.quality_control.content_type = content_type
     $(this.sentence_block).fadeOut(0);
@@ -256,10 +258,10 @@ class Sentences{
     this.quality_control.approved = true;
     this.quality_control.good = 0
     this.quality_control.bad = 0    
-    this.quality_control.approved_by = this.person_id;
     console.log(this.quality_control);
     this.post_put();
   }
+
   up_vote(){
     this.quality_control.good = 1
     this.quality_control.bad = 0

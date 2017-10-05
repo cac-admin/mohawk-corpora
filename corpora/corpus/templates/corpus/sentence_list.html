@@ -90,10 +90,12 @@ div.content{
 $('a.approve').popover({})
 
 sentences = new Sentences(
-  '{{person.id}}',
-  '{{content_type}}',
+  {{person.id}},
+  {{content_type}},
   '{% if user.can_approve %}?quality_control__approved=False{% else %}{%endif%}',
-  {{user.can_approve|lower}})
+  {{user.can_approve|lower}},
+  {% if user.can_approve %}{{user.id}}{% else %}null{% endif %}
+)
 
 sentences.next()
 

@@ -4,8 +4,6 @@ from django.db import models
 
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-# Register your models here.
-
 from .models import QualityControl, Sentence, Recording, Source
 
 
@@ -36,9 +34,12 @@ class SentenceAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super(SentenceAdmin, self).get_queryset(request)
-        qs = qs.annotate(models.Count('recording'))\
+        qs = qs\
             .annotate(sum_approved=models.Sum(
                 models.Case(
+                    models.When(
+                        quality_control__isnull=True,
+                        then=models.Value(0)),
                     models.When(
                         quality_control__approved=True,
                         then=models.Value(1)),
@@ -46,12 +47,10 @@ class SentenceAdmin(admin.ModelAdmin):
                         quality_control__approved=False,
                         then=models.Value(0)),
                     default=models.Value(0),
-                    output_field=models.IntegerField())
-                ))
+                    output_field=models.IntegerField())))
         return qs
 
     def get_approved(self, obj):
-        qc = obj.quality_control
         return obj.sum_approved
     get_approved.short_description = 'Approvals'
     get_approved.admin_order_field = 'sum_approved'
@@ -71,7 +70,7 @@ class SentenceAdmin(admin.ModelAdmin):
     get_approved_by.admin_order_field = 'quality_control__approved'
 
     def num_recordings(self, obj):
-        return obj.recording__count
+        return Recording.objects.filter(sentence=obj).count()
     num_recordings.short_description = '# Recordings'
     num_recordings.admin_order_field = 'recording__count'
 

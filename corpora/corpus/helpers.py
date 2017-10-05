@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Sum, Case, When, Value, IntegerField
-from .models import Sentence, Recording
+from corpus.models import Sentence
 from people.helpers import get_current_language, get_or_create_person
 import random
 import logging
 logger = logging.getLogger('corpora')
 
 
-def get_sentences(request, recordings=None):
+def get_sentences(request,
+                  recordings=None,
+                  person=None,
+                  current_language=None):
     ''' Returns sentences without recordings '''
-    person = get_or_create_person(request)
-    current_language = get_current_language(request)
 
-    # recordings = Recording.objects\
-    #     .filter(person=person, sentence__language=current_language)
+    if person is None:
+        person = get_or_create_person(request)
+
+    if current_language is None:
+        current_language = get_current_language(request)
 
     sentences = Sentence.objects.filter(language=current_language)\
         .annotate(sum_approved=Sum(
@@ -40,9 +44,6 @@ def get_sentences(request, recordings=None):
                 default=Value(0),
                 output_field=IntegerField())))\
         .filter(person_no_more_recording=0)
-
-    #  .filter(recording__is_null=True) #  <= this doesn't work on a per user basis
-    #  .exclude(pk__in=[i.sentence.pk for i in recordings])
 
     return sentences
 
