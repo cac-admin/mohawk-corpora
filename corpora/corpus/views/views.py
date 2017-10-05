@@ -52,51 +52,61 @@ class SentenceListView(ListView):
 def submit_recording(request):
     return render(request, 'corpus/submit_recording.html')
 
+
 def failed_submit(request):
     return render(request, 'corpus/failed_submit.html')
+
 
 def record(request):
     # Get the person object from the user
 
-    # if not request.user.is_authenticated(): return redirect(reverse('account_login'))
+    # if not request.user.is_authenticated():
+    # return redirect(reverse('account_login'))
 
     person = get_or_create_person(request)
 
     if request.method == 'GET':
-        if request.GET.get('sentence',None):
+        if request.GET.get('sentence', None):
             sentence = Sentence.objects.get(pk=request.GET.get('sentence'))
         else:
             sentence = get_next_sentence(request)
-            if sentence == None:
+            if sentence is None:
                 return redirect('people:profile')
 
     # Generate a form model from the Recording model
     RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
 
-    # If page receives POST request, save the submitted audio data as a recording model
+    # If page receives POST request, save the submitted audio data as a
+    # recording model
     if request.method == 'POST' and request.is_ajax():
 
         # Create a form from the Recording Form model
         form = RecordingFormAJAX(request.POST, request.FILES)
 
-        # If the form is valid, save the new model and send back an OK HTTP Response
+        # If the form is valid, save the new model and send back an OK HTTP
+        # Response
         if form.is_valid():
             recording = form.save()
             recording.save()
             return HttpResponse(
                 json.dumps({
                     'success': True,
-                    'message': "Thank you for submitting a recording! Here's another sentence for you to record."
-                }), 
+                    'message': "Thank you for submitting a recording!\
+                                Here's another sentence for you to record.",
+                    'recording': json.dumps(
+                        {'id': recording.id,
+                         'sentence_text': recording.sentence_text})
+                }),
                 content_type='application/json',
             )
 
         # If the form is not valid, sent a 400 HTTP Response
         else:
-            # errors = form.errors          
+            errors = form.errors
             response = HttpResponse(
                 json.dumps({
-                        'err': "Sorry, your recording did not save."
+                        'err': "Sorry, your recording did not save.",
+                        'result': json.dumps(errors)
                     }),
                 content_type='application/json'
             )
@@ -106,9 +116,16 @@ def record(request):
 
     # Load up the page normally with request and object context
 
+    request.user.can_approve = request.user.is_staff and \
+        request.user.is_authenticated()
+
+    ct = ContentType.objects.get(model='sentence')
+
     context = {'request': request,
                'person': person,
                'sentence': sentence,
+               'content_type': ct.id,
+               'user': request.user,
                'uuid': request.get_signed_cookie('uuid', 'none')}
 
     response = render(request, 'corpus/record.html', context)

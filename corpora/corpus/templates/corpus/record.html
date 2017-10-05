@@ -10,6 +10,7 @@
 @import 'corpora/css/text';
 @import 'corpus/css/record';
 @import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
 
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
@@ -29,8 +30,8 @@ div.content{
   border:0px solid $brand_primary;
   margin-top: 30px;
 }
-span.sentence{
-  font-size: 2em;
+.sentence{
+  font-size: 2em !important;
 }
 a.btn{
   display: inline-block;
@@ -38,10 +39,11 @@ a.btn{
 
 
 .circle-button-container{
+    padding-bottom: 30px;
 
   @include media-breakpoint-down(lg){
-    padding-top: 15px;
-  }
+/*    padding-top: 15px;
+*/  }
 
 }
 </style>
@@ -51,24 +53,27 @@ a.btn{
 
 <div class="container record">
 
-  {% if sentence %}
-  <div class="row align-items-center" id="recorder-container">
+  <div class="row align-items-center sentence-block" id="recorder-container">
+
     <div class="col-12" style="display: none;">
       <div id="status-message" class="error-message" style="display: none;"><h2></h2></div>
     </div>
+
     <div class="col-12 col-md-7 col-lg-8">
       <div class="row">
-        <div class="col-12">
-          <span class="sentence">{{sentence.text}}</span>
+        <div class="col-12 sentence">
+         
         </div>
         <div class="col-12">
           <canvas class="visualizer" style=""></canvas>
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-5 col-lg-4"> 
 
-      <div class="row">
+    <div class="col-12 col-md-5 col-lg-4 actions"> 
+
+      <div class="row ">
+
         <div class="col-12">
           <div class="circle-button-container">
             <div class="circle background-circle">
@@ -88,51 +93,60 @@ a.btn{
           </div>
         </div>
 
-        <div class="col-12" style="text-align: center;" >
-          <a href="javascript:void(0)" id="redo" class="btn btn-default disabled redo">
+        <div class="col-12 " style="text-align: center;" >
+          <a href="javascript:void(0)" id="redo" class=" disabled redo">
             <i class="fa fa-undo fw"></i> {% trans "Redo" %}
           </a>
-          <a href="javascript:void(0)" id="save" class="btn btn-default disabled save">
+          <a href="javascript:void(0)" id="save" class=" disabled save">
             <i class="fa fa-save fw"></i> {% trans "Save" %}
           </a>
-          <a href="{{request.path}}" id="next" class="btn btn-default  next">
+          <a href="javascript:void(0)" id="next" class=" next">
             <i class="fa fa-step-forward fw"></i> {% trans "Skip" %}
           </a>
         </div>
+
       </div>
+
     </div>
   </div>
+
+
 </div>
+
+
 
 {% comment %}
 <small> Does this recording sound accurate? If so, press Next. If not, go back and fix it with Back.</small>
-
 <a href="{% url 'corpus:submit_recording' %}">
     <div class="button submit-audio">
         Submit
     </div>
 </a>
 {% endcomment %}
-
     
     
-    <audio id="play-audio" style="display: none; width: 0px; height: 0px">
-    </audio>
+<audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
-    {% addtoblock "js" %}
-        <script>
-            var person_pk = "{{person.pk}}";
-            var sentence_pk = "{{sentence.pk}}";
-            var encoder_path = "{% static 'opus-recorderjs/build/encoderWorker.min.js' %}";
-        </script>
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
 
-        <script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>
-        <!-- <script type="text/javascript" src="{% static 'corpora/js/recorder.storepage.js' %}"></script> -->
-        <script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>
-        <script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>
+{% addtoblock "js" %}
+<script type="text/javascript">
+  var person_pk = "{{person.pk}}";
+  var sentence_pk = "{{sentence.pk}}";
 
-    {% endaddtoblock %}
+  var sentences = new Sentences(
+    '{{person.id}}',
+    '{{content_type}}',
+    '?recording=True',
+    {{user.can_approve|lower}})
+  sentences.next()
+
+</script>
+{% endaddtoblock %}
 
 
-    {% endif %}
 {% endblock %}

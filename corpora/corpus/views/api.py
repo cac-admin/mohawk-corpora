@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from corpus.models import QualityControl, Sentence, Recording, Source
 from django.db.models import Count, Q, Sum, Case, When, Value, IntegerField
 from people.helpers import get_person
+from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
@@ -84,6 +85,11 @@ class IsStaffOrReadOnly(permissions.BasePermission):
 
 
 class SentencesView(generics.ListCreateAPIView):
+    """
+    API endpoint that allows sentences to be viewed or edited.
+    """
+
+    queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     pagination_class = OneHundredResultPagination
     permission_classes = (IsStaffOrReadOnly,)
@@ -93,30 +99,38 @@ class SentencesView(generics.ListCreateAPIView):
         queryset = Sentence.objects.all()\
             .order_by('quality_control__approved', 'quality_control__updated')
 
-        query = self.request.query_params.get('quality_control__approved')
-        if query is not None:
-            queryset = queryset.annotate(sum_approved=Sum(
-                Case(
-                    When(
-                        quality_control__approved=True,
-                        then=Value(1)),
-                    When(
-                        quality_control__approved=False,
-                        then=Value(0)),
-                    default=Value(0),
-                    output_field=IntegerField())
-            ))
+        q = self.request.query_params.get('recording')
+        if eval(q):
+            sentence = get_next_sentence(self.request)
+            queryset = queryset.filter(pk=sentence.pk)
+            return queryset
 
-            if eval(query) is True:
+        else:
 
-                queryset = queryset.filter(sum_approved__gte=1).order_by('-sum_approved')
-                # queryset = queryset.filter(quality_control__isnull=False)
+            query = self.request.query_params.get('quality_control__approved')
+            if query is not None:
+                queryset = queryset.annotate(sum_approved=Sum(
+                    Case(
+                        When(
+                            quality_control__approved=True,
+                            then=Value(1)),
+                        When(
+                            quality_control__approved=False,
+                            then=Value(0)),
+                        default=Value(0),
+                        output_field=IntegerField())
+                ))
 
-            # filter by approved = false
-            elif eval(query) is False:
-                queryset = queryset.filter(sum_approved__lte=0).order_by('-sum_approved')
-            else:
-                raise TypeError
+                if eval(query) is True:
+
+                    queryset = queryset.filter(sum_approved__gte=1).order_by('-sum_approved')
+                    # queryset = queryset.filter(quality_control__isnull=False)
+
+                # filter by approved = false
+                elif eval(query) is False:
+                    queryset = queryset.filter(sum_approved__lte=0).order_by('-sum_approved')
+                else:
+                    raise TypeError
 
         return queryset
 
@@ -205,12 +219,13 @@ class ListenPermissions(permissions.BasePermission):
             return False
 
 
-class ListenViewSet(RecordingViewSet):
+class ListenViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows a single recording to be viewed.
     This api obfuscates extra recording information and only provides the
     recording file link and the id.
     """
+    queryset = Recording.objects.all()
     pagination_class = OneResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)

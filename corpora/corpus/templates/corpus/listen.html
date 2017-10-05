@@ -9,6 +9,7 @@
 @import 'corpora/css/colors';
 @import 'corpus/css/record';
 @import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
 
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
@@ -18,37 +19,6 @@ div.content{
   padding: 60px 0px 60px 0px;
 }
 
-.footer{}
-
-.disabled{
-  display: none;
-}
-
-.container.sentence{
-  min-height: 500px;  
-}
-
-.sentence-block{
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
-
-  .sentence{
-    text-align: left;
-    font-size: 1.4em;
-    font-weight: 400;
-    @include media-breakpoint-down(md) {
-      padding-bottom: 15px;
-    }
-
-    .text-area{
-      width: 100%;
-    }
-
-  }
-  
-
-}
 
 </style>
 {% endaddtoblock %}
@@ -144,16 +114,52 @@ class Listen{
     this.audio = document.getElementById('play-audio');
     this.quality_control.content_type = {{content_type}}
     $(sentence_block).fadeOut(0)
+
+    var self = this
+    $(sentence_block).find('.approve').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.approve();
+      }
+    })
+
+    $(sentence_block).find('.good').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.up_vote();
+      }
+    })   
+
+    $(sentence_block).find('.bad').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.down_vote();
+      }
+    })
+
+
   }
 
   get_recordings(){
     var self = this;
     console.log('Fetching more recordings')
     $.ajax({
-        url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query
+        url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('Trying from first page')
+          self.next_url=null
+          self.get_recordings()
+        }
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
+
+          console.log(self.objects.length)
+          console.log(self.objects)
+          console.log(d.results)
+          console.log(d.results.length)
+          console.log(d.results[0])
+
           if (self.objects.length == 0 || self.error_loop>3){
             console.log('No more recordings')
             self.all_done()
@@ -163,7 +169,10 @@ class Listen{
             console.log(d.results)
             self.next()
           }
-    })
+        }).fail(function(){
+          self.next_url=null
+          self.get_recordings()
+        });
   }
 
   reload(){
@@ -197,6 +206,11 @@ class Listen{
         
       }
 
+      if (this.sentence==null && this.recording.sentence_text.length>0){
+        this.sentence = {}
+        this.sentence.text=this.recording.sentence_text
+      }
+
       this.show_next_recording()
     }
   }
@@ -222,11 +236,7 @@ class Listen{
       $(input_elm).text(this.recording.sentence_text);
       $(sentence_block).find('.sentence').append(input_elm)
       $(sentence_block).fadeIn('fast');
-      $(sentence_block).find('.approve').off().on('click', function(e){
-        $(e.currentTarget).addClass('disabled').off()
-        console.log('clicked')
-        self.approve();
-      })
+
 
       $('#play-button').show();
 
@@ -247,22 +257,6 @@ class Listen{
         self.next()
       })
 
-      
-
-      $(sentence_block).find('.good').off().on('click', function(e){
-        $(e.currentTarget).addClass('disabled').off()
-        $(sentence_block).find('.bad').addClass('disabled').off()        
-        console.log('clicked')
-        self.up_vote();
-      })   
-
-      $(sentence_block).find('.bad').off().on('click', function(e){
-        $(e.currentTarget).addClass('disabled').off()
-        $(sentence_block).find('.good').addClass('disabled').off()        
-
-        console.log('clicked')
-        self.down_vote();
-      })
 
       $(input_elm).on('change', function(){
         self.edit_sentence()
@@ -359,7 +353,7 @@ class Listen{
   post_put(){
     var method = 'POST'
     this.quality_control.object_id = this.recording.id
-
+    this.audio.pause()
     if (this.recording.quality_control){
       for (let qc of this.recording.quality_control){
         if (qc.person == this.quality_control.person){
@@ -438,7 +432,7 @@ class Player {
 
     })
 
-    $(this.audio).bind('loadeddata', function(){
+    $(this.audio).bind('canplay', function(){
       if ($('a.auto-play').hasClass('auto-play-on')){
         self.audio.play();
       } 

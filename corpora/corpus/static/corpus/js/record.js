@@ -62,7 +62,6 @@ if (!Recorder.isRecordingSupported()) {
 			$('.circle-text.record').show();
 			$('.stop-square').hide();
 			$('.redo').removeClass('disabled');
-			$('#play-button').show();
 			$('#record-button').hide();
 		}
 		
@@ -75,6 +74,7 @@ if (!Recorder.isRecordingSupported()) {
 		var audioURL = URL.createObjectURL( audioBlob );
 
 		audio.src = audioURL;
+		$('#play-button').show();
 	});
 
 	// If play button clicked, play audio
@@ -108,6 +108,11 @@ if (!Recorder.isRecordingSupported()) {
 
 	// If "save audio" button clicked, create formdata to save recording model
 	$('.save').click(function(){
+		recorder.stop();
+		audio.pause();
+		$('.redo').addClass('disabled');
+		$('.save').addClass('disabled');
+		$('.next').addClass('disabled');
 		// Initialize FormData
 		var fd = new FormData();
 		// Set enctype to multipart; necessary for audio form data
@@ -118,10 +123,15 @@ if (!Recorder.isRecordingSupported()) {
 
 		// Append necessary person and sentence pks to form data to add to recording model
 		fd.append('person', person_pk);
-		fd.append('sentence', sentence_pk);
+		fd.append('sentence', sentences.sentence.id);
 
 		// Send ajax POST request back to corpus/views.py
+		console.log(person_pk)
+		console.log(sentences.sentence.id)
+		console.log(fd)
+
 		$.ajax({
+
 			type: 'POST',
 			url: '/record/',
 			data: fd,
@@ -132,12 +142,19 @@ if (!Recorder.isRecordingSupported()) {
 				// Session stores a reload value to display a thank you message 
 				console.log("Recording data successfully submitted and saved");
 				sessionStorage.setItem('reload', "true");
-				if (window.location.href.search('\\?sentence=')>0){
-					window.history.back();
-				} else {
-					window.location.reload();
-				}
 				
+				// if (window.location.href.search('\\?sentence=')>0){
+				// 	window.history.back();
+				// } else {
+				// 	window.location.reload();
+				// }
+				$('#play-button').hide();
+				$('#record-button').show();
+				audio.src = null;
+				recorder.clearStream();
+				recorder.initStream();
+				sentences.next()
+
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				// Display an error message if views return saving error

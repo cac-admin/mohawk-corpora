@@ -12,8 +12,8 @@ router = routers.DefaultRouter()
 
 router.register(r'qualitycontrol', corpus_api.QualityControlViewSet)
 router.register(r'sentences', corpus_api.SentenceViewSet)
-router.register(r'recordings', corpus_api.RecordingViewSet)
-router.register(r'listen', corpus_api.ListenViewSet)
+router.register(r'listen', corpus_api.ListenViewSet, 'listen')
+router.register(r'recordings', corpus_api.RecordingViewSet, 'recording')
 router.register(r'sources', corpus_api.SourceViewSet)
 
 # router.register(r'tribes', people_api.TribeViewSet)

@@ -87,6 +87,14 @@ $sm-fg-circle-inset: 12px;
 	display: none;
 }
 
+#record-button,#play-button{
+	border: 0px;
+}
+
+#record-button:active,#play-button:active{
+	border: 0px;
+	background: none;
+}
 
 // Small device css settings
 @media(max-width: 768px) {

@@ -1,0 +1,31 @@
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+.disabled{
+  display: none;
+}
+
+
+.container.sentence{
+  min-height: 500px;  
+}
+
+.sentence-block{
+  text-align: center;
+  
+  margin-bottom: 30px;
+
+  .sentence{
+    text-align: left;
+    font-size: 2em;
+    font-weight: 400;
+    @include media-breakpoint-down(md) {
+      padding-bottom: 15px;
+    }
+    .text-area{
+      width: 100%;
+    }
+  }
+}

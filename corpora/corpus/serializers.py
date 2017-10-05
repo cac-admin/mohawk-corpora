@@ -118,12 +118,8 @@ class RecordingSerializer(serializers.ModelSerializer):
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control', 'id', 'sentence_text')
 
 
-class ListenSerializer(RecordingSerializer):
+class ListenSerializer(serializers.ModelSerializer):
     sentence = ReadSentenceSerializer(
-        many=False,
-        read_only=True
-    )
-    person = serializers.PrimaryKeyRelatedField(
         many=False,
         read_only=True
     )

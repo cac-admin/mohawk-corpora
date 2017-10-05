@@ -5,7 +5,7 @@
 
 
 .actions{
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
     @include media-breakpoint-down(md) {
       text-align: center;
@@ -24,9 +24,9 @@
     a:active{
       text-shadow: 0px 0px 1px rgba($brand_dark,0);
       background-color: rgba($brand_dark, 1);
-      i{
+      
         color: lighten($brand_lightest,10%);
-      }
+      
     }
 
     i{
@@ -38,16 +38,16 @@
     a.good{
       color: $brand_dark;
       border-color: $brand_dark;
-      i{
+      
         color: $brand_dark;
-      }
+      
     }
 
     a.good:active{
       background-color: rgba($brand_dark, 1);
-      i{
+      
         color: lighten($brand_lightest,10%);
-      }
+      
     }
     a.bad{
       border-color: $brand_darker;
@@ -55,9 +55,9 @@
     }
     a.bad:active{
       background-color: rgba($brand_darker, 1);
-      i{
+      
         color: lighten($brand_lightest,10%);
-      }
+      
     }    
     
     a.approve{
@@ -66,9 +66,9 @@
     }
     a.approve:active{
       background-color: rgba($green, 1);
-      i{
+      
         color: lighten($brand_lightest,10%);
-      }
+      
     }    
     a.save{
       border-color: $blue;
@@ -76,17 +76,17 @@
     }
     a.save:active{
       background-color: rgba($blue, 1);
-      i{
+      
         color: lighten($brand_lightest,10%);
-      }
+      
     }       
     a.disabled, a.disabled:hover, a.disabled:active{
       border-color: rgba(gray,.5);
       background-color: $background_light;
       cursor: default;
-      i{
+      
         color: rgba(gray,.5);
-      }
+      
     }
     a.off{
       display: none;
