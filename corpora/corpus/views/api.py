@@ -102,7 +102,10 @@ class SentencesView(generics.ListCreateAPIView):
         q = self.request.query_params.get('recording', 'False')
         if 'True' in q:
             sentence = get_next_sentence(self.request)
-            queryset = queryset.filter(pk=sentence.pk)
+            if sentence:
+                queryset = queryset.filter(pk=sentence.pk)
+            else:
+                return []
             return queryset
 
         else:

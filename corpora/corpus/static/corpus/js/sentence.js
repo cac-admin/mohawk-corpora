@@ -263,6 +263,7 @@ class Sentences{
   up_vote(){
     this.quality_control.good = 1
     this.quality_control.bad = 0
+    this.quality_control.approved = false;
     console.log(this.quality_control);
     this.post_put();
   }
@@ -270,6 +271,7 @@ class Sentences{
   down_vote(){
     this.quality_control.bad = 1
     this.quality_control.good = 0
+    this.quality_control.approved = false;
     console.log(this.quality_control);
     this.post_put();
   }

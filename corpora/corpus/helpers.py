@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.db.models import Sum, Case, When, Value, IntegerField
 from .models import Sentence, Recording
 from people.helpers import get_current_language, get_or_create_person
 import random
@@ -11,12 +11,39 @@ def get_sentences(request, recordings=None):
     ''' Returns sentences without recordings '''
     person = get_or_create_person(request)
     current_language = get_current_language(request)
-    recordings = Recording.objects\
-        .filter(person=person, sentence__language=current_language)
+
+    # recordings = Recording.objects\
+    #     .filter(person=person, sentence__language=current_language)
+
     sentences = Sentence.objects.filter(language=current_language)\
-        .exclude(pk__in=[i.sentence.pk for i in recordings])\
-        .exclude(quality_control__approved=False)\
-        .order_by('quality_control__updated')
+        .annotate(sum_approved=Sum(
+            Case(
+                When(
+                    quality_control__approved=True,
+                    then=Value(1)),
+                When(
+                    quality_control__approved=False,
+                    then=Value(0)),
+                default=Value(0),
+                output_field=IntegerField())))\
+        .filter(sum_approved__gte=1)
+
+    sentences = sentences\
+        .annotate(person_no_more_recording=Sum(
+            Case(
+                When(
+                    recording__isnull=True,
+                    then=Value(0)),
+                When(
+                    recording__person=person,
+                    then=Value(-1)),
+                default=Value(0),
+                output_field=IntegerField())))\
+        .filter(person_no_more_recording=0)
+
+    #  .filter(recording__is_null=True) #  <= this doesn't work on a per user basis
+    #  .exclude(pk__in=[i.sentence.pk for i in recordings])
+
     return sentences
 
 
@@ -33,7 +60,7 @@ def get_next_sentence(request, recordings=None):
 
 def get_sentences_annonymous(request):
     current_language = get_current_language(request)
-    sentences_without_recordings = Sentence.objects.filter(language=current_language, recording__is_null=True)
+    sentences_without_recordings = Sentence.objects.filter(language=current_language, recording__isnull=True)
     return sentences_without_recordings
 
 
