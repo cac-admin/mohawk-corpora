@@ -17,18 +17,14 @@
   {% addtoblock "css" %}<link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">{% endaddtoblock %}
 
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/popper.js/dist/umd/popper.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpora/js/transitions.js' %}"></script>{% endaddtoblock %}
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/popper.js/dist/umd/popper.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpora/js/transitions.js' %}"></script>{% endaddtoblock %}
+{% comment %}
 
+
+<!-- {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>{% endaddtoblock %} -->
+<!-- {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>{% endaddtoblock %} -->
+<!--  -->
+{% endcomment %}
 
 </head>
 
@@ -40,7 +36,14 @@
   <div class="footer">{% block footer %}{% endblock %}</div>
 
   {# Uses sekizai to load all js at end of page #}
+  
   {% render_block "js" %}
+
+  {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpora/js/transitions.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/popper.js/dist/umd/popper.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>{% endaddtoblock %}
+
   {% render_block "js-end" %}
 
 </body>

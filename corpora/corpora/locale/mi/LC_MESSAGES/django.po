@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-04 02:05+0000\n"
+"POT-Creation-Date: 2017-10-05 03:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr "Māori"
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:60
+#: corpora/templates/corpora/home.html:57
 msgid ""
 "Corpora.io is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -41,11 +41,11 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:69
+#: corpora/templates/corpora/home.html:66
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:70
+#: corpora/templates/corpora/home.html:67
 msgid "Translations for corpora.io are provided in the following langauges:"
 msgstr ""
 
@@ -59,20 +59,20 @@ msgstr ""
 msgid "Listen"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:41
-msgid "Profile"
-msgstr ""
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:50
+#: corpora/templates/corpora/logged_in_nav_buttons.html:43
 msgid "Sentences"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:57
+#: corpora/templates/corpora/logged_in_nav_buttons.html:50
 msgid "Stats"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:64
+#: corpora/templates/corpora/logged_in_nav_buttons.html:57
 msgid "Admin"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:65
+msgid "Profile"
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:73

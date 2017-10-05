@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-04 02:05+0000\n"
+"POT-Creation-Date: 2017-10-05 03:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -482,19 +482,19 @@ msgstr ""
 msgid "Start Recording"
 msgstr ""
 
-#: people/templates/people/profile.html:37
+#: people/templates/people/profile.html:39
 msgid "Sentences"
 msgstr ""
 
-#: people/templates/people/profile.html:42
+#: people/templates/people/profile.html:44
 msgid "Record"
 msgstr ""
 
-#: people/templates/people/profile.html:47
+#: people/templates/people/profile.html:49
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr ""
 
-#: people/views/views.py:75
+#: people/views/views.py:78
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr ""

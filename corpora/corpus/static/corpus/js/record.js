@@ -1,172 +1,196 @@
 var audio = document.getElementById('play-audio');
-
+var recorder
 var audioBlob, fileName;
 
 $(document).ready(function() {
-	if ( sessionStorage.getItem('reload') == "true") {
-		sessionStorage.setItem('reload', "false");
-		$("#status-message h2").text("Thank you for submitting a recording! Here's another sentence for you:");
-		$("#status-message").show();
-	}
+    if ( sessionStorage.getItem('reload') == "true") {
+        sessionStorage.setItem('reload', "false");
+        $("#status-message h2").text("Thank you for submitting a recording! Here's another sentence for you:");
+        $("#status-message").show();
+    }
 });
 
 // Check if recorderjs supported
 if (!Recorder.isRecordingSupported()) {
-	$('#recorder-container').children().remove();
-	var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
-		<h2>Browser Recording Not Supported</h2>\
-		<p>We\'re working on alternatives - and hoping browsers support WebRTC moving forward.</p>\
-		</div>');
-	$('#recorder-container').append(info);
-	console.log("Recorder not supported");
+    $('#recorder-container').children().remove();
+    var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
+        <h2>Browser Recording Not Supported</h2>\
+        <p>We\'re working on alternatives - and hoping browsers support WebRTC moving forward.</p>\
+        </div>');
+    $('#recorder-container').append(info);
+    console.log("Recorder not supported");
 } else {
-	console.log("Recorder supported");
+    console.log("Recorder supported");
 
-	// Initialize the recorder
-	// Using recorderjs: https://github.com/chris-rudmin/Recorderjs
-	// encoderPath option: directs to correct encoderWorker location
-	// leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream
+    // Initialize the recorder
+    // Using recorderjs: https://github.com/chris-rudmin/Recorderjs
+    // encoderPath option: directs to correct encoderWorker location
+    // leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream
 
-	// create an audio context then close it so we can detect microphpne sample rate
-	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-	window.audioContext = new AudioContext();
-	// var dummy_ac = new AudioContext();
-	var sample_rate = window.audioContext.sampleRate;
-	console.log(sample_rate)
-	window.audioContext.close();
+    // create an audio context then close it so we can detect microphpne sample rate
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    a = new AudioContext();
+    // var dummy_ac = new AudioContext();
+    var sample_rate = a.sampleRate;
+    console.log(sample_rate)
+    a.close();
+    
+    var recording = false;
+    // Record or halt recording when pressing record button
+    $('#record-button').click(function() {
+        if (recording == false) {
+            console.log('start recording')
+            // Start recorder if inactive and set recording state to true
+            recording = true
 
-	var recorder = new Recorder({
-		// encoderPath: '/static/corpora/js/encodeWaveWorker.js',
-		encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
-		encoderSampleRate: sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
-	});
-	
-	var recording = false;
-	// Record or halt recording when pressing record button
-	$('#record-button').click(function() {
-		if (recording == false) {
-			// Start recorder if inactive and set recording state to true
-			recording = true
-			setTimeout(function(){recorder.start()},200);
-
-
-			$('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
-			$('.circle-text.record').hide();
-			$('.stop-square').show();
-		} else {
-			// Stop recorder if active and set recording state to false
-			recording = false
-			recorder.stop();
-			
-			$('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-			$('.circle-text.record').show();
-			$('.stop-square').hide();
-			$('.redo').removeClass('disabled');
-			$('#record-button').hide();
-		}
-		
-	});
-
-	// Have recorder listen for when the data is available
-	recorder.addEventListener("dataAvailable", function(e) {
-		audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
-		fileName = new Date().toISOString() + ".wav";
-		var audioURL = URL.createObjectURL( audioBlob );
-
-		audio.src = audioURL;
-		$('#play-button').show();
-	});
-
-	// If play button clicked, play audio
-	$('#play-button').click(function(){
-		audio.play();
-		$('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
-	});
-
-	// When audio is done playing back, revert button to initial state
-	$('#play-audio').bind('ended', function(){
-		$('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
-		
-		$('.redo').removeClass('disabled');
-		$('.save').removeClass('disabled');
-	});
-
-	$(".redo").click(function() {
-		recorder.stop();
-		recorder.clearStream();
-		recorder.initStream();
-
-		audio.pause();
+            // Initialize audio stream (and ask the user if recording allowed?)
+            if (!recorder){
+                recorder = new Recorder({
+                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
+                    encoderSampleRate: sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
+                }); 
+            
+            }
 
 
-		$('#play-button').hide();
-		$('#record-button').show();
-		$('.redo').addClass('disabled');
-		$('.save').addClass('disabled');
+            
+            // Have recorder listen for when the data is available
+            recorder.addEventListener("dataAvailable", function(e) {
+                audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
+                fileName = new Date().toISOString() + ".wav";
+                var audioURL = URL.createObjectURL( audioBlob );
 
-	});
+                audio.src = audioURL;
+                $('#play-button').show();
+            });
 
-	// If "save audio" button clicked, create formdata to save recording model
-	$('.save').click(function(){
-		recorder.stop();
-		audio.pause();
-		$('.redo').addClass('disabled');
-		$('.save').addClass('disabled');
-		$('.next').addClass('disabled');
-		// Initialize FormData
-		var fd = new FormData();
-		// Set enctype to multipart; necessary for audio form data
-		fd.enctype="multipart/form-data";
+            recorder.addEventListener("streamReady", function(e) {
+                recorder.start()
+                $('.circle-text.record').hide();
+                $('.stop-square').show();               
+            });
 
-		// Add audio blob as blob.wav to form data
-		fd.append('audio_file', audioBlob, fileName);
+            $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
 
-		// Append necessary person and sentence pks to form data to add to recording model
-		fd.append('person', person_pk);
-		fd.append('sentence', sentences.sentence.id);
+            recorder.initStream()
 
-		// Send ajax POST request back to corpus/views.py
-		console.log(person_pk)
-		console.log(sentences.sentence.id)
-		console.log(fd)
+            // setTimeout(function(){},200);
 
-		$.ajax({
 
-			type: 'POST',
-			url: '/record/',
-			data: fd,
-			processData: false,
-			contentType: false,
-			success: function(data) {
-				// Reload the page for a new sentence if recording successfully saved;
-				// Session stores a reload value to display a thank you message 
-				console.log("Recording data successfully submitted and saved");
-				sessionStorage.setItem('reload', "true");
-				
-				// if (window.location.href.search('\\?sentence=')>0){
-				// 	window.history.back();
-				// } else {
-				// 	window.location.reload();
-				// }
-				$('#play-button').hide();
-				$('#record-button').show();
-				audio.src = null;
-				recorder.clearStream();
-				recorder.initStream();
-				sentences.next()
+        } else {
+            console.log('stop recording')
 
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				// Display an error message if views return saving error
-				$("#status-message h2").text("Sorry, there was an error!");
-				$("#status-message").show();
-			}
-		});
+            // Stop recorder if active and set recording state to false
+            recording = false
+            recorder.stop()
+            
+            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+            $('.circle-text.record').show();
+            $('.stop-square').hide();
+            $('.redo').removeClass('disabled');
+            $('#record-button').hide();
+        }
+        
+    });
 
-	});
 
-	// Initialize audio stream (and ask the user if recording allowed?)
-	recorder.initStream();
+
+    // If play button clicked, play audio
+    $('#play-button').click(function(){
+        audio.play();
+        $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+    });
+
+    // When audio is done playing back, revert button to initial state
+    $('#play-audio').bind('ended', function(){
+        $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
+        
+        $('.redo').removeClass('disabled');
+        $('.save').removeClass('disabled');
+    });
+
+    $(".redo").click(function() {
+        recorder.stop();
+        recorder.clearStream();
+
+        audio.pause();
+
+        $('#play-button').hide();
+        $('#record-button').show();
+        $('.stop-square').hide();
+        $('.redo').addClass('disabled');
+        $('.save').addClass('disabled');
+
+    });
+
+    // If "save audio" button clicked, create formdata to save recording model
+    $('.save').click(function(){
+        recorder.stop();
+        audio.pause();
+        $('.redo').addClass('disabled');
+        $('.save').addClass('disabled');
+        $('.next').addClass('disabled');
+        // Initialize FormData
+        var fd = new FormData();
+        // Set enctype to multipart; necessary for audio form data
+        fd.enctype="multipart/form-data";
+
+        // Add audio blob as blob.wav to form data
+        fd.append('audio_file', audioBlob, fileName);
+
+        // Append necessary person and sentence pks to form data to add to recording model
+        fd.append('person', person_pk);
+        fd.append('sentence', sentences.sentence.id);
+
+        // Send ajax POST request back to corpus/views.py
+        console.log(person_pk)
+        console.log(sentences.sentence.id)
+        console.log(fd)
+
+        $.ajax({
+
+            type: 'POST',
+            url: '/record/',
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                // Reload the page for a new sentence if recording successfully saved;
+                // Session stores a reload value to display a thank you message 
+                console.log("Recording data successfully submitted and saved");
+                sessionStorage.setItem('reload', "true");
+                
+                // if (window.location.href.search('\\?sentence=')>0){
+                //  window.history.back();
+                // } else {
+                //  window.location.reload();
+                // }
+                // recorder.clearStream();
+
+                delete audioBlob
+                delete fileName
+                delete audioURL
+                // delete recorder
+                var audioBlob, fileName;
+
+                $('#play-button').hide();
+                $('#record-button').show();
+                audio.src = null;
+                sentences.next()
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                // Display an error message if views return saving error
+                $("#status-message h2").text("Sorry, there was an error!");
+                $("#status-message").show();
+            }
+        });
+
+    });
+
+
+
+
 }
 
 // visualiser setup - create web audio api context and canvas
@@ -192,6 +216,7 @@ function visualize2(stream){
     console.log(bufferLength);
 
     var dataArray = new Uint8Array(bufferLength);
+    console.log(dataArray)
 
     var WIDTH = canvas.width;
     var HEIGHT = canvas.height;
@@ -200,14 +225,16 @@ function visualize2(stream){
     var barHeight;
     var x = 0;
 
+    console.log(barHeight)
     function renderFrame() {
       requestAnimationFrame(renderFrame);
 
       x = 0;
 
       analyser.getByteFrequencyData(dataArray);
-
-      canvacCTX.fillStyle = "#000";
+      // console.log(dataArray)
+      canvacCTX.clearRect(0, 0, WIDTH, HEIGHT);
+      canvacCTX.fillStyle = "rgba(0,0,0,.5)";
       canvacCTX.fillRect(0, 0, WIDTH, HEIGHT);
 
       for (var i = 0; i < bufferLength; i++) {
@@ -227,21 +254,23 @@ function visualize2(stream){
     renderFrame();  
 }
 
+// navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
+//     function(mediaStream){
+//         console.log('Yay')   
+//     }
+// );
+
+
 
 if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
-    // if (browserRatio >=1.5) {
-    //     $container.css('min-height', '360px');
-    // } else {
-    //     $container.css('min-height', '555px');
-    // }
+    $('.vis-container').remove()
 
 } else {
-	navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
-		function(mediaStream){
-			visualize2(mediaStream);
-			}
-	);
+    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
+        function(mediaStream){
+            visualize2(mediaStream);        
+        });   
 }
 
 

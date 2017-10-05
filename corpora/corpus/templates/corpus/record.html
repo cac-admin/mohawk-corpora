@@ -22,13 +22,22 @@ div.content{
   min-height: 500px;  
 }
 
+.vis-container{
+  @include media-breakpoint-up(md){
+    position: absolute;
+    bottom: 0px;
+    height: 40%;
+  }
+}
 .visualizer{
   width: 100%;
+  @include media-breakpoint-up(md){
+    height: 100%;
+  }
   height: 80px;
   border-radius: 4px;
   background-color: white;
   border:0px solid $brand_primary;
-  margin-top: 30px;
 }
 .sentence{
   font-size: 2em !important;
@@ -53,19 +62,19 @@ a.btn{
 
 <div class="container record">
 
-  <div class="row align-items-center sentence-block" id="recorder-container">
+  <div class="row align-items-top sentence-block" id="recorder-container">
 
     <div class="col-12" style="display: none;">
       <div id="status-message" class="error-message" style="display: none;"><h2></h2></div>
     </div>
 
-    <div class="col-12 col-md-7 col-lg-8">
-      <div class="row">
-        <div class="col-12 sentence">
+    <div class="col-12 col-md-7 col-lg-8" >
+      <div class="row align-items-bottom" style="height:100%;">
+        <div class="col-12 sentence align-items-bottom">
          
         </div>
-        <div class="col-12">
-          <canvas class="visualizer" style=""></canvas>
+        <div class="col-12 vis-container">
+          <canvas class="visualizer " style=""></canvas>
         </div>
       </div>
     </div>
@@ -122,18 +131,23 @@ a.btn{
         Submit
     </div>
 </a>
+
+
+
 {% endcomment %}
     
     
 <audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/waveWorker.min.js' %}"></script>{% endaddtoblock %}
 
-{% addtoblock "js" %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
 <script type="text/javascript">
   var person_pk = "{{person.pk}}";
   var sentence_pk = "{{sentence.pk}}";
@@ -144,6 +158,22 @@ a.btn{
     '?recording=True',
     {{user.can_approve|lower}})
   sentences.next()
+
+  $('a.next').on('click', function(){
+    audio.pause()
+    $('#play-button').hide();
+    $('#record-button').show();
+    $('.stop-square').hide();
+    $('.save').addClass('disabled');
+
+    $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+    $('.circle-text.record').show();
+    $('.stop-square').hide();
+    $('.redo').addClass('disabled');
+    recording=false;
+    recorder.clearStream()
+    // recorder.AudioContext.close()
+  })
 
 </script>
 {% endaddtoblock %}

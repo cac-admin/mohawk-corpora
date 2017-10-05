@@ -99,8 +99,8 @@ class SentencesView(generics.ListCreateAPIView):
         queryset = Sentence.objects.all()\
             .order_by('quality_control__approved', 'quality_control__updated')
 
-        q = self.request.query_params.get('recording')
-        if eval(q):
+        q = self.request.query_params.get('recording', 'False')
+        if 'True' in q:
             sentence = get_next_sentence(self.request)
             queryset = queryset.filter(pk=sentence.pk)
             return queryset

@@ -76,10 +76,10 @@ div.content{
 <audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}
+{% addtoblock "js-end" %}
 <script type="text/javascript">
 
-$('a.approve').popover({})
+// $('a.approve').popover({})
 
 var csrftoken = Cookies.get('csrftoken');
 
@@ -425,6 +425,7 @@ class Player {
       if ($(obj).hasClass('auto-play-off')){
         $(obj).removeClass('auto-play-off')
         $(obj).addClass('auto-play-on')
+        self.audio.autoplay=true;
       } else {
         $(obj).removeClass('auto-play-on')
         $(obj).addClass('auto-play-off')
@@ -434,6 +435,7 @@ class Player {
 
     $(this.audio).bind('canplay', function(){
       if ($('a.auto-play').hasClass('auto-play-on')){
+
         self.audio.play();
       } 
     });
