@@ -244,7 +244,7 @@ msgstr ""
 
 #: people/templates/account/login.html:23
 msgid "Forgot Password?"
-msgstr "Kua wareware kupuhia?"
+msgstr "Kua wareware tō kupu huna?"
 
 #: people/templates/account/login.html:46
 msgid "You can also sign in with: "
