@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-05 03:45+0000\n"
+"POT-Creation-Date: 2017-10-09 03:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,33 +49,33 @@ msgstr ""
 msgid "Translations for corpora.io are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:27
-#: corpora/templates/corpora/logged_in_nav_buttons.html:119
+#: corpora/templates/corpora/logged_in_nav_buttons.html:29
+#: corpora/templates/corpora/logged_in_nav_buttons.html:118
 msgid "Speak"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:34
-#: corpora/templates/corpora/logged_in_nav_buttons.html:126
+#: corpora/templates/corpora/logged_in_nav_buttons.html:36
+#: corpora/templates/corpora/logged_in_nav_buttons.html:125
 msgid "Listen"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:43
+#: corpora/templates/corpora/logged_in_nav_buttons.html:45
 msgid "Sentences"
 msgstr "Ngā Rerenga Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:50
+#: corpora/templates/corpora/logged_in_nav_buttons.html:52
 msgid "Stats"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:57
+#: corpora/templates/corpora/logged_in_nav_buttons.html:59
 msgid "Admin"
 msgstr "Whakahaere"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:65
+#: corpora/templates/corpora/logged_in_nav_buttons.html:67
 msgid "Profile"
 msgstr "Whakaritenga"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:73
+#: corpora/templates/corpora/logged_in_nav_buttons.html:75
 msgid "Edit Info"
 msgstr "Whakarerekē"
 
@@ -83,11 +83,11 @@ msgstr "Whakarerekē"
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:110
+#: corpora/templates/corpora/logged_in_nav_buttons.html:109
 msgid "Log Out"
 msgstr "Takiputa"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:133
+#: corpora/templates/corpora/logged_in_nav_buttons.html:132
 msgid "Log In"
 msgstr "Takiuru"
 

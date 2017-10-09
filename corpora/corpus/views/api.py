@@ -13,6 +13,18 @@ from rest_framework import generics
 from django.core.cache import cache
 
 
+class OneHundredResultPagination(pagination.PageNumberPagination):
+    page_size = 100
+
+
+class OneResultPagination(pagination.PageNumberPagination):
+    page_size = 1
+
+
+class TenResultPagination(pagination.PageNumberPagination):
+    page_size = 10
+
+
 class PutOnlyStaffReadPermission(permissions.BasePermission):
     """
     Model permission to only allow staff the ability to
@@ -21,14 +33,16 @@ class PutOnlyStaffReadPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
-            self.message = _("Only staff can {0}.".format(permissions.SAFE_METHODS))
+            self.message = _("Only staff can {0}.".format(
+                permissions.SAFE_METHODS))
             return request.user.is_staff
         else:
             # Anyone can post
             if request.method in ['PUT', 'POST']:
                 return True
             else:
-                self.message = _("PONIES Method {0} not allowed.".format(request.method))
+                self.message = _("PONIES Method {0} not allowed.".format(
+                    request.method))
                 return request.user.is_staff
 
 
@@ -39,6 +53,7 @@ class QualityControlViewSet(viewsets.ModelViewSet):
     queryset = QualityControl.objects.all()
     serializer_class = QualityControlSerializer
     permission_classes = (PutOnlyStaffReadPermission,)
+    pagination_class = OneHundredResultPagination
 
 
 class SourceViewSet(viewsets.ModelViewSet):
@@ -48,6 +63,7 @@ class SourceViewSet(viewsets.ModelViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
     permission_classes = (permissions.IsAdminUser,)
+    pagination_class = OneHundredResultPagination
 
 
 class SentenceViewSet(viewsets.ModelViewSet):
@@ -57,14 +73,7 @@ class SentenceViewSet(viewsets.ModelViewSet):
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     permission_classes = (permissions.IsAdminUser,)
-
-
-class OneHundredResultPagination(pagination.PageNumberPagination):
-    page_size = 100
-
-
-class OneResultPagination(pagination.PageNumberPagination):
-    page_size = 1
+    pagination_class = OneHundredResultPagination
 
 
 class IsStaffOrReadOnly(permissions.BasePermission):
@@ -180,6 +189,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)
+    pagination_class = TenResultPagination
 
     def get_queryset(self):
         queryset = Recording.objects.all().order_by('-updated')
