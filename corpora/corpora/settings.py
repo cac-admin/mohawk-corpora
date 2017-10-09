@@ -27,7 +27,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(os.environ['DJANGO_ISNOT_PRODUCTION'])
 
-ALLOWED_HOSTS = [u'{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+ALLOWED_HOSTS = ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 
 # For ELB Certificate & NGINX settings.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
