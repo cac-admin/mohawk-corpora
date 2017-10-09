@@ -52,12 +52,12 @@ msgstr ""
 #: corpora/templates/corpora/logged_in_nav_buttons.html:29
 #: corpora/templates/corpora/logged_in_nav_buttons.html:118
 msgid "Speak"
-msgstr ""
+msgstr "Kōrero"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:36
 #: corpora/templates/corpora/logged_in_nav_buttons.html:125
 msgid "Listen"
-msgstr ""
+msgstr "Whakarongo"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:45
 msgid "Sentences"
