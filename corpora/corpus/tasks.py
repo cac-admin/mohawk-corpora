@@ -155,7 +155,7 @@ def encode_audio(recording, test=False, codec='aac'):
             audio = True
 
     if audio:
-        file_name = recording.get_recordign_file_name()
+        file_name = recording.get_recording_file_name()
         extension = codecs[codec][1]
 
         code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(

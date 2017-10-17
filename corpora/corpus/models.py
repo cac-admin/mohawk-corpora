@@ -224,7 +224,7 @@ class Recording(models.Model):
             url = ""
         return url
 
-    def get_recordign_file_name(self):
+    def get_recording_file_name(self):
         parts = self.audio_file.name.split('.')
         parts.pop()
         return os.path.basename('.'.join(parts))
