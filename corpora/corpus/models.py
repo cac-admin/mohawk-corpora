@@ -127,6 +127,11 @@ class Sentence(models.Model):
     def __unicode__(self):
         return self.text
 
+    def get_features(self):
+        import features
+        f = features.import_finder(self.language)
+        return f(self.text)
+
 
 class Recording(models.Model):
     person = models.ForeignKey(
