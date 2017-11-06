@@ -6,7 +6,7 @@ from django.forms import ModelForm
 
 from django.contrib.auth.models import User
 
-from corpora.settings import LANGUAGES, LANGUAGE_CODE # Import supported languages and default language.
+from corpora.settings import LANGUAGES, LANGUAGE_CODE  # Import supported languages and default language.
 
 
 from django.utils.translation import ugettext_lazy as _
@@ -23,7 +23,7 @@ def get_uuid():
 
 
 class Tribe(models.Model):
-    name = models.CharField(help_text='Name', max_length=200)
+    name = models.CharField(help_text='Name', max_length=200, unique=True)
 
     class Meta:
         verbose_name = 'Tribe'
@@ -81,7 +81,7 @@ class KnownLanguage(models.Model):
     active = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (('person','language'))
+        unique_together = (('person', 'language'))
 
 
 @receiver(models.signals.post_save, sender=KnownLanguage)
@@ -92,6 +92,7 @@ def deactivate_other_known_languages_when_known_language_activated(sender, insta
             kl.active = False
             kl.save()
 
+
 @receiver(models.signals.post_save, sender=KnownLanguage)
 def ensure_a_language_is_active(sender, instance, **kwargs):
     try:
@@ -99,16 +100,14 @@ def ensure_a_language_is_active(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         known_language = KnownLanguage.objects.filter(person=instance.person).first()
         if known_language:
-            known_language.active=True
-            known_language.save()       
+            known_language.active = True
+            known_language.save()
+
 
 @receiver(models.signals.post_delete, sender=KnownLanguage)
 def change_active_language_when_active_language_deleted(sender, instance, **kwargs):
     if instance.active:
         known_language = KnownLanguage.objects.filter(person=instance.person).first()
         if known_language:
-            known_language.active=True
+            known_language.active = True
             known_language.save()
-            
-
-        

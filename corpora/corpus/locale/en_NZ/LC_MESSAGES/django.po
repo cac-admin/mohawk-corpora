@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-09 03:28+0000\n"
+"POT-Creation-Date: 2017-11-06 21:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,41 +104,41 @@ msgstr ""
 msgid "^stats/"
 msgstr ""
 
-#: corpus/views/api.py:24
+#: corpus/views/api.py:36
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr ""
 
-#: corpus/views/api.py:31
+#: corpus/views/api.py:44
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
 msgstr ""
 
-#: corpus/views/api.py:83
+#: corpus/views/api.py:92
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:151
+#: corpus/views/api.py:160
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:157
+#: corpus/views/api.py:166
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:162
+#: corpus/views/api.py:171
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:170
+#: corpus/views/api.py:179
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:172
+#: corpus/views/api.py:181
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:208 corpus/views/api.py:221
+#: corpus/views/api.py:217 corpus/views/api.py:230
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

@@ -196,7 +196,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
         sort_by = self.request.query_params.get('sort_by', '')
 
         person = get_person(self.request)
-        if 'listen' in sort_by:
+        if 'listen' in sort_by.lower():
             queryset = queryset\
                 .exclude(quality_control__person=person)\
                 .annotate(num_qc=Count('quality_control'))\

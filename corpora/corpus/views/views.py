@@ -22,8 +22,10 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, When, Value, Case, IntegerField
 from django.core.cache import cache
+
+from corpus.aggregate import get_num_approved, get_net_votes
 
 import logging
 logger = logging.getLogger('corpora')
@@ -196,18 +198,38 @@ class StatsView(ListView):
 
         sentences = Sentence.objects.all()
         recordings = Recording.objects.all()
+        people = Person.objects.all()
 
         length = Recording.objects.aggregate(Sum('duration'))
 
         approved_sentences = sentences.filter(quality_control__approved=True)
+        approved_recordings = recordings.filter(quality_control__approved=True)
+
+
 
         seconds = float(length['duration__sum'])
         hours = int(seconds/(60.0*60))
         minutes = int((seconds - (60*60.0)*hours)/60.0)
         seconds = int(seconds - (60*60.0)*hours - 60.0*minutes)
 
+        recording_votes = get_net_votes(recordings)
+        sentence_votes = get_net_votes(sentences)
+
+        stats = {'recordings': {
+                    'num_approved': get_num_approved(recordings),
+                    'up_votes': recording_votes[0],
+                    'down_votes': recording_votes[1],
+                    },
+                 'sentences': {
+                    'num_approved': get_num_approved(sentences),
+                    'up_votes': sentence_votes[0],
+                    'down_votes': sentence_votes[1],
+                    },
+                 }
+
         context['user'] = user
         context['num_recordings'] = recordings.count()
+        context['stats'] = stats
         context['num_sentences'] = sentences.count()
         context['approved_sentences'] = approved_sentences.count()
         context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format( hours, minutes, seconds)
