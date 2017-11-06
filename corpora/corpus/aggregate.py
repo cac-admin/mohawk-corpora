@@ -3,8 +3,8 @@ from django.db.models import Sum, Count, When, Value, Case, IntegerField
 
 
 def get_num_approved(query):
-    query = query\
-        .annotate(sum_approved=Sum(
+    d = query\
+        .aggregate(sum_approved=Sum(
             Case(
                 When(
                     quality_control__isnull=True,
@@ -17,12 +17,13 @@ def get_num_approved(query):
                     then=Value(0)),
                 default=Value(0),
                 output_field=IntegerField())))
-    return query.sum_approved
+    return d['sum_approved']
 
 
 def get_net_votes(query):
-    query = query\
-        .annotate(total_up_votes=Sum('quality_control__good'))\
-        .annotate(total_down_votes=Sum('quality_control__good'))
+    d1 = query\
+        .aggregate(total_up_votes=Sum('quality_control__good'))
+    d2 = query\
+        .aggregate(total_down_votes=Sum('quality_control__bad'))
 
-    return (query.total_up_votes, query.total_down_votes)
+    return (d1['total_up_votes'], d2['total_down_votes'])

@@ -11,9 +11,9 @@ from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
 from corpus.models import Recording, Sentence, QualityControl
-from people.models import Person
+from people.models import Person, KnownLanguage
 from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person, get_person
+from people.helpers import get_or_create_person, get_person, get_current_language
 from django.conf import settings
 
 from django import http
@@ -22,7 +22,7 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum, Count, When, Value, Case, IntegerField
+from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q
 from django.core.cache import cache
 
 from corpus.aggregate import get_num_approved, get_net_votes
@@ -192,12 +192,14 @@ class StatsView(ListView):
         context = super(StatsView, self).get_context_data(**kwargs)
         user = self.request.user
 
+        language = get_current_language(self.request)
+
         # qc = self.get_queryset()
         # qc_s = qc.filter(content_type='sentence')
         # qc_r = qc.filter(content_type='recording')
 
-        sentences = Sentence.objects.all()
-        recordings = Recording.objects.all()
+        sentences = Sentence.objects.filter(language=language)
+        recordings = Recording.objects.filter(sentence__language=language)
         people = Person.objects.all()
 
         length = Recording.objects.aggregate(Sum('duration'))
@@ -216,24 +218,50 @@ class StatsView(ListView):
         sentence_votes = get_net_votes(sentences)
 
         stats = {'recordings': {
+                    'total': recordings.count(),
                     'num_approved': get_num_approved(recordings),
                     'up_votes': recording_votes[0],
                     'down_votes': recording_votes[1],
+                    'duration': "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds),
                     },
                  'sentences': {
+                    'total': recordings.count(),
                     'num_approved': get_num_approved(sentences),
                     'up_votes': sentence_votes[0],
                     'down_votes': sentence_votes[1],
                     },
                  }
 
+        stats_by_proficiency = {}
+        for level in KnownLanguage.PROFICIENCIES:
+            query = recordings\
+                .filter(person__knownlanguage__language=language)\
+                .filter(person__knownlanguage__level_of_proficiency=level[0])
+            recording_votes = get_net_votes(query)
+            length = query.aggregate(Sum('duration'))
+            if length['duration__sum'] is None:
+                seconds = 0
+            else:
+                seconds = float(length['duration__sum'])
+            hours = int(seconds/(60.0*60))
+            minutes = int((seconds - (60*60.0)*hours)/60.0)
+            seconds = int(seconds - (60*60.0)*hours - 60.0*minutes)
+            stats_by_proficiency[level[0]] = {
+                'language_level': str(level[1]),
+                'total': query.count(),
+                'num_approved': get_num_approved(query),
+                'up_votes': recording_votes[0],
+                'down_votes': recording_votes[1],
+                'duration': "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds)
+            }
+
         context['user'] = user
         context['num_recordings'] = recordings.count()
         context['stats'] = stats
         context['num_sentences'] = sentences.count()
         context['approved_sentences'] = approved_sentences.count()
-        context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format( hours, minutes, seconds)
-
+        context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds)
+        context['recordings_by_proficiency'] = stats_by_proficiency
         return context
 
 

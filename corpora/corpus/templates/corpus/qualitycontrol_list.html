@@ -23,15 +23,62 @@
     <div class="col">
       <h4>{% trans "Recordings" %}:</h4>
         <ul>
-          <li>{% trans "Number" %}: {{num_recordings}}</li>
-          <li>{% trans "Duration" %}: {{total_duration}} </li>
-        </ul>
-      <h4>{% trans "Sentences" %}</h4>
-        <ul>
-          <li>{% trans "Number" %}: {{num_sentences}}</li>
-          <li>{% trans "Approved" %}: {{approved_sentences}}</li>
+          <li>{% trans "Number" %}: {{stats.recordings.total}}</li>
+          <li>{% trans "Duration" %}: {{stats.recordings.duration}} </li>
+          <li>{% trans "Approved" %}: {{stats.recordings.num_approved}} </li>
+          <li>{% trans "Good" %}: {{stats.recordings.up_votes}} </li>
+          <li>{% trans "Bad" %}: {{stats.recordings.down_votes}} </li>
         </ul>
     </div>
+    <div class="col">
+      <h4>{% trans "Sentences" %}</h4>
+        <ul>
+          <li>{% trans "Number" %}: {{stats.sentences.total}}</li>
+          <li>{% trans "Approved" %}: {{stats.sentences.num_approved}} </li>
+          <li>{% trans "Good" %}: {{stats.sentences.up_votes}} </li>
+          <li>{% trans "Bad" %}: {{stats.sentences.down_votes}} </li>
+        </ul>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col">
+      <h4>{% trans "Recordings by Language Proficiency" %}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <b>Language Level</b><br>
+      <br>
+      <b>Recordings:</b> 
+      <br>
+      <b>Duration:</b>
+      <br>
+      <b>Approved:</b> 
+      <br>
+      <b>Good:</b>
+      <br>
+      <b>Bad:</b>
+      <br><br>
+    </div>    
+    {% for key,value in recordings_by_proficiency.items %}
+    <div class="col">
+      
+      <b><small>{{value.language_level}}</small></b>
+      <br>
+      {{value.total}}
+      <br>
+      {{value.duration}}
+      <br>
+      {{value.num_approved}}
+      <br>
+      {{value.up_votes}}
+      <br>
+      {{value.down_votes}}
+      <br><br>
+    </div>
+    {% endfor %}
 
   </div>
 

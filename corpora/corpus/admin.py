@@ -22,7 +22,7 @@ class RecordingsInline(admin.TabularInline):
 
 @admin.register(QualityControl)
 class QualityControlAdmin(admin.ModelAdmin):
-    list_display = ('updated', 'content_type', 'object_id')
+    list_display = ('updated', 'content_type', 'object_id', 'approved', 'good', 'bad')
     date_hierarchy = 'updated'
 
 
@@ -77,7 +77,46 @@ class SentenceAdmin(admin.ModelAdmin):
 
 @admin.register(Recording)
 class RecordingAdmin(admin.ModelAdmin):
+    list_display = ('sentence_text', 'person', 'get_approved', 'get_approved_by')
+    inlines = [QualityControlInline]
     readonly_fields = ('duration',)
+
+    def get_queryset(self, request):
+        qs = super(RecordingAdmin, self).get_queryset(request)
+        qs = qs\
+            .annotate(sum_approved=models.Sum(
+                models.Case(
+                    models.When(
+                        quality_control__isnull=True,
+                        then=models.Value(0)),
+                    models.When(
+                        quality_control__approved=True,
+                        then=models.Value(1)),
+                    models.When(
+                        quality_control__approved=False,
+                        then=models.Value(0)),
+                    default=models.Value(0),
+                    output_field=models.IntegerField())))
+        return qs
+
+    def get_approved(self, obj):
+        return obj.sum_approved
+    get_approved.short_description = 'Approvals'
+    get_approved.admin_order_field = 'sum_approved'
+
+    def get_approved_by(self, obj):
+        qc = obj.quality_control
+        results = qc.all()
+        names = []
+        if len(results) > 0:
+            for r in results:
+                if r.approved_by:
+                    names.append(str(r.approved_by))
+            return ', '.join(names)
+        else:
+            return _("None")
+    get_approved_by.short_description = 'Approved By'
+    get_approved_by.admin_order_field = 'quality_control__approved'
 
 
 @admin.register(Source)
