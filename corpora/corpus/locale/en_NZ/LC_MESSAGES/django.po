@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-06 21:28+0000\n"
+"POT-Creation-Date: 2017-11-07 06:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:68 corpus/models.py:188 corpus/models.py:194
+#: corpus/admin.py:68 corpus/admin.py:117 corpus/models.py:188
+#: corpus/models.py:194
 msgid "None"
 msgstr ""
 
@@ -44,7 +45,7 @@ msgid "Recordings"
 msgstr ""
 
 #: corpus/templates/corpus/qualitycontrol_list.html:26
-#: corpus/templates/corpus/qualitycontrol_list.html:31
+#: corpus/templates/corpus/qualitycontrol_list.html:36
 msgid "Number"
 msgstr ""
 
@@ -52,12 +53,27 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
+#: corpus/templates/corpus/qualitycontrol_list.html:28
+#: corpus/templates/corpus/qualitycontrol_list.html:37
+msgid "Approved"
+msgstr ""
+
 #: corpus/templates/corpus/qualitycontrol_list.html:29
+#: corpus/templates/corpus/qualitycontrol_list.html:38
+msgid "Good"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:30
+#: corpus/templates/corpus/qualitycontrol_list.html:39
+msgid "Bad"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:34
 msgid "Sentences"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:32
-msgid "Approved"
+#: corpus/templates/corpus/qualitycontrol_list.html:47
+msgid "Recordings by Language Proficiency"
 msgstr ""
 
 #: corpus/templates/corpus/record.html:107
@@ -104,41 +120,41 @@ msgstr ""
 msgid "^stats/"
 msgstr ""
 
-#: corpus/views/api.py:36
+#: corpus/views/api.py:37
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr ""
 
-#: corpus/views/api.py:44
+#: corpus/views/api.py:45
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
 msgstr ""
 
-#: corpus/views/api.py:92
+#: corpus/views/api.py:93
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:160
+#: corpus/views/api.py:161
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:166
+#: corpus/views/api.py:167
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:171
+#: corpus/views/api.py:172
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:179
+#: corpus/views/api.py:180
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:181
+#: corpus/views/api.py:182
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:217 corpus/views/api.py:230
+#: corpus/views/api.py:224 corpus/views/api.py:237
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

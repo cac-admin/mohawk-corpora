@@ -73,7 +73,8 @@ div.content{
       {% else %}
       {% endif %}
       <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
-      <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>      
+      <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>
+      <a href="javascript:void(0)" id="next" class="next"><i class="fa fa-step-forward fw"></i> {% trans "Skip" %}</a>    
     </div>
 
   </div>
@@ -113,7 +114,7 @@ class Listen{
     this.base_url = '/api/{% if user.can_approve %}recordings{% else %}listen{%endif%}/'
     this.base_quality_url = '/api/qualitycontrol/'
     this.base_recording_url = '/api/{% if user.can_approve %}recordings{% else %}listen{%endif%}/'
-    this.url_filter_query = {% if user.can_approve %}'?sort_by=listen'{% else %}''{% endif %}
+    this.url_filter_query = {% if user.can_approve %}'?sort_by=listen'{% else %}'?sort_by=random'{% endif %}
     this.next_url = null
     this.quality_control = {}
     this.quality_control.person = {{ person.id }}
@@ -143,6 +144,13 @@ class Listen{
         self.down_vote();
       }
     })
+
+    $(sentence_block).find('.next').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(sentence_block).find('a').addClass('disabled')
+        self.next();
+      }
+    })  
 
 
   }
@@ -231,7 +239,7 @@ class Listen{
     var self = this;
     if (this.sentence){
       $(sentence_block).removeClass('disabled')
-      $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
+      $(sentence_block).find('.next, .auto-play').removeClass('disabled')
       $(sentence_block).find('.sentence .text-area').remove()
       {% if user.can_approve %}
       var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
@@ -394,6 +402,7 @@ class Listen{
   up_vote(){
     this.quality_control.good = 1
     this.quality_control.bad = 0
+    this.quality_control.approved = false;
     console.log(this.quality_control);
     this.post_put();
   }
@@ -401,6 +410,7 @@ class Listen{
   down_vote(){
     this.quality_control.bad = 1
     this.quality_control.good = 0
+    this.quality_control.approved = false;
     console.log(this.quality_control);
     this.post_put();
   }
@@ -442,13 +452,22 @@ class Player {
 
     $(this.audio).bind('canplay', function(){
       if ($('a.auto-play').hasClass('auto-play-on')){
-
         self.audio.play();
-      } 
+      }
     });
 
     $(this.audio).bind('play', function(){
       $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+    });
+
+    $(this.audio).bind('ended', function(){
+      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+
+
+      $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
+
+
+
     });
 
   }

@@ -11,6 +11,7 @@ from corpus.serializers import QualityControlSerializer,\
                          SourceSerializer
 from rest_framework import generics
 from django.core.cache import cache
+import random
 
 
 class OneHundredResultPagination(pagination.PageNumberPagination):
@@ -169,7 +170,10 @@ class RecordingPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             self.message = _("Only staff can read recordings.")
-            return request.user.is_staff
+            if request.user.is_staff:
+                person = get_person(request)
+                cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
+                return True
         else:
             if request.method in ['PUT']:
                 if request.user.is_staff:
@@ -198,9 +202,15 @@ class RecordingViewSet(viewsets.ModelViewSet):
         person = get_person(self.request)
         if 'listen' in sort_by.lower():
             queryset = queryset\
-                .exclude(quality_control__person=person)\
-                .annotate(num_qc=Count('quality_control'))\
-                .order_by('num_qc')
+                .exclude(quality_control__person=person)
+            # .annotate(num_qc=Count('quality_control'))\
+            # .order_by('num_qc')
+
+            if len(queryset) > 1:
+                i = random.randint(0, len(queryset)-1)
+                return [queryset[i]]
+            else:
+                return queryset
 
         return queryset
 
@@ -246,8 +256,18 @@ class ListenViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         person = get_person(self.request)
         queryset = Recording.objects.exclude(quality_control__person=person)
+        sort_by = self.request.query_params.get('sort_by', '')
+
+        # Let's just get a random recording.
+        '''
         queryset = queryset\
             .annotate(num_qc=Count('quality_control'))\
             .order_by('num_qc')
+        '''
+
+        if 'random' in sort_by.lower():
+            if len(queryset) > 1:
+                i = random.randint(0, len(queryset)-1)
+                return [queryset[i]]
 
         return queryset
