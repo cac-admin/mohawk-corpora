@@ -2,6 +2,10 @@
 from django.contrib.auth.models import User
 from django.utils import translation
 from django.conf import settings
+
+from corpus.base_settings import \
+    LANGUAGES
+
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Person, KnownLanguage
 import logging
@@ -82,62 +86,67 @@ def set_language_cookie(response, language):
     response.set_cookie(
         settings.LANGUAGE_COOKIE_NAME,
         language,
-        max_age=2*365 * 24 * 60 * 60, 
-        domain=settings.SESSION_COOKIE_DOMAIN, 
+        max_age=2*365 * 24 * 60 * 60,
+        domain=settings.SESSION_COOKIE_DOMAIN,
         secure=settings.SESSION_COOKIE_SECURE or None
     )
     return response
 
-def set_current_language_for_person(person, language):    
+
+def set_current_language_for_person(person, language):
     kl = KnownLanguage.objects.get(person=person, language=language)
     kl.active = True
     kl.save()
     translation.activate(language)
 
+
 def get_current_language(request):
     if request.user.is_authenticated():
         person = get_or_create_person(request)
         try:
-            active_language = KnownLanguage.objects.get(person=person, active=True)
+            active_language = \
+                KnownLanguage.objects.get(person=person, active=True)
         except ObjectDoesNotExist:
             return None
-        return active_language.language # are we returning tuple or ang code??
+        return active_language.language  # are we returning tuple or ang code??
     else:
         return translation.get_language()
 
 
 def get_num_supported_languages():
-    return len(settings.LANGUAGES)
+    return len(LANGUAGES)
 
 
 def get_known_languages(person):
-    if not isinstance(person,Person):
+    if not isinstance(person, Person):
         try:
             person = Person.objects.get(user=person)
         except:
             return None
     ''' Returns a list of language codes known by person '''
-    known_languages = [i.language for i in KnownLanguage.objects.filter(person=person) ]
+    known_languages = \
+        [i.language for i in KnownLanguage.objects.filter(person=person)]
     return known_languages
 
 
 def get_unknown_languages(person):
-    if isinstance(person,User):
+    if isinstance(person, User):
         try:
             person = Person.objects.get(user=person)
         except:
             person = None
     else:
         person = None
-        
+
     if person is None:
         known_languages = []
     else:
         ''' Returns a list of language codes not known by person '''
-        known_languages = [i.language for i in KnownLanguage.objects.filter(person=person) ]
+        known_languages = \
+            [i.language for i in KnownLanguage.objects.filter(person=person)]
 
     alter_choices = []
-    for i in range(len(settings.LANGUAGES)):
-        if settings.LANGUAGES[i][0] not in known_languages:
-            alter_choices.append(settings.LANGUAGES[i][0])
+    for i in range(len(LANGUAGES)):
+        if LANGUAGES[i][0] not in known_languages:
+            alter_choices.append(LANGUAGES[i][0])
     return alter_choices

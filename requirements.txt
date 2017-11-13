@@ -1,6 +1,6 @@
 # pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
 
-Django==1.10.8
+Django==1.11.7
 boto
 Pillow
 celery
@@ -48,3 +48,9 @@ djangorestframework
 django-coreapi
 pygments
 markdown
+
+# Autocomplete
+django-autocomplete-light
+
+#Support
+pyyaml

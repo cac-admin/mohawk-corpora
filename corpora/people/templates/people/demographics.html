@@ -6,45 +6,43 @@
 {% load sass_tags %}
 
 {% block content %}
+  <div class="container" style="text-align: center;">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col demographics">
 
-	<div class="container" style="text-align: center;">
-		<div class="row">
-			<div class="col-xs-12 col-sm-1 col-md-3 col-lg-3"></div>
-			<div class="col-xs-12 col-sm-10 col-md-6 col-lg-6 demographics">
+        <form method="post" id="demographic_form"> {%csrf_token%}
+          {% for field in form %}
+              <div class="form-group">
+                  {{ field.errors }}
+                  {{ field.label_tag }} {{ field }}
+                  {% if field.help_text %}<small class="text-muted">{{ field.help_text|safe }}</small>{% endif %}
+              </div>
+          {% endfor %}
+          <input type="submit" value="Submit" class="button">
 
-				<form method="post"> {%csrf_token%}
-					{% for field in form %}
-					    <div class="fieldWrapper">
-					        {{ field.errors }}
-					        {{ field.label_tag }} {{ field }}
-					        {% if field.help_text %}
-					        <h3><p class="help">{{ field.help_text|safe }}</p></h3>
-					        {% endif %}
-					    </div>
-					{% endfor %}
-					<input type="submit" value="Submit" class="button">
-				</form>
+                    
+        </form>
+      </div>
+      <div class="col"></div>
+  </div>
+</div>
 
 
-				{% comment %}
+{% addtoblock 'js-end' %}
+{{ form.media }}
+{% endaddtoblock %}
 
-				<a href="javascript:void(0)" id="skip">
-					<div class="button">
-						Skip
-					</div>
-				</a>
 
-				
-				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" id="skip" style="display: none;">
-					<a href="javascript:void(0)">
-						<div class="button">
-							Skip
-						</div>
-					</a>
-				</div>
-				{% endcomment %}
-			</div>
-			<div class="col-xs-12 col-sm-1 col-md-3 col-lg-3"></div>
-		</div>
-	</div>
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$('#demographic_form').find('label').addClass('col-form-label');
+$('#demographic_form').find('input').addClass('form-control');
+$('#demographic_form').find('select').addClass('form-control');
+
+</script>
+{% endaddtoblock %}
+
+
 {% endblock %}

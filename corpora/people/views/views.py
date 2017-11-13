@@ -7,7 +7,13 @@ from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
 
-from people.helpers import get_current_language, get_num_supported_languages, get_or_create_person, get_unknown_languages, set_current_language_for_person, set_language_cookie
+from people.helpers import get_current_language,\
+    get_num_supported_languages,\
+    get_or_create_person,\
+    get_unknown_languages,\
+    set_current_language_for_person,\
+    set_language_cookie
+
 from corpus.helpers import get_next_sentence, get_sentences
 
 from people.models import Person, KnownLanguage, Demographic
@@ -31,10 +37,10 @@ def profile(request):
         unknown_languages = get_unknown_languages(person)
 
         if not current_language:
-            if len(known_languages)==0:
+            if len(known_languages) == 0:
                 url = reverse('people:choose_language') + '?next=people:profile'
                 return redirect(url)
-            elif len(known_languages)>=1:
+            elif len(known_languages) >= 1:
                 set_current_language_for_person(person, known_languages[0].language)
                 current_language = known_languages[0].language
             else:
@@ -177,7 +183,7 @@ def set_language(request):
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
 
-            response =  redirect(reverse(url)) #render(request,  'people/set_language.html')
+            response = redirect(reverse(url)) #render(request,  'people/set_language.html')
             response = set_language_cookie(response, user_language)
             logger.debug('RESPONSE: {0}'.format(response))
             return response
@@ -192,6 +198,7 @@ def create_demographics(request):
         person = get_or_create_person(request)
 
         if form.is_valid():
+            #  Chek if demographic data already there if so then replace.
             demographic = form.save(commit=False)
             demographic.person = person
             demographic.save()

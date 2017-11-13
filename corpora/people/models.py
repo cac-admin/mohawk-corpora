@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 from django.forms import ModelForm
-
 from django.contrib.auth.models import User
-
-from corpora.settings import LANGUAGES, LANGUAGE_CODE  # Import supported languages and default language.
-
-
+from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from django.utils.translation import ugettext_lazy as _
-
-
 from django.dispatch import receiver
-
 from django.core.exceptions import ObjectDoesNotExist
 import uuid
 
@@ -23,17 +15,35 @@ def get_uuid():
 
 
 class Tribe(models.Model):
-    name = models.CharField(help_text='Name', max_length=200, unique=True)
+    name = models.CharField(
+        help_text=_('Name of tribe.'),
+        max_length=200,
+        unique=True)
 
     class Meta:
-        verbose_name = 'Tribe'
-        verbose_name_plural = 'Tribes'
+        verbose_name = _('Tribe')
+        verbose_name_plural = _('Tribes')
+
+    def __unicode__(self):
+        return self.name
 
 
 class Person(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    full_name = models.CharField(help_text=_('Full Name'), max_length=200, blank=True)
-    uuid = models.CharField(max_length=64, default=get_uuid, editable=False, unique=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True)
+    full_name = models.CharField(
+        help_text=_('Full Name'),
+        max_length=200,
+        blank=True)
+    uuid = models.CharField(
+        max_length=64,
+        default=get_uuid,
+        editable=False,
+        unique=True)
+    # accept_terms = models.BooleanField(editable=False, default=False)
 
     class Meta:
         verbose_name = _('Person')
@@ -53,13 +63,35 @@ class Demographic(models.Model):
         ('A', _('Asexual'))
     )
 
-    # birthday = models.DateField(help_text=_('When were you born?'), null=True, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True, help_text=_('How old are you?'))
-    sex = models.CharField(help_text=_('Gender'), choices=SEX_CHOICES, max_length=2, null=True, blank=True)
-    person = models.OneToOneField(Person, on_delete=models.CASCADE, null=True, unique=True)
+    age = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=_('How old are you?'))
+    sex = models.CharField(
+        help_text=_('Gender'),
+        choices=SEX_CHOICES,
+        max_length=2,
+        null=True,
+        blank=True)
+    person = models.OneToOneField(
+        Person,
+        on_delete=models.CASCADE,
+        null=True,
+        unique=True)
 
-    # tribe
+    tribe = models.ManyToManyField(
+        Tribe,
+        help_text=_('Which tribe(s) do you identify with?'),
+        null=True,
+        blank=True)
+    # tribe - This should be many field - many to many?
+    # where did you grow up
     # ethnicities
+    # anthing else?
+
+    def tribe_names(self):
+        return u', '.join([a.name for a in self.tribe.all()])
+    tribe_names.short_description = _('Tribes')
 
 
 class KnownLanguage(models.Model):
@@ -80,14 +112,51 @@ class KnownLanguage(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
+    accent = models.CharField(choices=ACCENTS, max_length=8, null=True)
+    dialect = models.CharField(choices=DIALECTS, max_length=8, null=True)
+    # where did you learn your reo?
+
     class Meta:
         unique_together = (('person', 'language'))
 
 
+class License(models.Model):
+    license_name = models.CharField(
+        max_length=250,
+        help_text=_('Name of license'))
+    description = models.TextField(
+        help_text=_('Please provide a description of the license.'))
+    license = models.TextField(
+        help_text=_('The actual license text.'),
+        null=True)
+    # should the site have alink to this? or each person can choose a icense?
+    # initially just have one license in the database and that's the only one
+    # they can use
+
+    def __unicode__(self):
+        return self.license_name
+
+
+class AcceptLicense(models.Model):
+    license = models.ManyToManyField(License)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    def license_names(self):
+        return ', '.join([a.license_name for a in self.license.all()])
+    license_names.short_description = _('Accepted licenses')
+
+
 @receiver(models.signals.post_save, sender=KnownLanguage)
-def deactivate_other_known_languages_when_known_language_activated(sender, instance, **kwargs):
+def deactivate_other_known_languages_when_known_language_activated(
+        sender,
+        instance,
+        **kwargs):
+
     if instance.active:
-        known_languages = KnownLanguage.objects.filter(person=instance.person).exclude(pk=instance.pk)
+        known_languages = KnownLanguage.objects\
+            .filter(person=instance.person)\
+            .exclude(pk=instance.pk)
+
         for kl in known_languages:
             kl.active = False
             kl.save()
@@ -96,18 +165,26 @@ def deactivate_other_known_languages_when_known_language_activated(sender, insta
 @receiver(models.signals.post_save, sender=KnownLanguage)
 def ensure_a_language_is_active(sender, instance, **kwargs):
     try:
-        active_language = KnownLanguage.objects.get(person=instance.person, active=True)
+        active_language = KnownLanguage.objects.get(
+            person=instance.person,
+            active=True)
     except ObjectDoesNotExist:
-        known_language = KnownLanguage.objects.filter(person=instance.person).first()
+        known_language = KnownLanguage.objects\
+            .filter(person=instance.person).first()
+
         if known_language:
             known_language.active = True
             known_language.save()
 
 
 @receiver(models.signals.post_delete, sender=KnownLanguage)
-def change_active_language_when_active_language_deleted(sender, instance, **kwargs):
+def change_active_language_when_active_language_deleted(
+        sender, instance, **kwargs):
+
     if instance.active:
-        known_language = KnownLanguage.objects.filter(person=instance.person).first()
+        known_language = KnownLanguage.objects\
+            .filter(person=instance.person).first()
+
         if known_language:
             known_language.active = True
             known_language.save()

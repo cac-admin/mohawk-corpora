@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from .models import KnownLanguage, Person, Demographic
+from dal import autocomplete
 
 # from django.conf.settings import LANGUAGES
 
@@ -38,4 +39,18 @@ class DemographicForm(forms.ModelForm):
 
     class Meta:
         model = Demographic
-        fields = ('age', 'sex')
+        fields = ('age', 'sex', 'tribe')
+        widgets = {
+            'tribe': autocomplete.ModelSelect2Multiple(url='people:tribe-autocomplete')
+        }
+
+
+class DemographicFormAdmin(forms.ModelForm):
+    # date_of_birth = DateField(input_formats=settings.DATE_INPUT_FORMATS)
+
+    class Meta:
+        model = Demographic
+        fields = ('__all__')
+        widgets = {
+            'tribe': autocomplete.ModelSelect2Multiple(url='people:tribe-autocomplete')
+        }

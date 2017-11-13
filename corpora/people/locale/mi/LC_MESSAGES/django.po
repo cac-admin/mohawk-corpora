@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 06:14+0000\n"
+"POT-Creation-Date: 2017-11-13 02:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,79 +21,79 @@ msgstr ""
 msgid "Full Name"
 msgstr "Ingoa"
 
-#: people/models.py:39
+#: people/models.py:46
 msgid "Person"
 msgstr "He Tāngata"
 
-#: people/models.py:40
+#: people/models.py:47
 msgid "People"
 msgstr "Ngā tāngata"
 
-#: people/models.py:48
+#: people/models.py:55
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:49
+#: people/models.py:56
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:50
+#: people/models.py:57
 msgid "Other"
 msgstr ""
 
-#: people/models.py:51
+#: people/models.py:58
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:52
+#: people/models.py:59
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:53
+#: people/models.py:60
 msgid "Asexual"
 msgstr "Kore ai"
 
-#: people/models.py:57
+#: people/models.py:66
 msgid "How old are you?"
 msgstr "Ehia ngā tau?"
 
-#: people/models.py:58
+#: people/models.py:68
 msgid "Gender"
 msgstr ""
 
-#: people/models.py:67
+#: people/models.py:88
 msgid "Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:68
+#: people/models.py:89
 msgid "Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:69
+#: people/models.py:90
 msgid "Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:70
+#: people/models.py:91
 msgid "Near Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:71
+#: people/models.py:92
 msgid "Near Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:72
+#: people/models.py:93
 msgid "Near Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:73
+#: people/models.py:94
 msgid "Second Language Learner - Beginner"
 msgstr ""
 
-#: people/models.py:74
+#: people/models.py:95
 msgid "Second Language Learner - Intermediate"
 msgstr ""
 
-#: people/models.py:75
+#: people/models.py:96
 msgid "Second Language Learner - Advanced"
 msgstr ""
 

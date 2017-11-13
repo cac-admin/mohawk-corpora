@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
-from people.views import views
+from people.views import views, autocomplete
 
 urlpatterns = [
     url(r'^profile', views.profile, name='profile'),
@@ -9,4 +9,11 @@ urlpatterns = [
     # url(r'^(?P<uuid>[\w-]+)', views.person, name='person'),
     url(r'^demographics', views.create_demographics, name='demographics'),
     url(r'^create_account', views.create_user, name='create_user'),
+
+    # autocomplete
+    url(
+        r'^tribe-autocomplete/$',
+        autocomplete.TribeAutocomplete.as_view(),
+        name='tribe-autocomplete',
+    ),
 ]

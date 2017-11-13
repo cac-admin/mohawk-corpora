@@ -9,7 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey,\
 from django.contrib.contenttypes.models import ContentType
 
 from django.contrib.auth.models import User
-from corpora.settings import LANGUAGES, LANGUAGE_CODE
+from corpus.base_settings import LANGUAGES, LANGUAGE_CODE
 
 from uuid import uuid4
 import os
@@ -192,3 +192,5 @@ class Recording(models.Model):
             return self.person.full_name
         else:
             return _('None')
+
+
