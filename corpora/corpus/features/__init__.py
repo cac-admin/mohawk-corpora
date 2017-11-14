@@ -10,7 +10,7 @@ def import_finder(lang):
     if lang.isalpha():
         try:
             m = import_module('features.%s' % lang)
-            return m.find_features
+            return m.get_features
         except ImportError as e:
             return default_feature_finder
         except AttributeError as e:
