@@ -2,7 +2,8 @@ from importlib import import_module
 
 def default_feature_finder(x):
     # rely only on the set of characters.
-    return set
+    from collections import Counter
+    return Counter
 
 
 def import_finder(lang):
