@@ -175,3 +175,10 @@ def partially_normalise_text(text):
     text = re.sub(r'\n\s*\n+', '. ', text)
     text = re.sub(r'\n\s*', ' ', text)
     return text
+
+
+def get_features(sentence):
+    features =  find_features(sentence,
+                              word_boundaries=False,
+                              trigram_mode='all')
+    return features
