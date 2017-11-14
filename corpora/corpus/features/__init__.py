@@ -12,8 +12,6 @@ def import_finder(lang):
             m = import_module('features.%s' % lang)
             return m.find_features
         except ImportError as e:
-            print >> sys.stderr, "lang %s is not known" % lang
             return default_feature_finder
         except AttributeError as e:
-            print >> sys.stderr, "'%s' has no find_features method" % lang
             return default_feature_finder
