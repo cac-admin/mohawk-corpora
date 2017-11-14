@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-13 02:30+0000\n"
+"POT-Creation-Date: 2017-11-13 20:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,84 +17,116 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: people/models.py:35
+#: people/models.py:19
+msgid "Name of tribe."
+msgstr ""
+
+#: people/models.py:24
+msgid "Tribe"
+msgstr ""
+
+#: people/models.py:25 people/models.py:94
+msgid "Tribes"
+msgstr ""
+
+#: people/models.py:38
 msgid "Full Name"
 msgstr ""
 
-#: people/models.py:46
+#: people/models.py:49
 msgid "Person"
 msgstr ""
 
-#: people/models.py:47
+#: people/models.py:50
 msgid "People"
 msgstr ""
 
-#: people/models.py:55
+#: people/models.py:58
 msgid "Male"
 msgstr ""
 
-#: people/models.py:56
+#: people/models.py:59
 msgid "Female"
 msgstr ""
 
-#: people/models.py:57
+#: people/models.py:60
 msgid "Other"
 msgstr ""
 
-#: people/models.py:58
+#: people/models.py:61
 msgid "Transexual (Male to Female)"
 msgstr ""
 
-#: people/models.py:59
+#: people/models.py:62
 msgid "Transexual (Female to Male)"
 msgstr ""
 
-#: people/models.py:60
+#: people/models.py:63
 msgid "Asexual"
 msgstr ""
 
-#: people/models.py:66
+#: people/models.py:69
 msgid "How old are you?"
 msgstr ""
 
-#: people/models.py:68
+#: people/models.py:71
 msgid "Gender"
 msgstr ""
 
-#: people/models.py:88
+#: people/models.py:84
+msgid "Which tribe(s) do you identify with?"
+msgstr ""
+
+#: people/models.py:99
 msgid "Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:89
+#: people/models.py:100
 msgid "Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:90
+#: people/models.py:101
 msgid "Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:91
+#: people/models.py:102
 msgid "Near Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:92
+#: people/models.py:103
 msgid "Near Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:93
+#: people/models.py:104
 msgid "Near Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:94
+#: people/models.py:105
 msgid "Second Language Learner - Beginner"
 msgstr ""
 
-#: people/models.py:95
+#: people/models.py:106
 msgid "Second Language Learner - Intermediate"
 msgstr ""
 
-#: people/models.py:96
+#: people/models.py:107
 msgid "Second Language Learner - Advanced"
+msgstr ""
+
+#: people/models.py:126
+msgid "Name of license"
+msgstr ""
+
+#: people/models.py:128
+msgid "Please provide a description of the license."
+msgstr ""
+
+#: people/models.py:130
+msgid "The actual license text."
+msgstr ""
+
+#: people/models.py:146
+msgid "Accepted licenses"
 msgstr ""
 
 #: people/templates/account/account_inactive.html:5
@@ -466,35 +498,31 @@ msgstr "G'Day!"
 msgid "This is a long welcome message."
 msgstr "This welcom message is long as."
 
-#: people/templates/people/profile.html:13
-msgid "Hello"
-msgstr ""
-
-#: people/templates/people/profile.html:20
+#: people/templates/people/profile.html:59
 msgid "Recordings"
 msgstr ""
 
-#: people/templates/people/profile.html:29
+#: people/templates/people/profile.html:68
 msgid "You haven't recorded any corpus yet."
 msgstr ""
 
-#: people/templates/people/profile.html:32
+#: people/templates/people/profile.html:71
 msgid "Start Recording"
 msgstr ""
 
-#: people/templates/people/profile.html:39
+#: people/templates/people/profile.html:78
 msgid "Sentences"
 msgstr ""
 
-#: people/templates/people/profile.html:44
+#: people/templates/people/profile.html:83
 msgid "Record"
 msgstr ""
 
-#: people/templates/people/profile.html:49
+#: people/templates/people/profile.html:88
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr ""
 
-#: people/views/views.py:78
+#: people/views/views.py:84
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr ""

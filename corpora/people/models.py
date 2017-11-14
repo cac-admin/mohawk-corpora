@@ -75,6 +75,7 @@ class Demographic(models.Model):
         blank=True)
     person = models.OneToOneField(
         Person,
+        related_name='demographic',
         on_delete=models.CASCADE,
         null=True,
         unique=True)
@@ -109,7 +110,7 @@ class KnownLanguage(models.Model):
 
     language = models.CharField(choices=LANGUAGES, max_length=16)
     level_of_proficiency = models.IntegerField(choices=PROFICIENCIES)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, related_name='known_languages', on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
     accent = models.CharField(choices=ACCENTS, max_length=8, null=True)
@@ -139,7 +140,10 @@ class License(models.Model):
 
 class AcceptLicense(models.Model):
     license = models.ManyToManyField(License)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(
+        Person,
+        related_name='acceted_licenses',
+        on_delete=models.CASCADE)
 
     def license_names(self):
         return ', '.join([a.license_name for a in self.license.all()])

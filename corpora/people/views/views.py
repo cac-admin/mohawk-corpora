@@ -6,6 +6,7 @@ from django.conf import settings
 from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
+from django.views.generic.base import TemplateView
 
 from people.helpers import get_current_language,\
     get_num_supported_languages,\
@@ -17,14 +18,41 @@ from people.helpers import get_current_language,\
 from corpus.helpers import get_next_sentence, get_sentences
 
 from people.models import Person, KnownLanguage, Demographic
+from people.serializers import PersonSerializer
 from corpus.models import Recording, Sentence
 
 from django.forms import inlineformset_factory
-from people.forms import KnownLanguageFormWithPerson, DemographicForm
+from people.forms import \
+    KnownLanguageFormWithPerson,\
+    DemographicForm,\
+    PersonForm
+
+
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.views import APIView
+
 
 import logging
 logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
+
+
+class ProfileDetail(APIView, TemplateView):
+    template_name = "people/profile_detail.html"
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+
+        person = get_or_create_person(self.request)
+        serializer = PersonSerializer(person)
+        context['person'] = person
+        context['serializer'] = serializer
+
+        context['demographic_form'] = DemographicForm(instance=person.demographic)
+        context['person_form'] = PersonForm(instance=person)
+
+        return context
 
 
 def profile(request):

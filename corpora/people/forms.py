@@ -34,6 +34,14 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         # self.fields['language'].choices = alter_choices
         # 
 
+
+class PersonForm(forms.ModelForm):
+
+    class Meta:
+        model = Person
+        fields = ('full_name',)
+
+
 class DemographicForm(forms.ModelForm):
     # date_of_birth = DateField(input_formats=settings.DATE_INPUT_FORMATS)
 

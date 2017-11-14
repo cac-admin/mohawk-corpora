@@ -101,6 +101,9 @@ div.content{
 
 
 // Input forms
+
+/*
+
 input[type="text"], input[type="password"], input[type="email"] {
 	margin: 0;
 	appearance: none;
@@ -138,12 +141,13 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 ::-webkit-input-placeholder {
 	@include placeholder();
 }
-
-:-moz-placeholder { /* Firefox 18- */
+*/
+/*
+:-moz-placeholder { 
 	@include placeholder();
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder {  
 	@include placeholder(); 
 }
 
@@ -217,3 +221,5 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 @keyframes moveFromRight {
 	from { -webkit-transform: translateX(100%); transform: translateX(100%); }
 }
+
+*/

@@ -1,0 +1,245 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress sass_tags i18n rest_framework %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'corpus/scss/actionButtons';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 60px 0px 60px 0px;
+}
+
+
+</style>
+{% endaddtoblock %}
+  
+
+{% include 'people/profile_header.html' %}
+<div class="container">
+<div class="row">
+  <div class="col">
+    
+    <div class="profile" id="profile">
+
+
+    <form action="" method="post" id="person_form">
+    {% csrf_token %}
+
+    {% for field in person_form %}
+    <div class="form-group row">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-10">{{ field }}</div>
+        {% if field.help_text %}
+        <div class="col-2"></div><div class="col-9">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    </form>
+
+
+    <form action="" method="post" id="demographic_form">
+    {% csrf_token %}
+    {% for field in demographic_form %}
+    <div class="form-group row">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-10">{{ field }}</div>
+        {% if field.help_text %}
+        <div class="col-2"></div><div class="col-9">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </form>
+
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'people/js/profile.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}{{ demographic_form.media }}{% endaddtoblock %}
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$('#demographic_form, #person_form').find('label').addClass('col-form-label col-2');
+$('#demographic_form, #person_form').find('input').addClass('form-control');
+$('#demographic_form, #person_form').find('select').addClass('form-control');
+
+</script>
+{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+
+<script type="text/javascript">
+  
+class Profile{
+  constructor(pk, target_element_selector){
+    this.base_url = '/api/persons/'+pk+'/'
+    this.target_element = $(target_element_selector)
+    this.data = null
+    var self = this
+  }
+
+  load(){
+    this.get_data()
+  }
+
+  initialize_elements(){
+    console.log('Initializing elements')
+    var self = this
+    $(this.target_element).find('form').on('keypress', function(event){
+      if(event.keyCode == 13) {
+        event.preventDefault();
+        self.save()
+      }
+    });
+
+    $(this.target_element).find('form input, form select').change(function(){
+      console.log('change')
+      self.save()
+    });
+    
+    console.log(this.data)
+    $.each(this.data, function(key, value){
+      console.log(key)
+      console.log(value)
+    })
+
+  }
+
+  get_data(){
+    var self = this;
+    console.log('Fetching profile data')
+    $.ajax({
+        url: this.base_url,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('No person exists.')
+          // DO SOMETHING MEANINGFUL!
+        }
+        }).done(function(d){
+          self.data = d;
+          self.initialize_elements()
+        }).fail(function(){
+          console.log('FAILED')
+          // do something usefule!
+        });
+  }
+
+  save(){
+    console.log('saving')
+
+    var demo = this.data.demographic
+    demo.age = $(this.target_element).find('#id_age').val()
+    demo.sex = $(this.target_element).find('#id_sex').val()
+    demo.tribe = $(this.target_element).find('#id_tribe').val()
+
+    this.data.demographic = demo
+
+    this.data.full_name = $(this.target_element).find('#id_full_name').val()
+
+
+    this.put(this.data)
+
+  }
+
+
+  put(data){
+    var self = this
+    data = JSON.stringify(data)
+    console.log(data)
+    $.ajax({
+      type: "PUT",
+      data: data,
+      url: this.base_url,
+      dataType: 'json',
+      contentType:"application/json; charset=utf-8",
+      error: function(e){
+        console.log(e.responseText)
+      }
+    }).done(function(){
+      console.log('saved')
+    }).fail(function(){
+      console.log('Failed.')
+    })
+    return true;    
+  }
+
+  post(data){
+    var self = this
+    $.ajax({
+      type: "POST",
+      data: data,
+      url: this.base_url,
+      dataType: 'json',
+      contentType:"application/json; charset=utf-8",
+      error: function(e){
+        console.log(e.responseText)
+      }
+    }).done(function(){
+      self.next();
+    }).fail(function(){
+      console.log('Failed.')
+    })
+    return true;    
+  }
+
+  post_put(){
+    var method = 'POST'
+    this.quality_control.object_id = this.recording.id
+    this.audio.pause()
+    if (this.recording.quality_control){
+      for (let qc of this.recording.quality_control){
+        if (qc.person == this.quality_control.person){
+          console.log('Found matching qc ')
+          this.quality_control_id = qc.id
+          this.quality_control.bad += qc.bad
+          this.quality_control.good += qc.good
+          method = 'PUT'
+        } else{
+          
+        }
+      }
+    }
+
+    if (method=='POST'){
+      this.post(this.quality_control)
+    } else {
+      this.put(this.quality_control)
+    }
+
+  }
+
+
+}
+
+
+</script>
+
+
+<script type="text/javascript">
+  profile = new Profile({{person.pk}}, '#profile');
+  profile.load()
+</script>
+{% endaddtoblock %}
+
+
+{% endblock %}

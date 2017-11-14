@@ -16,10 +16,10 @@ router.register(r'listen', corpus_api.ListenViewSet, 'listen')
 router.register(r'recordings', corpus_api.RecordingViewSet, 'recording')
 router.register(r'sources', corpus_api.SourceViewSet)
 
-# router.register(r'tribes', people_api.TribeViewSet)
-# router.register(r'demographics', people_api.DemographicViewSet)
-# router.register(r'persons', people_api.PersonViewSet)
-# router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
+router.register(r'tribes', people_api.TribeViewSet)
+router.register(r'demographics', people_api.DemographicViewSet)
+router.register(r'persons', people_api.PersonViewSet)
+router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 
 urlpatterns = [
 
