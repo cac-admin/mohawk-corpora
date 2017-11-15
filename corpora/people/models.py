@@ -45,6 +45,10 @@ class Person(models.Model):
         unique=True)
     # accept_terms = models.BooleanField(editable=False, default=False)
 
+    def email(self):
+        if self.user:
+            return self.user.email
+
     class Meta:
         verbose_name = _('Person')
         verbose_name_plural = _('People')
@@ -109,8 +113,16 @@ class KnownLanguage(models.Model):
         )
 
     language = models.CharField(choices=LANGUAGES, max_length=16)
-    level_of_proficiency = models.IntegerField(choices=PROFICIENCIES)
-    person = models.ForeignKey(Person, related_name='known_languages', on_delete=models.CASCADE)
+    level_of_proficiency = models.IntegerField(
+        choices=PROFICIENCIES,
+        null=True,
+        blank=True)
+
+    person = models.ForeignKey(
+        Person,
+        related_name='known_languages',
+        on_delete=models.CASCADE)
+
     active = models.BooleanField(default=False)
 
     accent = models.CharField(choices=ACCENTS, max_length=8, null=True)

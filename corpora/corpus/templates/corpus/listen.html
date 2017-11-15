@@ -37,10 +37,18 @@ div.content{
         <div class="col-12">
           <div class="circle-button-container">
             <div class="circle background-circle">
-                <a href="javascript:void(0)" id="record-button">
-                    <div class="circle foreground-circle unclicked-circle record">
-                        <div class="circle-text"></div>
+
+                <a href="javascript:void(0)" id="stop-button">
+                    <div class="circle foreground-circle unclicked-circle stop">
                         <div class="stop-square"></div>
+                    </div>
+                </a>
+
+                <a href="javascript:void(0)" id="loading">
+                    <div class="circle foreground-circle unclicked-circle loading">
+                        <div class="play-loading">
+                          <div><i class="fa fa-circle-o-notch fa-spin fa-3x"></i></div>
+                        </div>
                     </div>
                 </a>
 
@@ -49,6 +57,10 @@ div.content{
                         <div class="play-triangle"></div>
                     </div>
                 </a>
+
+
+                
+
             </div>
           </div>
         </div>
@@ -64,7 +76,7 @@ div.content{
             data-content="{% trans 'Save changes.' %}"
             ><i class="fa fa-save fa-fw"></i></a>
 
-      <a href="#" class="approve"
+      <a href="#" class="approve disabled"
         data-toggle="popover" 
         data-trigger="hover" 
         title="Approve" 
@@ -72,9 +84,9 @@ div.content{
         ><i class="fa fa-check-circle-o fa-fw"></i></a>
       {% else %}
       {% endif %}
-      <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
-      <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>
-      <a href="javascript:void(0)" id="next" class="next"><i class="fa fa-step-forward fw"></i> {% trans "Skip" %}</a>    
+      <a href="#" class="good disabled"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
+      <a href="#" class="bad disabled"><i class="fa fa-thumbs-o-down fa-fw"></i></a>
+      <a href="javascript:void(0)" id="next disabled" class="next"><i class="fa fa-step-forward fw"></i> {% trans "Skip" %}</a>    
     </div>
 
   </div>
@@ -147,23 +159,39 @@ class Listen{
 
     $(sentence_block).find('.next').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
-        $(sentence_block).find('a').addClass('disabled')
+        $(sentence_block).find('.actions a').addClass('disabled')
+        self.audio.pause()
+        self.audio.src=null
         self.next();
+        self.show_loading()
       }
     })  
 
 
   }
 
+  show_loading(){
+    $('.foreground-circle').hide();
+    $('.foreground-circle.loading').show();
+    $('.foreground-circle.loading div').show();    
+  }
+
+  hide_loading(){
+    $('.foreground-circle').show();
+    $('.foreground-circle.loading').hide();
+  }
+
   get_recordings(){
     var self = this;
     console.log('Fetching more recordings')
+    self.show_loading()
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
         error: function(XMLHttpRequest, textStatus, errorThrown){
           console.log('Trying from first page')
           self.next_url=null
           self.get_recordings()
+          self.hide_loading()
         }
         }).done(function(d){
           self.objects = d.results
@@ -236,10 +264,12 @@ class Listen{
   }
 
   show_next_recording(){
+
     var self = this;
+    self.show_loading();
+
     if (this.sentence){
       $(sentence_block).removeClass('disabled')
-      $(sentence_block).find('.next, .auto-play').removeClass('disabled')
       $(sentence_block).find('.sentence .text-area').remove()
       {% if user.can_approve %}
       var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
@@ -253,7 +283,7 @@ class Listen{
       $(sentence_block).fadeIn('fast');
 
 
-      $('#play-button').show();
+      // $('#play-button').show();
 
       $.ajax({
         type: "GET",
@@ -265,7 +295,12 @@ class Listen{
           console.log(errorThrown)
         }
       }).done(function(){
+
+        $(sentence_block).find('.next, .auto-play').removeClass('disabled')
+        self.hide_loading()
+
         console.log('gotted')
+        // $(sentence_block).find('.actions a').removeClass('disabled')
         self.audio.src = self.recording.audio_file_url
       }).fail(function(){
         console.log('not gotted.')
@@ -302,6 +337,7 @@ class Listen{
 
   post_qc(data){
     var self = this
+    self.show_loading()
     this.quality_control.object_id = this.recording.id
     $.ajax({
       type: "POST",
@@ -311,17 +347,21 @@ class Listen{
       error: function(XMLHttpRequest, textStatus, errorThrown){
         console.log(XMLHttpRequest.status)
         console.log(XMLHttpRequest.responseText)
+        self.hide_loading()
       }
     }).done(function(){
+
       self.next();
     }).fail(function(){
       console.log('Failed.')
+      self.hide_loading()
     })
     return true;    
   }
 
   put_qc(data){
     var self = this
+    self.show_loading()
     $.ajax({
       type: "PUT",
       data: data,
@@ -329,11 +369,14 @@ class Listen{
       dataType: 'json',
       error: function(e){
         console.log(e.responseText)
+        self.hide_loading()
       }
     }).done(function(){
       self.next();
+
     }).fail(function(){
       console.log('Failed.')
+      self.hide_loading()
     })
     return true;    
   }
@@ -341,7 +384,7 @@ class Listen{
   save_sentence(text){
     var self=this
     this.recording.sentence_text = text
-
+    self.show_loading()
     var data = {
       id: this.recording.id,
       sentence_text: text
@@ -356,12 +399,15 @@ class Listen{
         console.log(textStatus.responseText)
         console.log(XMLHttpRequest)
         console.log(errorThrown)
+        self.hide_loading()
       }
     }).done(function(){
       console.log('Saved')
       self.reload();
+      self.hide_loading()
     }).fail(function(){
       console.log('Failed.')
+      self.hide_loading()
     })
   }
 
@@ -422,14 +468,30 @@ class Listen{
 class Player {
   constructor(){
     this.play_button_selector = '#play-button'
+    this.stop_button_selector = '#stop-button'
     this.audio_selector = '#play-audio'
     this.audio = document.getElementById('play-audio');
 
     var self = this;
+
+
+    $(this.play_button_selector).on('mousedown', function(){
+      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+      $(self.play_button_selector).on('blur', function(){
+        $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
+      });
+
+    });
+    
+
+
     $(this.play_button_selector).click(function(){
       self.audio.play();
-      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
     });    
+
+    $(this.stop_button_selector).click(function(){
+      self.audio.pause();
+    });  
 
     // When audio is done playing back, revert button to initial state
     $(this.audio).bind('ended', function(){
@@ -438,36 +500,74 @@ class Player {
 
     $('a.auto-play').click(function(event){
       var obj = event.currentTarget
-
+      console.log('auto play clicked')
       if ($(obj).hasClass('auto-play-off')){
         $(obj).removeClass('auto-play-off')
         $(obj).addClass('auto-play-on')
         self.audio.autoplay=true;
+        if (self.audio.paused){
+          self.audio.play()
+        }
       } else {
+        self.audio.autoplay=false;
         $(obj).removeClass('auto-play-on')
         $(obj).addClass('auto-play-off')
       }
 
     })
 
-    $(this.audio).bind('canplay', function(){
+    $(this.audio).bind('loadstart', function(){
+      $('.foreground-circle').hide();
+      $('.foreground-circle.loading').show();
+      $('.foreground-circle.loading div').show();
+      // $('.foreground-circle.loading').addClass('clicked-circle').removeClass('unclicked-circle').show();  
+    });
+
+
+    $(this.audio).bind('loadeddata', function(){
+      console.log('data loaded')
       if ($('a.auto-play').hasClass('auto-play-on')){
+        console.log('audo playing')
         self.audio.play();
+      } else{
+        $('.foreground-circle.loading').hide();
+        $('.foreground-circle.play').show();
+
       }
     });
 
     $(this.audio).bind('play', function(){
-      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+      $('.foreground-circle').hide();
+      $('.foreground-circle.loading').show();
+      $('.foreground-circle.loading div').show();
+      $('.foreground-circle.loading').addClass('clicked-circle').removeClass('unclicked-circle').show();  
+
+    });
+
+
+
+    $(this.audio).bind('playing', function(){
+      $('.foreground-circle.loading').removeClass('clicked-circle').addClass('unclicked-circle')
+
+      $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle').show();  
+
+      $('.foreground-circle.loading').hide();
+      $('.foreground-circle.stop').show();
+      $('.foreground-circle.stop div').show();
+    });
+
+    $(this.audio).bind('pause', function(){
+      $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
+      $('.foreground-circle.play').show();
+      $('.foreground-circle.stop').hide(); 
+      self.audio.currentTime = 0; 
     });
 
     $(this.audio).bind('ended', function(){
-      $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
-
-
+      $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
+      $('.foreground-circle.play').show();
+      $('.foreground-circle.stop').hide();  
       $(sentence_block).find('.approve, .good, .bad').removeClass('disabled')
-
-
-
     });
 
   }

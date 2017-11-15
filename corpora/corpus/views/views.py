@@ -67,54 +67,54 @@ def record(request):
 
     person = get_or_create_person(request)
 
-    if request.method == 'GET':
-        if request.GET.get('sentence', None):
-            sentence = Sentence.objects.get(pk=request.GET.get('sentence'))
-        else:
-            sentence = get_next_sentence(request)
-            if sentence is None:
-                return redirect('people:profile')
+    # if request.method == 'GET':
+    #     if request.GET.get('sentence', None):
+    #         sentence = Sentence.objects.get(pk=request.GET.get('sentence'))
+    #     else:
+    #         sentence = get_next_sentence(request)
+    #         if sentence is None:
+    #             return redirect('people:profile')
 
     # Generate a form model from the Recording model
-    RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
+    # RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
 
-    # If page receives POST request, save the submitted audio data as a
-    # recording model
-    if request.method == 'POST' and request.is_ajax():
+    # # If page receives POST request, save the submitted audio data as a
+    # # recording model
+    # if request.method == 'POST' and request.is_ajax():
 
-        # Create a form from the Recording Form model
-        form = RecordingFormAJAX(request.POST, request.FILES)
+    #     # Create a form from the Recording Form model
+    #     form = RecordingFormAJAX(request.POST, request.FILES)
 
-        # If the form is valid, save the new model and send back an OK HTTP
-        # Response
-        if form.is_valid():
-            recording = form.save()
-            recording.save()
-            return HttpResponse(
-                json.dumps({
-                    'success': True,
-                    'message': "Thank you for submitting a recording!\
-                                Here's another sentence for you to record.",
-                    'recording': json.dumps(
-                        {'id': recording.id,
-                         'sentence_text': recording.sentence_text})
-                }),
-                content_type='application/json',
-            )
+    #     # If the form is valid, save the new model and send back an OK HTTP
+    #     # Response
+    #     if form.is_valid():
+    #         recording = form.save()
+    #         recording.save()
+    #         return HttpResponse(
+    #             json.dumps({
+    #                 'success': True,
+    #                 'message': "Thank you for submitting a recording!\
+    #                             Here's another sentence for you to record.",
+    #                 'recording': json.dumps(
+    #                     {'id': recording.id,
+    #                      'sentence_text': recording.sentence_text})
+    #             }),
+    #             content_type='application/json',
+    #         )
 
-        # If the form is not valid, sent a 400 HTTP Response
-        else:
-            errors = form.errors
-            response = HttpResponse(
-                json.dumps({
-                        'err': "Sorry, your recording did not save.",
-                        'result': json.dumps(errors)
-                    }),
-                content_type='application/json'
-            )
-            response.status_code = 400
+    #     # If the form is not valid, sent a 400 HTTP Response
+    #     else:
+    #         errors = form.errors
+    #         response = HttpResponse(
+    #             json.dumps({
+    #                     'err': "Sorry, your recording did not save.",
+    #                     'result': json.dumps(errors)
+    #                 }),
+    #             content_type='application/json'
+    #         )
+    #         response.status_code = 400
 
-            return response
+    #         return response
 
     # Load up the page normally with request and object context
 
@@ -125,7 +125,7 @@ def record(request):
 
     context = {'request': request,
                'person': person,
-               'sentence': sentence,
+               # 'sentence': sentence,
                'content_type': ct.id,
                'user': request.user,
                'uuid': request.get_signed_cookie('uuid', 'none')}

@@ -32,12 +32,24 @@
 <div class="container name" >
   <div class="row">
     <div class="col" >
-      <h4>{{person.full_name}}</h4><small>Not you?
+      {% if person.full_name %}
+        <h4>{{person.full_name}}</h4><small>Not you?
         {% if user.is_authenticated %}
           <a href="{% url 'account_logout' %}">Logout</a>
         {% else %}
-          <a href="{% url 'account_login' %}">Login</a>
+          <a href="{% url 'account_login' %}">Login</a> or help us further by
+          <a href="{% url 'account_signup' %}">signing up</a>.
         {% endif %}</small>
+      {% else %}
+        <h4>Anonymous Kumara</h4><small>
+        {% if user.is_authenticated %}
+          Edit your profile
+          <a href="{% url 'account_logout' %}">Profile</a>
+        {% else %}
+          Help us further by <a href="{% url 'people:profile' %}">editing</a> your profile or
+          <a href="{% url 'account_signup' %}">signing up</a>.
+        {% endif %}</small>
+      {% endif %}
     </div>
   </div>
 </div>

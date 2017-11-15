@@ -6,9 +6,18 @@ from .models import \
 
 from people.forms import DemographicFormAdmin
 
-admin.site.register(Person)
 admin.site.register(License)
 admin.site.register(Tribe)
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = (
+        'full_name',
+        'email',
+        'user',
+        'uuid',
+        )
 
 
 @admin.register(Demographic)

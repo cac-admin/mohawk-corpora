@@ -7,6 +7,7 @@ from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
 from django.views.generic.base import TemplateView
+from django.core.exceptions import ObjectDoesNotExist
 
 from people.helpers import get_current_language,\
     get_num_supported_languages,\
@@ -40,6 +41,14 @@ logger = logging.getLogger('corpora')
 class ProfileDetail(APIView, TemplateView):
     template_name = "people/profile_detail.html"
     renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        person = get_or_create_person(self.request)
+        demographic, created = Demographic.objects.get_or_create(person=person)
+        if created:
+            demographic.save()
+
+        return super(ProfileDetail, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
@@ -221,20 +230,44 @@ def set_language(request):
 
 
 def create_demographics(request):
+    """
+    THIS VIEW SHOULD NO LONGER BE USED AS THE PROFILE VIEW HANDLES
+    AJAX EDITING OF DEMOGRAPHIC DATA
+    """
+    person = get_or_create_person(request)
+
     if request.method == "POST":
         form = DemographicForm(request.POST)
-        person = get_or_create_person(request)
 
         if form.is_valid():
             #  Chek if demographic data already there if so then replace.
             demographic = form.save(commit=False)
-            demographic.person = person
-            demographic.save()
+            instance, created = Demographic.objects.get_or_create(person=person)
+            if created:
+                demographic.person = person
+                demographic.save()
+            else:
+                instance.sex = demographic.sex
+                instance.age = demographic.age
+                for tribe in instance.tribe.all():
+                    instance.tribe.remove(tribe)
+                demographic.pk = instance.pk
+
+                for tribe in demographic.tribe.all():
+                    instance.tribe.add(tribe)
+                instance.save()
 
             return redirect(reverse('people:profile'))
 
     else:
-        form = DemographicForm()
+        try:
+            instance = Demographic.objects.get(person=person)
+            if instance.sex is None or instance.age is None:
+                form = DemographicForm(instance=instance)
+            else:
+                return redirect(reverse('people:profile'))
+        except ObjectDoesNotExist:
+            form = DemographicForm()
 
     return render(request, 'people/demographics.html', {'form': form})
 

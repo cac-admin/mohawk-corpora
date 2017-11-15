@@ -94,23 +94,30 @@ def set_language_cookie(response, language):
 
 
 def set_current_language_for_person(person, language):
-    kl = KnownLanguage.objects.get(person=person, language=language)
-    kl.active = True
-    kl.save()
+    try:
+        kl = KnownLanguage.objects.get(person=person, language=language)
+        kl.active = True
+        kl.save()
+    except ObjectDoesNotExist:
+        kl = KnownLanguage.objects.create(person=person, language=language)
+        kl.active = True
+        kl.save()
     translation.activate(language)
 
 
 def get_current_language(request):
+    language = translation.get_language()
     if request.user.is_authenticated():
         person = get_or_create_person(request)
         try:
             active_language = \
                 KnownLanguage.objects.get(person=person, active=True)
+            return active_language.language
+
         except ObjectDoesNotExist:
-            return None
-        return active_language.language  # are we returning tuple or ang code??
+            return language
     else:
-        return translation.get_language()
+        return language
 
 
 def get_num_supported_languages():

@@ -22,12 +22,16 @@ class StaffOnlyPermissions(permissions.BasePermission):
 
 class PersonInfoPermissions(permissions.BasePermission):
     """
-    Only an authenticated person can edit his/her own info. This
+    Only a person can edit his/her own info. This
     involved all info including related models; therefore this persmission
-    must work accross all the related hyperlink viewsets.
+    must work accross all the related hyperlink viewsets. Note that we
+    don't require authentication to edit the person's info. This
+    allows an anyone using the same device to provide info without
+    having to create a login.
     """
 
     def has_permission(self, request, view):
+        return True
         if request.user.is_staff and request.user.is_authenticated:
             self.message = _("Only staff can view this information.")
             return True
@@ -41,18 +45,21 @@ class PersonInfoPermissions(permissions.BasePermission):
             return True
         else:
             person = get_person(request)
-            if person == obj.person:
+            if person == obj:
                 # Only a person can view/edit his/her own data
                 if request.method in permissions.SAFE_METHODS:
                     # No authentication needed to view data
                     return True
                 elif request.method in ['POST', 'PUT']:
+                    return True  # No longer requiring authentication
+
                     # Authentication needed to edit data
                     self.message = _("You must sign in to edit your info.")
                     return request.user.is_authenticated
             else:
-                self.message_("You're not allowed to view this information.")
+                self.message = _("You're not allowed to view this information.")
                 return False
+        self.message = _("You're not allowed to view this information.")
         return False
 
 

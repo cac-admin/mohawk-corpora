@@ -80,22 +80,24 @@
       
         color: lighten($brand_lightest,10%);
       
-    }       
-    a.disabled, a.disabled:hover, a.disabled:active{
-      border-color: rgba(gray,.5);
-      background-color: $background_light;
-      cursor: default;
-      
-        color: rgba(gray,.5);
-      
-    }
-    a.off{
-      display: none;
-    }
+    }     
 
     a.auto-play.auto-play-on{
       background-color: $brand_primary;
       color: $brand_lightest;
     }
+
+    a.disabled, a.disabled:hover, a.disabled:active{
+      border-color: rgba(gray,.5) !important;
+      background-color: $background_light !important;
+      cursor: default !important;
+      color: rgba(gray,.5) !important;
+    }
+
+    a.off{
+      display: none;
+    }
+
+
 
   }
