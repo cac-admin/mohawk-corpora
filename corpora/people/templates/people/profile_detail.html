@@ -88,7 +88,7 @@ $('#demographic_form, #person_form').find('select').addClass('form-control');
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
-  profile = new Profile({{person.pk}}, '#profile');
+  profile = new Profile({{person.pk}}, '#profile', '.alert-area');
   profile.load()
 </script>
 {% endaddtoblock %}

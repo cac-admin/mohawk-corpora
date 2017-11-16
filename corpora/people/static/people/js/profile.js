@@ -1,13 +1,21 @@
 
 class Profile{
-  constructor(pk, target_element_selector){
+  constructor(pk, target_element_selector, target_alert_element_selector=null){
     this.base_url = '/api/persons/'+pk+'/'
     this.target_element = $(target_element_selector)
+    this.alert_element = (target_alert_element_selector==null) ? null : $(target_alert_element_selector);
     this.data = null
     this.alert = null
     this.change_counter = 0
     this.saving = false
     var self = this
+
+    // CREATE AND REGISTER EVENT LISTENERS
+    var event = document.createEvent('Event');
+    event.initEvent('profile.loaded', true, true);
+    this.profile_loaded_event = event;
+
+
   }
 
   load(){
@@ -26,12 +34,16 @@ class Profile{
       self.save()
     });
     
-
-
     var elem = '<div class="alert " role="alert" style="position:absolute; right: 0;"></div>'
     this.alert = $(elem)
     $(this.alert).hide()
-    $(this.target_element).append(this.alert)
+    if (this.alert_element == null){
+      $(this.target_element).append(this.alert)
+    } else {
+      $(this.alert_element).append(this.alert)
+    }
+
+    document.dispatchEvent(this.profile_loaded_event);
 
   }
 
@@ -45,7 +57,7 @@ class Profile{
         }
         }).done(function(d){
           self.data = d;
-          self.initialize_elements()
+          self.initialize_elements();
         }).fail(function(){
           console.error('FAILED')
           // do something usefule!
@@ -59,8 +71,6 @@ class Profile{
     demo.sex = $(this.target_element).find('#id_sex').val()
 
     $.each(demo, function(key, value){
-      console.log(key)
-      console.log(value)
       if (value == ''){
         delete demo[key];
       }
@@ -81,17 +91,19 @@ class Profile{
     
     window.setTimeout(function(){
       self.change_counter -= 1
-      if (self.change_counter==0){
-        if (self.saving == false){
+      if (self.change_counter<=0){
+        if (self.change_counter<0){self.change_counter=0}
+
+        if (self.saving == false){  
           self.put(self.data)
         } else{
           window.setTimeout(function(){
             self.change_counter += 1
             self.save()
-          }, 2000)
+          }, 1500)
         }
       }
-    }, 2000)
+    }, 1500)
 
   } 
 
@@ -145,6 +157,27 @@ class Profile{
       console.error('POST Failed.')
     })
     return true;    
+  }
+
+  display(){
+    this.form_element = $(this.target_element).clone()
+    $(this.target_element).empty()
+    this.display_element = $("<div class='row profile profile-display-element'></div>")
+    this.display_element.append($('<div class="col-12 email" id="id_email"><span>Email:</span> <a target="_blank" href="mailto:'
+      +this.data.user.email+'?subject=corpora.io">'+this.data.user.email+'</a></div>'))
+    this.display_element.append($('<div class="col-12 full_name" id="id_full_name"><span>Name:</span> '+this.data.full_name+'</div>'))
+
+    if (this.data.demographic != null){ 
+      this.display_element.append($('<div class="col-12 sex" id="id_sex"><span>Sex:</span>&nbsp;'+this.data.demographic.sex+'</div>'))
+      this.display_element.append($('<div class="col-12 age" id="id_age"><span>Age:</span>&nbsp;'+this.data.demographic.age+'</div>'))
+      var tribes = []
+      for (var i in this.data.demographic.tribe){
+        console.log(this.data.demographic.tribe[i])
+        tribes.push(this.data.demographic.tribe[i].name)
+      }
+      this.display_element.append($('<div class="col-12 tribe" id="id_tribe"><span>Tribes:</span> '+tribes+'</div>'))
+    }
+    $(this.target_element).append(this.display_element)
   }
 
 

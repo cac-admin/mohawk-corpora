@@ -21,6 +21,7 @@ router.register(r'demographics', people_api.DemographicViewSet)
 router.register(r'persons', people_api.PersonViewSet)
 router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 
+
 urlpatterns = [
 
     url(r'^api/sentences/$', corpus_api.SentencesView.as_view()),

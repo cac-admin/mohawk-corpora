@@ -1,0 +1,359 @@
+class Listen{
+  constructor(person_pk, target_element_selector, content_type, admin=false, user_id=null){
+    var self = this;
+    this.sentence_block = $(target_element_selector)
+    this.admin = admin
+    this.user_id = user_id
+    this.objects = null
+    this.recording = null
+    this.sentence = null
+    if(admin){
+      this.base_url = '/api/recordings/'
+      this.base_recording_url = '/api/recordings/'
+      this.url_filter_query = '?sort_by=listen'
+    } else{
+      this.base_url = '/api/listen/'
+      this.base_recording_url = '/api/listen/'
+      this.url_filter_query = '?sort_by=random'
+    }
+    
+    this.base_quality_url = '/api/qualitycontrol/'
+    this.next_url = null
+    this.quality_control = {}
+    this.quality_control.person = person_pk
+    this.error_loop = 0
+    this.audio = document.getElementById('play-audio');
+    this.quality_control.content_type = content_type
+    $(this.sentence_block).fadeOut(0)
+
+    
+    $(self.sentence_block).find('.approve').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.approve();
+      }
+    })
+
+    $(self.sentence_block).find('.good').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.up_vote();
+      }
+    })   
+
+    $(self.sentence_block).find('.bad').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        self.down_vote();
+      }
+    })
+
+    $(self.sentence_block).find('.next').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(self.sentence_block).find('.actions a').addClass('disabled')
+        self.audio.pause()
+        self.audio.src=null
+        self.next();
+        self.show_loading()
+      }
+    })  
+
+
+    // CREATE AND REGISTER EVENT LISTENERS
+    var event = document.createEvent('Event');
+    event.initEvent('listen.recording.loaded', true, true);
+    this.recording_loaded_event = event;
+
+  }
+
+  show_loading(){
+    $('.foreground-circle').hide();
+    $('.foreground-circle.loading').show();
+    $('.foreground-circle.loading div').show();    
+  }
+
+  hide_loading(){
+    $('.foreground-circle').show();
+    $('.foreground-circle.loading').hide();
+  }
+
+  get_recordings(){
+    var self = this;
+    console.log('Fetching more recordings')
+    self.show_loading()
+    $.ajax({
+        url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('Trying from first page')
+          self.next_url=null
+          self.get_recordings()
+          self.hide_loading()
+        }
+        }).done(function(d){
+          self.objects = d.results
+          self.next_url = d.next
+
+          console.log(self.objects.length)
+          console.log(self.objects)
+          console.log(d.results)
+          console.log(d.results.length)
+          console.log(d.results[0])
+
+          if (self.objects.length == 0 || self.error_loop>3){
+            console.log('No more recordings')
+            self.all_done()
+          }
+          else{
+            console.log(d)
+            console.log(d.results)
+            self.next()
+          }
+        }).fail(function(){
+          self.next_url=null
+          self.get_recordings()
+        });
+  }
+
+  reload(){
+    var self = this
+    $.ajax({
+        url: this.base_recording_url+this.recording.id+'/'
+        }).done(function(d){
+          console.log(d)
+          self.recording.quality_control = d.quality_control
+          self.recording = d
+          self.sentence = d.sentence
+          self.show_next_recording()
+    })    
+  }
+
+  next(){
+    if (this.objects == null || this.objects.length==0){
+      this.get_recordings()
+    } else{
+      this.recording = this.objects.shift()
+      this.sentence = this.recording.sentence
+
+      if (this.recording.sentence_text == '' || this.recording.sentence_text==null){
+        if (this.sentence==null){
+          this.recording.sentence_text = 'These arent teh droid your looking for'
+          console.log('error')
+          this.error_loop+=1
+          this.show_next_recording()
+          this.next()
+        } else { this.recording.sentence_text = this.sentence.text }
+        
+      }
+
+      if (this.sentence==null && this.recording.sentence_text.length>0){
+        this.sentence = {}
+        this.sentence.text=this.recording.sentence_text
+      }
+
+      this.show_next_recording()
+    }
+  }
+
+  all_done(){
+    $(this.sentence_block).text("All done.")
+    $(this.sentence_block).fadeIn('disabled')
+  }
+
+  show_next_recording(){
+
+    var self = this;
+    self.show_loading();
+
+    if (this.sentence){
+      $(self.sentence_block).removeClass('disabled')
+      $(self.sentence_block).find('.sentence .text-area').remove()
+      if (this.admin){
+        var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
+      } else {
+        var input_elm = $('<span class="text-area"></span>');
+      }
+
+      $(input_elm).val(this.recording.sentence_text);
+      $(input_elm).text(this.recording.sentence_text);
+      $(self.sentence_block).find('.sentence').append(input_elm)
+      $(self.sentence_block).fadeIn('fast');
+
+
+      // $('#play-button').show();
+
+      $.ajax({
+        type: "GET",
+        url: this.base_recording_url+this.recording.id+'/',
+        dataType: 'json',
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          console.log(textStatus.responseText)
+          console.log(XMLHttpRequest)
+          console.log(errorThrown)
+        }
+      }).done(function(){
+
+        $(self.sentence_block).find('.next, .auto-play').removeClass('disabled')
+        self.hide_loading()
+        self.audio.src = self.recording.audio_file_url
+        document.dispatchEvent(self.recording_loaded_event);
+
+      }).fail(function(){
+        console.error('FAILED TO GET RECORDING FILE')
+        self.next()
+      })
+
+
+      $(input_elm).on('change', function(){
+        self.edit_sentence()
+      })
+
+      $(input_elm).on('keyup', function(event){
+        self.check_sentence_changed(event)
+      })
+
+    }
+  }
+
+  check_sentence_changed(event){
+    if ($(event.currentTarget).val() != this.sentence.text){
+      this.edit_sentence()
+    }
+  }
+
+  edit_sentence(){
+    var self = this
+    $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+    $(self.sentence_block).find('.save').removeClass('off').removeClass('disabled')
+    $(self.sentence_block).find('.save').off().on('click', function(e){
+        $(e.currentTarget).addClass('disabled').off()
+        self.save_sentence($(self.sentence_block).find('.text-area').val());
+    })     
+  }
+
+  post_qc(data){
+    var self = this
+    self.show_loading()
+    this.quality_control.object_id = this.recording.id
+    $.ajax({
+      type: "POST",
+      data: this.quality_control,
+      url: this.base_quality_url,
+      dataType: 'json',
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        console.log(XMLHttpRequest.status)
+        console.log(XMLHttpRequest.responseText)
+        self.hide_loading()
+      }
+    }).done(function(){
+
+      self.next();
+    }).fail(function(){
+      console.log('Failed.')
+      self.hide_loading()
+    })
+    return true;    
+  }
+
+  put_qc(data){
+    var self = this
+    self.show_loading()
+    $.ajax({
+      type: "PUT",
+      data: data,
+      url: this.base_quality_url+this.quality_control_id+'/',
+      dataType: 'json',
+      error: function(e){
+        console.log(e.responseText)
+        self.hide_loading()
+      }
+    }).done(function(){
+      self.next();
+
+    }).fail(function(){
+      console.log('Failed.')
+      self.hide_loading()
+    })
+    return true;    
+  }
+
+  save_sentence(text){
+    var self=this
+    this.recording.sentence_text = text
+    self.show_loading()
+    var data = {
+      id: this.recording.id,
+      sentence_text: text
+    }
+
+    $.ajax({
+      type: "PUT",
+      data: data,
+      url: this.base_recording_url+this.recording.id+'/',
+      dataType: 'json',
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        console.log(textStatus.responseText)
+        console.log(XMLHttpRequest)
+        console.log(errorThrown)
+        self.hide_loading()
+      }
+    }).done(function(){
+      console.log('Saved')
+      self.reload();
+      self.hide_loading()
+    }).fail(function(){
+      console.log('Failed.')
+      self.hide_loading()
+    })
+  }
+
+  post_put(){
+    var method = 'POST'
+    this.quality_control.object_id = this.recording.id
+    this.audio.pause()
+    if (this.recording.quality_control){
+      for (let qc of this.recording.quality_control){
+        if (qc.person == this.quality_control.person){
+          console.log('Found matching qc ')
+          this.quality_control_id = qc.id
+          this.quality_control.bad += qc.bad
+          this.quality_control.good += qc.good
+          method = 'PUT'
+        } else{
+          
+        }
+      }
+    }
+
+    if (method=='POST'){
+      this.post_qc(this.quality_control)
+    } else {
+      this.put_qc(this.quality_control)
+    }
+
+  }
+
+  approve(){
+    this.quality_control.approved = true;
+    this.quality_control.good = 0
+    this.quality_control.bad = 0    
+    this.quality_control.approved_by = this.user_id;
+    console.log(this.quality_control);
+    this.post_put();
+  }
+  up_vote(){
+    this.quality_control.good = 1
+    this.quality_control.bad = 0
+    this.quality_control.approved = false;
+    console.log(this.quality_control);
+    this.post_put();
+  }
+
+  down_vote(){
+    this.quality_control.bad = 1
+    this.quality_control.good = 0
+    this.quality_control.approved = false;
+    console.log(this.quality_control);
+    this.post_put();
+  }
+
+}

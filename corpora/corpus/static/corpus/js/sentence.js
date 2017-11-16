@@ -93,8 +93,20 @@ class Sentences{
     })
   }
 
+  show_loading(){
+    $('.foreground-circle.loading').show();
+    $('.foreground-circle.loading div').show();
+    $(this.sentence_block).find('.sentence .text-area').addClass('disabled')    
+  }
+
+  hide_loading(){
+    $('.foreground-circle.loading').hide();
+    $(this.sentence_block).find('.sentence .text-area').removeClass('disabled')
+  }
+
   reload(){
     var self = this
+    self.show_loading()
     $.ajax({
         url: this.base_sentence_url+this.sentence.id+'/'
         }).done(function(d){
@@ -102,6 +114,7 @@ class Sentences{
           self.sentence.quality_control = d.quality_control
           self.sentence = d
           self.show_next_sentence()
+          self.hide_loading()
     })    
   }
 
@@ -146,6 +159,7 @@ class Sentences{
       $(input_elm).off().on('keyup', function(event){
         self.check_sentence_changed(event)
       })
+      self.hide_loading()
 
     }
   }

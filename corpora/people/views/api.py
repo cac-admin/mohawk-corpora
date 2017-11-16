@@ -7,6 +7,20 @@ from people.serializers import PersonSerializer,\
                          DemographicSerializer,\
                          KnownLanguageSerializer
 
+from rest_framework import mixins
+
+import logging
+logger = logging.getLogger('corpora')
+
+
+class DetailViewset(
+  mixins.CreateModelMixin,
+  mixins.RetrieveModelMixin,
+  mixins.UpdateModelMixin,
+  mixins.DestroyModelMixin,
+  viewsets.GenericViewSet):
+    pass
+
 
 class StaffOnlyPermissions(permissions.BasePermission):
     """
@@ -20,7 +34,7 @@ class StaffOnlyPermissions(permissions.BasePermission):
         return request.user.is_staff and request.user.is_authenticated
 
 
-class PersonInfoPermissions(permissions.BasePermission):
+class PersonPermissions(permissions.BasePermission):
     """
     Only a person can edit his/her own info. This
     involved all info including related models; therefore this persmission
@@ -31,13 +45,15 @@ class PersonInfoPermissions(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return True
+
         if request.user.is_staff and request.user.is_authenticated:
             self.message = _("Only staff can view this information.")
             return True
-
-        self.message = _("You're not allowed to view this information.")
-        return False
+        elif view.action in 'retrieve update partial_update':
+            return True
+        else:
+            self.message = _("You're not allowed to view this information.")
+            return False
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff and request.user.is_authenticated:
@@ -69,7 +85,7 @@ class PersonViewSet(viewsets.ModelViewSet):
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
-    permission_classes = (PersonInfoPermissions,)
+    permission_classes = (PersonPermissions,)
 
 
 class TribeViewSet(viewsets.ModelViewSet):
@@ -79,7 +95,7 @@ class TribeViewSet(viewsets.ModelViewSet):
 
     queryset = Tribe.objects.all()
     serializer_class = TribeSerializer
-    permission_classes = (PersonInfoPermissions,)
+    permission_classes = (PersonPermissions,)
 
 
 class DemographicViewSet(viewsets.ModelViewSet):
@@ -88,7 +104,7 @@ class DemographicViewSet(viewsets.ModelViewSet):
     """
     queryset = Demographic.objects.all()
     serializer_class = DemographicSerializer
-    permission_classes = (PersonInfoPermissions,)
+    permission_classes = (PersonPermissions,)
 
 
 class KnownLanguageViewSet(viewsets.ModelViewSet):
@@ -97,4 +113,4 @@ class KnownLanguageViewSet(viewsets.ModelViewSet):
     """
     queryset = KnownLanguage.objects.all()
     serializer_class = KnownLanguageSerializer
-    permission_classes = (PersonInfoPermissions,)
+    permission_classes = (PersonPermissions,)

@@ -37,8 +37,11 @@
         {% if user.is_authenticated %}
           <a href="{% url 'account_logout' %}">Logout</a>
         {% else %}
-          <a href="{% url 'account_login' %}">Login</a> or help us further by
-          <a href="{% url 'account_signup' %}">signing up</a>.
+          <a href="{% url 'account_login' %}">Login</a>
+          {% if person.user is not None %}
+          {% else %}
+           or help us further by
+          <a href="{% url 'account_signup' %}">signing up</a>.{% endif %}
         {% endif %}</small>
       {% else %}
         <h4>Anonymous Kumara</h4><small>
@@ -50,6 +53,9 @@
           <a href="{% url 'account_signup' %}">signing up</a>.
         {% endif %}</small>
       {% endif %}
+    </div>
+    <div class="col alert-area">
+      
     </div>
   </div>
 </div>

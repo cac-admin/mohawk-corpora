@@ -79,30 +79,17 @@ a.btn{
       </div>
     </div>
 
-    <div class="col-12 col-md-5 col-lg-4 actions"> 
+    <div class="col-12 col-md-5 col-lg-4 "> 
 
       <div class="row ">
 
         <div class="col-12">
-          <div class="circle-button-container">
-            <div class="circle background-circle">
-                <a href="javascript:void(0)" id="record-button">
-                    <div class="circle foreground-circle unclicked-circle record">
-                        <div class="circle-text record">REC</div>
-                        <div class="stop-square"></div>
-                    </div>
-                </a>
 
-                <a href="javascript:void(0)" id="play-button">
-                    <div class="circle foreground-circle unclicked-circle play">
-                        <div class="play-triangle"></div>
-                    </div>
-                </a>
-            </div>
-          </div>
+          {% include 'corpus/_player.button.html' %}
+
         </div>
 
-        <div class="col-12 " style="text-align: center;" >
+        <div class="col-12 actions" style="text-align: center;" >
           <a href="javascript:void(0)" id="redo" class=" disabled redo">
             <i class="fa fa-undo fw"></i> {% trans "Redo" %}
           </a>
@@ -147,9 +134,12 @@ a.btn{
 {% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/player.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+  var player = new Player('#play-audio');
+
   var person_pk = "{{person.pk}}";
   var sentence_pk = "{{sentence.pk}}";
 
@@ -159,21 +149,37 @@ a.btn{
     '?recording=True')
   sentences.next()
 
-  $('a.next').on('click', function(){
-    audio.pause()
-    $('#play-button').hide();
-    $('#record-button').show();
-    $('.stop-square').hide();
-    $('.save').addClass('disabled');
 
-    $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-    $('.circle-text.record').show();
-    $('.stop-square').hide();
-    $('.redo').addClass('disabled');
+
+  $('a.next').on('click', function(){
+    sentences.show_loading()
+    audio.pause()
     recording=false;
-    recorder.clearStream()
-    // recorder.AudioContext.close()
+    if (recorder!=null){
+      recorder.clearStream()
+    }
+    audio.src = null
+
+    $('.circle-button-container').find('.play, .stop').hide()
+    $('.save').addClass('disabled');
+    $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+    $('.redo').addClass('disabled');
+    
+    $('.circle-button-container .record').show()    
   })
+
+  $('.save').on('click', function(){
+    sentences.show_loading()
+  })
+
+
+  $(document).ready(function(){
+    $('.circle-button-container .record').show()
+    $('.circle-button-container').find('.play, .stop').hide()
+    $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
+
+  })
+
 
 </script>
 {% endaddtoblock %}

@@ -9,13 +9,12 @@
   {# Uses sekizai to load all css at start of page & compressor to minify it #}
   {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
 
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,400i,500,600,700,700i,800,900" rel="stylesheet">
   {# CSS files to load and combine #}
-  {% addtoblock "css" %}
-    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% sass_src 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />
-  {% endaddtoblock %}
+  {% addtoblock "css" %} {% endaddtoblock %}
+  {% addtoblock "css" %}<link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+  {% addtoblock "css" %}<link href="{% sass_src 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
   {% addtoblock "css" %}<link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">{% endaddtoblock %}
-
 
 
 {% comment %}

@@ -54,7 +54,7 @@ class Person(models.Model):
         verbose_name_plural = _('People')
 
     def __unicode__(self):
-        return self.full_name + " | " + self.uuid
+        return self.full_name
 
 
 class Demographic(models.Model):

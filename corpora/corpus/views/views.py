@@ -76,45 +76,45 @@ def record(request):
     #             return redirect('people:profile')
 
     # Generate a form model from the Recording model
-    # RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
+    RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
 
-    # # If page receives POST request, save the submitted audio data as a
-    # # recording model
-    # if request.method == 'POST' and request.is_ajax():
+    # If page receives POST request, save the submitted audio data as a
+    # recording model
+    if request.method == 'POST' and request.is_ajax():
 
-    #     # Create a form from the Recording Form model
-    #     form = RecordingFormAJAX(request.POST, request.FILES)
+        # Create a form from the Recording Form model
+        form = RecordingFormAJAX(request.POST, request.FILES)
 
-    #     # If the form is valid, save the new model and send back an OK HTTP
-    #     # Response
-    #     if form.is_valid():
-    #         recording = form.save()
-    #         recording.save()
-    #         return HttpResponse(
-    #             json.dumps({
-    #                 'success': True,
-    #                 'message': "Thank you for submitting a recording!\
-    #                             Here's another sentence for you to record.",
-    #                 'recording': json.dumps(
-    #                     {'id': recording.id,
-    #                      'sentence_text': recording.sentence_text})
-    #             }),
-    #             content_type='application/json',
-    #         )
+        # If the form is valid, save the new model and send back an OK HTTP
+        # Response
+        if form.is_valid():
+            recording = form.save()
+            recording.save()
+            return HttpResponse(
+                json.dumps({
+                    'success': True,
+                    'message': "Thank you for submitting a recording!\
+                                Here's another sentence for you to record.",
+                    'recording': json.dumps(
+                        {'id': recording.id,
+                         'sentence_text': recording.sentence_text})
+                }),
+                content_type='application/json',
+            )
 
-    #     # If the form is not valid, sent a 400 HTTP Response
-    #     else:
-    #         errors = form.errors
-    #         response = HttpResponse(
-    #             json.dumps({
-    #                     'err': "Sorry, your recording did not save.",
-    #                     'result': json.dumps(errors)
-    #                 }),
-    #             content_type='application/json'
-    #         )
-    #         response.status_code = 400
+        # If the form is not valid, sent a 400 HTTP Response
+        else:
+            errors = form.errors
+            response = HttpResponse(
+                json.dumps({
+                        'err': "Sorry, your recording did not save.",
+                        'result': json.dumps(errors)
+                    }),
+                content_type='application/json'
+            )
+            response.status_code = 400
 
-    #         return response
+            return response
 
     # Load up the page normally with request and object context
 
@@ -235,8 +235,8 @@ class StatsView(ListView):
         stats_by_proficiency = {}
         for level in KnownLanguage.PROFICIENCIES:
             query = recordings\
-                .filter(person__knownlanguage__language=language)\
-                .filter(person__knownlanguage__level_of_proficiency=level[0])
+                .filter(person__known_languages__language=language)\
+                .filter(person__known_languages__level_of_proficiency=level[0])
             recording_votes = get_net_votes(query)
             length = query.aggregate(Sum('duration'))
             if length['duration__sum'] is None:

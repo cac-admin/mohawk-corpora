@@ -39,7 +39,7 @@ if (!Recorder.isRecordingSupported()) {
     // Record or halt recording when pressing record button
     $('#record-button').click(function() {
         if (recording == false) {
-            console.log('start recording')
+
             // Start recorder if inactive and set recording state to true
             recording = true
 
@@ -52,8 +52,6 @@ if (!Recorder.isRecordingSupported()) {
             
             }
 
-
-            
             // Have recorder listen for when the data is available
             recorder.addEventListener("dataAvailable", function(e) {
                 audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
@@ -66,8 +64,8 @@ if (!Recorder.isRecordingSupported()) {
 
             recorder.addEventListener("streamReady", function(e) {
                 recorder.start()
-                $('.circle-text.record').hide();
-                $('.stop-square').show();               
+                $('.circle-button-container .record').hide()
+                $('.circle-button-container .stop').show()              
             });
 
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
@@ -77,23 +75,27 @@ if (!Recorder.isRecordingSupported()) {
             // setTimeout(function(){},200);
 
 
-        } else {
-            console.log('stop recording')
+        }})
+
+
+    $('#stop-button').click(function(){
+
 
             // Stop recorder if active and set recording state to false
             recording = false
             recorder.stop()
             
             $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-            $('.circle-text.record').show();
-            $('.stop-square').hide();
+            // $('.circle-text.record').show();
+            // $('.circle-button-container .stop').hide()
             $('.redo').removeClass('disabled');
-            $('#record-button').hide();
-        }
-        
-    });
+            $('.circle-button-container .record').hide()
+    })
 
-
+    // WHen sentence is loaded, show the record button
+    // $('#play-button').bind('ready', function(){
+    //     $('#record-button').show();
+    // });    
 
     // If play button clicked, play audio
     $('#play-button').click(function(){
@@ -112,15 +114,12 @@ if (!Recorder.isRecordingSupported()) {
     $(".redo").click(function() {
         recorder.stop();
         recorder.clearStream();
-
         audio.pause();
 
-        $('#play-button').hide();
-        $('#record-button').show();
-        $('.stop-square').hide();
+        $('.circle-button-container').find('.play, .stop').hide();
         $('.redo').addClass('disabled');
         $('.save').addClass('disabled');
-
+        $('.circle-button-container .record').show();
     });
 
     // If "save audio" button clicked, create formdata to save recording model
@@ -173,8 +172,8 @@ if (!Recorder.isRecordingSupported()) {
                 // delete recorder
                 var audioBlob, fileName;
 
-                $('#play-button').hide();
-                $('#record-button').show();
+                $('.circle-button-container .play').hide()
+                $('.circle-button-container .record').show()
                 audio.src = null;
                 sentences.next()
 
