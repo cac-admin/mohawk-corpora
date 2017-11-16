@@ -6,7 +6,6 @@ Pillow
 celery
 flower #used to monitor Celery
 django-compressor
-# django-sass-processor
 django-libsass
 libsass
 django-sekizai

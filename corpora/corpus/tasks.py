@@ -166,10 +166,14 @@ def encode_audio(recording, test=False, codec='aac'):
         data = commands.getstatusoutput(code)
         logger.debug(data[1])
 
+    if not audio:
+        logger.debug('No audio stream found.')
+        return False
+
     data = commands.getstatusoutput('rm ' + tmp_file)
     logger.debug('Removed tmp file %s' % (tmp_file))
-    if not audio:
-        logger.debug('No audio stream in video.')
-        return False
+
+    data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
+    logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
 
     return True

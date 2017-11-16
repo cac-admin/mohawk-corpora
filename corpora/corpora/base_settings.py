@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
     'sekizai',
     'compressor',
-    'sass_processor',
+    # 'sass_processor',
 
     'allauth',
     'allauth.account',
@@ -263,7 +263,7 @@ STATICFILES_FINDERS = (
 
     # Additional finders
     'djangobower.finders.BowerFinder',
-    'sass_processor.finders.CssFinder',
+    # 'sass_processor.finders.CssFinder',
     'compressor.finders.CompressorFinder',
 
 )
