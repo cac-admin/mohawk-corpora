@@ -2,7 +2,6 @@
 {% load static %}
 {% load sekizai_tags %}
 {% load compress %}
-{% load sass_tags %}
 {% load i18n %}
 
 
@@ -112,7 +111,7 @@
 
 {% addtoblock "css" %}
     <link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% sass_src 'corpora/css/inline_forms.scss' %}">
+    <link rel="stylesheet" href="{% static 'corpora/css/inline_forms.scss' %}">
 {% endaddtoblock %}
 
 {% addtoblock "js" %}

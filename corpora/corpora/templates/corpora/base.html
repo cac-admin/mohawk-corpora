@@ -1,4 +1,4 @@
-{% load static sekizai_tags compress sass_tags %}<!DOCTYPE html>
+{% load static sekizai_tags compress  %}<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -13,7 +13,7 @@
   {# CSS files to load and combine #}
   {% addtoblock "css" %} {% endaddtoblock %}
   {% addtoblock "css" %}<link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
-  {% addtoblock "css" %}<link href="{% sass_src 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+  {% addtoblock "css" %}<link href="{% static 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
   {% addtoblock "css" %}<link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">{% endaddtoblock %}
 
 
