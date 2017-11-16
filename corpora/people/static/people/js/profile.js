@@ -163,8 +163,11 @@ class Profile{
     this.form_element = $(this.target_element).clone()
     $(this.target_element).empty()
     this.display_element = $("<div class='row profile profile-display-element'></div>")
-    this.display_element.append($('<div class="col-12 email" id="id_email"><span>Email:</span> <a target="_blank" href="mailto:'
+
+    if (this.data.user != null){
+      this.display_element.append($('<div class="col-12 email" id="id_email"><span>Email:</span> <a target="_blank" href="mailto:'
       +this.data.user.email+'?subject=corpora.io">'+this.data.user.email+'</a></div>'))
+    }
     this.display_element.append($('<div class="col-12 full_name" id="id_full_name"><span>Name:</span> '+this.data.full_name+'</div>'))
 
     if (this.data.demographic != null){ 

@@ -193,6 +193,7 @@ class Listen{
         $(self.sentence_block).find('.next, .auto-play').removeClass('disabled')
         self.hide_loading()
         self.audio.src = self.recording.audio_file_url
+        self.audio.load()
         document.dispatchEvent(self.recording_loaded_event);
 
       }).fail(function(){

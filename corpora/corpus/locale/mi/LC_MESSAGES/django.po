@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-13 20:33+0000\n"
+"POT-Creation-Date: 2017-11-16 22:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,23 +50,19 @@ msgstr ""
 msgid "English \"i\""
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:64
+#: corpus/templates/corpus/listen.html:52
 #: corpus/templates/corpus/sentence_list.html:38
 msgid "Save changes."
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:71
+#: corpus/templates/corpus/listen.html:59
 #: corpus/templates/corpus/sentence_list.html:44
 msgid "Approve for recording?"
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:77
-#: corpus/templates/corpus/record.html:114
+#: corpus/templates/corpus/listen.html:65
+#: corpus/templates/corpus/record.html:100
 msgid "Skip"
-msgstr ""
-
-#: corpus/templates/corpus/listen.html:234
-msgid "All done."
 msgstr ""
 
 #: corpus/templates/corpus/qualitycontrol_list.html:18
@@ -109,11 +105,11 @@ msgstr "Ngā Rerenga Kōrero"
 msgid "Recordings by Language Proficiency"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:107
+#: corpus/templates/corpus/record.html:93
 msgid "Redo"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:111
+#: corpus/templates/corpus/record.html:97
 msgid "Save"
 msgstr ""
 

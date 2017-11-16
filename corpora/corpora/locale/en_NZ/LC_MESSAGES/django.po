@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-13 20:33+0000\n"
+"POT-Creation-Date: 2017-11-16 22:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/templates/corpora/home.html:15
+#: corpora/templates/corpora/home.html:14
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:57
+#: corpora/templates/corpora/home.html:56
 msgid ""
 "Corpora.io is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -37,21 +37,21 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:65
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:67
+#: corpora/templates/corpora/home.html:66
 msgid "Translations for corpora.io are provided in the following langauges:"
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:29
-#: corpora/templates/corpora/logged_in_nav_buttons.html:118
+#: corpora/templates/corpora/logged_in_nav_buttons.html:117
 msgid "Speak"
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:36
-#: corpora/templates/corpora/logged_in_nav_buttons.html:125
+#: corpora/templates/corpora/logged_in_nav_buttons.html:124
 msgid "Listen"
 msgstr ""
 
@@ -68,6 +68,7 @@ msgid "Admin"
 msgstr "Whakahaere"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:67
+#: corpora/templates/corpora/logged_in_nav_buttons.html:131
 msgid "Profile"
 msgstr "Whakaritenga"
 
@@ -76,14 +77,15 @@ msgid "Edit Info"
 msgstr "Whakarerekē"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:87
+#: corpora/templates/corpora/logged_in_nav_buttons.html:143
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:109
+#: corpora/templates/corpora/logged_in_nav_buttons.html:108
 msgid "Log Out"
 msgstr "Takiputa"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:132
+#: corpora/templates/corpora/logged_in_nav_buttons.html:164
 msgid "Log In"
 msgstr "Takiuru"
 

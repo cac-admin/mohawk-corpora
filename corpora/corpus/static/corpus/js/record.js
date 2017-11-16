@@ -2,6 +2,17 @@ var audio = document.getElementById('play-audio');
 var recorder
 var audioBlob, fileName;
 
+
+function show_loading(){
+$('.circle-button-container a').hide();
+$('.circle-button-container').find('.loading').show()   
+}
+
+function hide_loading(){
+$('.circle-button-container a').hide();
+$('.circle-button-container').find('.loading').hide()
+}
+
 $(document).ready(function() {
     if ( sessionStorage.getItem('reload') == "true") {
         sessionStorage.setItem('reload', "false");
@@ -39,6 +50,7 @@ if (!Recorder.isRecordingSupported()) {
     // Record or halt recording when pressing record button
     $('#record-button').click(function() {
         if (recording == false) {
+            show_loading();
 
             // Start recorder if inactive and set recording state to true
             recording = true
@@ -52,6 +64,7 @@ if (!Recorder.isRecordingSupported()) {
             
             }
 
+
             // Have recorder listen for when the data is available
             recorder.addEventListener("dataAvailable", function(e) {
                 audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
@@ -59,13 +72,15 @@ if (!Recorder.isRecordingSupported()) {
                 var audioURL = URL.createObjectURL( audioBlob );
 
                 audio.src = audioURL;
-                $('#play-button').show();
+                audio.load()
+                $('.circle-button-container').find('.play').show()
             });
 
             recorder.addEventListener("streamReady", function(e) {
+                hide_loading();
                 recorder.start()
-                $('.circle-button-container .record').hide()
-                $('.circle-button-container .stop').show()              
+                $('.circle-button-container').find('.record').hide()
+                $('.circle-button-container').find('.stop').show()             
             });
 
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
@@ -79,12 +94,21 @@ if (!Recorder.isRecordingSupported()) {
 
 
     $('#stop-button').click(function(){
+        $('.circle-button-container').find('.stop').hide()
+        
+        $('.circle-button-container').find('.play').show()    
+        
 
         // Stop recorder if active and set recording state to false
         recording = false
         recorder.stop()
+
         $('.redo').removeClass('disabled');
+
         $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+
+         
+
             // // $('.circle-text.record').show();
             // // $('.circle-button-container .stop').hide()
             // 
@@ -113,6 +137,7 @@ if (!Recorder.isRecordingSupported()) {
             recorder.stop();
             recorder.clearStream();
             audio.pause();
+            
 
             $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
             $('.circle-button-container').find('.play, .stop').hide();
