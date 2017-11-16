@@ -47,7 +47,7 @@ a.btn{
 
 
 .circle-button-container{
-    padding-bottom: 30px;
+    /*padding-bottom: 30px;*/
 
   @include media-breakpoint-down(lg){
 /*    padding-top: 15px;
@@ -169,6 +169,11 @@ a.btn{
 
   $('.save').on('click', function(){
     sentences.show_loading()
+  })
+
+  sentences.sentence_block.addEventListener('sentence.ready', function(){
+    console.log('sentence.ready')
+    $('.circle-button-container .record').show()
   })
 
 

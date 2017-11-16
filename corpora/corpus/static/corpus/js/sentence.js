@@ -66,12 +66,15 @@ class Sentences{
       }
     })
 
-
     $('#confirmDelete').on('click', function(e){
       // $(e.currentTarget).addClass('disabled').off()
       $('#askDelete').modal('hide')
       self.delete_sentence();
     })
+
+    var event = document.createEvent('Event');
+    event.initEvent('sentence.ready', true, true);
+    this.sentence_block_ready_event = event;
 
   }
 
@@ -161,6 +164,7 @@ class Sentences{
       })
       self.hide_loading()
 
+      this.sentence_block.dispatchEvent(this.sentence_block_ready_event)
     }
   }
 

@@ -31,19 +31,19 @@ div.content{
 
 <div class="container sentence">
 
-  <div class="row sentence-block disabled">
-    <div class="col-lg-7 sentence"></div>
+  <div class="row sentence-block disabled justify-content-md-center">
+    <div class="col-lg-auto sentence"></div>
     
-    <div class="col-lg-5 play">
+    <div class="col-lg-12 play">
         <div class="col-12">
 
           {% include 'corpus/_player.button.html' %}
 
         </div>
     </div>
-    <div class="col-lg-7"></div>
-    <div class="col-lg-5 actions">
-      <a href="javascript:void(0)" class="auto-play auto-play-off"><i class="fa fa-play-circle fa-fw"></i><span>Auto Play</span></a>            
+    <!-- <div class="col-lg-7"></div> -->
+    <div class="col-lg-12 actions">
+      <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fa fa-play-circle fa-fw"></i></a>            
       {% if user.can_approve %}
      <a href="#" class="save disabled"
             data-toggle="popover" 
@@ -57,7 +57,7 @@ div.content{
         data-trigger="hover" 
         title="Approve" 
         data-content="{% trans 'Approve for recording?' %}"
-        ><i class="fa fa-check-circle-o fa-fw"></i></a>
+        ><i class="fa fa-check-circle-o fa-fw"></i><span>Approve</span></a>
       {% else %}
       {% endif %}
       <a href="#" class="good disabled"><i class="fa fa-thumbs-o-up fa-fw"></i></a>

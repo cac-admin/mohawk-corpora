@@ -21,11 +21,31 @@
     text-align: left;
     font-size: 2em;
     font-weight: 400;
+    min-height: 150px;
+
     @include media-breakpoint-down(md) {
-      padding-bottom: 15px;
+      // padding-bottom: 15px;
     }
     .text-area{
       width: 100%;
+      margin-bottom: 15px;
+      @include media-breakpoint-up(md) {
+        min-width: 600px;
+      }
+      @include media-breakpoint-down(sm) {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+      }
+
+
     }
+
+    .span{
+      @include media-breakpoint-up(md) {
+        // min-width: 600px;
+      }
+    }
+
+
   }
 }

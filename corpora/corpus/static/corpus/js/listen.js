@@ -29,21 +29,21 @@ class Listen{
     
     $(self.sentence_block).find('.approve').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
-        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        $(self.sentence_block).find('.actions a').addClass('disabled')
         self.approve();
       }
     })
 
     $(self.sentence_block).find('.good').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
-        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        $(self.sentence_block).find('.actions a').addClass('disabled')
         self.up_vote();
       }
     })   
 
     $(self.sentence_block).find('.bad').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
-        $(self.sentence_block).find('.approve, .good, .bad').addClass('disabled')
+        $(self.sentence_block).find('.actions a').addClass('disabled')
         self.down_vote();
       }
     })
@@ -54,7 +54,6 @@ class Listen{
         self.audio.pause()
         self.audio.src=null
         self.next();
-        self.show_loading()
       }
     })  
 
@@ -67,14 +66,13 @@ class Listen{
   }
 
   show_loading(){
-    $('.foreground-circle').hide();
-    $('.foreground-circle.loading').show();
-    $('.foreground-circle.loading div').show();    
+    $('.circle-button-container a').hide();
+    $('.circle-button-container').find('.loading').show()   
   }
 
   hide_loading(){
-    $('.foreground-circle').show();
-    $('.foreground-circle.loading').hide();
+    $('.circle-button-container a').hide();
+    $('.circle-button-container').find('.loading').hide()
   }
 
   get_recordings(){
@@ -245,7 +243,6 @@ class Listen{
         self.hide_loading()
       }
     }).done(function(){
-
       self.next();
     }).fail(function(){
       console.log('Failed.')

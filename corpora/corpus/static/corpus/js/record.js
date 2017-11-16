@@ -80,16 +80,15 @@ if (!Recorder.isRecordingSupported()) {
 
     $('#stop-button').click(function(){
 
-
-            // Stop recorder if active and set recording state to false
-            recording = false
-            recorder.stop()
-            
-            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-            // $('.circle-text.record').show();
-            // $('.circle-button-container .stop').hide()
-            $('.redo').removeClass('disabled');
-            $('.circle-button-container .record').hide()
+        // Stop recorder if active and set recording state to false
+        recording = false
+        recorder.stop()
+        $('.redo').removeClass('disabled');
+        $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+            // // $('.circle-text.record').show();
+            // // $('.circle-button-container .stop').hide()
+            // 
+            // $('.circle-button-container .record').hide()
     })
 
     // WHen sentence is loaded, show the record button
@@ -98,93 +97,95 @@ if (!Recorder.isRecordingSupported()) {
     // });    
 
     // If play button clicked, play audio
-    $('#play-button').click(function(){
-        audio.play();
-        $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
-    });
+    // $('#play-button').click(function(){
+    //     audio.play();
+    //     $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
+    // });
 
     // When audio is done playing back, revert button to initial state
-    $('#play-audio').bind('ended', function(){
-        $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
-        
+    $('#play-audio').bind('ended', function(){        
         $('.redo').removeClass('disabled');
         $('.save').removeClass('disabled');
     });
 
-    $(".redo").click(function() {
-        recorder.stop();
-        recorder.clearStream();
-        audio.pause();
+    $(".redo").click(function(e) {
+        if (!$(e.currentTarget).hasClass('disabled')){
+            recorder.stop();
+            recorder.clearStream();
+            audio.pause();
 
-        $('.circle-button-container').find('.play, .stop').hide();
-        $('.redo').addClass('disabled');
-        $('.save').addClass('disabled');
-        $('.circle-button-container .record').show();
+            $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
+            $('.circle-button-container').find('.play, .stop').hide();
+            $('.redo').addClass('disabled');
+            $('.save').addClass('disabled');
+            $('.circle-button-container .record').show();
+        }
     });
 
     // If "save audio" button clicked, create formdata to save recording model
-    $('.save').click(function(){
-        recorder.stop();
-        audio.pause();
-        $('.redo').addClass('disabled');
-        $('.save').addClass('disabled');
-        $('.next').addClass('disabled');
-        // Initialize FormData
-        var fd = new FormData();
-        // Set enctype to multipart; necessary for audio form data
-        fd.enctype="multipart/form-data";
+    $('.save').click(function(e){
+        if (!$(e.currentTarget).hasClass('disabled')){
+            recorder.stop();
+            audio.pause();
+            $('.redo').addClass('disabled');
+            $('.save').addClass('disabled');
+            $('.next').addClass('disabled');
+            // Initialize FormData
+            var fd = new FormData();
+            // Set enctype to multipart; necessary for audio form data
+            fd.enctype="multipart/form-data";
 
-        // Add audio blob as blob.wav to form data
-        fd.append('audio_file', audioBlob, fileName);
+            // Add audio blob as blob.wav to form data
+            fd.append('audio_file', audioBlob, fileName);
 
-        // Append necessary person and sentence pks to form data to add to recording model
-        fd.append('person', person_pk);
-        fd.append('sentence', sentences.sentence.id);
+            // Append necessary person and sentence pks to form data to add to recording model
+            fd.append('person', person_pk);
+            fd.append('sentence', sentences.sentence.id);
 
-        // Send ajax POST request back to corpus/views.py
-        console.log(person_pk)
-        console.log(sentences.sentence.id)
-        console.log(fd)
+            // Send ajax POST request back to corpus/views.py
+            console.log(person_pk)
+            console.log(sentences.sentence.id)
+            console.log(fd)
 
-        $.ajax({
+            $.ajax({
 
-            type: 'POST',
-            url: '/record/',
-            data: fd,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                // Reload the page for a new sentence if recording successfully saved;
-                // Session stores a reload value to display a thank you message 
-                console.log("Recording data successfully submitted and saved");
-                sessionStorage.setItem('reload', "true");
-                
-                // if (window.location.href.search('\\?sentence=')>0){
-                //  window.history.back();
-                // } else {
-                //  window.location.reload();
-                // }
-                // recorder.clearStream();
+                type: 'POST',
+                url: '/record/',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    // Reload the page for a new sentence if recording successfully saved;
+                    // Session stores a reload value to display a thank you message 
+                    console.log("Recording data successfully submitted and saved");
+                    sessionStorage.setItem('reload', "true");
+                    
+                    // if (window.location.href.search('\\?sentence=')>0){
+                    //  window.history.back();
+                    // } else {
+                    //  window.location.reload();
+                    // }
+                    // recorder.clearStream();
 
-                delete audioBlob
-                delete fileName
-                delete audioURL
-                // delete recorder
-                var audioBlob, fileName;
+                    delete audioBlob
+                    delete fileName
+                    delete audioURL
+                    // delete recorder
+                    var audioBlob, fileName;
 
-                $('.circle-button-container .play').hide()
-                $('.circle-button-container .record').show()
-                audio.src = null;
-                sentences.next()
+                    $('.circle-button-container .play').hide()
+                    $('.circle-button-container .record').show()
+                    audio.src = null;
+                    sentences.next()
 
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                // Display an error message if views return saving error
-                $("#status-message h2").text("Sorry, there was an error!");
-                $("#status-message").show();
-            }
-        });
-
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    // Display an error message if views return saving error
+                    $("#status-message h2").text("Sorry, there was an error!");
+                    $("#status-message").show();
+                }
+            });
+        }
     });
 
 
