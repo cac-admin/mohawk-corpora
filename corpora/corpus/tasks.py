@@ -5,7 +5,7 @@ from django.conf import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 from corpus.models import Recording
-
+from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.core.files import File
@@ -95,7 +95,9 @@ def prepare_temporary_environment(recording, test=False):
     tmp_file = tmp_stor_dir+'/'+file.name.split('/')[-1].replace(' ', '')
     if not os.path.exists(tmp_file):
         if 'http' in file_path:
-            code = 'wget '+file_path+' -O ' + tmp_file
+            r = RecordingFileView()
+            url = r.get_redirect_url(filepath=file.name)
+            code = 'wget '+url+' -O ' + tmp_file
         else:
             code = "cp '%s' '%s'" % (file_path, tmp_file)
         logger.debug(code)
