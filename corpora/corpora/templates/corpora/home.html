@@ -3,7 +3,6 @@
 {% load static %}
 {% load sekizai_tags %}
 {% load compress %}
-{% load sass_tags %}
 {% load i18n %}
 
 
@@ -21,7 +20,7 @@
 {% block content %}
 
 {% addtoblock "css" %}
-<link href="{% sass_src 'corpora/css/home.scss' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'corpora/css/home.scss' %}" rel="stylesheet" type="text/css" />
 {% endaddtoblock %}
 
 {% addtoblock "css" %}

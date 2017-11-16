@@ -5,12 +5,13 @@
 {% load static %}
 {% load sekizai_tags %}
 {% load compress %}
-{% load sass_tags %}
 
 {% block content %}
 
 {% addtoblock "css" %}
-  <link href="{% sass_src 'people/css/account.scss' %}" rel="stylesheet" type="text/css" />
+<style type="text/x-scss">
+@import 'people/css/account.scss';
+</style>
 {% endaddtoblock %}
 
 <div class="container" style="text-align: center;">

@@ -13,8 +13,14 @@
   {# CSS files to load and combine #}
   {% addtoblock "css" %} {% endaddtoblock %}
   {% addtoblock "css" %}<link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
-  {% addtoblock "css" %}<link href="{% static 'corpora/css/main.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
   {% addtoblock "css" %}<link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">{% endaddtoblock %}
+
+  {% addtoblock "css" %}
+    <style type="text/x-scss">      
+    @import 'corpora/css/main.scss';
+    @import 'corpora/css/nav.scss';
+    </style>
+  {% endaddtoblock %}  
 
 
 {% comment %}
