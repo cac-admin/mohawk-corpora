@@ -231,14 +231,13 @@ function visualize2(my_object){
     var src = my_object.sourceNode
     var analyser = my_object.audioContext.createAnalyser();
 
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
 
     src.connect(analyser);
     // analyser.connect(audioCTX.destination);
 
-    analyser.fftSize = 32*4;
+    analyser.fftSize = 32*2;
 
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
@@ -246,10 +245,11 @@ function visualize2(my_object){
     var dataArray = new Uint8Array(bufferLength);
     console.log(dataArray)
 
-    var WIDTH = canvas.width;
-    var HEIGHT = canvas.height;
+    var WIDTH = canvas.clientWidth;
+    var HEIGHT = canvas.clientHeight;
+    console.log(HEIGHT)
 
-    var barWidth = (WIDTH / bufferLength) * 2.5;
+    var barWidth = (WIDTH / bufferLength) ;
     var barHeight;
     var x = 0;
 
@@ -266,13 +266,15 @@ function visualize2(my_object){
       canvacCTX.fillRect(0, 0, WIDTH, HEIGHT);
 
       for (var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i]*2;
-        
-        var r = barHeight + (25 * (i/bufferLength));
-        var g = 250 * (i/bufferLength);
-        var b = 50;
 
-        canvacCTX.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        barHeight = dataArray[i]*.35;
+        
+        var h = 345//..barHeight + (25 * (i/bufferLength));
+        var s = 73 * ( HEIGHT/barHeight * .5) //250 * (i/bufferLength);
+        var l = 10+ 80*( barHeight/HEIGHT )   ;//20;
+        
+
+        canvacCTX.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)";
         canvacCTX.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
 
         x += barWidth + 1;
@@ -281,7 +283,6 @@ function visualize2(my_object){
 
     renderFrame();  
 }
-
 // navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
 //     function(mediaStream){
 //         console.log('Yay')   
