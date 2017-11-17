@@ -4,13 +4,16 @@ var audioBlob, fileName;
 
 
 function show_loading(){
-$('.circle-button-container a').hide();
-$('.circle-button-container').find('.loading').show()   
+    console.log('showing loading?')
+    $('.circle-button-container a').hide();
+    $('.circle-button-container').find('.loading').show()
+    $('.sentence-block .sentence').css('opacity', .5)
 }
 
 function hide_loading(){
-$('.circle-button-container a').hide();
-$('.circle-button-container').find('.loading').hide()
+    $('.circle-button-container a').hide();
+    $('.circle-button-container').find('.loading').hide()
+    $('.sentence-block .sentence').css('opacity', 1)
 }
 
 $(document).ready(function() {
@@ -49,9 +52,10 @@ if (!Recorder.isRecordingSupported()) {
     var recording = false;
     // Record or halt recording when pressing record button
     $('#record-button').click(function() {
+        console.log('record button pressed')
+        show_loading();
         if (recording == false) {
-            show_loading();
-
+            
             // Start recorder if inactive and set recording state to true
             recording = true
 
@@ -64,19 +68,19 @@ if (!Recorder.isRecordingSupported()) {
             
             }
 
-
             // Have recorder listen for when the data is available
             recorder.addEventListener("dataAvailable", function(e) {
                 audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
                 fileName = new Date().toISOString() + ".wav";
                 var audioURL = URL.createObjectURL( audioBlob );
-
                 audio.src = audioURL;
                 audio.load()
                 $('.circle-button-container').find('.play').show()
             });
 
             recorder.addEventListener("streamReady", function(e) {
+                visualize2(recorder);
+
                 hide_loading();
                 recorder.start()
                 $('.circle-button-container').find('.record').hide()
@@ -84,10 +88,8 @@ if (!Recorder.isRecordingSupported()) {
             });
 
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
-
-            recorder.initStream()
-
-            // setTimeout(function(){},200);
+            
+            setTimeout(function(){recorder.initStream();},100);
 
 
         }})
@@ -137,7 +139,7 @@ if (!Recorder.isRecordingSupported()) {
             recorder.stop();
             recorder.clearStream();
             audio.pause();
-            
+            delete recorder
 
             $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
             $('.circle-button-container').find('.play, .stop').hide();
@@ -224,10 +226,11 @@ var audioCTX = new (window.AudioContext || webkitAudioContext)();
 var canvas = document.querySelector('.visualizer');
 var canvacCTX = canvas.getContext("2d");
 
-function visualize2(stream){
+function visualize2(my_object){
 
-    var src = audioCTX.createMediaStreamSource(stream);
-    var analyser = audioCTX.createAnalyser();
+    var src = my_object.sourceNode
+    var analyser = my_object.audioContext.createAnalyser();
+
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -259,7 +262,7 @@ function visualize2(stream){
       analyser.getByteFrequencyData(dataArray);
       // console.log(dataArray)
       canvacCTX.clearRect(0, 0, WIDTH, HEIGHT);
-      canvacCTX.fillStyle = "rgba(0,0,0,.5)";
+      canvacCTX.fillStyle = "#333";
       canvacCTX.fillRect(0, 0, WIDTH, HEIGHT);
 
       for (var i = 0; i < bufferLength; i++) {
@@ -287,16 +290,19 @@ function visualize2(stream){
 
 
 
-if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+// if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
-    $('.vis-container').remove()
+//     $('.vis-container').remove()
 
-} else {
-    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
-        function(mediaStream){
-            visualize2(mediaStream);        
-        });   
-}
+// } else {
+//     navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
+//         function(mediaStream){
+                // var sourceNode = audioCTX.createMediaStreamSource(mediaStream);
+                // my_object = {}
+                //my_object['sourceNode'] = sourceNode
+//             visualize2(my_object);        
+//         });   
+// }
 
 
 

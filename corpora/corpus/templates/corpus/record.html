@@ -35,7 +35,7 @@ div.content{
   }
   height: 80px;
   border-radius: 4px;
-  background-color: white;
+  background-color: #333;
   border:0px solid $brand_primary;
 }
 .sentence{
@@ -128,7 +128,9 @@ a.btn{
 
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/waveWorker.min.js' %}"></script>{% endaddtoblock %}
+
 
 {% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
@@ -181,6 +183,34 @@ a.btn{
     $('.circle-button-container .record').show()
     $('.circle-button-container').find('.play, .stop').hide()
     $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
+
+  })
+
+  var my_object_player = {};
+  my_object_player['audioContext'] = new (window.AudioContext || window.webkitAudioContext)();
+  my_object_player['sourceNode'] = my_object_player['audioContext'].createMediaElementSource(player.audio);
+  my_object_player['sourceNode'].connect(my_object_player['audioContext'].destination)
+
+
+  // ios Safari permission shit see: https://gist.github.com/laziel/7aefabe99ee57b16081c
+  if (typeof webkitAudioContext !== 'undefined'){
+    var resume = function () {
+      my_object_player['audioContext'].resume();
+      setTimeout(function () {
+        if (my_object_player['audioContext'].state === 'running') {
+          document.body.removeEventListener('touchend', resume, false);
+        }
+      }, 0);
+    };
+  }
+
+  document.body.addEventListener('touchend', resume, false);
+
+  $(player.audio).on('play',function(){
+      visualize2(my_object_player);
+  })
+    
+  $(player.audio).on('ended paused',function(){
 
   })
 

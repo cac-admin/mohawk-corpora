@@ -88,6 +88,7 @@ class Player {
 
     $(this.audio).bind('playing', function(){
       self.logger('audio playing')
+      self.logger(self.audio.src)
       $('.circle-button-container a').hide();
       $('.foreground-circle.loading').removeClass('clicked-circle').addClass('unclicked-circle')
       $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle')
