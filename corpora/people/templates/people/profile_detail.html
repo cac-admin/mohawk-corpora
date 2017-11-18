@@ -27,7 +27,7 @@ div.content{
 <div class="row">
   <div class="col">
     
-    <div class="profile" id="profile">
+    <div class="profile" id="profile-div">
 
     <form action="" method="post" id="person_form">
     {% csrf_token %}
@@ -71,10 +71,10 @@ div.content{
 </div>
 </div>
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'people/js/profile.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}{{ demographic_form.media }}{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}{{ demographic_form.media }}{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'people/js/profile.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock 'js-end' %}
 <script type="text/javascript">
@@ -88,8 +88,8 @@ $('#demographic_form, #person_form').find('select').addClass('form-control');
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
-  profile = new Profile({{person.pk}}, '#profile', '.alert-area');
-  profile.load()
+  p = new Profile({{person.pk}}, '#profile-div', '.alert-area');
+  p.load()
 </script>
 {% endaddtoblock %}
 

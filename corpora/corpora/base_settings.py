@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     'sekizai',
     'compressor',
+    # 'compressor_toolkit',
     # 'sass_processor',
 
     'allauth',
@@ -288,15 +289,14 @@ COMPRESS_PRECOMPILERS = (
     # ('text/less', 'lessc {infile} {outfile}'),
     # ('text/x-sass', 'sass {infile} {outfile}'),
     # ('text/x-scss', 'sass --scss {infile} {outfile}'),
+    # ('module', 'compressor_toolkit.precompilers.ES6Compiler'),
     ('text/x-scss', 'django_libsass.SassCompiler'),
-
     # ('text/stylus', 'stylus < {infile} > {outfile}'),
     # ('text/foobar', 'path.to.MyPrecompilerFilter'),
 )
-
-
-
-
+COMPRESS_LOCAL_NPM_INSTALL = False
+# COMPRESS_ENABLED = True
+# COMPRESS_NODE_MODULES = "/usr/local/lib/node_modules/"
 
 
 LOGGING = {

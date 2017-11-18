@@ -73,7 +73,7 @@ a.btn{
          
         </div>
         <div class="col-12 vis-container">
-          <canvas class="visualizer " style=""></canvas>
+          <canvas class="visualizer " style="" id="vis-area"></canvas>
         </div>
       </div>
     </div>
@@ -126,21 +126,24 @@ a.btn{
     
 <audio id="play-audio" style="display: none; width: 0px; height: 0px" preload="auto"> </audio>
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/waveWorker.min.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/waveWorker.min.js' %}"></script>{% endaddtoblock %}
 
 
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/player.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/player.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
-  var player = new Player('#play-audio');
 
+{% include 'corpus/js/record.js' %}
+{% include 'corpus/js/visualize.js' %}
+
+
+  var player = new Player('#play-audio');
   var person_pk = "{{person.pk}}";
   var sentence_pk = "{{sentence.pk}}";
 
@@ -149,7 +152,6 @@ a.btn{
     '{{content_type}}',
     '?recording=True')
   sentences.next()
-
 
 
   $('a.next').on('click', function(){
@@ -169,9 +171,7 @@ a.btn{
     $('.circle-button-container .record').show()    
   })
 
-  $('.save').on('click', function(){
-    sentences.show_loading()
-  })
+
 
   sentences.sentence_block.addEventListener('sentence.ready', function(){
     console.log('sentence.ready')
@@ -206,12 +206,16 @@ a.btn{
 
   document.body.addEventListener('touchend', resume, false);
 
+
+  var vis = new Visualize('vis-area', my_object_player.sourceNode, my_object_player.audioContext);
+
+
   $(player.audio).on('play',function(){
-      visualize2(my_object_player);
+      vis.start()
   })
     
   $(player.audio).on('ended paused',function(){
-
+    vis.stop()
   })
 
 

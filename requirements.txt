@@ -8,6 +8,7 @@ flower #used to monitor Celery
 django-compressor
 django-libsass
 libsass
+# django-compressor-toolkit
 django-sekizai
 gunicorn
 psycopg2

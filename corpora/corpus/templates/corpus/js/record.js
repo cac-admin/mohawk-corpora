@@ -79,17 +79,21 @@ if (!Recorder.isRecordingSupported()) {
             });
 
             recorder.addEventListener("streamReady", function(e) {
-                visualize2(recorder);
-
                 hide_loading();
                 recorder.start()
                 $('.circle-button-container').find('.record').hide()
-                $('.circle-button-container').find('.stop').show()             
+                $('.circle-button-container').find('.stop').show()
+
+                setTimeout(function(){
+                    visualize2(recorder);
+                    },200);
+                
+
             });
 
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
             
-            setTimeout(function(){recorder.initStream();},100);
+            setTimeout(function(){recorder.initStream();},200);
 
 
         }})
@@ -174,6 +178,8 @@ if (!Recorder.isRecordingSupported()) {
             console.log(sentences.sentence.id)
             console.log(fd)
 
+            show_loading();
+
             $.ajax({
 
                 type: 'POST',
@@ -203,6 +209,7 @@ if (!Recorder.isRecordingSupported()) {
                     $('.circle-button-container .play').hide()
                     $('.circle-button-container .record').show()
                     audio.src = null;
+                    hide_loading()
                     sentences.next()
 
                 },
@@ -210,6 +217,7 @@ if (!Recorder.isRecordingSupported()) {
                     // Display an error message if views return saving error
                     $("#status-message h2").text("Sorry, there was an error!");
                     $("#status-message").show();
+                    hide_loading()
                 }
             });
         }
@@ -237,7 +245,7 @@ function visualize2(my_object){
     src.connect(analyser);
     // analyser.connect(audioCTX.destination);
 
-    analyser.fftSize = 32*2;
+    analyser.fftSize = 32;
 
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
@@ -278,11 +286,16 @@ function visualize2(my_object){
         canvacCTX.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
 
         x += barWidth + 1;
+
+        // console.log(parseInt(barHeight), HEIGHT)
+
+        i = bufferLength
       }
     }
 
     renderFrame();  
 }
+
 // navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
 //     function(mediaStream){
 //         console.log('Yay')   
