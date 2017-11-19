@@ -10,16 +10,16 @@ from people.helpers import get_unknown_languages
 
 from corpus import views
 
+
 def home(request):
-	if request.user.is_authenticated():
-		return redirect('people:profile')
-	else:
+    if request.user.is_authenticated():
+        return redirect('people:profile')
+    else:
 
+        context = {
+            'request': request, 
+            'languages': get_unknown_languages(None),
+        }
 
-		context = {
-			'request': request,
-			'languages': get_unknown_languages(None),
-		}
-
-		return render(request, 'corpora/home.html', context)
-		#return redirect('account/login')
+        return render(request, 'corpora/home.html', context)
+        #return redirect('account/login')

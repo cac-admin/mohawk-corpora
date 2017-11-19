@@ -17,7 +17,7 @@
 {% endaddtoblock %}
 <nav class="navbar navbar-expand">
   <div class="container">
-  <a class="navbar-brand" href="/">corpora.io</a>
+  <a class="navbar-brand" href="/">{{request.site.name}}</a>
   
   <ul class="navbar-nav ml-auto ">
     {% if request.user.is_authenticated %}

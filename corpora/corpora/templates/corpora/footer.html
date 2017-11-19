@@ -31,7 +31,7 @@
         <h4>Site Map</h4>
         <p><a href="{% url 'account_login' %}">Login</a> / <a href="{% url 'account_signup' %}">Sign-Up</a></p>
         <p><a href="{% url 'corpus:record' %}">Record</a></p>
-        <p><a href="{% url 'corpus:sentence-list' %}">Verify Sentences</a></p>
+        <p><a href="{% url 'corpus:listen' %}">Listen</a></p>
       </div>
       <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
         <h4>Get Involved</h4>
@@ -53,7 +53,7 @@
   
   <div class="row">
     <div class="col-12" style="text-align: center; padding-top: 15px;">
-      Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content collected at corpora.io falls under our Kaitiaki License.
+      Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content collected at {{request.site}} falls under our Kaitiaki License.
     </div>
   </div>
 

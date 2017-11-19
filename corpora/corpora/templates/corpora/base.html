@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width" />
 
-  <title>{% block title %}corpora.io{% endblock %}</title>
+  <title>{% block title %}{{request.site.name}}{% endblock %}</title>
 
   {# Uses sekizai to load all css at start of page & compressor to minify it #}
   {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
