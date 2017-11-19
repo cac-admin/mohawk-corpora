@@ -103,6 +103,11 @@ def prepare_temporary_environment(recording, test=False):
         logger.debug(code)
         result = commands.getstatusoutput(code)
         logger.debug(result[0])
+        try:
+            logger.debug(result[1])
+        except:
+            logger.debug(result)
+
         if not os.path.exists(tmp_file):
             logger.debug('ERROR GETTING: ' + tmp_file)
             raise ValueError
