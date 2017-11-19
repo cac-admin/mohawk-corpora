@@ -133,14 +133,16 @@ a.btn{
 
 
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/player.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
 
-{% include 'corpus/js/record.js' %}
+{% include 'corpus/js/sentence.js' %}
+{% include 'corpus/js/player.js' %}
 {% include 'corpus/js/visualize.js' %}
+{% include 'corpus/js/record.2.js' %}
+
+var visRecorder;
 
 
   var player = new Player('#play-audio');
@@ -154,34 +156,42 @@ a.btn{
   sentences.next()
 
 
+  var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
+
+
   $('a.next').on('click', function(){
     sentences.show_loading()
-    audio.pause()
-    recording=false;
-    if (recorder!=null){
-      recorder.clearStream()
+    my_recorder.audio.pause()
+    my_recorder.recording=false;
+    if (my_recorder.recorder!=null){
+      my_recorder.recorder.clearStream()
     }
-    audio.src = null
+    my_recorder.audio.src = null
 
-    $('.circle-button-container').find('.play, .stop').hide()
+    $(document.getElementById('stop-button')).hide()
+    $(document.getElementById('play-button')).hide()
     $('.save').addClass('disabled');
     $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
     $('.redo').addClass('disabled');
     
-    $('.circle-button-container .record').show()    
+    $(document.getElementById('record-button')).show()
   })
 
 
 
   sentences.sentence_block.addEventListener('sentence.ready', function(){
     console.log('sentence.ready')
-    $('.circle-button-container .record').show()
+    $(document.getElementById('record-button')).show()
   })
 
 
   $(document).ready(function(){
-    $('.circle-button-container .record').show()
-    $('.circle-button-container').find('.play, .stop').hide()
+    
+    $(document.getElementById('stop-button')).hide()
+    $(document.getElementById('play-button')).hide()
+    $(document.getElementById('record-button')).show()
+    $(document.getElementById('loading-button')).hide()    
+
     $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
 
   })
@@ -204,18 +214,18 @@ a.btn{
     };
   }
 
+
   document.body.addEventListener('touchend', resume, false);
-
-
-  var vis = new Visualize('vis-area', my_object_player.sourceNode, my_object_player.audioContext);
-
+  var vis;
 
   $(player.audio).on('play',function(){
+      vis = new Visualize('vis-area', my_object_player.sourceNode, my_object_player.audioContext);
       vis.start()
   })
     
   $(player.audio).on('ended paused',function(){
     vis.stop()
+    delete vis;
   })
 
 

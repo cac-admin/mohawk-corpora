@@ -34,7 +34,7 @@ class Profile{
       self.save()
     });
     
-    var elem = '<div class="alert " role="alert" style="position:absolute; right: 0;"></div>'
+    var elem = '<div class="alert " role="alert"></div>'
     this.alert = $(elem)
     $(this.alert).hide()
     if (this.alert_element == null){
@@ -100,10 +100,10 @@ class Profile{
           window.setTimeout(function(){
             self.change_counter += 1
             self.save()
-          }, 1500)
+          }, 1000)
         }
       }
-    }, 1500)
+    }, 1000)
 
   } 
 
@@ -138,7 +138,7 @@ class Profile{
   }
 
   show_success(){
-      $(this.alert).addClass('alert-info').text('Profile updated').fadeIn().delay(500).fadeOut()
+      $(this.alert).addClass('alert-info').html('Profile&nbsp;updated').fadeIn().delay(500).fadeOut()
   }
 
   post(data){

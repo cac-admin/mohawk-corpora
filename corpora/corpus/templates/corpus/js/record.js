@@ -1,18 +1,24 @@
 var audio = document.getElementById('play-audio');
 var recorder
 var audioBlob, fileName;
-
+var stop_button = document.getElementById('stop-button')
+var play_button = document.getElementById('play-button')
+var loading_button = document.getElementById('loading-button')
+var record_button = document.getElementById('record-button')
 
 function show_loading(){
-    console.log('showing loading?')
-    $('.circle-button-container a').hide();
-    $('.circle-button-container').find('.loading').show()
+    $(stop_button).hide()
+    $(play_button).hide()
+    $(record_button).hide()
+    $(loading_button).show()
     $('.sentence-block .sentence').css('opacity', .5)
 }
 
 function hide_loading(){
-    $('.circle-button-container a').hide();
-    $('.circle-button-container').find('.loading').hide()
+    $(stop_button).hide()
+    $(play_button).hide()
+    $(record_button).hide()
+    $(loading_button).hide()
     $('.sentence-block .sentence').css('opacity', 1)
 }
 
@@ -46,8 +52,9 @@ if (!Recorder.isRecordingSupported()) {
     a = new AudioContext();
     // var dummy_ac = new AudioContext();
     var sample_rate = a.sampleRate;
-    console.log(sample_rate)
+
     a.close();
+    delete a;
     
     var recording = false;
     // Record or halt recording when pressing record button
@@ -75,18 +82,21 @@ if (!Recorder.isRecordingSupported()) {
                 var audioURL = URL.createObjectURL( audioBlob );
                 audio.src = audioURL;
                 audio.load()
-                $('.circle-button-container').find('.play').show()
+                $(document.getElementById('play-button')).show()
+                delete recorder;
             });
 
             recorder.addEventListener("streamReady", function(e) {
                 hide_loading();
                 recorder.start()
-                $('.circle-button-container').find('.record').hide()
-                $('.circle-button-container').find('.stop').show()
+       
+                $(document.getElementById('record-button')).hide()
+                $(document.getElementById('stop-button')).show()                
 
                 setTimeout(function(){
-                    visualize2(recorder);
-                    },200);
+                    visRecorder = new Visualize('vis-area', recorder.sourceNode, recorder.audioContext);
+                    visRecorder.start();
+                },200);
                 
 
             });
@@ -95,30 +105,26 @@ if (!Recorder.isRecordingSupported()) {
             
             setTimeout(function(){recorder.initStream();},200);
 
-
         }})
 
 
-    $('#stop-button').click(function(){
-        $('.circle-button-container').find('.stop').hide()
-        
-        $('.circle-button-container').find('.play').show()    
-        
+        $('#stop-button').click(function(){
 
-        // Stop recorder if active and set recording state to false
-        recording = false
-        recorder.stop()
+            $(document.getElementById('stop-button')).hide()
+            $(document.getElementById('play-button')).show()
 
-        $('.redo').removeClass('disabled');
+            // Stop recorder if active and set recording state to false
+            recording = false
+            recorder.stop()
+            visRecorder.stop();
+            delete visRecorder;
+            $('.redo').removeClass('disabled');
+            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
 
-        $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-
-         
-
-            // // $('.circle-text.record').show();
-            // // $('.circle-button-container .stop').hide()
-            // 
-            // $('.circle-button-container .record').hide()
+                // // $('.circle-text.record').show();
+                // // $('.circle-button-container .stop').hide()
+                // 
+                // $('.circle-button-container .record').hide()
     })
 
     // WHen sentence is loaded, show the record button
@@ -146,10 +152,13 @@ if (!Recorder.isRecordingSupported()) {
             delete recorder
 
             $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
-            $('.circle-button-container').find('.play, .stop').hide();
+
+            $(document.getElementById('stop-button')).hide()
+            $(document.getElementById('play-button')).hide()
+
             $('.redo').addClass('disabled');
             $('.save').addClass('disabled');
-            $('.circle-button-container .record').show();
+            $(document.getElementById('record-button')).show()
         }
     });
 
@@ -206,8 +215,12 @@ if (!Recorder.isRecordingSupported()) {
                     // delete recorder
                     var audioBlob, fileName;
 
-                    $('.circle-button-container .play').hide()
-                    $('.circle-button-container .record').show()
+
+                    $(document.getElementById('play-button')).hide()
+                    $(document.getElementById('record-button')).show()
+
+     
+
                     audio.src = null;
                     hide_loading()
                     sentences.next()
@@ -228,73 +241,76 @@ if (!Recorder.isRecordingSupported()) {
 
 }
 
-// visualiser setup - create web audio api context and canvas
-// pinched from https://github.com/mdn/web-dictaphone/blob/gh-pages/scripts/app.js
-var audioCTX = new (window.AudioContext || webkitAudioContext)();
-var canvas = document.querySelector('.visualizer');
-var canvacCTX = canvas.getContext("2d");
 
-function visualize2(my_object){
 
-    var src = my_object.sourceNode
-    var analyser = my_object.audioContext.createAnalyser();
 
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+// // visualiser setup - create web audio api context and canvas
+// // pinched from https://github.com/mdn/web-dictaphone/blob/gh-pages/scripts/app.js
+// var audioCTX = new (window.AudioContext || webkitAudioContext)();
+// var canvas = document.querySelector('.visualizer');
+// var canvacCTX = canvas.getContext("2d");
 
-    src.connect(analyser);
-    // analyser.connect(audioCTX.destination);
+// function visualize2(my_object){
 
-    analyser.fftSize = 32;
+//     var src = my_object.sourceNode
+//     var analyser = my_object.audioContext.createAnalyser();
 
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
+//     canvas.width = canvas.clientWidth;
+//     canvas.height = canvas.clientHeight;
 
-    var dataArray = new Uint8Array(bufferLength);
-    console.log(dataArray)
+//     src.connect(analyser);
+//     // analyser.connect(audioCTX.destination);
 
-    var WIDTH = canvas.clientWidth;
-    var HEIGHT = canvas.clientHeight;
-    console.log(HEIGHT)
+//     analyser.fftSize = 32;
 
-    var barWidth = (WIDTH / bufferLength) ;
-    var barHeight;
-    var x = 0;
+//     var bufferLength = analyser.frequencyBinCount;
+//     console.log(bufferLength);
 
-    console.log(barHeight)
-    function renderFrame() {
-      requestAnimationFrame(renderFrame);
+//     var dataArray = new Uint8Array(bufferLength);
+//     console.log(dataArray)
 
-      x = 0;
+//     var WIDTH = canvas.clientWidth;
+//     var HEIGHT = canvas.clientHeight;
+//     console.log(HEIGHT)
 
-      analyser.getByteFrequencyData(dataArray);
-      // console.log(dataArray)
-      canvacCTX.clearRect(0, 0, WIDTH, HEIGHT);
-      canvacCTX.fillStyle = "#333";
-      canvacCTX.fillRect(0, 0, WIDTH, HEIGHT);
+//     var barWidth = (WIDTH / bufferLength) ;
+//     var barHeight;
+//     var x = 0;
 
-      for (var i = 0; i < bufferLength; i++) {
+//     console.log(barHeight)
+//     function renderFrame() {
+//       requestAnimationFrame(renderFrame);
 
-        barHeight = dataArray[i]*.35;
+//       x = 0;
+
+//       analyser.getByteFrequencyData(dataArray);
+//       // console.log(dataArray)
+//       canvacCTX.clearRect(0, 0, WIDTH, HEIGHT);
+//       canvacCTX.fillStyle = "#333";
+//       canvacCTX.fillRect(0, 0, WIDTH, HEIGHT);
+
+//       for (var i = 0; i < bufferLength; i++) {
+
+//         barHeight = dataArray[i]*.35;
         
-        var h = 345//..barHeight + (25 * (i/bufferLength));
-        var s = 73 * ( HEIGHT/barHeight * .5) //250 * (i/bufferLength);
-        var l = 10+ 80*( barHeight/HEIGHT )   ;//20;
+//         var h = 345//..barHeight + (25 * (i/bufferLength));
+//         var s = 73 * ( HEIGHT/barHeight * .5) //250 * (i/bufferLength);
+//         var l = 10+ 80*( barHeight/HEIGHT )   ;//20;
         
 
-        canvacCTX.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)";
-        canvacCTX.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+//         canvacCTX.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)";
+//         canvacCTX.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
 
-        x += barWidth + 1;
+//         x += barWidth + 1;
 
-        // console.log(parseInt(barHeight), HEIGHT)
+//         // console.log(parseInt(barHeight), HEIGHT)
 
-        i = bufferLength
-      }
-    }
+//         i = bufferLength
+//       }
+//     }
 
-    renderFrame();  
-}
+//     renderFrame();  
+// }
 
 // navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(
 //     function(mediaStream){

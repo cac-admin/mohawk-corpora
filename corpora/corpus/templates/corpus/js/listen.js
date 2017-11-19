@@ -67,12 +67,11 @@ class Listen{
 
   show_loading(){
     $('.circle-button-container a').hide();
-    $('.circle-button-container').find('.loading').show()   
+    $('.circle-button-container a.loading').show()   
   }
 
   hide_loading(){
     $('.circle-button-container a').hide();
-    $('.circle-button-container').find('.loading').hide()
   }
 
   get_recordings(){
@@ -208,6 +207,11 @@ class Listen{
 
       $(input_elm).on('keyup', function(event){
         self.check_sentence_changed(event)
+      })
+
+
+      $(self.audio).bind('error', function(){
+        self.next()
       })
 
     }

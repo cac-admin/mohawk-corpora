@@ -26,12 +26,20 @@
     }
   }
 }
+
+.alert-area .alert{
+  position: absolute;
+  right: 0px;
+  font-size: .7em;
+  margin-right: 15px;
+}
+
 </style>
 {% endaddtoblock %}
 
 <div class="container name" >
   <div class="row">
-    <div class="col-sm-12" >
+    <div class="col-11" >
       {% if person.full_name %}
         <h4>{{person.full_name}}</h4><small>Not you?
         {% if user.is_authenticated %}
@@ -54,7 +62,7 @@
         {% endif %}</small>
       {% endif %}
     </div>
-    <div class="col alert-area">
+    <div class="col-1 alert-area">
       
     </div>
   </div>

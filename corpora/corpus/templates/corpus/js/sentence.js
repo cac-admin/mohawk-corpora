@@ -1,13 +1,7 @@
 
 class Sentences{
 
-  constructor(person_id,
-              content_type,
-              filter_query='',
-              can_approve=false,
-              approver_user_id=null,
-              sentence_block_selector='.sentence-block',
-              ){
+  constructor(person_id, content_type, filter_query='', can_approve=false, approver_user_id=null, sentence_block_selector='.sentence-block'){
     this.sentence_block = $(sentence_block_selector).get(0);
     this.objects = null
     this.sentence = null
