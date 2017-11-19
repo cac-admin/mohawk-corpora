@@ -16,7 +16,8 @@ class MyRecorder extends Player{
         this.dummy = null
         this.fd = null
         this.should_vis = true
-
+        this.skipped = false
+        this.skip_button = document.getElementById('skip-button')
         var self = this
 
         // CREATE AND REGISTER EVENT LISTENERS
@@ -42,6 +43,33 @@ class MyRecorder extends Player{
                 self.stop_recording();
             }
         });
+
+        $(self.skip_button).click(function(){
+
+            // console.log('record skip')
+            self.skipped = true
+            self.audio.pause()
+
+            if (self.recording){
+                self.stop_recording()
+            }
+
+
+
+            self.audio.src = ''
+            delete self.audio.src
+            delete self.audioBlob            
+            
+            $('.save').addClass('disabled');
+            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+            $('.redo').addClass('disabled');
+            $(self.record_button).show()
+            $(self.play_button).show()
+
+        })
+
+ 
+  
 
         // When audio is done playing back, revert button to initial state
         $(this.audio).bind('ended', function(){        
@@ -75,21 +103,15 @@ class MyRecorder extends Player{
         $(".redo").click(function(e) {
             if (!$(e.currentTarget).hasClass('disabled')){
                 
-                if (self.recorder != null){
-                    self.recorder.stop();
-                    self.recorder.clearStream();
-                    delete self.audio.src
-                    // self.audioBlob.dispose()
-                    delete self.audioBlob
-
-                    // delete self.recorder                    
+                if (self.recording){
+                    self.stop_recording()                  
+                    // delete self.r/ecorder.storePage
+                    // delete self.recorder.streamPage
                 }
+
                 self.audio.pause();
 
-
                 $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
-
-                
                 $('.redo').addClass('disabled');
                 $('.save').addClass('disabled');
                 $(self.record_button).show()
@@ -114,19 +136,50 @@ class MyRecorder extends Player{
             console.log("Recorder not supported");
             return false;
         } else {
+
             console.log("Recorder supported");
 
+            
+            // Initialize the recorder
+            // Using recorderjs: https://github.com/chris-rudmin/Recorderjs
+            // encoderPath option: directs to correct encoderWorker location
+            // leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream            
+            self.recorder = new Recorder({
+                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
+                    encoderSampleRate: self.audio.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
+            });
+
+
+            // Have recorder listen for when the data is available
+            // This fires when recording is stopped
+            self.recorder.addEventListener("dataAvailable", function(e) {
+                self.actions_element.dispatchEvent(self.event_record_stop)
+
+                if (self.skipped == false){
+                    self.audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
+                    self.fileName = new Date().toISOString() + ".wav";
+                    self.audio.src  = URL.createObjectURL( self.audioBlob );
+                    self.audio.load()
+                } else {
+                    console.log('NOT SETTING AUDIO')
+                    self.skipped = false
+                }
+            });        
+
+            self.recorder.addEventListener("streamReady", function(e) {
+                self.actions_element.dispatchEvent(self.event_record_start)
+                self.recorder.start()
+                $(self.record_button).hide()
+                $(self.stop_button).show()                
+                setTimeout(function(){
+                    if (self.should_vis==true){
+                        self.visualize = new Visualize('vis-area', self.recorder.sourceNode, self.recorder.audioContext);
+                        self.visualize.start();
+                    }
+                },200);
+            });
+
         }
-
-
-
-        
-
-
-//     $('.vis-container').remove()
-
-// } else {
-
 
     }
 
@@ -136,76 +189,26 @@ class MyRecorder extends Player{
         var self = this
         self.actions_element.dispatchEvent(self.event_record)
         if (self.recording == false) {
-            // Start recorder if inactive and set recording state to true
             self.recording = true
-
-            // Initialize audio stream (and ask the user if recording allowed?)
-            // Initialize the recorder
-            // Using recorderjs: https://github.com/chris-rudmin/Recorderjs
-            // encoderPath option: directs to correct encoderWorker location
-            // leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream
-
-            // create an audio context then close it so we can detect microphpne sample rate
-            if (self.sampleRate == null){
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                self.dummy = new AudioContext();
-                self.sample_rate = self.dummy.sampleRate;
-                self.dummy.close();
-                delete self.dummy;
-            }
-
-            if (!self.recorder){
-                self.recorder = new Recorder({
-                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
-                    encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
-                }); 
-            }
-
-            // Have recorder listen for when the data is available
-            // This fires when recording is stopped
-            self.recorder.addEventListener("dataAvailable", function(e) {
-                self.actions_element.dispatchEvent(self.event_record_stop)
-                self.audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
-                self.fileName = new Date().toISOString() + ".wav";
-                self.audio.src  = URL.createObjectURL( self.audioBlob );
-                self.audio.load()
-                $(self.play_button).show()
-                self.recorder.clearStream();
-                // delete self.recorder;
-            });
-
-            // THis fires when recording begins.
-            self.recorder.addEventListener("streamReady", function(e) {
-                self.actions_element.dispatchEvent(self.event_record_start)
-                self.recorder.start()
-                $(self.record_button).hide()
-                $(self.record_button).show()                
-                setTimeout(function(){
-                    if (self.should_vis==true){
-                        self.visualize = new Visualize('vis-area', self.recorder.sourceNode, self.recorder.audioContext);
-                        self.visualize.start();
-                    }
-                },200);
-            });
-
+            window.setTimeout(function(){
+                self.recorder.initStream();
+            }, 200)
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
-            
-            setTimeout(function(){self.recorder.initStream();},200);
-
         }
     }
 
 
     stop_recording(){
-        $(this.stop_button).hide()
-        $(this.play_button).show()
+        var self = this
+        self.recording = false  
+        // Stop recorder if active and set recording state to false        
+        self.recorder.stop()
+        $(self.stop_button).hide()
+        $(self.play_button).show()
         if (self.should_vis==true){
             self.visualize.stop();
             // delete self.visualize;
         }
-        // Stop recorder if active and set recording state to false
-        this.recording = false
-        this.recorder.stop()
 
         $('.redo').removeClass('disabled');
         $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
@@ -246,12 +249,11 @@ class MyRecorder extends Player{
             success: function(data) {
                 console.log("Recording data successfully submitted and saved");
                 
-
-
                 delete self.fd;
                 delete self.audioBlob
                 delete self.audio.src
                 delete self.fileName
+                
 
                 self.hide_all_buttons()
                 $(self.record_button).show()
@@ -263,7 +265,7 @@ class MyRecorder extends Player{
                 // Display an error message if views return saving error
                 $("#status-message h2").text("Sorry, there was an error!");
                 $("#status-message").show();
-                hide_loading()
+                self.hide_loading()
             }
         });
     }    

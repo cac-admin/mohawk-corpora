@@ -32,7 +32,7 @@ class Sentences{
       }
     })
 
-    $(this.sentence_block).find('.next').off().on('click', function(e){
+    $(this.sentence_block).find('.next').on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(this.sentence_block).find('a').addClass('disabled')
         self.next();
@@ -77,13 +77,13 @@ class Sentences{
   }
 
   show_loading(){
-    $('.foreground-circle.loading').show();
-    $('.foreground-circle.loading div').show();
+    console.log('sentence show loading')
+    $(document.getElementById('loading-button')).show()
     $(this.sentence_block).find('.sentence .text-area').addClass('disabled')    
   }
 
   hide_loading(){
-    $('.foreground-circle.loading').hide();
+    $(document.getElementById('loading-button')).hide()    
     $(this.sentence_block).find('.sentence .text-area').removeClass('disabled')
   }
 
@@ -102,6 +102,7 @@ class Sentences{
   }
 
   next(){
+    this.show_loading()    
     if (this.objects == null || this.objects.length==0){
       this.get_sentences()
     } else{
@@ -134,7 +135,7 @@ class Sentences{
       $(this.sentence_block).find('.sentence').append(input_elm)
       $(this.sentence_block).fadeIn('fast');
 
-      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 60})
+      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40})
 
       $(input_elm).off().on('change', function(){
         self.edit_sentence()

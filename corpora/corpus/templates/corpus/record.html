@@ -96,7 +96,7 @@ a.btn{
           <a href="javascript:void(0)" id="save" class=" disabled save">
             <i class="fa fa-save fw"></i> {% trans "Save" %}
           </a>
-          <a href="javascript:void(0)" id="next" class=" next">
+          <a href="javascript:void(0)" id="skip-button" class="next">
             <i class="fa fa-step-forward fw"></i> {% trans "Skip" %}
           </a>
         </div>
@@ -108,20 +108,6 @@ a.btn{
 
 
 </div>
-
-
-
-{% comment %}
-<small> Does this recording sound accurate? If so, press Next. If not, go back and fix it with Back.</small>
-<a href="{% url 'corpus:submit_recording' %}">
-    <div class="button submit-audio">
-        Submit
-    </div>
-</a>
-
-
-
-{% endcomment %}
     
     
 <audio id="play-audio" style="display: none; width: 0px; height: 0px" preload="auto"> </audio>
@@ -158,26 +144,6 @@ var visRecorder;
 
 
   var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
-
-
-  $('a.next').on('click', function(){
-    sentences.show_loading()
-    my_recorder.audio.pause()
-    my_recorder.recording=false;
-    if (my_recorder.recorder!=null){
-      my_recorder.recorder.clearStream()
-    }
-    my_recorder.audio.src = null
-
-    $(document.getElementById('stop-button')).hide()
-    $(document.getElementById('play-button')).hide()
-    $('.save').addClass('disabled');
-    $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-    $('.redo').addClass('disabled');
-    
-    $(document.getElementById('record-button')).show()
-  })
-
 
 
   sentences.sentence_block.addEventListener('sentence.ready', function(){

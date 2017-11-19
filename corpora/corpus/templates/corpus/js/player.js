@@ -9,7 +9,7 @@ class Player {
     this.loading_button = document.getElementById('loading-button')
     this.record_button = document.getElementById('record-button')
 
-    this.debug = true;
+    this.debug = false;
 
     $(this.play_button).on('mousedown', function(){
       $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');

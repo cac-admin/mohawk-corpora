@@ -174,7 +174,7 @@ class Listen{
       $(input_elm).text(this.recording.sentence_text);
       $(self.sentence_block).find('.sentence').append(input_elm)
       $(self.sentence_block).fadeIn('fast');
-      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 60})
+      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40})
 
       // $('#play-button').show();
 

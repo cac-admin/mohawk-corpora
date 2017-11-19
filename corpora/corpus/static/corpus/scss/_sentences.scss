@@ -21,7 +21,7 @@
     text-align: left;
     margin-bottom: 15px;
     font-weight: 400;
-    height: 250px;
+    height: 180px;
 
     @include media-breakpoint-down(md) {
       // padding-bottom: 15px;
@@ -30,7 +30,7 @@
     textarea{
       width: 100%;
       margin-bottom: 15px;
-      height: 200px;
+      height: 180px;
       display: block;
       @include media-breakpoint-up(md) {
         min-width: 600px;
