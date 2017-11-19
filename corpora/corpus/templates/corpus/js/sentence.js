@@ -134,6 +134,7 @@ class Sentences{
       $(this.sentence_block).find('.sentence').append(input_elm)
       $(this.sentence_block).fadeIn('fast');
 
+      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 60})
 
       $(input_elm).off().on('change', function(){
         self.edit_sentence()

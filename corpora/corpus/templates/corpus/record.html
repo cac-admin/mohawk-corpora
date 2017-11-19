@@ -39,7 +39,7 @@ div.content{
   border:0px solid $brand_primary;
 }
 .sentence{
-  font-size: 2em !important;
+  font-size: 2em ;
 }
 a.btn{
   display: inline-block;
@@ -133,6 +133,7 @@ a.btn{
 
 
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">

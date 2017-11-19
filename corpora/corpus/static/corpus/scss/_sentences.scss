@@ -19,16 +19,19 @@
 
   .sentence{
     text-align: left;
-    font-size: 2em;
+    margin-bottom: 15px;
     font-weight: 400;
-    min-height: 150px;
+    height: 250px;
 
     @include media-breakpoint-down(md) {
       // padding-bottom: 15px;
     }
-    .text-area{
+    
+    textarea{
       width: 100%;
       margin-bottom: 15px;
+      height: 200px;
+      display: block;
       @include media-breakpoint-up(md) {
         min-width: 600px;
       }
@@ -36,12 +39,12 @@
         margin-bottom: 0px;
         padding-bottom: 0px;
       }
-
-
     }
 
-    .span{
+    span.text-area{
+  
       @include media-breakpoint-up(md) {
+
         // min-width: 600px;
       }
     }
