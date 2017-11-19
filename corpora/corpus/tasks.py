@@ -97,7 +97,7 @@ def prepare_temporary_environment(recording, test=False):
         if 'http' in file_path:
             r = RecordingFileView()
             url = r.get_redirect_url(filepath=file.name)
-            code = 'wget "'+url+'"" -O ' + tmp_file
+            code = 'wget "'+url+'" -O ' + tmp_file
         else:
             code = "cp '%s' '%s'" % (file_path, tmp_file)
         logger.debug(code)
