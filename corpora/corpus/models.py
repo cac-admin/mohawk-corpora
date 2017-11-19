@@ -14,6 +14,8 @@ from corpus.base_settings import LANGUAGES, LANGUAGE_CODE
 from uuid import uuid4
 import os
 
+from django.utils.safestring import mark_safe
+
 
 def upload_directory(instance, filename):
     d = timezone.now()
@@ -165,6 +167,11 @@ class Recording(models.Model):
 
     def __unicode__(self):
         return self.get_sentence_text() + " by " + self.get_person_name()
+
+    def audio_file_admin(self):
+        url = self.get_recording_file_url()
+        return mark_safe(
+            "<a href='%s'>%s</a>" % (url, url))
 
     def get_recording_file_url(self):
         from django.urls import reverse

@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.contenttypes.admin import GenericTabularInline
 
 from .models import QualityControl, Sentence, Recording, Source
+from corpus.views.views import RecordingFileView
 
 
 class QualityControlInline(GenericTabularInline):
@@ -79,7 +80,10 @@ class SentenceAdmin(admin.ModelAdmin):
 class RecordingAdmin(admin.ModelAdmin):
     list_display = ('sentence_text', 'person', 'get_approved', 'get_approved_by')
     inlines = [QualityControlInline]
-    readonly_fields = ('duration',)
+    readonly_fields = ('duration', 'audio_file', 'audio_file_aac', 'audio_file_admin')
+
+    def audio_file_aac(self, obj):
+        return 'test'
 
     def get_queryset(self, request):
         qs = super(RecordingAdmin, self).get_queryset(request)
