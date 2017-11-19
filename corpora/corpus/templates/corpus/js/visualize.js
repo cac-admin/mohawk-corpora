@@ -39,12 +39,17 @@ class Visualize{
   renderFrame() {
     var self = this
     if (self.loop){
-      window.requestAnimationFrame(function(){self.renderFrame()});
-      if (navigator.userAgent.match(/(Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini)/) && Math.random()*100<50) {
+      
+      if (navigator.userAgent.match(/(Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini)/) && Math.random()*100<0) {
   
+        window.setTimeout(
+          function(){
+            window.requestAnimationFrame(function(){self.renderFrame()});
+          }, 500)
 
       } else{
 
+        window.requestAnimationFrame(function(){self.renderFrame()});
         self.analyser.getByteFrequencyData(self.dataArray);
         // self.canvasContext.clearRect(0, 0, self.WIDTH, self.HEIGHT);
         self.canvasContext.fillStyle = "#333";
