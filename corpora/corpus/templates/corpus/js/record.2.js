@@ -54,6 +54,16 @@ class MyRecorder extends Player{
             $('.save').removeClass('disabled');
         });
 
+        // Only redo button causes audio to pause?
+        var fn = function(event){
+          console.log('custon ended')
+          $(self.record_button).show()
+          $(self.stop_button).hide()
+          $(self.play_button).hide()
+        }
+        self.audio.addEventListener('pause', fn, false)
+
+
         // event record
         // event recording started
         // event recording ended
@@ -77,23 +87,21 @@ class MyRecorder extends Player{
             $(self.play_button).show()
         })
 
+
+
         $(".redo").click(function(e) {
             if (!$(e.currentTarget).hasClass('disabled')){
-                
-                if (self.recorder != null){
-                    self.recorder.stop();
-                    self.recorder.clearStream();
-                    delete self.audio.src
-                    // self.audioBlob.dispose()
-                    delete self.audioBlob
 
-                    // delete self.recorder                    
+                if (self.recording){
+                	self.recorder.stop();
                 }
-                self.audio.pause();
+                if ( $(self.stop_button).css('display')!='None' ){
+                	self.audio.pause();
+                } else {
 
+                }
 
                 $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
-
                 
                 $('.redo').addClass('disabled');
                 $('.save').addClass('disabled');
