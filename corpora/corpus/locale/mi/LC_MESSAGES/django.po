@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-20 01:41+0000\n"
+"POT-Creation-Date: 2017-11-20 05:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,23 +48,6 @@ msgstr ""
 
 #: corpus/base_settings.py:57
 msgid "English \"i\""
-msgstr ""
-
-#: corpus/templates/corpus/license_modal.html:17
-#: corpus/templates/corpus/license_modal.html:26
-msgid "License"
-msgstr ""
-
-#: corpus/templates/corpus/license_modal.html:21
-msgid "You must accept the terms and conditions to continue."
-msgstr ""
-
-#: corpus/templates/corpus/license_modal.html:22
-msgid "All content collected at"
-msgstr ""
-
-#: corpus/templates/corpus/license_modal.html:24
-msgid "falls under the"
 msgstr ""
 
 #: corpus/templates/corpus/listen.html:52

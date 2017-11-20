@@ -23,9 +23,13 @@
     margin-bottom: 15px;
     font-weight: 400;
     height: 180px;
+
     // font-size: 20px;
     // line-height: initial;
-    
+
+    @include media-breakpoint-up(md) {
+      min-width: 600px;
+    }    
     @include media-breakpoint-down(md) {
       // padding-bottom: 15px;
     }

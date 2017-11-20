@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-20 01:41+0000\n"
+"POT-Creation-Date: 2017-11-20 05:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,52 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: people/models.py:19
+#: people/models.py:20
 msgid "Name of tribe."
 msgstr ""
 
-#: people/models.py:24
+#: people/models.py:25
 msgid "Tribe"
 msgstr ""
 
-#: people/models.py:25 people/models.py:99
+#: people/models.py:26 people/models.py:99
 msgid "Tribes"
 msgstr ""
 
-#: people/models.py:38
+#: people/models.py:39
 msgid "Full Name"
 msgstr ""
 
-#: people/models.py:53
+#: people/models.py:54
 msgid "Person"
 msgstr ""
 
-#: people/models.py:54
+#: people/models.py:55
 msgid "People"
 msgstr ""
 
-#: people/models.py:62
+#: people/models.py:63
 msgid "Male"
 msgstr ""
 
-#: people/models.py:63
+#: people/models.py:64
 msgid "Female"
 msgstr ""
 
-#: people/models.py:64
+#: people/models.py:65
 msgid "Other"
 msgstr ""
 
-#: people/models.py:65
+#: people/models.py:66
 msgid "Transexual (Male to Female)"
 msgstr ""
 
-#: people/models.py:66
-msgid "Transexual (Female to Male)"
-msgstr ""
-
 #: people/models.py:67
-msgid "Asexual"
+msgid "Transexual (Female to Male)"
 msgstr ""
 
 #: people/models.py:73
@@ -111,22 +107,6 @@ msgstr ""
 
 #: people/models.py:112
 msgid "Second Language Learner - Advanced"
-msgstr ""
-
-#: people/models.py:139
-msgid "Name of license"
-msgstr ""
-
-#: people/models.py:141
-msgid "Please provide a description of the license."
-msgstr ""
-
-#: people/models.py:143
-msgid "The actual license text."
-msgstr ""
-
-#: people/models.py:162
-msgid "Accepted licenses"
 msgstr ""
 
 #: people/templates/account/account_inactive.html:5
@@ -522,15 +502,15 @@ msgstr ""
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr ""
 
-#: people/views/api.py:50
+#: people/views/api.py:53
 msgid "Only staff can view this information."
 msgstr ""
 
-#: people/views/api.py:55 people/views/api.py:76 people/views/api.py:78
+#: people/views/api.py:58 people/views/api.py:79 people/views/api.py:81
 msgid "You're not allowed to view this information."
 msgstr ""
 
-#: people/views/api.py:73
+#: people/views/api.py:76
 msgid "You must sign in to edit your info."
 msgstr ""
 

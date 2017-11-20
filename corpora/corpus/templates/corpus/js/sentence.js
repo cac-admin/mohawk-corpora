@@ -129,6 +129,8 @@ class Sentences{
       if (this.can_approve){
         var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="3">')
         $(input_elm).val(this.sentence.text);
+        $(this.sentence_block).find('.sentence').append(input_elm)
+        $(this.sentence_block).fadeIn('fast');        
         $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40, innerTag: 'textarea',
           success: function(){
             var space = 
@@ -142,6 +144,8 @@ class Sentences{
 
         var input_elm = $('<span class="text-area"></span>')
         $(input_elm).text(this.sentence.text);
+        $(this.sentence_block).find('.sentence').append(input_elm)
+        $(this.sentence_block).fadeIn('fast');        
         $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40,
             success: function(){
             var space = 
@@ -152,8 +156,7 @@ class Sentences{
 
       }
       
-      $(this.sentence_block).find('.sentence').append(input_elm)
-      $(this.sentence_block).fadeIn('fast');
+
 
       
 

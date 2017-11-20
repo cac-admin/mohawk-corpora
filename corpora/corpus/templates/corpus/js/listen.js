@@ -167,13 +167,16 @@ class Listen{
         $(input_elm).val(this.sentence.text);
         $(this.sentence_block).find('.sentence').append(input_elm)
         $(this.sentence_block).fadeIn('fast');        
-        $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40, innerTag: 'textarea',
+        $(this.sentence_block).find('.sentence').textfill({
+          maxFontPixels: 40,
+          innerTag: 'textarea',
           success: function(){
             var space = 
               parseFloat($(this.sentence_block).find('.sentence').parent().css('line-height')) /
               parseFloat($(this.sentence_block).find('.sentence').parent().css('font-size'))
               $(this.sentence_block).find('.sentence').css('line-height', space+'px')
-          }})
+          }
+        })
 
       } else {
 
@@ -181,13 +184,15 @@ class Listen{
         $(input_elm).text(this.sentence.text);
         $(this.sentence_block).find('.sentence').append(input_elm)
         $(this.sentence_block).fadeIn('fast');        
-        $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40,
+        $(this.sentence_block).find('.sentence').textfill({
+          maxFontPixels: 40,
           success: function(){
             var space = 
               parseFloat($(this.sentence_block).find('.sentence').parent().css('line-height')) /
               parseFloat($(this.sentence_block).find('.sentence').parent().css('font-size'))
               $(this.sentence_block).find('.sentence').css('line-height', space+'px')
-          }})
+          }
+        })
 
       }
       
