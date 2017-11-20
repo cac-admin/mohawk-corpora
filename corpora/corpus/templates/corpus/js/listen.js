@@ -160,17 +160,37 @@ class Listen{
     if (this.sentence){
       $(self.sentence_block).removeClass('disabled')
       $(self.sentence_block).find('.sentence .text-area').remove()
-      if (this.admin){
-        var input_elm = $('<textarea class="text-area" type="textarea" name="text" rows="4">');
-      } else {
-        var input_elm = $('<span class="text-area"></span>');
-      }
 
-      $(input_elm).val(this.recording.sentence_text);
-      $(input_elm).text(this.recording.sentence_text);
-      $(self.sentence_block).find('.sentence').append(input_elm)
-      $(self.sentence_block).fadeIn('fast');
-      $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40})
+
+      if (this.admin){
+        var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
+        $(input_elm).val(this.sentence.text);
+        $(this.sentence_block).find('.sentence').append(input_elm)
+        $(this.sentence_block).fadeIn('fast');        
+        $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40, innerTag: 'textarea',
+          success: function(){
+            var space = 
+              parseFloat($(this.sentence_block).find('.sentence').parent().css('line-height')) /
+              parseFloat($(this.sentence_block).find('.sentence').parent().css('font-size'))
+              $(this.sentence_block).find('.sentence').css('line-height', space+'px')
+          }})
+
+      } else {
+
+        var input_elm = $('<span class="text-area"></span>')
+        $(input_elm).text(this.sentence.text);
+        $(this.sentence_block).find('.sentence').append(input_elm)
+        $(this.sentence_block).fadeIn('fast');        
+        $(this.sentence_block).find('.sentence').textfill({maxFontPixels: 40,
+          success: function(){
+            var space = 
+              parseFloat($(this.sentence_block).find('.sentence').parent().css('line-height')) /
+              parseFloat($(this.sentence_block).find('.sentence').parent().css('font-size'))
+              $(this.sentence_block).find('.sentence').css('line-height', space+'px')
+          }})
+
+      }
+      
 
       // $('#play-button').show();
 
@@ -196,6 +216,7 @@ class Listen{
         window.setTimeout(function(){
           self.next()
         }, 500)
+      })
 
 
       $(input_elm).on('change', function(){
@@ -210,7 +231,6 @@ class Listen{
       $(self.audio).bind('error', function(){
         self.next()
       })
-
     }
   }
 

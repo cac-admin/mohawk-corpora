@@ -17,12 +17,15 @@
   
   margin-bottom: 30px;
 
+  // line-height: initial;
   .sentence{
     text-align: left;
     margin-bottom: 15px;
     font-weight: 400;
     height: 180px;
-
+    // font-size: 20px;
+    // line-height: initial;
+    
     @include media-breakpoint-down(md) {
       // padding-bottom: 15px;
     }
@@ -32,6 +35,8 @@
       margin-bottom: 15px;
       height: 180px;
       display: block;
+      // font-size: 20px;
+      // line-height: inherit;
       @include media-breakpoint-up(md) {
         min-width: 600px;
       }
@@ -42,7 +47,8 @@
     }
 
     span.text-area{
-  
+      // font-size: 20px;
+      // line-height: inherit;
       @include media-breakpoint-up(md) {
 
         // min-width: 600px;
