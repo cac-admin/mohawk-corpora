@@ -2,8 +2,8 @@
 
 from django.utils import translation
 from django.conf import settings
-
 from people.helpers import get_current_language, get_or_create_person
+from license.models import SiteLicense
 
 
 class PersonMiddleware(object):
@@ -73,4 +73,31 @@ class LanguageMiddleware(object):
         # the view is called.
 
         translation.deactivate() # Deactivates our langauge after we've processed the request.
+        return response
+
+
+class LicenseMiddleware(object):
+    '''
+    This middleware sets the license of the current site.
+    '''
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        try:
+            license = SiteLicense.objects.get(site=settings.SITE_ID)
+        except:
+            license = None
+
+        request.license = license
+
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
         return response

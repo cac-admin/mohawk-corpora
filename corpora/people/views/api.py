@@ -1,7 +1,10 @@
 from django.utils.translation import ugettext_lazy as _
-from people.models import Person, Tribe, Demographic, KnownLanguage
+from people.models import \
+    Person, Tribe, Demographic, KnownLanguage
+
 from people.helpers import get_person
 from rest_framework import viewsets, permissions
+
 from people.serializers import PersonSerializer,\
                          TribeSerializer, \
                          DemographicSerializer,\

@@ -2,11 +2,10 @@ from django.contrib import admin
 
 from .models import \
     Person, Demographic, KnownLanguage,\
-    License, AcceptLicense, Tribe
+    Tribe
 
 from people.forms import DemographicFormAdmin
 
-admin.site.register(License)
 admin.site.register(Tribe)
 
 
@@ -38,12 +37,4 @@ class KnownLanguageAdmin(admin.ModelAdmin):
         'level_of_proficiency',
         'dialect',
         'accent',
-        )
-
-
-@admin.register(AcceptLicense)
-class AcceptLicenseAdmin(admin.ModelAdmin):
-    list_display = (
-        'person',
-        'license_names'
         )

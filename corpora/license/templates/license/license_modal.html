@@ -1,0 +1,111 @@
+{% load static sekizai_tags  i18n %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $.ajax({
+    url: '/api/accept_license/',
+    type: 'GET',
+    dataType: 'json'
+  }).done(function(response){
+    
+    if (response.length == 0){
+      $('#accept-license').modal()
+    }
+
+  }).fail(function(){
+    $('#accept-license').modal('hide')
+    $('#error-modal').modal()
+    $('#error-modal').on('hidden.bs.modal', function (e) {
+      $('#error-modal').modal('show')
+      window.location='/'
+    })
+  })
+})
+
+var load_click = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>'
+
+cancel_license_button.addEventListener('click',function(event){
+  console.log(event)
+  event.target.disabled=true
+  event.target.innerHTML = load_click
+  window.location = "/listen"
+})
+
+accept_license_button.addEventListener('click',function(event){
+  event.target.disabled=true
+  event.target.innerHTML = load_click
+  $.ajax({
+    url: '/api/accept_license/',
+    type: 'POST',
+    dataType: 'json'
+  }).done(function(response){
+    $('#accept-license').modal('hide')
+  }).fail(function(){
+    $('#accept-license').modal('hide')
+    $('#error-modal').modal()
+    $('#error-modal').on('hidden.bs.modal', function (e) {
+      $('#error-modal').modal('show')
+      window.location='/'
+    })
+  })
+
+
+})
+
+</script>
+{% endaddtoblock %}
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+  .modal .modal-footer .row{
+    text-align: center;
+
+    button{
+      font-size: 1em;
+      cursor: pointer;
+      i{
+        font-size: 1em;
+      }
+    }
+  }
+</style>
+{% endaddtoblock %}
+
+<div class="modal fade" id="accept-license" tabindex="-1" role="dialog" aria-labelledby="Accept License" aria-hidden="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{license.license_name|title}} {% trans "License" %}</h5>
+      </div>
+      <div class="modal-body">
+        {{license.description}}
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-12">
+            {% blocktrans %}You must accept the above {{license.name|title}} license to continue.{% endblocktrans %}
+          </div>
+            
+          <div class="col-12">
+            <button type="button" class="btn btn-secondary" id="cancel_license_button">Cancel</button>
+            <button type="button" class="btn btn-primary" id="accept_license_button">Accept</button>
+          </div>
+        </div>
+      </div>    
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="Accept License" aria-hidden="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% trans "Woops" %}</h5>
+      </div>
+      <div class="modal-body">
+        Something went wrong. Please try again later or refresh your browser.
+      </div>  
+    </div>
+  </div>
+</div>

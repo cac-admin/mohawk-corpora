@@ -7,6 +7,7 @@ from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 import uuid
 
 
@@ -64,7 +65,6 @@ class Demographic(models.Model):
         ('O', _('Other')),
         ('TF', _('Transexual (Male to Female)')),
         ('TM', _('Transexual (Female to Male)')),
-        ('A', _('Asexual'))
     )
 
     age = models.PositiveIntegerField(
@@ -131,35 +131,6 @@ class KnownLanguage(models.Model):
 
     class Meta:
         unique_together = (('person', 'language'))
-
-
-class License(models.Model):
-    license_name = models.CharField(
-        max_length=250,
-        help_text=_('Name of license'))
-    description = models.TextField(
-        help_text=_('Please provide a description of the license.'))
-    license = models.TextField(
-        help_text=_('The actual license text.'),
-        null=True)
-    # should the site have alink to this? or each person can choose a icense?
-    # initially just have one license in the database and that's the only one
-    # they can use
-
-    def __unicode__(self):
-        return self.license_name
-
-
-class AcceptLicense(models.Model):
-    license = models.ManyToManyField(License)
-    person = models.ForeignKey(
-        Person,
-        related_name='acceted_licenses',
-        on_delete=models.CASCADE)
-
-    def license_names(self):
-        return ', '.join([a.license_name for a in self.license.all()])
-    license_names.short_description = _('Accepted licenses')
 
 
 @receiver(models.signals.post_save, sender=KnownLanguage)

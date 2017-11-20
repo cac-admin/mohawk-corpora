@@ -20,7 +20,8 @@ def get_or_create_person(request):
         if uuid is not None:
             # get person from uuid
             person, created = Person.objects.get_or_create(uuid=uuid)
-            logger.info("Created new person, {0}".format(person))
+            if created:
+                logger.info("Created new person, {0}".format(person))
         else:
             # Create person and set uuid
             person = Person.objects.create()

@@ -1,21 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
-from django.conf import settings
-
-from django.core.exceptions import ObjectDoesNotExist
 from people.models import Person
 from corpus.models import Recording
-from corpus.views.views import RecordingFileView
-from django.contrib.sites.shortcuts import get_current_site
-
-from django.core.files import File
-import wave
-import contextlib
-import os
-import stat
-import commands
-import ast
 
 import logging
 logger = logging.getLogger('corpora')
@@ -24,13 +11,20 @@ logger = logging.getLogger('corpora')
 @shared_task
 def clean_empty_person_models():
     people = Person.objects\
-        .filter(full_name__isnull=True)\
+        .filter(full_name='')\
         .filter(user__isnull=True)\
-        .filter(demographic__isnul=True)\
-        .filter(known_language__isnull=True)
+        .filter(demographic__isnull=True)\
+        .filter(known_languages__isnull=True)
+
+    if len(people) == 0:
+        logger.debug('No person models to clean')
+    else:
+        logger.debug('Found {0} to clean'.format(len(people)))
 
     for person in people:
         recordings = Recording.objects.filter(person=person)
         if len(recordings) == 0:
             logger.debug('Removing: {0}'.format(person))
             person.delete()
+        else:
+            logger.debug('Not removing {0} as recordings exist.'.format(person))

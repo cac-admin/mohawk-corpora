@@ -7,6 +7,6 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'clean_empty_person_models': {
         'task': 'people.tasks.clean_empty_person_models',
-        'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
+        'schedule': crontab(minute='42', hour='*', day_of_week='*'),
     },
 }

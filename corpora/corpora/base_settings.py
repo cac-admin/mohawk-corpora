@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'corpora',
     'corpus',
     'people',
+    'license',
 
     'storages',
     'djangobower',
@@ -100,6 +101,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'sekizai.context_processors.sekizai',
+                'license.context_processors.license'
             ],
         },
     },

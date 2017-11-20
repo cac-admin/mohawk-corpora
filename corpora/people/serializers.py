@@ -1,4 +1,6 @@
-from people.models import Person, Tribe, Demographic, KnownLanguage
+from people.models import \
+    Person, Tribe, Demographic, KnownLanguage
+
 from corpora.serializers import UserSerializer
 from rest_framework import serializers
 from dal import autocomplete
