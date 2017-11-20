@@ -112,6 +112,9 @@ a.btn{
     
 <audio id="play-audio" style="display: none; width: 0px; height: 0px" preload="auto"> </audio>
 
+{% include 'corpus/license_modal.html' %}
+
+
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
 
@@ -203,3 +206,4 @@ var visRecorder;
 
 
 {% endblock %}
+

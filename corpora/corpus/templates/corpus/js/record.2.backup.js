@@ -16,11 +16,6 @@ class MyRecorder extends Player{
         this.dummy = null
         this.fd = null
         this.should_vis = true
-        this.skip_button = document.getElementById('skip-button')
-        this.skipped = false
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
-        this.sourceNode.connect(this.audioContext.destination)        
 
         var self = this
 
@@ -108,30 +103,6 @@ class MyRecorder extends Player{
                 self.save_recording()
         }})
 
-
-        $(self.skip_button).click(function(){
-
-            // console.log('record skip')
-            self.skipped = true
-            self.audio.pause()
-
-            if (self.recording){
-                self.stop_recording()
-            }
-
-            self.audio.src = ''
-            delete self.audio.src
-            delete self.audioBlob            
-            
-            $('.save').addClass('disabled');
-            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-            $('.redo').addClass('disabled');
-            $(self.record_button).show()
-            $(self.play_button).show()
-
-        })
-
-
         // Check if recorderjs supported
         if (!Recorder.isRecordingSupported()) {
             $('#recorder-container').children().remove();
@@ -141,75 +112,25 @@ class MyRecorder extends Player{
                 </div>');
             $('#recorder-container').append(info);
             console.log("Recorder not supported");
-            return undefined;
+            return false;
         } else {
-
-
-            if (navigator.userAgent.match('Safari')!=null
-              && navigator.userAgent.match('Macintosh')!=null 
-              && navigator.userAgent.match('Chrome')==null){
-              
-                $('#recorder-container').children().remove();
-                var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
-                    <h2>Browser Recording Not Supported</h2>\
-                    <p>Please use Chrome or Firefox.</p>\
-                    </div>');
-                $('#recorder-container').append(info);
-                console.log("Recorder not supported");
-                return undefined;
-            }
-
             console.log("Recorder supported");
 
         }
 
 
 
+        
+
+
+//     $('.vis-container').remove()
+
+// } else {
+
+
     }
 
 
-    create_recorder(){
-        var self = this
-        if (self.recorder == null){
-
-            self.recorder = new Recorder({
-                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
-                    // encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
-                }); 
-            
-            // Have recorder listen for when the data is available
-            // This fires when recording is stopped
-            self.recorder.addEventListener("dataAvailable", function(e) {
-
-                if (self.skipped == false){
-                    self.actions_element.dispatchEvent(self.event_record_stop)
-                    self.audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
-                    self.fileName = new Date().toISOString() + ".wav";
-                    self.audio.src  = URL.createObjectURL( self.audioBlob );
-                    self.audio.load()
-                    $(self.play_button).show()
-                } else{
-                    self.skipped=false
-                }
-                // delete self.recorder;
-            });
-
-            // THis fires when recording begins.
-            self.recorder.addEventListener("streamReady", function(e) {
-                self.actions_element.dispatchEvent(self.event_record_start)
-                self.logger('recording started')
-                self.recorder.start()
-                $(self.loading_button).hide()
-                $(self.record_button).show()                
-                setTimeout(function(){
-                    if (self.should_vis==true){
-                        self.visualize = new Visualize('vis-area', self.recorder.sourceNode, self.recorder.audioContext);
-                        self.visualize.start();
-                    }
-                },200);
-            });
-        }
-    }
 
     start_recording(){
         var self = this
@@ -225,22 +146,52 @@ class MyRecorder extends Player{
             // leaveStreamOpen option: allows for recording multiple times wihtout reinitializing audio stream
 
             // create an audio context then close it so we can detect microphpne sample rate
-            // if (self.sampleRate == null){
-            //     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            //     self.dummy = new AudioContext();
-            //     self.sample_rate = self.dummy.sampleRate;
-            //     self.dummy.close();
-            //     delete self.dummy;
-            // }
+            if (self.sampleRate == null){
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                self.dummy = new AudioContext();
+                self.sample_rate = self.dummy.sampleRate;
+                self.dummy.close();
+                delete self.dummy;
+            }
 
-            self.create_recorder()
+            if (!self.recorder){
+                self.recorder = new Recorder({
+                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
+                    encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
+                }); 
+            }
+
+            // Have recorder listen for when the data is available
+            // This fires when recording is stopped
+            self.recorder.addEventListener("dataAvailable", function(e) {
+                self.actions_element.dispatchEvent(self.event_record_stop)
+                self.audioBlob = new Blob( [e.detail], {type: 'audio/wave'});
+                self.fileName = new Date().toISOString() + ".wav";
+                self.audio.src  = URL.createObjectURL( self.audioBlob );
+                self.audio.load()
+                $(self.play_button).show()
+                self.recorder.clearStream();
+                // delete self.recorder;
+            });
+
+            // THis fires when recording begins.
+            self.recorder.addEventListener("streamReady", function(e) {
+                self.actions_element.dispatchEvent(self.event_record_start)
+                self.recorder.start()
+                $(self.record_button).hide()
+                $(self.record_button).show()                
+                setTimeout(function(){
+                    if (self.should_vis==true){
+                        self.visualize = new Visualize('vis-area', self.recorder.sourceNode, self.recorder.audioContext);
+                        self.visualize.start();
+                    }
+                },200);
+            });
+
             $('.foreground-circle.record').removeClass('unclicked-circle').addClass('clicked-circle');
             
-            self.logger('init stream')
-            $(self.loading_button).show()
-            window.setTimeout(function(){
-                self.recorder.initStream()
-            }, 300)
+            setTimeout(function(){self.recorder.initStream();},200);
+
         }
     }
 
@@ -294,6 +245,8 @@ class MyRecorder extends Player{
             contentType: false,
             success: function(data) {
                 console.log("Recording data successfully submitted and saved");
+                
+
 
                 delete self.fd;
                 delete self.audioBlob

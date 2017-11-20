@@ -90,11 +90,7 @@ class Listen{
           self.objects = d.results
           self.next_url = d.next
 
-          console.log(self.objects.length)
-          console.log(self.objects)
-          console.log(d.results)
-          console.log(d.results.length)
-          console.log(d.results[0])
+
 
           if (self.objects.length == 0 || self.error_loop>3){
             console.log('No more recordings')
@@ -197,8 +193,9 @@ class Listen{
 
       }).fail(function(){
         console.error('FAILED TO GET RECORDING FILE')
-        self.next()
-      })
+        window.setTimeout(function(){
+          self.next()
+        }, 500)
 
 
       $(input_elm).on('change', function(){

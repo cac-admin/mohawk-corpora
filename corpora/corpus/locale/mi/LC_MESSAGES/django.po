@@ -113,6 +113,22 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: corpus/templates/corpus/record.html:127
+msgid "You must accept the terms and conditions to continue."
+msgstr ""
+
+#: corpus/templates/corpus/record.html:128
+msgid "All content collected at"
+msgstr ""
+
+#: corpus/templates/corpus/record.html:130
+msgid "falls under the"
+msgstr ""
+
+#: corpus/templates/corpus/record.html:132
+msgid "License"
+msgstr ""
+
 #: corpus/templates/corpus/sentence_list.html:67
 msgid "Confirm Delete"
 msgstr ""
