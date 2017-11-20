@@ -7,4 +7,4 @@ def license(request):
         license = SiteLicense.objects.get(site=settings.SITE_ID)
         return {'license': license.license}
     except:
-        return None
+        return {'license': None}
