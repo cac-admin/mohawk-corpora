@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-18 20:51+0000\n"
+"POT-Creation-Date: 2017-11-19 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: corpora/templates/corpora/home.html:56
 msgid ""
-"Corpora.io is an opensource app designed to collect spoken \n"
+" is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
 "understand \n"
 "      spoken languages through machine learning. This project started in an "
@@ -42,7 +42,11 @@ msgid "Available Languages"
 msgstr ""
 
 #: corpora/templates/corpora/home.html:66
-msgid "Translations for corpora.io are provided in the following langauges:"
+msgid "Translations for "
+msgstr ""
+
+#: corpora/templates/corpora/home.html:66
+msgid " are provided in the following langauges:"
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:29

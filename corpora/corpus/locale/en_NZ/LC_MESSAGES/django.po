@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-18 20:51+0000\n"
+"POT-Creation-Date: 2017-11-19 23:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:68 corpus/admin.py:117 corpus/models.py:188
-#: corpus/models.py:194
+#: corpus/admin.py:69 corpus/admin.py:121 corpus/models.py:195
+#: corpus/models.py:201
 msgid "None"
 msgstr ""
 
