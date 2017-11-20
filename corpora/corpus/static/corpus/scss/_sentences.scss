@@ -42,7 +42,8 @@
       // font-size: 20px;
       // line-height: inherit;
       @include media-breakpoint-up(md) {
-        min-width: 600px;
+        // below doens't work well in record view.
+        // min-width: 600px;
       }
       @include media-breakpoint-down(sm) {
         margin-bottom: 0px;

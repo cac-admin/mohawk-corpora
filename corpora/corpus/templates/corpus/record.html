@@ -45,6 +45,16 @@ a.btn{
   display: inline-block;
 }
 
+.sentence-block{
+  .sentence{
+    min-width: 0px !important;
+    @include media-breakpoint-up(md){
+      padding-bottom: 15px;
+      height: 60%;
+    }
+  }
+}
+
 
 .circle-button-container{
     /*padding-bottom: 30px;*/
