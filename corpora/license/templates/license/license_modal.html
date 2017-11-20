@@ -12,6 +12,9 @@ $(document).ready(function(){
     
     if (response.length == 0){
       $('#accept-license').modal()
+      $('#accept-license').on('hidden.bs.modal', function (e) {
+        $('#accept-license').modal('show')
+      })
     }
 
   }).fail(function(){
@@ -34,6 +37,8 @@ cancel_license_button.addEventListener('click',function(event){
 })
 
 accept_license_button.addEventListener('click',function(event){
+  $('#accept-license').off()
+
   event.target.disabled=true
   event.target.innerHTML = load_click
   $.ajax({
