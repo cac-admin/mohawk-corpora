@@ -127,7 +127,7 @@ class Sentences{
 
 
       if (this.can_approve){
-        var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="3">')
+        var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
         $(input_elm).val(this.sentence.text);
         $(this.sentence_block).find('.sentence').append(input_elm)
         $(this.sentence_block).fadeIn('fast');        

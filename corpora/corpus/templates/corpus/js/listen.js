@@ -220,7 +220,7 @@ class Listen{
         console.error('FAILED TO GET RECORDING FILE')
         window.setTimeout(function(){
           self.next()
-        }, 500)
+        }, 2000)
       })
 
 
