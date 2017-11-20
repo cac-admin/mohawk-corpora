@@ -82,15 +82,11 @@ class Listen{
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
         error: function(XMLHttpRequest, textStatus, errorThrown){
           console.log('Trying from first page')
-          self.next_url=null
-          self.get_recordings()
-          self.hide_loading()
+          
         }
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
-
-
 
           if (self.objects.length == 0 || self.error_loop>3){
             console.log('No more recordings')
@@ -102,8 +98,13 @@ class Listen{
             self.next()
           }
         }).fail(function(){
-          self.next_url=null
-          self.get_recordings()
+          
+          window.setTimeout( function(){
+            self.next_url=null
+            self.get_recordings()
+            self.hide_loading()
+          }, 500 )
+
         });
   }
 
@@ -220,7 +221,7 @@ class Listen{
         console.error('FAILED TO GET RECORDING FILE')
         window.setTimeout(function(){
           self.next()
-        }, 2000)
+        }, 1000)
       })
 
 
