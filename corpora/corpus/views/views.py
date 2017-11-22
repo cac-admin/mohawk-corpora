@@ -159,8 +159,7 @@ class RecordingFileView(RedirectView):
 
         key = '{0}:{0}:listen'.format(p.uuid, m.id)
         access = cache.get(key)
-        logger.debug(key)
-        logger.debug(access)
+        logger.debug('CAN VIEW: {0} {1}'.format(key, access))
 
         if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
             try:

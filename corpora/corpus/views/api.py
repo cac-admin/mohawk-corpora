@@ -238,7 +238,7 @@ class ListenPermissions(permissions.BasePermission):
             person = get_person(request)
             key = '{0}:{0}:listen'.format(person.uuid, obj.id)
             cache.set(key, True, 15)
-            logger.debug(key)
+            logger.debug('  CACHE KEY: {0}'.format(key))
             return True
         else:
             self.message = _("{0} not allowed with this API\
