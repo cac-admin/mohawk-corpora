@@ -15,6 +15,7 @@ import os
 import stat
 import commands
 import ast
+import sys
 
 import logging
 logger = logging.getLogger('corpora')
@@ -69,7 +70,11 @@ def transcode_all_audio():
     logger.debug('Found {0} recordings to encode.'.format(len(recordings)))
     for recording in recordings:
         logger.debug('Encoding {0}.'.format(recording))
-        encode_audio(recording)
+        try:
+            encode_audio(recording)
+        except:
+            logger.error(sys.exc_info()[0])
+            continue
 
 
 def prepare_temporary_environment(recording, test=False):
@@ -95,28 +100,27 @@ def prepare_temporary_environment(recording, test=False):
         logger.debug('Exists: ' + os.path.abspath(tmp_stor_dir))
 
     tmp_file = tmp_stor_dir+'/'+file.name.split('/')[-1].replace(' ', '')
-    if not os.path.exists(tmp_file):
-        if 'http' in file_path:
-            r = RecordingFileView()
-            url = r.get_redirect_url(filepath=file.name)
-            code = 'wget "'+url+'" -O ' + tmp_file
-        else:
-            code = "cp '%s' '%s'" % (file_path, tmp_file)
-        logger.debug(code)
-        result = commands.getstatusoutput(code)
-        logger.debug(result[0])
-        try:
-            logger.debug(result[1])
-        except:
-            logger.debug(result)
 
-        if not os.path.exists(tmp_file):
-            logger.debug('ERROR GETTING: ' + tmp_file)
-            raise ValueError
-        else:
-            logger.debug('Downloaded: ' + os.path.abspath(tmp_file))
+    # Will just replace file since we only doing one encode.
+    if 'http' in file_path:
+        r = RecordingFileView()
+        url = r.get_redirect_url(filepath=file.name)
+        code = 'wget "'+url+'" -O ' + tmp_file
     else:
-        logger.debug('Exists: ' + os.path.abspath(tmp_file))
+        code = "cp '%s' '%s'" % (file_path, tmp_file)
+    logger.debug(code)
+    result = commands.getstatusoutput(code)
+    logger.debug(result[0])
+    try:
+        logger.debug(result[1])
+    except:
+        logger.debug(result)
+
+    if not os.path.exists(tmp_file):
+        logger.debug('ERROR GETTING: ' + tmp_file)
+        raise ValueError
+    else:
+        logger.debug('Downloaded: ' + os.path.abspath(tmp_file))
 
     absolute_directory = ''
 
