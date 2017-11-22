@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-20 06:54+0000\n"
+"POT-Creation-Date: 2017-11-22 00:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgid "Approve for recording?"
 msgstr ""
 
 #: corpus/templates/corpus/listen.html:65
-#: corpus/templates/corpus/record.html:100
+#: corpus/templates/corpus/record.html:110
 msgid "Skip"
 msgstr ""
 
@@ -105,11 +105,11 @@ msgstr "Ngā Rerenga Kōrero"
 msgid "Recordings by Language Proficiency"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:93
+#: corpus/templates/corpus/record.html:103
 msgid "Redo"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:97
+#: corpus/templates/corpus/record.html:107
 msgid "Save"
 msgstr ""
 

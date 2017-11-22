@@ -248,7 +248,7 @@ class MyRecorder extends Player{
             $(self.loading_button).show()
             window.setTimeout(function(){
                 self.recorder.initStream()
-            }, 300)
+            }, 10)
         }
     }
 
