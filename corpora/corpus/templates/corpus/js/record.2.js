@@ -69,7 +69,7 @@ class MyRecorder extends Player{
         // event recording ended
         this.actions_element.addEventListener('myrecorder.record', function(){
             self.hide_all_buttons();
-            $('.sentence-block .sentence').css('opacity', .25)
+            $('.sentence-block .sentence').css('opacity', 0)
             $(self.loading_button).show()
             $('.foreground-circle.loading').addClass('clicked-circle').removeClass('unclicked-circle').show();
         })
@@ -214,7 +214,7 @@ class MyRecorder extends Player{
                         self.visualize = new Visualize('vis-area', self.recorder.sourceNode, self.recorder.audioContext);
                         self.visualize.start();
                     }
-                },200);
+                }, 200);
             });
         }
     }
@@ -248,7 +248,7 @@ class MyRecorder extends Player{
             $(self.loading_button).show()
             window.setTimeout(function(){
                 self.recorder.initStream()
-            }, 10)
+            }, 0)
         }
     }
 
