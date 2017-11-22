@@ -12,6 +12,8 @@ from corpus.serializers import QualityControlSerializer,\
 from rest_framework import generics
 from django.core.cache import cache
 import random
+import logging
+logger = logging.getLogger('corpora')
 
 
 class OneHundredResultPagination(pagination.PageNumberPagination):
@@ -234,7 +236,9 @@ class ListenPermissions(permissions.BasePermission):
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
             person = get_person(request)
-            cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
+            key = '{0}:{0}:listen'.format(person.uuid, obj.id)
+            cache.set(key, True, 15)
+            logger.debug(key)
             return True
         else:
             self.message = _("{0} not allowed with this API\

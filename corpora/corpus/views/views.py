@@ -157,7 +157,10 @@ class RecordingFileView(RedirectView):
         if m.audio_file_aac:
             audio_file = m.audio_file_aac
 
-        access = cache.get('{0}:{0}:listen'.format(p.uuid, m.id))
+        key = '{0}:{0}:listen'.format(p.uuid, m.id)
+        access = cache.get(key)
+        logger.debug(key)
+        logger.debug(access)
 
         if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
             try:
