@@ -1,5 +1,33 @@
+# -*- coding: utf-8 -*-
 # Library functions for manipulating Māori text corpora.
-# Copyright Douglas Bagnall <douglas@halo.gen.nz> GPLv3
+"""Typically you will only use the def get_features() function, which
+you do like this:
+
+sentence = "ko wai au?"
+features = get_features(sentence)
+print '|'.join(sorted(features.elements()))
+# prints
+#" | |ai|ai»|au|au»|i»|k|ko|ko»|o|o»|u»|w|wa|wai|«a|«au|«k|«ko|«w|«wa|ä|ȧ"
+
+What are these features?
+========================
+
+For a start, there are all the unigrams, counting macronised vowels
+and diphongs as single units. For example, the unigrams in "ko wai
+au?" are 'k', 'o', ' ', 'w', 'ai', ' ', and 'au'. The diphthongs are
+represented by ad-hoc characters ('ä' and 'ȧ' in this case), but don't
+worry about that -- it doesn't matter. The consonants 'wh' and 'ng'
+are represented as 'f' and 'ŋ' respectively.
+
+Next there are all the bigrams, calculated by splitting macrons and
+diphthongs. That is, "ngā hau" would be converted to "ŋaa hau" and
+result in the bigrams 'ŋa', 'aa', 'a ', ' h', 'ha', 'au'.
+
+Finally there are all the trigrams, which would be 'ŋaa', 'aa ',
+'a h', ' ha', 'hau' for "ngā hau".
+
+"""
+from __future__ import print_function, unicode_literals
 import re
 import unicodedata
 import sys
@@ -59,9 +87,9 @@ def generate_n_grams(n, prefix, diphthongs, macrons):
     return ngrams
 
 
-has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw ]').search
-has_bad_cluster = re.compile(r'[fhkmnŋprtw][fhkmnŋprtw]').search
-has_bad_end = re.compile(r'[^aeiouāēīōū ]\b').search
+has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw ]', re.UNICODE).search
+has_bad_cluster = re.compile('[fhkmnŋprtw][fhkmnŋprtw]', re.UNICODE).search
+has_bad_end = re.compile('[^aeiouāēīōū ]\\b', re.UNICODE).search
 
 
 def has_english(text):
@@ -81,11 +109,12 @@ def remove_english(text):
 
 
 def normalise_text(text):
+    text = text.decode('utf8')
     text = unicodedata.normalize('NFC', text)
     text = text.lower()
-    text = re.sub(r'[^\wāēōūī]+', ' ', text)
-    text = re.sub(r'ng', 'ŋ', text)
-    text = re.sub(r'wh', 'f', text)
+    text = re.sub(r'[^\wāēōūī]+', ' ', text, flags=re.UNICODE)
+    text = re.sub(r'ng', 'ŋ', text, flags=re.UNICODE)
+    text = re.sub(r'wh', 'f', text, flags=re.UNICODE)
     return text
 
 
@@ -93,12 +122,13 @@ def find_features(text, word_boundaries, trigram_mode):
     text = normalise_text(text)
 
     if has_english(text):
-        return {}
+        return Counter()
 
-    # count unigrams first (including diphthongs and macrons).
+    # count unigrams first (including diphthongs and macrons and spaces).
     features = Counter(mangle_text(text, diphthongs=True, macrons=True))
 
-    text = mangle_text(text, diphthongs=False, macrons=False)
+    text = mangle_text(text, diphthongs=False, macrons=False,
+                       space_padding=True)
     words = text.split()
     is_vowel = set('aeiou').__contains__
     for word in words:
@@ -126,22 +156,26 @@ def find_features(text, word_boundaries, trigram_mode):
     return features
 
 
-def mangle_text(text, diphthongs, macrons, no_english=True):
+def mangle_text(text, diphthongs, macrons, no_english=True,
+                space_padding=False):
     if no_english:
         text = remove_english(text)
     if not macrons:
         text = demacronise(text)
     if diphthongs:
         for k, v in DIPHTHONGS.items():
-            text = re.sub(k, v, text)
+            text = re.sub(k, v, text, flags=re.UNICODE)
+    text = text.strip()
+    if space_padding:
+        text = ' ' + text + ' '
     return text
 
 
 def denormalise_text(text):
-    text = re.sub(r'ŋ', 'ng', text)
-    text = re.sub(r'f', 'wh', text)
+    text = re.sub(r'ŋ', 'ng', text, flags=re.UNICODE)
+    text = re.sub(r'f', 'wh', text, flags=re.UNICODE)
     for k, v in DIPHTHONGS.items():
-        text = re.sub(v, k, text)
+        text = re.sub(v, k, text, flags=re.UNICODE)
     return text
 
 
@@ -172,13 +206,13 @@ def load_text(filenames, **kwargs):
 
 def partially_normalise_text(text):
     text = unicodedata.normalize('NFC', text)
-    text = re.sub(r'\n\s*\n+', '. ', text)
-    text = re.sub(r'\n\s*', ' ', text)
+    text = re.sub(r'\n\s*\n+', '. ', text, flags=re.UNICODE)
+    text = re.sub(r'\n\s*', ' ', text, flags=re.UNICODE)
     return text
 
 
 def get_features(sentence):
     features =  find_features(sentence,
-                              word_boundaries=False,
+                              word_boundaries=True,
                               trigram_mode='all')
     return features
