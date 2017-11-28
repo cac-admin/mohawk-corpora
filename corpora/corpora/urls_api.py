@@ -9,7 +9,7 @@ from rest_framework.authtoken import views
 
 router = routers.DefaultRouter()
 # router.register(r'groups', corpora_api.GroupViewSet)
-# router.register(r'users', corpora_api.UserViewSet)
+router.register(r'users', corpora_api.UserViewSet)
 
 router.register(r'qualitycontrol', corpus_api.QualityControlViewSet)
 router.register(r'sentences', corpus_api.SentenceViewSet)

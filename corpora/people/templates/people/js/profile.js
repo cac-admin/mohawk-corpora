@@ -8,6 +8,7 @@ class Profile{
     this.alert = null
     this.change_counter = 0
     this.saving = false
+    this.debug = true
     var self = this
 
     // CREATE AND REGISTER EVENT LISTENERS
@@ -18,22 +19,57 @@ class Profile{
 
   }
 
+  logger(m){
+    if (this.debug)
+    {console.log(m)}
+  }
+
   load(){
     this.get_data()
   }
 
   initialize_elements(){
     var self = this
+
+    self.email = document.getElementById('id_email');
+    self.email.addEventListener("input", function (event) {
+      // Each time the user types something, we check if the
+      // email field is valid.
+      if (self.email.validity.valid) {
+        // In case there is an error message visible, if the field
+        // is valid, we remove the error message.
+        // self.email.innerHTML = ""; // Reset the content of the message
+        // self.email.className = "error"; // Reset the visual state of the message
+        $('#id_email').removeClass('invalid')
+      }
+    }, false);
+
     $(this.target_element).find('form').on('submit', function(event){
       event.preventDefault();
-      self.save();
+
+      if (!self.email.validity.valid) {
+        // If the field is not valid, we display a custom
+        // error message.
+        // error.innerHTML = "I expect an e-mail, darling!";
+        // error.className = "error active";
+        // And we prevent the form from being sent by canceling the event
+        event.preventDefault();
+      } else{
+        try{self.save()}catch(e){}  
+      }
+      
     });
 
     $(this.target_element).find('form input, form select').change(function(){
       self.change_counter += 1
+      self.logger('counter = '+self.change_counter)
+      self.logger('Chagned')
       self.save()
     });
     
+
+
+
     var elem = '<div class="alert " role="alert"></div>'
     this.alert = $(elem)
     $(this.alert).hide()
@@ -51,15 +87,12 @@ class Profile{
     var self = this;
     $.ajax({
         url: this.base_url,
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-          console.error('No person exists.')
-          // DO SOMETHING MEANINGFUL!
-        }
         }).done(function(d){
           self.data = d;
           self.initialize_elements();
-        }).fail(function(){
-          console.error('FAILED')
+        }).fail(function(e){
+          console.log(e)
+          console.log('FAILED')
           // do something usefule!
         });
   }
@@ -67,6 +100,7 @@ class Profile{
   save(){
     var self = this
     var demo = this.data.demographic
+    this.logger('Saving....')
     demo.age = $(this.target_element).find('#id_age').val()
     demo.sex = $(this.target_element).find('#id_sex').val()
 
@@ -89,13 +123,40 @@ class Profile{
     this.data.demographic = demo
     this.data.full_name = $(this.target_element).find('#id_full_name').val()
     
+    if (this.data.user != null){
+      this.data.user.email = $(this.target_element).find('#id_email').val()
+    }
+
+    // Set Known Languages
+    // Note will need to test this works when extra forms available!
+    var num_forms = $('#id_known_languages-TOTAL_FORMS').val()
+
+    var known_languages = []
+    for (var i=0; i < num_forms; i++){
+      var known_language = {}
+      const keys = ['id', 'accent', 'dialect', 'language', 'level_of_proficiency']      
+      for (var j in keys){
+        var query = '#id_known_languages-'+i+'-'+keys[j]
+        self.logger(query)
+        known_language[keys[j]] = $(query).val()        
+      } 
+      this.logger(known_language)
+      known_languages.push(known_language)
+    }
+    this.logger(known_languages)
+
+    this.data.known_languages = known_languages
+
     window.setTimeout(function(){
       self.change_counter -= 1
       if (self.change_counter<=0){
         if (self.change_counter<0){self.change_counter=0}
 
-        if (self.saving == false){  
-          self.put(self.data)
+        if (self.saving == false){ 
+          self.logger('Trying put...')
+          self.put(self.data)  
+         
+          
         } else{
           window.setTimeout(function(){
             self.change_counter += 1
@@ -118,7 +179,6 @@ class Profile{
       }
     })
 
-
     data = JSON.stringify(data)
     $.ajax({
       type: "PUT",
@@ -126,14 +186,29 @@ class Profile{
       url: this.base_url,
       dataType: 'json',
       contentType:"application/json; charset=utf-8",
-      error: function(e){
-        console.error(e.responseText)
-      }
-    }).done(function(){
+    }).done(function(e){
+      self.logger(e)
       self.saving = false
       self.show_success()
-    }).fail(function(){
+    }).fail(function(e){
+      
+      self.saving = false
+
+      var errorData = e.responseJSON
+      self.logger(errorData)
+      $.each(errorData, function(key, value){
+        if (key == 'user'){
+          $.each(value, function(k, v){
+            if (k=='email'){
+              $('#id_email').addClass('invalid')
+            }
+          })
+        }
+      })
+
+
     })
+
     return true;    
   }
 
@@ -149,12 +224,9 @@ class Profile{
       url: this.base_url,
       dataType: 'json',
       contentType:"application/json; charset=utf-8",
-      error: function(e){
-        console.error(e.responseText)
-      }
     }).done(function(){
     }).fail(function(){
-      console.error('POST Failed.')
+      console.log('POST Failed.')
     })
     return true;    
   }

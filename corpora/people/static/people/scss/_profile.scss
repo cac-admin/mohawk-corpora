@@ -11,7 +11,7 @@
 
   div{
     font-weight: 300;
-    span{
+    label{
       font-weight: 700;
     }
   }
@@ -19,3 +19,18 @@
 
 
 }
+
+.col-form-label{
+	font-weight: 700;
+}
+
+
+input.invalid{
+	border: 2px solid red;
+  border-color: #900;
+  background-color: #FDD;
+}
+
+// input:focus:invalid {
+//   outline: none;
+// }

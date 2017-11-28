@@ -125,8 +125,16 @@ class KnownLanguage(models.Model):
 
     active = models.BooleanField(default=False)
 
-    accent = models.CharField(choices=ACCENTS, max_length=8, null=True)
-    dialect = models.CharField(choices=DIALECTS, max_length=8, null=True)
+    accent = models.CharField(
+        choices=ACCENTS,
+        max_length=8,
+        null=True,
+        blank=True)
+    dialect = models.CharField(
+        choices=DIALECTS,
+        max_length=8,
+        null=True,
+        blank=True)
     # where did you learn your reo?
 
     class Meta:

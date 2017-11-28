@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import KnownLanguage, Person, Demographic
+from people.models import KnownLanguage, Person, Demographic
+from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from dal import autocomplete
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 # from django.conf.settings import LANGUAGES
 
@@ -16,30 +18,43 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         person = kwargs.pop('person', None)
         super(KnownLanguageFormWithPerson, self).__init__(*args, **kwargs)
 
+        instance = kwargs['instance']  # this is a known language instance.
 
-        # obj = self.fields['language']
+        # I have a feeling this will braeak when there's an empty instance - e.g. known language is None
+        # We'll need to use autocomplete light to update fields when someone adds a new language.
 
-        # choices = self.fields['language'].choices
-        # current_language_value = self.fields['language'].initial
+        language_accents = None
+        for i in range(len(ACCENTS)):
+            if ACCENTS[i][0] == instance.language:
+                language_accents = ACCENTS[i][1]
 
+        language_dialects = None
+        for i in range(len(DIALECTS)):
+            if DIALECTS[i][0] == instance.language:
+                language_dialects = DIALECTS[i][1]
 
-        # logger.debug(current_language_value)
+        # if language_accents:
+        #     self.fields['accent'].choices = ()
+        #     self.fields['accent'].choices.append(BLANK_CHOICE_DASH)
+        #     for i in language_accents:
+        #         self.fields['accent'].choices.append(i)
+        # if language_dialects:
+        #     self.fields['dialect'].choices = ()
+        #     self.fields['dialect'].choices.append(BLANK_CHOICE_DASH)
+        #     for i in language_dialects:
+        #         self.fields['dialect'].choices.append(i)
 
-        # known_languages = [i.language for i in KnownLanguage.objects.filter(person=person)]
-        # alter_choices = []
-        # for i in range(len(choices)):
-        #     if choices[i][0] not in known_languages:
-        #         alter_choices.append(choices[i])
-        #     # elif 
-        # self.fields['language'].choices = alter_choices
-        # 
+        self.fields['language'].disabled = True
+        self.fields['accent'].choices = BLANK_CHOICE_DASH + list(language_accents)
+        self.fields['dialect'].choices = BLANK_CHOICE_DASH + list(language_dialects)
 
 
 class PersonForm(forms.ModelForm):
+    email = forms.EmailField()
 
     class Meta:
         model = Person
-        fields = ('full_name',)
+        fields = ('full_name', 'email')
 
 
 class DemographicForm(forms.ModelForm):

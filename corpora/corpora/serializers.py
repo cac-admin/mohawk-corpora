@@ -14,3 +14,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'pk')
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.email
+        instance.save()
+        return instance

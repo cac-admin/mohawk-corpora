@@ -227,7 +227,7 @@ class StatsView(ListView):
                     'duration': "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds),
                     },
                  'sentences': {
-                    'total': recordings.count(),
+                    'total': sentences.count(),
                     'num_approved': get_num_approved(sentences),
                     'up_votes': sentence_votes[0],
                     'down_votes': sentence_votes[1],

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-22 00:48+0000\n"
+"POT-Creation-Date: 2017-11-27 20:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,16 +38,28 @@ msgstr ""
 msgid "Taranaki"
 msgstr ""
 
-#: corpus/base_settings.py:55
+#: corpus/base_settings.py:57
 msgid "Academic"
 msgstr ""
 
-#: corpus/base_settings.py:56
+#: corpus/base_settings.py:58
 msgid "Modern"
 msgstr ""
 
-#: corpus/base_settings.py:57
+#: corpus/base_settings.py:59
 msgid "English \"i\""
+msgstr ""
+
+#: corpus/base_settings.py:63
+msgid "Australian"
+msgstr ""
+
+#: corpus/base_settings.py:64
+msgid "New Zealand"
+msgstr ""
+
+#: corpus/base_settings.py:65
+msgid "American"
 msgstr ""
 
 #: corpus/templates/corpus/listen.html:52
@@ -147,41 +159,41 @@ msgstr "Ngā Rerenga Kōrero"
 msgid "^stats/"
 msgstr ""
 
-#: corpus/views/api.py:37
+#: corpus/views/api.py:39
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr ""
 
-#: corpus/views/api.py:45
+#: corpus/views/api.py:47
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
 msgstr ""
 
-#: corpus/views/api.py:93
+#: corpus/views/api.py:95
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:161
+#: corpus/views/api.py:163
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:167
+#: corpus/views/api.py:169
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:172
+#: corpus/views/api.py:174
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:183
+#: corpus/views/api.py:185
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:185
+#: corpus/views/api.py:187
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:227 corpus/views/api.py:240
+#: corpus/views/api.py:229 corpus/views/api.py:244
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

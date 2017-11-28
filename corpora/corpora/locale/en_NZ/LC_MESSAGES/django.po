@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-22 00:48+0000\n"
+"POT-Creation-Date: 2017-11-27 20:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,6 +96,18 @@ msgstr "Takiuru"
 #: corpora/urls.py:26
 msgid "^people/"
 msgstr "tangata"
+
+#: corpora/views/api.py:18
+msgid "Only staff can view this information."
+msgstr ""
+
+#: corpora/views/api.py:23 corpora/views/api.py:44 corpora/views/api.py:46
+msgid "You're not allowed to view this information."
+msgstr ""
+
+#: corpora/views/api.py:41
+msgid "You must sign in to edit your info."
+msgstr ""
 
 #~ msgid "Record"
 #~ msgstr "Rekoata"

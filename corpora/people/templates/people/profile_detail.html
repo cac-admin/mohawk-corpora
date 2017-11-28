@@ -8,6 +8,7 @@
 <style type="text/x-scss">
 @import 'corpora/css/colors';
 @import 'corpus/scss/actionButtons';
+@import 'people/scss/profile';
 
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
@@ -36,40 +37,45 @@ span.select2-container{
     
     <div class="profile" id="profile-div">
 
+
+
     <form action="" method="post" id="person_form">
     {% csrf_token %}
-
     {% for field in person_form %}
-    <div class="form-group row">
+    <div class="form-group row justify-content-end">
         {{ field.errors }}
         {{ field.label_tag }}
-        <div class="col-10">{{ field }}</div>
+        <div class="col-sm-12 col-md-10">{{ field }}</div>
         {% if field.help_text %}
-        <div class="col-2"></div><div class="col-9">
+        <div class="col-sm-12 col-md-10">
         <small class="form-text text-muted">{{ field.help_text|safe }}</small>
         </div>
         {% endif %}
     </div>
     {% endfor %}
-
     </form>
 
 
     <form action="" method="post" id="demographic_form">
     {% csrf_token %}
     {% for field in demographic_form %}
-    <div class="form-group row">
+    <div class="form-group row justify-content-end">
         {{ field.errors }}
         {{ field.label_tag }}
-        <div class="col-10">{{ field }}</div>
+        <div class="col-sm-12 col-md-10">{{ field }}</div>
         {% if field.help_text %}
-        <div class="col-2"></div><div class="col-9">
+        <div class="col-sm-12 col-md-10">
         <small class="form-text text-muted">{{ field.help_text|safe }}</small>
         </div>
         {% endif %}
     </div>
     {% endfor %}
     </form>
+
+    <hr>
+    
+
+    {% include 'people/choose_language_form.html' %}
 
 
     </div>
@@ -81,14 +87,19 @@ span.select2-container{
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}{{ demographic_form.media }}{% endaddtoblock %}
-{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'people/js/profile.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js" %}<script type="text/javascript">{% include 'people/js/profile.js' %}</script>{% endaddtoblock %}
+
+
 
 {% addtoblock 'js-end' %}
 <script type="text/javascript">
   
-$('#demographic_form, #person_form').find('label').addClass('col-form-label col-2');
-$('#demographic_form, #person_form').find('input').addClass('form-control');
-$('#demographic_form, #person_form').find('select').addClass('form-control');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('label').addClass('col-form-label col-sm-12 col-md-2');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('input').addClass('form-control');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('select').addClass('form-control');
+
+$('#submit_choose_language_form').hide();
 
 </script>
 {% endaddtoblock %}

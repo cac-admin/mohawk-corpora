@@ -48,6 +48,20 @@ class ProfileDetail(APIView, TemplateView):
         if created:
             demographic.save()
 
+        known_languages = KnownLanguage.objects.filter(person=person)
+
+        if len(known_languages) == 0:
+            url = reverse('people:choose_language') + '?next=people:profile'
+            return redirect(url)
+        elif len(known_languages) >= 1:
+            set_current_language_for_person(
+                person, known_languages[0].language)
+            current_language = known_languages[0]
+
+            if current_language.level_of_proficiency is None:
+                url = reverse('people:choose_language') + '?next=people:profile'
+                return redirect(url)
+
         return super(ProfileDetail, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -59,7 +73,30 @@ class ProfileDetail(APIView, TemplateView):
         context['serializer'] = serializer
 
         context['demographic_form'] = DemographicForm(instance=person.demographic)
-        context['person_form'] = PersonForm(instance=person)
+        if person.user:
+            context['person_form'] = PersonForm(instance=person, initial={'email': person.user.email})
+        else:
+            context['person_form'] = PersonForm(instance=person,)
+
+        known_languages = KnownLanguage.objects.filter(person=person).count()
+        if known_languages > 0:
+            extra = known_languages
+        else:
+            extra = 1
+
+        KnownLanguageFormset = inlineformset_factory(
+            Person,
+            KnownLanguage,
+            form=KnownLanguageFormWithPerson,
+            fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
+            max_num=get_num_supported_languages(), extra=extra)
+
+        kl_formset = KnownLanguageFormset(
+            instance=person,
+            form_kwargs={'person': person})
+
+        context['known_language_form'] = kl_formset
+        context['known_languages'] = known_languages
 
         return context
 
@@ -73,16 +110,20 @@ def profile(request):
         known_languages = KnownLanguage.objects.filter(person=person)
         unknown_languages = get_unknown_languages(person)
 
-        if not current_language:
-            if len(known_languages) == 0:
+        if len(known_languages) == 0:
+            url = reverse('people:choose_language') + '?next=people:profile'
+            return redirect(url)
+        elif len(known_languages) >= 1:
+            set_current_language_for_person(person, known_languages[0].language)
+            current_language = known_languages[0].language
+
+            if current_language.level_of_proficiency is None:
                 url = reverse('people:choose_language') + '?next=people:profile'
                 return redirect(url)
-            elif len(known_languages) >= 1:
-                set_current_language_for_person(person, known_languages[0].language)
-                current_language = known_languages[0].language
-            else:
-                logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
-                raise Http404("Something went wrong. We're working on this...")
+
+        else:
+            logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
+            raise Http404("Something went wrong. We're working on this...")
 
 
         recordings = Recording.objects\
@@ -140,9 +181,14 @@ def choose_language(request):
         extra = known_languages
     else:
         extra = 1
+
     unknown = get_unknown_languages(person)
-    
-    KnownLanguageFormset = inlineformset_factory(Person, KnownLanguage, form=KnownLanguageFormWithPerson, fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra= extra )
+    KnownLanguageFormset = inlineformset_factory(
+        Person,
+        KnownLanguage,
+        form=KnownLanguageFormWithPerson,
+        fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
+        max_num=get_num_supported_languages(), extra= extra )
     # formset  = KnownLanguageFormset(form_kwargs={'person':person})
     # KnownLanguageFormsetWithPerson = inlineformset_factory(Person, KnownLanguage, form=form,  fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra=known_languages+1)
     
@@ -171,34 +217,41 @@ def choose_language(request):
                 if next_page:
                     response = redirect(reverse(next_page))
                 else:
-                    response  = redirect(reverse('people:choose_language'))
+                    response = redirect(reverse('people:choose_language'))
 
                 response = set_language_cookie(response, current_language)
 
                 return response
-
 
         else:
             if next_page:
                 return redirect(reverse(next_page))
             else:
                 return redirect(reverse('people:choose_language'))
-            # formset = KnownLanguageFormsetWithPerson(instance=person)    
-            
+            # formset = KnownLanguageFormsetWithPerson(instance=person)
+
     else:
 
-        formset = KnownLanguageFormset(instance=person, form_kwargs={'person':person})
+        formset = KnownLanguageFormset(
+            instance=person,
+            form_kwargs={'person': person})
 
         # for form in formset:
-    response = render(request, 'people/choose_language.html', {'formset':formset, 'known_languages':known_languages, 'unknown_languages':unknown})
+    response = render(
+        request,
+        'people/choose_language.html',
+        {'known_language_form': formset,
+            'known_languages': known_languages,
+            'unknown_languages': unknown})
 
     current_language = get_current_language(request)
     if current_language:
-        set_current_language_for_person(person, current_language)    
-        response = set_language_cookie(response, current_language)     
+        set_current_language_for_person(person, current_language)
+        response = set_language_cookie(response, current_language)
     else:
         logger.debug('no current language')
     return response
+
 
 def set_language(request):
     logger.debug('SET LANGAUGE')
@@ -211,16 +264,16 @@ def set_language(request):
     else:
         url = 'people:choose_language'
 
-    if request.method=='POST':
+    if request.method == 'POST':
 
-        if request.POST.get('language','') != '':
-            user_language = request.POST.get('language','')
+        if request.POST.get('language', '') != '':
+            user_language = request.POST.get('language', '')
             person = get_or_create_person(request)
             set_current_language_for_person(person, user_language)
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
 
-            response = redirect(reverse(url)) #render(request,  'people/set_language.html')
+            response = redirect(reverse(url))  # render(request,  'people/set_language.html')
             response = set_language_cookie(response, user_language)
             logger.debug('RESPONSE: {0}'.format(response))
             return response
@@ -270,6 +323,7 @@ def create_demographics(request):
             form = DemographicForm()
 
     return render(request, 'people/demographics.html', {'form': form})
+
 
 def create_user(request):
     return render(request, 'people/create_account.html')

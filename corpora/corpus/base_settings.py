@@ -47,6 +47,8 @@ DIALECTS = (
             ('taranaki', _('Taranaki')),
     )),
 
+
+
 )
 
 ACCENTS = (
@@ -55,6 +57,12 @@ ACCENTS = (
             ('academic', _('Academic')),
             ('modern',   _('Modern')),
             ('englishi', _('English "i"')),
+    )),
+
+    ('en', (
+            ('australi', _('Australian')),
+            ('newzeald', _('New Zealand')),
+            ('american', _('American')),
     )),
 
 )

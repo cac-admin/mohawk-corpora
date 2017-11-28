@@ -5,6 +5,8 @@ from corpora.serializers import UserSerializer
 from rest_framework import serializers
 from dal import autocomplete
 
+from django.core.exceptions import ObjectDoesNotExist
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -52,7 +54,7 @@ class KnownLanguageSerializer(serializers.HyperlinkedModelSerializer):
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(partial=True, required=False)
     demographic = DemographicSerializer(partial=True, required=False)
-    known_languages = KnownLanguageSerializer(many=True, read_only=True)
+    known_languages = KnownLanguageSerializer(many=True, required=False, partial=True)
 
     class Meta:
         model = Person
@@ -93,6 +95,31 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             logger.debug(tribe)
             t = Tribe.objects.get(name=tribe['name'])
             demo.tribe.add(t)
+
+        validated_languages = validated_data['known_languages']
+        # logger.debug(validated_languages)
+        # logger.debug(validated_data)
+        for vl in validated_languages:
+            logger.debug(vl)
+            try:
+                kl = KnownLanguage.objects.get(
+                    person=instance,
+                    language=vl['language']
+                )
+
+                kl.level_of_proficiency = vl['level_of_proficiency']
+                kl.accent = vl['accent']
+                kl.dialect = vl['dialect']
+
+            except ObjectDoesNotExist:
+                kl = KnownLanguage.objects.create(
+                    person=instance,
+                    level_of_proficiency=vl['level_of_proficiency'],
+                    dialect=vl['dialect'],
+                    accent=vl['accent'],
+                    language=vl['language']
+                )
+            kl.save()
 
         instance.demographic = demo
         instance.save()
