@@ -273,7 +273,8 @@ class ListenView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ListenView, self).get_context_data(**kwargs)
         user = self.request.user
-        person = get_person(self.request)
+        person = get_or_create_person(self.request)
+
 
         # Don't fech recordings the person already listened to
         recordings = Recording.objects\

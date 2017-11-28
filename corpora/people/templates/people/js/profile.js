@@ -32,17 +32,22 @@ class Profile{
     var self = this
 
     self.email = document.getElementById('id_email');
-    self.email.addEventListener("input", function (event) {
-      // Each time the user types something, we check if the
-      // email field is valid.
-      if (self.email.validity.valid) {
-        // In case there is an error message visible, if the field
-        // is valid, we remove the error message.
-        // self.email.innerHTML = ""; // Reset the content of the message
-        // self.email.className = "error"; // Reset the visual state of the message
-        $('#id_email').removeClass('invalid')
-      }
-    }, false);
+
+    try{
+      self.email.addEventListener("input", function (event) {
+        // Each time the user types something, we check if the
+        // email field is valid.
+        if (self.email.validity.valid) {
+          // In case there is an error message visible, if the field
+          // is valid, we remove the error message.
+          // self.email.innerHTML = ""; // Reset the content of the message
+          // self.email.className = "error"; // Reset the visual state of the message
+          $('#id_email').removeClass('invalid')
+        }
+      }, false);
+    }catch(e){
+      self.logger(e)
+    }
 
     $(this.target_element).find('form').on('submit', function(event){
       event.preventDefault();

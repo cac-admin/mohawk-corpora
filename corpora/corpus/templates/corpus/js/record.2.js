@@ -21,6 +21,7 @@ class MyRecorder extends Player{
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
+        this.debug = true
 
         var self = this
 
@@ -91,23 +92,7 @@ class MyRecorder extends Player{
 
         $(".redo").click(function(e) {
             if (!$(e.currentTarget).hasClass('disabled')){
-
-                if (self.recording){
-                	self.recorder.stop();
-                }
-                if ( $(self.stop_button).css('display')!='None' ){
-                	self.audio.pause();
-                } else {
-
-                }
-
-                $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
-                
-                $('.redo').addClass('disabled');
-                $('.save').addClass('disabled');
-                $(self.record_button).show()
-                $(self.stop_button).hide()
-                $(self.play_button).hide()
+                self.reset()
             }
         });
 
@@ -121,21 +106,30 @@ class MyRecorder extends Player{
 
             // console.log('record skip')
             self.skipped = true
-            self.audio.pause()
+            
+            // CHANGED
+            self.reset()
 
-            if (self.recording){
-                self.stop_recording()
+            // self.audio.pause()
+
+            // if (self.recording){
+            //     self.stop_recording()
+            // }
+
+            if (self.audio.src != ''){
+                self.audio.src = ''
+                // delete self.audio.src
             }
 
-            self.audio.src = ''
-            delete self.audio.src
-            delete self.audioBlob            
+            // self.audio.src = ''
+            // delete self.audio.src
+            // delete self.audioBlob            
             
-            $('.save').addClass('disabled');
-            $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-            $('.redo').addClass('disabled');
-            $(self.record_button).show()
-            $(self.play_button).show()
+            // $('.save').addClass('disabled');
+            // $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+            // $('.redo').addClass('disabled');
+            // $(self.record_button).show()
+            // $(self.play_button).show()
 
         })
 
@@ -175,6 +169,27 @@ class MyRecorder extends Player{
 
     }
 
+    reset(){
+        var self = this
+        
+        if (self.recording){
+            self.recorder.stop();
+        }
+        
+        if ( $(self.stop_button).css('display')!='None' ){
+            self.audio.pause();
+        } else {
+
+        }
+
+        $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
+        $('.redo').addClass('disabled');
+        $('.save').addClass('disabled');
+        $(self.record_button).show()
+        $(self.stop_button).hide()
+        $(self.play_button).hide()        
+
+    }
 
     create_recorder(){
         var self = this
@@ -222,6 +237,7 @@ class MyRecorder extends Player{
     start_recording(){
         var self = this
         self.actions_element.dispatchEvent(self.event_record)
+        $(self.skip_button).addClass('disabled')
         if (self.recording == false) {
             // Start recorder if inactive and set recording state to true
             self.recording = true
@@ -254,6 +270,7 @@ class MyRecorder extends Player{
 
 
     stop_recording(){
+        var self = this
         $(this.stop_button).hide()
         $(this.play_button).show()
         if (self.should_vis==true){
@@ -266,6 +283,8 @@ class MyRecorder extends Player{
 
         $('.redo').removeClass('disabled');
         $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
+
+        $(self.skip_button).removeClass('disabled')
     }
 
 

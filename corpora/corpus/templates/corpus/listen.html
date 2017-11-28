@@ -97,7 +97,7 @@ player = new Player('.sentence-block');
 
 
 {% if user.can_approve %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'people/js/profile.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript">{% include 'people/js/profile.js' %}</script>{% endaddtoblock %}
 {% addtoblock "js-end" %}
 <script type="text/javascript" >
   var profile;

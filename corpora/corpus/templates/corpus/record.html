@@ -166,6 +166,7 @@ var visRecorder;
   sentences.sentence_block.addEventListener('sentence.ready', function(){
     console.log('sentence.ready')
     $(document.getElementById('record-button')).show()
+    my_recorder.skipped = false
   })
 
 
