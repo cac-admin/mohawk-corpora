@@ -18,6 +18,7 @@ class MyRecorder extends Player{
         this.should_vis = true
         this.skip_button = document.getElementById('skip-button')
         this.skipped = false
+        this.redo = false
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
@@ -47,6 +48,11 @@ class MyRecorder extends Player{
             if (self.recording){
                 self.stop_recording();
             }
+
+            // if (!$(e.currentTarget).hasClass('disabled')){       
+            //     $(self.stop_button).show()
+            // }
+
         });
 
         // When audio is done playing back, revert button to initial state
@@ -57,10 +63,14 @@ class MyRecorder extends Player{
 
         // Only redo button causes audio to pause?
         var fn = function(event){
-          console.log('custon ended')
-          $(self.record_button).show()
-          $(self.stop_button).hide()
-          $(self.play_button).hide()
+            self.logger('custom ended')
+            $(self.record_button).show()
+            $(self.stop_button).hide()
+            if (self.redo){
+                self.logger('Redone - Hiding Play')
+                $(self.play_button).hide()
+                self.redo = false
+            }
         }
         self.audio.addEventListener('pause', fn, false)
 
@@ -92,6 +102,7 @@ class MyRecorder extends Player{
 
         $(".redo").click(function(e) {
             if (!$(e.currentTarget).hasClass('disabled')){
+                self.redo = true
                 self.reset()
             }
         });
@@ -103,6 +114,8 @@ class MyRecorder extends Player{
 
 
         $(self.skip_button).click(function(){
+
+            if (!$(self.skip_button).hasClass('disabled')){
 
             // console.log('record skip')
             self.skipped = true
@@ -131,6 +144,7 @@ class MyRecorder extends Player{
             // $(self.record_button).show()
             // $(self.play_button).show()
 
+            }
         })
 
 
@@ -176,18 +190,33 @@ class MyRecorder extends Player{
             self.recorder.stop();
         }
         
-        if ( $(self.stop_button).css('display')!='None' ){
-            self.audio.pause();
-        } else {
 
+        if (self.audio.paused != true){
+            self.audio.pause();
+            window.setTimeout
         }
+
+        // if ( $(self.stop_button).css('display')!='None' ){
+        //     var pause_promise = self.audio.pause();
+        //     if (pause_promise !== undefined){
+        //         pause_promise.then(function(){
+        //             console.log('promised for pause')
+        //             $(self.play_button).hide()        
+
+        //         })
+        //     } else{
+        //         console.log('Promise not defined')
+        //     }
+        // } else {
+
+        // }
 
         $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
         $('.redo').addClass('disabled');
         $('.save').addClass('disabled');
         $(self.record_button).show()
         $(self.stop_button).hide()
-        $(self.play_button).hide()        
+        $(self.play_button).hide()       
 
     }
 
