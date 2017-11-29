@@ -16,6 +16,8 @@ logger = logging.getLogger('corpora')
 class KnownLanguageFormWithPerson(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         person = kwargs.pop('person', None)
+        require_proficiency = kwargs.pop('require_proficiency', None)
+
         super(KnownLanguageFormWithPerson, self).__init__(*args, **kwargs)
 
         instance = kwargs['instance']  # this is a known language instance.
@@ -47,6 +49,9 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         self.fields['language'].disabled = True
         self.fields['accent'].choices = BLANK_CHOICE_DASH + list(language_accents)
         self.fields['dialect'].choices = BLANK_CHOICE_DASH + list(language_dialects)
+
+        if require_proficiency:
+            self.fields['level_of_proficiency'].required = require_proficiency
 
 
 class PersonForm(forms.ModelForm):

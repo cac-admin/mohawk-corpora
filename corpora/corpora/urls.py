@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 
 from corpora.views import views
+from django.views.generic import RedirectView
+
 from rest_framework.documentation import include_docs_urls
 
 
@@ -18,8 +20,14 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
     url(r'^admin/', admin.site.urls),
-    url(r'^account/', include('allauth.urls')),
-
+    url(r'^account/', include('allauth.urls'), name='allauth-account-x'),
+    # url(r'^accounts/',
+    #     RedirectView.as_view(
+    #         pattern_name='accounts',
+    #         permanent=False,
+    #         query_string=True,
+    #         url='/'),
+    #     name='allauth-accounts-redirect'),
 
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 

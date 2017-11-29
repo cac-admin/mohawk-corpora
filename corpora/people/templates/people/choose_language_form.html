@@ -36,7 +36,7 @@
     <div >
     {% for field in form.visible_fields %}
 
-        <div class="form-group row">
+        <div class="form-group row justify-content-end">
           
 
             {% if field.name == 'DELETE' %}
@@ -86,7 +86,7 @@
 
             {% endif %}
 
-            {% if field.errors %}<div class="alert alert-danger" role="alert">{{ field.errors }}</div>{% endif %}
+            {% if field.errors %}<div class="col-sm-12 col-md-10"><div class="alert alert-danger" role="alert">{{ field.errors }}</div></div>{% endif %}
         
     </div>
     {% endfor %}
@@ -99,7 +99,13 @@
 
     
     <div class="row"><div class="col-12 " style="text-align: center;">
-    <input id="submit_choose_language_form" type="submit" value="Save Language" class="btn btn-default btn-lg">
+    <!-- <input id="submit_choose_language_form" type="submit" value="Save Language" class="btn btn-default btn-lg"> -->
+
+    <a id="submit_choose_language_form" class="btn btn-default btn-lg" href="javascript:{}" onclick="document.getElementById('choose_language_form').submit();">
+        {% trans 'Save' %}
+    </a>
+
+
     </div></div>
     
 

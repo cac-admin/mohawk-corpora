@@ -191,17 +191,25 @@ def choose_language(request):
         KnownLanguage,
         form=KnownLanguageFormWithPerson,
         fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
-        max_num=get_num_supported_languages(), extra= extra )
+        max_num=get_num_supported_languages(), extra=extra,)
     # formset  = KnownLanguageFormset(form_kwargs={'person':person})
     # KnownLanguageFormsetWithPerson = inlineformset_factory(Person, KnownLanguage, form=form,  fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra=known_languages+1)
-    
+
+    formset = KnownLanguageFormset(
+            instance=person,
+            form_kwargs={'person': person, 'require_proficiency': True})
+
     if request.method == 'POST':
-        formset = KnownLanguageFormset(request.POST, request.FILES, instance=person, form_kwargs={'person':person})
+        formset = KnownLanguageFormset(
+                    request.POST, request.FILES,
+                    instance=person,
+                    form_kwargs={
+                        'person': person,
+                        'require_proficiency': True})
         if formset.has_changed():
             if formset.is_valid():
                 instances = formset.save()
 
-                
                 current_language = get_current_language(request)
                 if not current_language:
                     for instance in instances:
@@ -209,14 +217,12 @@ def choose_language(request):
                             current_language = obj.language
                 if not current_language:
                     current_language = translation.get_language()
-                
+
                 try:
                     set_current_language_for_person(person, current_language)
                 except:
-
                     logger.debug("We may be trying to set a language when knownlanguage doens't exist")              
 
-                    
                 if next_page:
                     response = redirect(reverse(next_page))
                 else:
@@ -227,17 +233,14 @@ def choose_language(request):
                 return response
 
         else:
-            if next_page:
-                return redirect(reverse(next_page))
-            else:
-                return redirect(reverse('people:choose_language'))
+            if formset.is_valid():
+                if next_page:
+                    return redirect(reverse(next_page))
+                # else:
+                #     return redirect(reverse('people:choose_language'))
             # formset = KnownLanguageFormsetWithPerson(instance=person)
 
-    else:
 
-        formset = KnownLanguageFormset(
-            instance=person,
-            form_kwargs={'person': person})
 
         # for form in formset:
     response = render(
