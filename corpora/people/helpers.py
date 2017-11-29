@@ -49,7 +49,8 @@ def get_or_create_person(request):
                 full_name = user.username
             else:
                 full_name = '{0} {1}'.format(first, last)
-            person.full_name = full_name
+            if not person.full_name:
+                person.full_name = full_name
             person.save()
         request.session['uuid'] = person.uuid
         return person
