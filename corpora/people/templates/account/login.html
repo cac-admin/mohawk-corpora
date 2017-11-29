@@ -45,20 +45,20 @@ label[for=id_remember]{
   <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;" id="login_form">
     {% csrf_token %}
 
+    {{form.non_field_errors}}
     {% for field in form %}
     <div class="form-group row justify-content-end">
-        
         <div class="col-12">{{ field.label_tag }}{{ field }} </div>
         {% if field.help_text %}
         <div class="col-12">
         <small class="form-text text-muted">{{ field.help_text|safe }}</small>
         </div>
         {% endif %}
-        {% if field.errors %}
+        
         <div class="col-12">
         {{ field.errors }}
         </div>
-        {% endif %}              
+        
     </div>
     {% endfor %}
 

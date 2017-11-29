@@ -32,7 +32,7 @@ class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def save_user(self, request, sociallogin, form=None):
 
-        user = super(PersonSocialAccountAdapter, self).save_user(request, sociallogin, form=None)
+        user = super(PersonSocialAccountAdapter, self).save_user(request, sociallogin, form)
 
         # Create a People Object with User Information
         request.user = user
