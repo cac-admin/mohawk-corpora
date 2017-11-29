@@ -20,7 +20,8 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
     url(r'^admin/', admin.site.urls),
-    url(r'^account/', include('allauth.urls'), name='allauth-account-x'),
+    url(r'^account/', include('allauth.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     # url(r'^accounts/',
     #     RedirectView.as_view(
     #         pattern_name='accounts',
