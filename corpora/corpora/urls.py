@@ -22,13 +22,20 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^account/', include('allauth.urls')),
     url(r'^accounts/', include('allauth.urls')),
-    # url(r'^accounts/',
-    #     RedirectView.as_view(
-    #         pattern_name='accounts',
-    #         permanent=False,
-    #         query_string=True,
-    #         url='/'),
-    #     name='allauth-accounts-redirect'),
+
+    url(r'^signup/',
+        RedirectView.as_view(
+            permanent=False,
+            query_string=True,
+            url='/accounts/signup'),
+        name='signup'),
+
+    url(r'^login/',
+        RedirectView.as_view(
+            permanent=False,
+            query_string=True,
+            url='/accounts/login'),
+        name='login'),
 
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 
