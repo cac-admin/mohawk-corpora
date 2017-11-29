@@ -1,6 +1,7 @@
 class Listen{
   constructor(person_pk, target_element_selector, content_type, admin=false, user_id=null){
     var self = this;
+    this.debug = true
     this.sentence_block = $(target_element_selector)
     this.admin = admin
     this.user_id = user_id
@@ -52,7 +53,7 @@ class Listen{
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
         self.audio.pause()
-        self.audio.src=null
+        // self.audio.src=null
         self.next();
       }
     })  
@@ -81,7 +82,7 @@ class Listen{
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
         error: function(XMLHttpRequest, textStatus, errorThrown){
-          console.log('Trying from first page')
+          self.logger('ERROR fetching recordings')
           
         }
         }).done(function(d){
@@ -89,16 +90,16 @@ class Listen{
           self.next_url = d.next
 
           if (self.objects.length == 0 || self.error_loop>3){
-            console.log('No more recordings')
+            self.logger('No more recordings')
             self.all_done()
           }
           else{
-            console.log(d)
-            console.log(d.results)
+            self.logger('Got recordings')
+            self.logger(self.objects[0])
             self.next()
           }
         }).fail(function(){
-          
+          self.logger('Failed to fetch recordings, will try again...')
           window.setTimeout( function(){
             self.next_url=null
             self.get_recordings()
@@ -113,7 +114,8 @@ class Listen{
     $.ajax({
         url: this.base_recording_url+this.recording.id+'/'
         }).done(function(d){
-          console.log(d)
+          self.logger('Reloaded')
+          self.logger(d)
           self.recording.quality_control = d.quality_control
           self.recording = d
           self.sentence = d.sentence
@@ -122,6 +124,7 @@ class Listen{
   }
 
   next(){
+    this.logger('Next')
     if (this.objects == null || this.objects.length==0){
       this.get_recordings()
     } else{
@@ -133,7 +136,7 @@ class Listen{
           this.recording.sentence_text = 'These arent teh droid your looking for'
           console.log('error')
           this.error_loop+=1
-          this.show_next_recording()
+          // this.show_next_recording()
           this.next()
         } else { this.recording.sentence_text = this.sentence.text }
         
@@ -154,7 +157,7 @@ class Listen{
   }
 
   show_next_recording(){
-
+    this.logger('Show next recording')
     var self = this;
     self.show_loading();
 
@@ -322,11 +325,11 @@ class Listen{
         self.hide_loading()
       }
     }).done(function(){
-      console.log('Saved')
+      self.logger('Saved')
       self.reload();
       self.hide_loading()
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
       self.hide_loading()
     })
   }
@@ -362,14 +365,14 @@ class Listen{
     this.quality_control.good = 0
     this.quality_control.bad = 0    
     this.quality_control.approved_by = this.user_id;
-    console.log(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
   }
   up_vote(){
     this.quality_control.good = 1
     this.quality_control.bad = 0
     this.quality_control.approved = false;
-    console.log(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
   }
 
@@ -377,8 +380,14 @@ class Listen{
     this.quality_control.bad = 1
     this.quality_control.good = 0
     this.quality_control.approved = false;
-    console.log(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
+  }
+
+  logger(s){
+    if (this.debug){
+      console.log(s)
+    }
   }
 
 }

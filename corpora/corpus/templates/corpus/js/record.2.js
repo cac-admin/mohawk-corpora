@@ -22,7 +22,8 @@ class MyRecorder extends Player{
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
-        this.debug = true
+        
+        this.debug = false
 
         var self = this
 
