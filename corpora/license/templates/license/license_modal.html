@@ -1,5 +1,7 @@
 {% load static sekizai_tags  i18n %}
 
+{% if license %}
+
 {% addtoblock "js-end" %}
 <script type="text/javascript">
 $(document).ready(function(){
@@ -95,7 +97,7 @@ accept_license_button.addEventListener('click',function(event){
             
           <div class="col-12">
             <button type="button" class="btn btn-secondary" id="cancel_license_button">Cancel</button>
-            <button type="button" class="btn btn-primary" id="accept_license_button">Accept</button>
+            <button type="button" class="btn btn-default" id="accept_license_button">Accept</button>
           </div>
         </div>
       </div>    
@@ -115,3 +117,5 @@ accept_license_button.addEventListener('click',function(event){
     </div>
   </div>
 </div>
+
+{% endif %}
