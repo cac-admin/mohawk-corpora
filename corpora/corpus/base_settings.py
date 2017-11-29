@@ -42,21 +42,20 @@ LANGUAGES = (
 DIALECTS = (
 
     ('mi', (
-            ('muriwhen', _('Muriwhenua')),
             ('kaitahu',  _('Kaitahu')),
+            ('muriwhen', _('Muriwhenua')),
             ('taranaki', _('Taranaki')),
+            ('tuhoe', _('Tuhoe')),
     )),
-
-
 
 )
 
 ACCENTS = (
 
     ('mi', (
-            ('academic', _('Academic')),
-            ('modern',   _('Modern')),
-            ('englishi', _('English "i"')),
+            # ('academic', _('Academic')),
+            # ('modern',   _('Modern')),
+            # ('englishi', _('English "i"')),
     )),
 
     ('en', (
