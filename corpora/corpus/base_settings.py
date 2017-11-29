@@ -36,7 +36,6 @@ LANGUAGES = (
     ('mi',    _('Maori')),
     # ('en',    _('English')),
     # ('en_NZ', _('New Zealand English')),
-
 )
 
 DIALECTS = (
