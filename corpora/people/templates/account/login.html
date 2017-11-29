@@ -6,14 +6,61 @@
 
 {% block account_content %}
 
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+.btn{
+  /*margin-top: 0px;*/
+}
+.socialaccount_providers{
+  font-size: 1.2em;
+  li{
+    padding-top: 15px;
+  }
+}
+
+input[type=checkbox]{
+  display: inline-block;
+  width: 20px;
+  height: 15px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+label[for=id_remember]{
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1em;
+  margin: 0px;
+}
+</style>
+{% endaddtoblock %}
+
+<div class="row"><div class="col">
   <h1>{% trans 'Sign In' %}</h1>
+  <br>
+</div></div>
 
   {% get_providers as socialaccount_providers %}
 
+<div class="row"><div class="col">
   <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;" id="login_form">
     {% csrf_token %}
 
-    {{form.as_p}}
+    {% for field in form %}
+    <div class="form-group row justify-content-end">
+        
+        <div class="col-12">{{ field.label_tag }}{{ field }} </div>
+        {% if field.help_text %}
+        <div class="col-12">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+        {% if field.errors %}
+        <div class="col-12">
+        {{ field.errors }}
+        </div>
+        {% endif %}              
+    </div>
+    {% endfor %}
 
     {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'people:profile' %}" />
@@ -28,6 +75,7 @@
     </a>
 
   </form>
+</div></div>
 
   {% addtoblock 'js-end' %}
   <script type="text/javascript">
@@ -42,8 +90,10 @@
   </script>
   {% endaddtoblock %}
 
+<div class="row"><div class="col">
   {% if socialaccount_providers %}
-  <p class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</p>
+  <br>
+  <h4 class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</h4>
 
   <div class="socialaccount_ballot">
 
@@ -62,5 +112,15 @@
   <p>{% blocktrans %}If you have not created an account yet, then please
   <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
   {% endif %}
+</div></div>
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+$('#login_form').find('input').addClass('form-control');
+$('#login_form').find('select').addClass('form-control');
+$('#login_form input[type=submit').removeClass('form-control');
+</script>
+{% endaddtoblock %}
+
 
 {% endblock account_content %}

@@ -130,6 +130,8 @@ class Profile{
     
     if (this.data.user != null){
       this.data.user.email = $(this.target_element).find('#id_email').val()
+    } else{
+      this.data.profile_email = $(this.target_element).find('#id_email').val()
     }
 
     // Set Known Languages

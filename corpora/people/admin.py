@@ -17,6 +17,7 @@ class PersonAdmin(admin.ModelAdmin):
         'user',
         'uuid',
         )
+    readonly_fields = ('profile_email',)
 
 
 @admin.register(Demographic)

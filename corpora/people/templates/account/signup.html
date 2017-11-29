@@ -1,39 +1,99 @@
 {% extends "account/base.html" %}
 
-{% load i18n socialaccount %}
+{% load i18n socialaccount sekizai_tags person %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block account_content %}
-<h1>{% trans "Sign Up" %}</h1>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>. Otherwise, please create an account below.{% endblocktrans %}</p>
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+.btn{
+  margin-top: 0px;
+}
+.socialaccount_providers{
+  font-size: 1.2em;
+  li{
+    padding-top: 15px;
+  }
+}
+</style>
+{% endaddtoblock %}
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+<div class="row"><div class="col">
+  <h1>{% trans "Sign Up" %}</h1> 
+  <br>
+</div></div>
+
+
+
+<div class="row"><div class="col">
+  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'people:profile' %}" />
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+  {% for field in form %}
+  <div class="form-group row justify-content-end">
+      {{ field.errors }}
+      {{ field.label_tag }}
+      <div class="col-sm-12 col-md-10">{{ field }}</div>
+      {% if field.help_text %}
+      <div class="col-sm-12 col-md-10">
+      <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+      </div>
+      {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="form-group row justify-content-center">
+    <div class="col-12" style="text-align: center;">
+      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'people:profile' %}" />
+      <button type="submit" class="btn btn-default  btn-lg">{% trans "Sign Up" %}</button>      
+    </div>
+  </div>
+
+  </form>
+</div></div>
+
+{% get_person as person %}
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$('#signup_form').find('label').addClass('col-form-label col-sm-12 col-md-2');
+$('#signup_form').find('input').addClass('form-control');
+$('#signup_form').find('select').addClass('form-control');
+
+$('#submit_choose_language_form').hide();
+
+var email
+$(document).ready(function(){
+  email = '{{person.email}}';
+  if (email != ''){
+    var em_obj = $('#id_email').get(0)
+    em_obj.value = email
+  }
+})
+
+
+</script>
+{% endaddtoblock %}
 
 
   {% get_providers as socialaccount_providers %}
 
 {% if socialaccount_providers %}
-  <p class="p-text-block">{% blocktrans %}You can also sign up with: {% endblocktrans %}</p>
-
+<div class="row"><div class="col">
+  <h4><p class="p-text-block">{% blocktrans %}You can also sign up with: {% endblocktrans %}</p></h4>
   <div class="socialaccount_ballot">
-
     <ul class="socialaccount_providers">
       {% include "socialaccount/snippets/provider_list.html" with process="login" %}
     </ul>
-
   </div>
+  {% include "socialaccount/snippets/login_extra.html" %}  
+</div></div>
+{% endif %}
 
-
-  {% include "socialaccount/snippets/login_extra.html" %}
-
-
-  {% endif %}
+<div class="row"><div class="col">
+  <br>
+<p>{% blocktrans %}Already have an account? <a href="{{ login_url }}">Sign in</a>.{% endblocktrans %}</p>
+</div></div>
 
 {% endblock account_content %}

@@ -19,6 +19,8 @@
   <div class="container">
   <a class="navbar-brand" href="/">{{request.site.name}}</a>
   
+  {% get_available_languages as available_languages %}
+
   <ul class="navbar-nav ml-auto ">
     {% if request.user.is_authenticated %}
 
@@ -76,7 +78,8 @@
 </a>
 </div> -->
 
-
+    
+    {% if available_languages|length > 1 %}
     <li class="dropdown nav-item">
     {% get_current_language request as current_language %}
     {% get_known_languages request as known_languages %}
@@ -97,9 +100,8 @@
         {% endfor %}
             <li><a href="{% url 'people:choose_language' %}?next=people:profile">Add/Edit Language</a></li>
       </ul>
-
     </li>
-    
+    {% endif %}
 
     <li class="nav-item">
       <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
@@ -131,6 +133,7 @@
       </a>
     </li>
 
+    {% if available_languages|length > 1 %}
     <li class="dropdown nav-item">
     {% get_current_language request as current_language %}
     {% get_known_languages request as known_languages %}
@@ -151,10 +154,9 @@
             {{ lang.name_translated }}</a></li>
         {% endfor %}
             <li><a href="{% url 'people:choose_language' %}?next=people:profile">Add/Edit Language</a></li>
-      </ul>
-
-    
+      </ul>    
     </li>
+    {% endif %}
 
     <li class="nav-item">
       <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >

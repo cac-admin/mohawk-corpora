@@ -44,11 +44,17 @@ class Person(models.Model):
         default=get_uuid,
         editable=False,
         unique=True)
+    profile_email = models.EmailField(
+        blank=True,
+        null=True,
+        help_text="This is a placeholder for users that don't sign up.")
     # accept_terms = models.BooleanField(editable=False, default=False)
 
     def email(self):
         if self.user:
             return self.user.email
+        else:
+            return self.profile_email
 
     class Meta:
         verbose_name = _('Person')

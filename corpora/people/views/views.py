@@ -74,9 +74,12 @@ class ProfileDetail(APIView, TemplateView):
 
         context['demographic_form'] = DemographicForm(instance=person.demographic)
         if person.user:
-            context['person_form'] = PersonForm(instance=person, initial={'email': person.user.email})
+            email = person.user.email
+        elif person.profile_email:
+            email = person.profile_email
         else:
-            context['person_form'] = PersonForm(instance=person,)
+            email = None
+        context['person_form'] = PersonForm(instance=person, initial={'email': email})
 
         known_languages = KnownLanguage.objects.filter(person=person).count()
         if known_languages > 0:

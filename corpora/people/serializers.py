@@ -58,7 +58,9 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('full_name', 'uuid', 'user', 'demographic', 'known_languages', 'id')
+        fields = ('full_name', 'uuid', 'user',
+                  'demographic', 'known_languages', 'id',
+                  'profile_email')
 
     def update(self, instance, validated_data):
         instance.full_name = validated_data['full_name']
@@ -78,13 +80,11 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         except KeyError:
             demo.age = None
 
-        user = instance.user
-        try:
-            user.email = validated_data['user']['email']
-            instance.user = user
+        if 'user' in validated_data.keys():
+            instance.user.email = validated_data['user']['email']
             instance.user.save()
-        except KeyError:
-            pass
+        elif validated_data['profile_email']:
+            instance.profile_email = validated_data['profile_email']
 
         logger.debug(demographic)
         # remove all current relations
