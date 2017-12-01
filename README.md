@@ -7,10 +7,10 @@ other technologies can work in te reo Māori, ʻōlelo Hawaiʻi, and other indig
 ## Supported Languages
 - Māori
 
-You can help us add more languages by translating this app. The current project is live at koreromaori.com and is hosted in AWS. If you'd like to lead a copora gathering campaign for your language, get in touch as we'd love to help.
+You can help us add more languages by translating this app. The current project is live at https://koreromaori.com/. If you'd like to lead a copora gathering campaign for your language, get in touch as we'd love to help.
 
 # Kōrero Māori
-Kōrero Māori is the project that's funding the build of this corpora app. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
+Kōrero Māori is the project that's funding the build of corpora. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker audio recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
 
 We are always looking for more support either financially or through in kind contributions. If you're keen to get involved please get in touch by emailing us at koreromaori@tehiku.nz.
 
