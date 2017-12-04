@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-28 22:27+0000\n"
+"POT-Creation-Date: 2017-12-04 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,38 +27,30 @@ msgid "Maori"
 msgstr ""
 
 #: corpus/base_settings.py:45
-msgid "Muriwhenua"
+msgid "Kaitahu"
 msgstr ""
 
 #: corpus/base_settings.py:46
-msgid "Kaitahu"
+msgid "Muriwhenua"
 msgstr ""
 
 #: corpus/base_settings.py:47
 msgid "Taranaki"
 msgstr ""
 
-#: corpus/base_settings.py:57
-msgid "Academic"
+#: corpus/base_settings.py:48
+msgid "Tuhoe"
 msgstr ""
 
-#: corpus/base_settings.py:58
-msgid "Modern"
-msgstr ""
-
-#: corpus/base_settings.py:59
-msgid "English \"i\""
-msgstr ""
-
-#: corpus/base_settings.py:63
+#: corpus/base_settings.py:62
 msgid "Australian"
 msgstr ""
 
-#: corpus/base_settings.py:64
+#: corpus/base_settings.py:63
 msgid "New Zealand"
 msgstr ""
 
-#: corpus/base_settings.py:65
+#: corpus/base_settings.py:64
 msgid "American"
 msgstr ""
 

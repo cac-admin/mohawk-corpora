@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-28 22:27+0000\n"
+"POT-Creation-Date: 2017-12-04 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,51 +49,51 @@ msgstr ""
 msgid " are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:29
-#: corpora/templates/corpora/logged_in_nav_buttons.html:117
+#: corpora/templates/corpora/logged_in_nav_buttons.html:31
+#: corpora/templates/corpora/logged_in_nav_buttons.html:119
 msgid "Speak"
 msgstr "Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:36
-#: corpora/templates/corpora/logged_in_nav_buttons.html:124
+#: corpora/templates/corpora/logged_in_nav_buttons.html:38
+#: corpora/templates/corpora/logged_in_nav_buttons.html:126
 msgid "Listen"
 msgstr "Whakarongo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:45
+#: corpora/templates/corpora/logged_in_nav_buttons.html:47
 msgid "Sentences"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:52
+#: corpora/templates/corpora/logged_in_nav_buttons.html:54
 msgid "Stats"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:59
+#: corpora/templates/corpora/logged_in_nav_buttons.html:61
 msgid "Admin"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:67
-#: corpora/templates/corpora/logged_in_nav_buttons.html:131
+#: corpora/templates/corpora/logged_in_nav_buttons.html:69
+#: corpora/templates/corpora/logged_in_nav_buttons.html:133
 msgid "Profile"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:75
+#: corpora/templates/corpora/logged_in_nav_buttons.html:77
 msgid "Edit Info"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:87
-#: corpora/templates/corpora/logged_in_nav_buttons.html:143
+#: corpora/templates/corpora/logged_in_nav_buttons.html:90
+#: corpora/templates/corpora/logged_in_nav_buttons.html:146
 msgid "Language"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:108
+#: corpora/templates/corpora/logged_in_nav_buttons.html:110
 msgid "Log Out"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:164
+#: corpora/templates/corpora/logged_in_nav_buttons.html:166
 msgid "Log In"
 msgstr ""
 
-#: corpora/urls.py:26
+#: corpora/urls.py:42
 msgid "^people/"
 msgstr "^tangata/"
 
