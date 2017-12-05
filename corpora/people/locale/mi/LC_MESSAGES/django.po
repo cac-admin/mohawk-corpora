@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-28 22:27+0000\n"
+"POT-Creation-Date: 2017-12-04 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Tribe"
 msgstr ""
 
-#: people/models.py:26 people/models.py:99
+#: people/models.py:26 people/models.py:105
 msgid "Tribes"
 msgstr ""
 
@@ -33,79 +33,79 @@ msgstr ""
 msgid "Full Name"
 msgstr "Ingoa"
 
-#: people/models.py:54
+#: people/models.py:60
 msgid "Person"
 msgstr "He Tāngata"
 
-#: people/models.py:55
+#: people/models.py:61
 msgid "People"
 msgstr "Ngā tāngata"
 
-#: people/models.py:63
+#: people/models.py:69
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:64
+#: people/models.py:70
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:65
+#: people/models.py:71
 msgid "Other"
 msgstr ""
 
-#: people/models.py:66
+#: people/models.py:72
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:67
+#: people/models.py:73
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:73
+#: people/models.py:79
 msgid "How old are you?"
 msgstr "Ehia ngā tau?"
 
-#: people/models.py:75
+#: people/models.py:81
 msgid "Gender"
 msgstr ""
 
-#: people/models.py:89
+#: people/models.py:95
 msgid "Which tribe(s) do you identify with?"
 msgstr ""
 
-#: people/models.py:104
+#: people/models.py:110
 msgid "Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:105
+#: people/models.py:111
 msgid "Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:106
+#: people/models.py:112
 msgid "Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:107
+#: people/models.py:113
 msgid "Near Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:108
+#: people/models.py:114
 msgid "Near Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:109
+#: people/models.py:115
 msgid "Near Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:110
+#: people/models.py:116
 msgid "Second Language Learner - Beginner"
 msgstr ""
 
-#: people/models.py:111
+#: people/models.py:117
 msgid "Second Language Learner - Intermediate"
 msgstr ""
 
-#: people/models.py:112
+#: people/models.py:118
 msgid "Second Language Learner - Advanced"
 msgstr ""
 
@@ -250,27 +250,28 @@ msgid ""
 "\"%(email_url)s\">issue a new e-mail confirmation request</a>."
 msgstr ""
 
-#: people/templates/account/login.html:5 people/templates/account/login.html:9
-#: people/templates/account/login.html:27
+#: people/templates/account/login.html:5
+#: people/templates/account/login.html:38
+#: people/templates/account/login.html:74
 msgid "Sign In"
 msgstr ""
 
-#: people/templates/account/login.html:23
+#: people/templates/account/login.html:70
 msgid "Forgot Password?"
 msgstr "Kua wareware tō kupu huna?"
 
-#: people/templates/account/login.html:46
+#: people/templates/account/login.html:96
 msgid "You can also sign in with: "
 msgstr ""
 
-#: people/templates/account/login.html:56
+#: people/templates/account/login.html:106
 #, python-format
 msgid ""
 "Don't have an account?<br><a href=\"%(signup_url)s\">Sign Up</a>\n"
 "  "
 msgstr ""
 
-#: people/templates/account/login.html:62
+#: people/templates/account/login.html:112
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"
@@ -342,25 +343,25 @@ msgstr ""
 msgid "Change Password"
 msgstr ""
 
-#: people/templates/account/password_reset.html:6
+#: people/templates/account/password_reset.html:5
 #: people/templates/account/password_reset.html:10
 #: people/templates/account/password_reset_done.html:6
 #: people/templates/account/password_reset_done.html:9
 msgid "Password Reset"
 msgstr ""
 
-#: people/templates/account/password_reset.html:15
-msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll send you "
-"an e-mail allowing you to reset it."
+#: people/templates/account/password_reset.html:19
+msgid "Enter your e-mail address and we'll send you a reset link."
 msgstr ""
 
-#: people/templates/account/password_reset.html:20
+#: people/templates/account/password_reset.html:46
 msgid "Reset My Password"
 msgstr ""
 
-#: people/templates/account/password_reset.html:23
-msgid "Please contact us if you have any trouble resetting your password."
+#: people/templates/account/password_reset.html:56
+msgid ""
+"Please <a href=\"mailto:info@tehiku.nz\">contact us</a> if you have any "
+"trouble resetting your password."
 msgstr ""
 
 #: people/templates/account/password_reset_done.html:15
@@ -401,22 +402,20 @@ msgstr ""
 msgid "Signup"
 msgstr ""
 
-#: people/templates/account/signup.html:8
-#: people/templates/account/signup.html:16
+#: people/templates/account/signup.html:24
+#: people/templates/account/signup.html:49
 #: people/templates/socialaccount/signup.html:9
 #: people/templates/socialaccount/signup.html:20
 msgid "Sign Up"
 msgstr ""
 
-#: people/templates/account/signup.html:10
-#, python-format
-msgid ""
-"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>. "
-"Otherwise, please create an account below."
+#: people/templates/account/signup.html:84
+msgid "You can also sign up with: "
 msgstr ""
 
-#: people/templates/account/signup.html:23
-msgid "You can also sign up with: "
+#: people/templates/account/signup.html:96
+#, python-format
+msgid "Already have an account? <a href=\"%(login_url)s\">Sign in</a>."
 msgstr ""
 
 #: people/templates/account/signup_closed.html:5
@@ -472,6 +471,10 @@ msgstr ""
 msgid ""
 "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
 "mail address</a>."
+msgstr ""
+
+#: people/templates/people/choose_language_form.html:106
+msgid "Save"
 msgstr ""
 
 #: people/templates/people/person.html:9
@@ -568,7 +571,7 @@ msgstr ""
 msgid "You must sign in to edit your info."
 msgstr ""
 
-#: people/views/views.py:162
+#: people/views/views.py:165
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "%(month)s %(day)s i tēnei rā."

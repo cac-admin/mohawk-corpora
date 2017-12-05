@@ -166,9 +166,11 @@ class Listen{
       $(self.sentence_block).find('.sentence .text-area').remove()
 
 
+      var display_text = this.recording.sentence_text
+
       if (this.admin){
         var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
-        $(input_elm).val(this.sentence.text);
+        $(input_elm).val(display_text);
         $(this.sentence_block).find('.sentence').append(input_elm)
         $(this.sentence_block).fadeIn('fast');        
         $(this.sentence_block).find('.sentence').textfill({
@@ -185,7 +187,7 @@ class Listen{
       } else {
 
         var input_elm = $('<span class="text-area"></span>')
-        $(input_elm).text(this.sentence.text);
+        $(input_elm).text(display_text);
         $(this.sentence_block).find('.sentence').append(input_elm)
         $(this.sentence_block).fadeIn('fast');        
         $(this.sentence_block).find('.sentence').textfill({
