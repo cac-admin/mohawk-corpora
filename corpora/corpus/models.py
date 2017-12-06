@@ -93,7 +93,6 @@ class Source(models.Model):
         verbose_name_plural = 'Sources'
         unique_together = (("added_by", "source_name", "source_type", "author"),)
 
-
     def __unicode__(self):
         return "{0} by {1}".format(self.source_name, self.author)
 
@@ -158,7 +157,10 @@ class Recording(models.Model):
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
-    audio_file_aac = models.FileField(upload_to=upload_directory, null=True, blank=True)
+    audio_file_aac = models.FileField(
+                        upload_to=upload_directory, null=True, blank=True)
+    user_agent = models.CharField(
+                        max_length=512, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Recording'
@@ -199,5 +201,3 @@ class Recording(models.Model):
             return self.person.full_name
         else:
             return _('None')
-
-

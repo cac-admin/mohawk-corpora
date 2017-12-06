@@ -5,8 +5,12 @@ from .models import \
     Tribe
 
 from people.forms import DemographicFormAdmin
-
+from corpus.admin import RecordingsInline
 admin.site.register(Tribe)
+
+
+class PersonRecordingsInline(RecordingsInline):
+    exclude = ('source',)
 
 
 @admin.register(Person)
@@ -18,6 +22,7 @@ class PersonAdmin(admin.ModelAdmin):
         'uuid',
         )
     readonly_fields = ('profile_email',)
+    inlines = [PersonRecordingsInline]
 
 
 @admin.register(Demographic)

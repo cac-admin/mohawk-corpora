@@ -66,8 +66,8 @@ div.content{
     </div>
 
     {% if user.can_approve %}
-    <div class="col-12 person-info" >
-    </div>
+    <div class="col-12 person-info" ></div>
+    <div class="col-12 recording-info" ></div>    
     {% endif %}
   </div>
 
@@ -110,7 +110,12 @@ player = new Player('.sentence-block');
         profile.display();  
       })
 
-
+      $('.recording-info').empty()
+      var agent = "<br><p><b>User Agent:&nbsp;</b>"+listen.recording.user_agent+"</p>"
+      var url = window.location.hostname + "/admin/corpus/recording/" + listen.recording.id
+      var url_elem = "<p><i class='fa fa-link fa-fw'></i><a target='_blank' href='"+url+"'>"+url+"</a></p>"
+      $('.recording-info').append(agent)
+      $('.recording-info').append(url_elem)
     })
   })
 </script>

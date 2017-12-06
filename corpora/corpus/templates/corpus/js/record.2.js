@@ -152,7 +152,6 @@ class MyRecorder extends Player{
         }
 
 
-
     }
 
     reset(){
@@ -297,6 +296,7 @@ class MyRecorder extends Player{
         // Append necessary person and sentence pks to form data to add to recording model
         self.fd.append('person', self.person_pk);
         self.fd.append('sentence', sentences.sentence.id);
+        self.fd.append('user_agent', navigator.userAgent);
 
         self.hide_all_buttons()
         $(self.loading_button).show()
