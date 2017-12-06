@@ -278,7 +278,7 @@ class Sentences{
     this.quality_control.approved = true;
     this.quality_control.good = 0
     this.quality_control.bad = 0    
-    self.logger(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
   }
 
