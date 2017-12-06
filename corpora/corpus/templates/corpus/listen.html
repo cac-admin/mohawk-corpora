@@ -103,7 +103,6 @@ player = new Player('.sentence-block');
   var profile;
   $(document).ready(function(){
     document.addEventListener('listen.recording.loaded', function(){
-      console.log('listen recording loaded')
       profile = new Profile(listen.recording.person, '.person-info');
       profile.load()
       

@@ -34,7 +34,7 @@ class Player {
 
     $('a.auto-play').click(function(event){
       var obj = event.currentTarget
-      console.log('auto play clicked')
+      self.logger('auto play clicked')
       if ($(obj).hasClass('auto-play-off')){
         $(obj).removeClass('auto-play-off')
         $(obj).addClass('auto-play-on')

@@ -133,8 +133,6 @@ a.btn{
 {% endcomment %}
 
 
-
-
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 
@@ -162,25 +160,21 @@ var visRecorder;
 
   var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
 
-
+  
   sentences.sentence_block.addEventListener('sentence.ready', function(){
-    console.log('sentence.ready')
+    $(document.getElementById('play-button')).hide()
     $(document.getElementById('record-button')).show()
     my_recorder.skipped = false
   })
 
 
   $(document).ready(function(){
-    
     $(document.getElementById('stop-button')).hide()
     $(document.getElementById('play-button')).hide()
     $(document.getElementById('record-button')).show()
     $(document.getElementById('loading-button')).hide()    
-
     $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
-
   })
-
 
   // ios Safari permission shit see: https://gist.github.com/laziel/7aefabe99ee57b16081c
   if (typeof webkitAudioContext !== 'undefined'){
@@ -207,9 +201,6 @@ var visRecorder;
     vis.stop()
     delete vis;
   })
-
-
-
 
 
 </script>

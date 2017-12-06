@@ -1,7 +1,7 @@
 class Listen{
   constructor(person_pk, target_element_selector, content_type, admin=false, user_id=null){
     var self = this;
-    this.debug = true
+    this.debug = false
     this.sentence_block = $(target_element_selector)
     this.admin = admin
     this.user_id = user_id
@@ -77,7 +77,7 @@ class Listen{
 
   get_recordings(){
     var self = this;
-    console.log('Fetching more recordings')
+    self.logger('Fetching more recordings')
     self.show_loading()
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
@@ -134,7 +134,7 @@ class Listen{
       if (this.recording.sentence_text == '' || this.recording.sentence_text==null){
         if (this.sentence==null){
           this.recording.sentence_text = 'These arent teh droid your looking for'
-          console.log('error')
+          this.logger('error')
           this.error_loop+=1
           // this.show_next_recording()
           this.next()
@@ -157,8 +157,9 @@ class Listen{
   }
 
   show_next_recording(){
-    this.logger('Show next recording')
     var self = this;
+
+    this.logger('Show next recording')
     self.show_loading();
 
     if (this.sentence){
@@ -210,9 +211,9 @@ class Listen{
         url: this.base_recording_url+this.recording.id+'/',
         dataType: 'json',
         error: function(XMLHttpRequest, textStatus, errorThrown){
-          console.log(textStatus.responseText)
-          console.log(XMLHttpRequest)
-          console.log(errorThrown)
+          self.logger(textStatus.responseText)
+          self.logger(XMLHttpRequest)
+          self.logger(errorThrown)
         }
       }).done(function(){
 
@@ -271,14 +272,14 @@ class Listen{
       url: this.base_quality_url,
       dataType: 'json',
       error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(XMLHttpRequest.status)
-        console.log(XMLHttpRequest.responseText)
+        self.logger(XMLHttpRequest.status)
+        self.logger(XMLHttpRequest.responseText)
         self.hide_loading()
       }
     }).done(function(){
       self.next();
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
       self.hide_loading()
     })
     return true;    
@@ -293,14 +294,14 @@ class Listen{
       url: this.base_quality_url+this.quality_control_id+'/',
       dataType: 'json',
       error: function(e){
-        console.log(e.responseText)
+        self.logger(e.responseText)
         self.hide_loading()
       }
     }).done(function(){
       self.next();
 
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
       self.hide_loading()
     })
     return true;    
@@ -321,9 +322,9 @@ class Listen{
       url: this.base_recording_url+this.recording.id+'/',
       dataType: 'json',
       error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(textStatus.responseText)
-        console.log(XMLHttpRequest)
-        console.log(errorThrown)
+        self.logger(textStatus.responseText)
+        self.logger(XMLHttpRequest)
+        self.logger(errorThrown)
         self.hide_loading()
       }
     }).done(function(){
@@ -343,7 +344,7 @@ class Listen{
     if (this.recording.quality_control){
       for (let qc of this.recording.quality_control){
         if (qc.person == this.quality_control.person){
-          console.log('Found matching qc ')
+          self.logger('Found matching qc ')
           this.quality_control_id = qc.id
           this.quality_control.bad += qc.bad
           this.quality_control.good += qc.good

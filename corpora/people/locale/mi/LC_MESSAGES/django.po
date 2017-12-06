@@ -19,15 +19,15 @@ msgstr ""
 
 #: people/models.py:20
 msgid "Name of tribe."
-msgstr ""
+msgstr "Ingoa ō iwi."
 
 #: people/models.py:25
 msgid "Tribe"
-msgstr ""
+msgstr "Iwi"
 
 #: people/models.py:26 people/models.py:105
 msgid "Tribes"
-msgstr ""
+msgstr "Ngā Iwi"
 
 #: people/models.py:39
 msgid "Full Name"

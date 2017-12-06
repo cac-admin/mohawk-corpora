@@ -15,6 +15,9 @@ class Sentences{
     this.quality_control.approved_by = approver_user_id
     this.can_approve = can_approve
     this.quality_control.content_type = content_type
+
+    this.debug = false
+
     $(this.sentence_block).fadeOut(0);
 
     var self=this;
@@ -60,14 +63,14 @@ class Sentences{
 
   get_sentences(){
     var self = this;
-    console.log('Fetching more sentences')
+    self.logger('Fetching more sentences')
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query
         }).done(function(d){
           self.objects = d.results
           self.next_url = d.next
           if (self.objects.length == 0){
-            console.log('No more sentences')
+            self.logger('No more sentences')
             self.all_done()
           }
           else{
@@ -77,7 +80,7 @@ class Sentences{
   }
 
   show_loading(){
-    console.log('sentence show loading')
+    this.logger('sentence show loading')
     $(document.getElementById('loading-button')).show()
     $(this.sentence_block).find('.sentence .text-area').addClass('disabled')    
   }
@@ -93,7 +96,7 @@ class Sentences{
     $.ajax({
         url: this.base_sentence_url+this.sentence.id+'/'
         }).done(function(d){
-          console.log(d)
+          self.logger(d)
           self.sentence.quality_control = d.quality_control
           self.sentence = d
           self.show_next_sentence()
@@ -125,7 +128,6 @@ class Sentences{
       $(this.sentence_block).find('a').blur()
       $(this.sentence_block).find('.sentence .text-area').remove()
 
-
       if (this.can_approve){
         var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
         $(input_elm).val(this.sentence.text);
@@ -154,11 +156,7 @@ class Sentences{
               $(this.sentence_block).find('.sentence').css('line-height', space+'px')
         }})
 
-      }
-      
-
-
-      
+      }      
 
       $(input_elm).off().on('change', function(){
         self.edit_sentence()
@@ -199,13 +197,13 @@ class Sentences{
       url: this.base_quality_url,
       dataType: 'json',
       error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(XMLHttpRequest.status)
-        console.log(XMLHttpRequest.responseText)
+        self.logger(XMLHttpRequest.status)
+        self.logger(XMLHttpRequest.responseText)
       }
     }).done(function(){
       self.next();
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
     })
     return true;    
   }
@@ -218,38 +216,37 @@ class Sentences{
       url: this.base_quality_url+this.quality_control_id+'/',
       dataType: 'json',
       error: function(e){
-        console.log(e.responseText)
+        self.logger(e.responseText)
       }
     }).done(function(){
       self.next();
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
     })
     return true;    
   }
 
   save_sentence(text){
-
     var self=this
     var data = this.sentence
     delete data.quality_control
     data.text = text
-    console.log(data)
+    self.logger(data)
     $.ajax({
       type: "PUT",
       data: this.sentence,
       url: this.base_sentence_url+this.sentence.id+'/',
       dataType: 'json',
       error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(textStatus.responseText)
-        console.log(XMLHttpRequest)
-        console.log(errorThrown)
+        self.logger(textStatus.responseText)
+        self.logger(XMLHttpRequest)
+        self.logger(errorThrown)
       }
     }).done(function(){
-      console.log('Saved')
+      self.logger('Saved')
       self.reload();
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
     })
   }
 
@@ -259,7 +256,7 @@ class Sentences{
 
     for (let qc of this.sentence.quality_control){
       if (qc.person == this.quality_control.person){
-        console.log('Found matching qc ')
+        this.logger('Found matching qc ')
         this.quality_control_id = qc.id
         this.quality_control.bad += qc.bad
         this.quality_control.good += qc.good
@@ -281,7 +278,7 @@ class Sentences{
     this.quality_control.approved = true;
     this.quality_control.good = 0
     this.quality_control.bad = 0    
-    console.log(this.quality_control);
+    self.logger(this.quality_control);
     this.post_put();
   }
 
@@ -289,7 +286,7 @@ class Sentences{
     this.quality_control.good = 1
     this.quality_control.bad = 0
     this.quality_control.approved = false;
-    console.log(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
   }
 
@@ -297,30 +294,37 @@ class Sentences{
     this.quality_control.bad = 1
     this.quality_control.good = 0
     this.quality_control.approved = false;
-    console.log(this.quality_control);
+    this.logger(this.quality_control);
     this.post_put();
   }
 
   delete_sentence(){
-    console.log('Deleting "'+this.sentence.text+'"')
-    console.log('Sentence ID: '+this.sentence.id)
+    var self = this
+    self.logger('Deleting "'+this.sentence.text+'"')
+    self.logger('Sentence ID: '+this.sentence.id)
     var self = this;
     $.ajax({
       type: "DELETE",
       url: this.base_sentence_url+this.sentence.id+'/',
       dataType: 'json',
       error: function(XMLHttpRequest, textStatus, errorThrown){
-        console.log(textStatus.responseText)
-        console.log(XMLHttpRequest)
-        console.log(errorThrown)
+        self.logger(textStatus.responseText)
+        self.logger(XMLHttpRequest)
+        self.logger(errorThrown)
       },
     }).done(function(){
-      console.log('Deleted')
+      self.logger('Deleted')
       self.next();
     }).fail(function(){
-      console.log('Failed.')
+      self.logger('Failed.')
     })
 
+  }
+
+  logger(s){
+    if (this.debug){
+      console.log(s)
+    }
   }
 
 }

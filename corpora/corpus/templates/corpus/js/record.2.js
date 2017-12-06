@@ -49,11 +49,6 @@ class MyRecorder extends Player{
             if (self.recording){
                 self.stop_recording();
             }
-
-            // if (!$(e.currentTarget).hasClass('disabled')){       
-            //     $(self.stop_button).show()
-            // }
-
         });
 
         // When audio is done playing back, revert button to initial state
@@ -71,6 +66,9 @@ class MyRecorder extends Player{
                 self.logger('Redone - Hiding Play')
                 $(self.play_button).hide()
                 self.redo = false
+            } else if (self.skipped){
+                $(self.loading_button).show()
+                self.skipped = false
             }
         }
         self.audio.addEventListener('pause', fn, false)
@@ -99,12 +97,12 @@ class MyRecorder extends Player{
             $(self.play_button).show()
         })
 
-
-
         $(".redo").click(function(e) {
             if (!$(e.currentTarget).hasClass('disabled')){
                 self.redo = true
                 self.reset()
+                self.hide_all_buttons()
+                $(self.record_button).show()
             }
         });
 
@@ -115,36 +113,9 @@ class MyRecorder extends Player{
 
 
         $(self.skip_button).click(function(){
-
             if (!$(self.skip_button).hasClass('disabled')){
-
-            // console.log('record skip')
-            self.skipped = true
-            
-            // CHANGED
-            self.reset()
-
-            // self.audio.pause()
-
-            // if (self.recording){
-            //     self.stop_recording()
-            // }
-
-            if (self.audio.src != ''){
-                self.audio.src = ''
-                // delete self.audio.src
-            }
-
-            // self.audio.src = ''
-            // delete self.audio.src
-            // delete self.audioBlob            
-            
-            // $('.save').addClass('disabled');
-            // $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-            // $('.redo').addClass('disabled');
-            // $(self.record_button).show()
-            // $(self.play_button).show()
-
+                self.skipped = true
+                self.reset()
             }
         })
 
@@ -186,38 +157,26 @@ class MyRecorder extends Player{
 
     reset(){
         var self = this
-        
+        self.hide_all_buttons()
+
         if (self.recording){
             self.recorder.stop();
         }
         
-
         if (self.audio.paused != true){
             self.audio.pause();
-            window.setTimeout
         }
 
-        // if ( $(self.stop_button).css('display')!='None' ){
-        //     var pause_promise = self.audio.pause();
-        //     if (pause_promise !== undefined){
-        //         pause_promise.then(function(){
-        //             console.log('promised for pause')
-        //             $(self.play_button).hide()        
+        self.audio.removeAttribute('src')
 
-        //         })
-        //     } else{
-        //         console.log('Promise not defined')
-        //     }
-        // } else {
-
-        // }
-
-        $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
+        // $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
         $('.redo').addClass('disabled');
         $('.save').addClass('disabled');
-        $(self.record_button).show()
-        $(self.stop_button).hide()
-        $(self.play_button).hide()       
+        
+        $(self.loading_button).show();
+        // $(self.record_button).show();
+        // $(self.stop_button).hide();
+        // $(self.play_button).hide();
 
     }
 
@@ -350,11 +309,13 @@ class MyRecorder extends Player{
             processData: false,
             contentType: false,
             success: function(data) {
-                console.log("Recording data successfully submitted and saved");
+                self.logger("Recording data successfully submitted and saved");
+
+                self.audio.removeAttribute('src')
 
                 delete self.fd;
-                delete self.audioBlob
                 delete self.audio.src
+                delete self.audioBlob
                 delete self.fileName
 
                 self.hide_all_buttons()
