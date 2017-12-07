@@ -172,16 +172,23 @@ class Recording(models.Model):
 
     def audio_file_admin(self):
         url = self.get_recording_file_url()
-        return mark_safe(
-            "<a href='%s'>%s</a>" % (url, url))
+        return mark_safe("""
+            <a href='%s'
+            target="popup"
+            onclick="window.open('%s','popup','width=400,height=200'); return false;"
+            >%s</a>""" % (url, url, url))
 
     def get_recording_file_url(self):
         from django.urls import reverse
         from django.contrib.sites.models import Site
         current_site = Site.objects.get_current()
-        return "https://{1}{0}".format(
-            reverse('corpus:recording_file', kwargs={'pk': self.pk}),
-            current_site.domain)
+        try:
+            url = "https://{1}{0}".format(
+                reverse('corpus:recording_file', kwargs={'pk': self.pk}),
+                current_site.domain)
+        except:
+            url = ""
+        return url
 
     def get_recordign_file_name(self):
         parts = self.audio_file.name.split('.')

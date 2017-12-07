@@ -5,12 +5,19 @@ from .models import \
     Tribe
 
 from people.forms import DemographicFormAdmin
-from corpus.admin import RecordingsInline
+from corpus.models import Recording
 admin.site.register(Tribe)
 
 
-class PersonRecordingsInline(RecordingsInline):
-    exclude = ('source',)
+class PersonRecordingsInline(admin.StackedInline):
+    model = Recording
+    extra = 0
+    can_delete = False
+    fields = ['sentence', 'sentence_text', 'user_agent', 'audio_file_admin']
+    readonly_fields = ['user_agent', 'audio_file_admin']
+
+    # def myaudio_file_admin(self, obj):
+    #     return obj.audio_file_admin()
 
 
 @admin.register(Person)
