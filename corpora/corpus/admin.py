@@ -32,6 +32,7 @@ class SentenceAdmin(admin.ModelAdmin):
     list_display = ('text', 'updated', 'get_approved', 'get_approved_by',
                     'num_recordings')
     inlines = [QualityControlInline, RecordingsInline]
+    search_fields = ['text']
 
     def get_queryset(self, request):
         qs = super(SentenceAdmin, self).get_queryset(request)
@@ -78,9 +79,24 @@ class SentenceAdmin(admin.ModelAdmin):
 
 @admin.register(Recording)
 class RecordingAdmin(admin.ModelAdmin):
-    list_display = ('sentence_text', 'person', 'get_approved', 'get_approved_by')
+    list_display = (
+        'sentence_text',
+        'person',
+        'get_approved',
+        'get_approved_by')
+
     inlines = [QualityControlInline]
-    readonly_fields = ('duration', 'audio_file', 'audio_file_aac', 'audio_file_admin')
+
+    readonly_fields = (
+        'duration',
+        'audio_file',
+        'audio_file_aac',
+        'audio_file_admin')
+
+    search_fields = [
+        'person__user__email',
+        'person__full_name',
+        'person__user__username']
 
     def audio_file_aac(self, obj):
         return 'test'

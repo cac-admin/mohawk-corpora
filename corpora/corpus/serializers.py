@@ -115,7 +115,8 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recording
-        fields = ('person', 'sentence', 'audio_file_url', 'quality_control', 'id', 'sentence_text')
+        fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
+                  'id', 'sentence_text', 'user_agent')
 
 
 class ListenSerializer(serializers.ModelSerializer):

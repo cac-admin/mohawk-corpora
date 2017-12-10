@@ -93,7 +93,6 @@ class Source(models.Model):
         verbose_name_plural = 'Sources'
         unique_together = (("added_by", "source_name", "source_type", "author"),)
 
-
     def __unicode__(self):
         return "{0} by {1}".format(self.source_name, self.author)
 
@@ -158,7 +157,10 @@ class Recording(models.Model):
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
-    audio_file_aac = models.FileField(upload_to=upload_directory, null=True, blank=True)
+    audio_file_aac = models.FileField(
+                        upload_to=upload_directory, null=True, blank=True)
+    user_agent = models.CharField(
+                        max_length=512, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Recording'
@@ -170,16 +172,23 @@ class Recording(models.Model):
 
     def audio_file_admin(self):
         url = self.get_recording_file_url()
-        return mark_safe(
-            "<a href='%s'>%s</a>" % (url, url))
+        return mark_safe("""
+            <a href='%s'
+            target="popup"
+            onclick="window.open('%s','popup','width=400,height=200'); return false;"
+            >%s</a>""" % (url, url, url))
 
     def get_recording_file_url(self):
         from django.urls import reverse
         from django.contrib.sites.models import Site
         current_site = Site.objects.get_current()
-        return "https://{1}{0}".format(
-            reverse('corpus:recording_file', kwargs={'pk': self.pk}),
-            current_site.domain)
+        try:
+            url = "https://{1}{0}".format(
+                reverse('corpus:recording_file', kwargs={'pk': self.pk}),
+                current_site.domain)
+        except:
+            url = ""
+        return url
 
     def get_recordign_file_name(self):
         parts = self.audio_file.name.split('.')
@@ -199,5 +208,3 @@ class Recording(models.Model):
             return self.person.full_name
         else:
             return _('None')
-
-
