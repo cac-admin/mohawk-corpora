@@ -12,7 +12,7 @@ admin.site.register(Tribe)
 class PersonRecordingsInline(admin.StackedInline):
     model = Recording
     extra = 0
-    can_delete = False
+    can_delete = True
     fields = ['sentence', 'sentence_text', 'user_agent', 'audio_file_admin']
     readonly_fields = ['user_agent', 'audio_file_admin']
 
