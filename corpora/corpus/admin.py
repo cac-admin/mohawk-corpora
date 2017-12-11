@@ -2,10 +2,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.db import models
 
+from django.contrib import messages
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-from .models import QualityControl, Sentence, Recording, Source
+from .models import QualityControl, Sentence, Recording, Source, Text
 from corpus.views.views import RecordingFileView
+from .parser import save_sentences_from_text
 
 
 class QualityControlInline(GenericTabularInline):
@@ -142,3 +144,18 @@ class RecordingAdmin(admin.ModelAdmin):
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Text)
+class TextAdmin(admin.ModelAdmin):
+    list_display = ('uploaded_file', 'source', 'language', 'updated', )
+    raw_id_fields = ('source', )
+    actions = ('save_sentences', )
+
+    def save_sentences(self, request, queryset):
+        for obj in queryset:
+            info = save_sentences_from_text(obj)
+            messages.add_message(
+                request, messages.INFO,
+                '%s sentences created from %s (%s errors)' % (
+                    info['saved'], obj, info['errors']))

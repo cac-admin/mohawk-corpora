@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey,\
@@ -100,7 +101,7 @@ class Source(models.Model):
 class Sentence(models.Model):
     text = models.CharField(
         help_text='The sentence to be spoken.',
-        max_length=250, unique=True
+        max_length=1024, unique=True
         )
 
     language = models.CharField(
@@ -124,6 +125,13 @@ class Sentence(models.Model):
     class Meta:
         verbose_name = 'Sentence'
         verbose_name_plural = 'Sentences'
+
+    def clean(self):
+        if len(self.text) > 124:
+            raise ValidationError('Sentence too long')
+
+        if Sentence.objects.exclude(pk=self.pk).filter(text=self.text):
+            raise ValidationError('Duplicate sentence')
 
     def __unicode__(self):
         return self.text
@@ -208,3 +216,24 @@ class Recording(models.Model):
             return self.person.full_name
         else:
             return _('None')
+
+
+class Text(models.Model):
+    language = models.CharField(
+        verbose_name=_('language'),
+        choices=LANGUAGES,
+        max_length=16,
+        default=LANGUAGE_CODE
+        )
+    updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
+    source = models.ForeignKey('Source', verbose_name=_('source'))
+    uploaded_file = models.FileField(verbose_name=_('uploaded file'),
+                                     upload_to='%Y/%m/%d/%H/%M',
+                                     help_text=_('.txt format'))
+
+    class Meta:
+        verbose_name = _('text')
+        verbose_name_plural = _('texts')
+
+    def __unicode__(self):
+        return str(self.uploaded_file)
