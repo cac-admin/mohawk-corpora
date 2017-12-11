@@ -10,7 +10,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey,\
 from django.contrib.contenttypes.models import ContentType
 
 from django.contrib.auth.models import User
-from corpus.base_settings import LANGUAGES, LANGUAGE_CODE
+from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS
 
 from uuid import uuid4
 import os
@@ -109,6 +109,11 @@ class Sentence(models.Model):
         max_length=16,
         default=LANGUAGE_CODE
         )
+    dialect = models.CharField(
+        choices=DIALECTS,
+        max_length=8,
+        null=True,
+        blank=True)
 
     quality_control = GenericRelation(
         QualityControl,
@@ -225,6 +230,11 @@ class Text(models.Model):
         max_length=16,
         default=LANGUAGE_CODE
         )
+    dialect = models.CharField(
+        choices=DIALECTS,
+        max_length=8,
+        null=True,
+        blank=True)
     updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
     source = models.ForeignKey('Source', verbose_name=_('source'))
     uploaded_file = models.FileField(verbose_name=_('uploaded file'),
