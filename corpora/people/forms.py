@@ -67,7 +67,7 @@ class DemographicForm(forms.ModelForm):
 
     class Meta:
         model = Demographic
-        fields = ('age', 'sex', 'tribe')
+        fields = ('age', 'gender', 'tribe')
         widgets = {
             'tribe': autocomplete.ModelSelect2Multiple(url='people:tribe-autocomplete')
         }

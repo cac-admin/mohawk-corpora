@@ -37,7 +37,7 @@ class DemographicAdmin(admin.ModelAdmin):
     form = DemographicFormAdmin
     list_display = (
         'person',
-        'sex',
+        'gender',
         'age',
         'tribe_names')
 

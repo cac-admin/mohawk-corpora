@@ -77,7 +77,7 @@ class Demographic(models.Model):
         null=True,
         blank=True,
         help_text=_('How old are you?'))
-    sex = models.CharField(
+    gender = models.CharField(
         help_text=_('Gender'),
         choices=SEX_CHOICES,
         max_length=2,
