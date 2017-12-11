@@ -66,6 +66,17 @@ div.content{
     </div>
 
     {% if user.can_approve %}
+    <div class="col-12 sort-by buttons" >
+      Sort By: 
+      <a href="javascript:void(0)"
+         class="sort-by random on" 
+         id='sort-by-random'
+         data-sort-url-query="?sort_by=random"><span>Random</span></a>
+      <a href="javascript:void(0)" 
+         class="sort-by recent " 
+         id='sort-by-recent'
+         data-sort-url-query="?sort_by=recent"><span>Recent</span></a>
+    </div>
     <div class="col-12 person-info" ></div>
     <div class="col-12 recording-info" ></div>    
     {% endif %}
@@ -117,6 +128,19 @@ player = new Player('.sentence-block');
       $('.recording-info').append(agent)
       $('.recording-info').append(url_elem)
     })
+
+    $('#sort-by-recent, #sort-by-random').on('click', function(e){
+      if (!$(e.currentTarget).hasClass('on')){
+        $('#sort-by-recent, #sort-by-random').removeClass('on')
+        $(e.currentTarget).addClass('on')
+        listen.url_filter_query = e.currentTarget.getAttribute('data-sort-url-query')
+        // console.log(listen.url_filter_query)
+        listen.next_url = null
+        listen.get_recordings()
+      }
+    })
+
+
   })
 </script>
 {% endaddtoblock %}
