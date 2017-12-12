@@ -154,6 +154,8 @@ class Profile{
 
     this.data.known_languages = known_languages
 
+    this.data.groups = $(this.target_element).find('#id_groups').val()
+    
     window.setTimeout(function(){
       self.change_counter -= 1
       if (self.change_counter<=0){

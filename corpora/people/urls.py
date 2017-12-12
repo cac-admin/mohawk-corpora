@@ -17,4 +17,9 @@ urlpatterns = [
         autocomplete.TribeAutocomplete.as_view(),
         name='tribe-autocomplete',
     ),
+    url(
+        r'^groups-autocomplete/$',
+        autocomplete.GroupAutocomplete.as_view(),
+        name='groups-autocomplete',
+    ),
 ]

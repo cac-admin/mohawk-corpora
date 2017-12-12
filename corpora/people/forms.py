@@ -62,6 +62,20 @@ class PersonForm(forms.ModelForm):
         fields = ('full_name', 'email')
 
 
+class GroupsForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = ('groups', )
+        widgets = {
+            'groups': autocomplete.Select2Multiple(
+                url='people:groups-autocomplete',
+                attrs={
+                    # 'data-placeholder': '',
+                    'data-minimum-input-length': 3,
+                },)
+        }
+
+
 class DemographicForm(forms.ModelForm):
     # date_of_birth = DateField(input_formats=settings.DATE_INPUT_FORMATS)
 

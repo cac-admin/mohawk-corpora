@@ -1,5 +1,5 @@
 from people.models import \
-    Person, Tribe, Demographic, KnownLanguage
+    Person, Tribe, Demographic, KnownLanguage, Group
 
 from corpora.serializers import UserSerializer
 from rest_framework import serializers
@@ -55,12 +55,14 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(partial=True, required=False)
     demographic = DemographicSerializer(partial=True, required=False)
     known_languages = KnownLanguageSerializer(many=True, required=False, partial=True)
+    groups = serializers.PrimaryKeyRelatedField(
+        many=True, read_only=False, queryset=Group.objects.all())
 
     class Meta:
         model = Person
         fields = ('full_name', 'uuid', 'user',
                   'demographic', 'known_languages', 'id',
-                  'profile_email')
+                  'profile_email', 'groups', )
 
     def update(self, instance, validated_data):
         instance.full_name = validated_data['full_name']
@@ -124,5 +126,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         instance.demographic = demo
         instance.save()
         instance.demographic.save()
+
+        # TODO not sure if this is the correct approach?
+        instance.groups.set(validated_data['groups'])
 
         return instance

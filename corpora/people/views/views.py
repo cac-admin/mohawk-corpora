@@ -26,7 +26,7 @@ from django.forms import inlineformset_factory
 from people.forms import \
     KnownLanguageFormWithPerson,\
     DemographicForm,\
-    PersonForm
+    PersonForm, GroupsForm
 
 
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -80,6 +80,7 @@ class ProfileDetail(APIView, TemplateView):
         else:
             email = None
         context['person_form'] = PersonForm(instance=person, initial={'email': email})
+        context['groups_form'] = GroupsForm(instance=person)
 
         known_languages = KnownLanguage.objects.filter(person=person).count()
         if known_languages > 0:

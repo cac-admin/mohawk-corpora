@@ -53,6 +53,19 @@ span.select2-container{
         {% endif %}
     </div>
     {% endfor %}
+    
+    {% for field in groups_form %}
+    <div class="form-group row justify-content-end">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-sm-12 col-md-10">{{ field }}</div>
+        {% if field.help_text %}
+        <div class="col-sm-12 col-md-10">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
     </form>
 
 
