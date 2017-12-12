@@ -29,7 +29,7 @@ $(document).ready(function(){
   })
 })
 
-var load_click = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>'
+var load_click = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">{% trans "Loading..." %}</span>'
 
 cancel_license_button.addEventListener('click',function(event){
   console.log(event)
@@ -96,8 +96,10 @@ accept_license_button.addEventListener('click',function(event){
           </div>
             
           <div class="col-12">
-            <button type="button" class="btn btn-secondary" id="cancel_license_button">Cancel</button>
-            <button type="button" class="btn btn-default" id="accept_license_button">Accept</button>
+            <button type="button" class="btn btn-secondary" id="cancel_license_button">
+              {% trans "Cancel" %}</button>
+            <button type="button" class="btn btn-default" id="accept_license_button">
+              {% trans "Accept" %}</button>
           </div>
         </div>
       </div>    
@@ -112,7 +114,7 @@ accept_license_button.addEventListener('click',function(event){
         <h5 class="modal-title" id="exampleModalLabel">{% trans "Woops" %}</h5>
       </div>
       <div class="modal-body">
-        Something went wrong. Please try again later or refresh your browser.
+        {% trans "Something went wrong. Please try again later or refresh your browser." %}
       </div>  
     </div>
   </div>

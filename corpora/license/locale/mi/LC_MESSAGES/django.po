@@ -19,33 +19,33 @@ msgstr ""
 
 #: license/models.py:15
 msgid "Name of license"
-msgstr ""
+msgstr "Ingoa o te raihana"
 
 #: license/models.py:17
 msgid "Please provide a description of the license."
-msgstr ""
+msgstr "Tuhia mai koa he whakamāramatanga mō te raihana."
 
 #: license/models.py:19
 msgid "The actual license text."
-msgstr ""
+msgstr "Ngā kupu ake o te raihana."
 
 #: license/models.py:39
 msgid "Accepted licenses"
-msgstr ""
+msgstr "Raihana i whakaaetia"
 
 #: license/templates/license/license_modal.html:87
 msgid "License"
-msgstr ""
+msgstr "Raihana"
 
 #: license/templates/license/license_modal.html:95
 #, python-format
 msgid "You must accept the above %(license.name|title)s license to continue."
-msgstr ""
+msgstr "Me matua whakaae koe ki te raihana %(license.name|title)s i runga ake nei ka haere tonu ai."
 
 #: license/templates/license/license_modal.html:112
 msgid "Woops"
-msgstr ""
+msgstr "Auē"
 
 #: license/views/api.py:36
 msgid "You're not allowed to view this information."
-msgstr ""
+msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
