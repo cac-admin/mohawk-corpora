@@ -39,16 +39,18 @@
 {% endaddtoblock %}
 <div class="container">
 
-  <div class="row justify-content-center actions"> 
+  <div class="row justify-content-center actions">
+
     <div class="col-12 col-md-4 col-lg-3" >
-      <a href="/record" class="btn btn-default btn-lg " >
-        <i class="fa fa-comment fa-fw"></i>Share Your Voice</a>
+      <a href="{% url 'corpus:record' %}" class="btn btn-default btn-lg " >
+        <i class="fa fa-comment fa-fw"></i>{% trans "Start" %}</a>
     </div>
 
-    <div class="col-12 col-md-4 col-lg-3">
+<!--     <div class="col-12 col-md-4 col-lg-3">
       <a href="/listen" class="btn btn-default btn-lg " >
-        <i class="fa fa-check fa-fw"></i>Listen to Recordings</a>           
-    </div>
+        <i class="fa fa-check fa-fw"></i>{% trans "Listen to Recordings" %}</a>           
+    </div> -->
+
   </div> 
 
   <div class="row intro">
@@ -71,7 +73,7 @@
         {% endfor %}
         </ul>
 
-        <p>Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.</p>
+        <p>{% blocktrans %}Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.{% endblocktrans %}</p>
         </div>
 
     </div>

@@ -107,7 +107,7 @@ msgstr "Tomo Mai"
 
 #: corpora/urls.py:42
 msgid "^people/"
-msgstr "^tāngata/"
+msgstr "^tangata/"
 
 #: corpora/views/api.py:18
 msgid "Only staff can view this information."

@@ -145,7 +145,7 @@ msgstr "^whakarongo/"
 #, fuzzy
 #| msgid "Sentences"
 msgid "^sentences/"
-msgstr "rerenga_kōrero/"
+msgstr "rerenga_korero/"
 
 #: corpus/urls.py:17
 msgid "^stats/"
