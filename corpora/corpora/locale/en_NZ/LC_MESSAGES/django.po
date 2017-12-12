@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-12 21:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,64 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: corpora/templates/corpora/footer.html:32
+msgid "Login"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:32
+msgid "Sign-Up"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:33
+msgid "Record"
+msgstr "Rekoata"
+
+#: corpora/templates/corpora/footer.html:34
+#: corpora/templates/corpora/logged_in_nav_buttons.html:38
+#: corpora/templates/corpora/logged_in_nav_buttons.html:126
+msgid "Listen"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:37
+msgid "Get Involved"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:39
+msgid "Translate"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:40
+msgid "Wānanga"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:42
+msgid "Supporters"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:49
+msgid "Powered by"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:56
+#, python-format
+msgid ""
+"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content "
+"collected at %(request.site)s falls under our Kaitiaki License."
+msgstr ""
+
 #: corpora/templates/corpora/home.html:14
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:56
+#: corpora/templates/corpora/home.html:46
+msgid "Start"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:51
+msgid "Listen to Recordings"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:58
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -37,26 +90,27 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:65
+#: corpora/templates/corpora/home.html:67
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:68
 msgid "Translations for "
 msgstr ""
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:68
 msgid " are provided in the following langauges:"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:76
+msgid ""
+"Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
+"tree/translate\">translating</a> this app."
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:31
 #: corpora/templates/corpora/logged_in_nav_buttons.html:119
 msgid "Speak"
-msgstr ""
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:38
-#: corpora/templates/corpora/logged_in_nav_buttons.html:126
-msgid "Listen"
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:47
@@ -108,6 +162,3 @@ msgstr ""
 #: corpora/views/api.py:41
 msgid "You must sign in to edit your info."
 msgstr ""
-
-#~ msgid "Record"
-#~ msgstr "Rekoata"

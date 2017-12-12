@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-12 21:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:69 corpus/admin.py:121 corpus/models.py:195
-#: corpus/models.py:201
+#: corpus/admin.py:72 corpus/admin.py:139 corpus/models.py:212
+#: corpus/models.py:218
 msgid "None"
 msgstr ""
 
@@ -26,32 +26,60 @@ msgstr ""
 msgid "Maori"
 msgstr ""
 
-#: corpus/base_settings.py:45
+#: corpus/base_settings.py:44
 msgid "Kaitahu"
 msgstr ""
 
-#: corpus/base_settings.py:46
+#: corpus/base_settings.py:45
 msgid "Muriwhenua"
 msgstr ""
 
-#: corpus/base_settings.py:47
+#: corpus/base_settings.py:46
 msgid "Taranaki"
 msgstr ""
 
-#: corpus/base_settings.py:48
+#: corpus/base_settings.py:47
 msgid "Tuhoe"
 msgstr ""
 
-#: corpus/base_settings.py:62
+#: corpus/base_settings.py:61
 msgid "Australian"
 msgstr ""
 
-#: corpus/base_settings.py:63
+#: corpus/base_settings.py:62
 msgid "New Zealand"
 msgstr ""
 
-#: corpus/base_settings.py:64
+#: corpus/base_settings.py:63
 msgid "American"
+msgstr ""
+
+#: corpus/models.py:223
+msgid "language"
+msgstr ""
+
+#: corpus/models.py:228
+msgid "updated"
+msgstr ""
+
+#: corpus/models.py:229
+msgid "source"
+msgstr ""
+
+#: corpus/models.py:230
+msgid "uploaded file"
+msgstr ""
+
+#: corpus/models.py:232
+msgid ".txt format"
+msgstr ""
+
+#: corpus/models.py:235
+msgid "text"
+msgstr ""
+
+#: corpus/models.py:236
+msgid "texts"
 msgstr ""
 
 #: corpus/templates/corpus/listen.html:52
@@ -183,7 +211,7 @@ msgstr ""
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:229 corpus/views/api.py:244
+#: corpus/views/api.py:232 corpus/views/api.py:247
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""
