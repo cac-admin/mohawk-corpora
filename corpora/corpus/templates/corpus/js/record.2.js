@@ -304,7 +304,7 @@ class MyRecorder extends Player{
         $.ajax({
 
             type: 'POST',
-            url: '/record/',
+            url: "{% url 'corpus:record' %}",
             data: self.fd,
             processData: false,
             contentType: false,
