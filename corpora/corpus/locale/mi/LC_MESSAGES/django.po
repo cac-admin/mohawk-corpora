@@ -159,7 +159,7 @@ msgstr "Mā ngā kaimahi anake te {0}."
 #: corpus/views/api.py:47
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
-msgstr "E kore e āhei te tikanga PONIES"
+msgstr "E kore e āhei te tikanga PONIES {0}."
 
 #: corpus/views/api.py:95
 msgid "Only staff can post/put sentences."

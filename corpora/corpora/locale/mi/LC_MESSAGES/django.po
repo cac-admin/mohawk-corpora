@@ -48,8 +48,6 @@ msgstr ""
 "      ki ngā kohinga reo Māori. E hiahia ana anō hoki mātou kia taea te reo Māori, me ērā atu "
 "reo taketake,\n"
 "      e ngā mīhini reo kōrero pērā i a Siri."
-"
-
 
 #: corpora/templates/corpora/home.html:65
 msgid "Available Languages"
