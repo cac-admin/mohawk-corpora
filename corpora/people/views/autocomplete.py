@@ -11,7 +11,7 @@ class TribeAutocomplete(autocomplete.Select2QuerySetView):
 
         # TO DO: use somethign like solr and index while ignoring diacritics
         if self.q:
-            qs = qs.filter(name__icontains=self.q).order_by('name')
+            qs = qs.filter(name__unaccent__icontains=self.q).order_by('name')
 
         return qs
 
@@ -23,6 +23,6 @@ class GroupAutocomplete(autocomplete.Select2QuerySetView):
         qs = Group.objects.all().order_by('name')
 
         if self.q:
-            qs = qs.filter(name__icontains=self.q).order_by('name')
+            qs = qs.filter(name__unaccent__icontains=self.q).order_by('name')
 
         return qs
