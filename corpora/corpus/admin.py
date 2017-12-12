@@ -25,7 +25,8 @@ class RecordingsInline(admin.TabularInline):
 
 @admin.register(QualityControl)
 class QualityControlAdmin(admin.ModelAdmin):
-    list_display = ('updated', 'content_type', 'object_id', 'approved', 'good', 'bad')
+    list_display = ('updated', 'content_type', 'object_id', 'approved', 'good',
+                    'bad', 'calculate_score', )
     date_hierarchy = 'updated'
 
 

@@ -53,6 +53,17 @@ class QualityControl(models.Model):
         self.approved = False
         self.approved_by = None
 
+    def calculate_score(self):
+        """Listener/reviewer score for this review - the closer to the mean,
+        the higher the score. """
+
+        qc = QualityControl.objects.filter(content_type=self.content_type,
+                                           object_id=self.object_id)
+        avg = qc.aggregate(
+            value=models.Avg(models.F('good') - models.F('bad')))
+        vote = self.good - self.bad
+        return 1 - abs(vote - avg['value']) / 2
+
 
 class Source(models.Model):
     SOURCE_TYPES = (
