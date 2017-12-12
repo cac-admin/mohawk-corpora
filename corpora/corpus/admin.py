@@ -93,7 +93,10 @@ class RecordingAdmin(admin.ModelAdmin):
         'duration',
         'audio_file',
         'audio_file_aac',
-        'audio_file_admin')
+        'audio_file_admin',
+        'updated',
+        'created',
+    )
 
     search_fields = [
         'person__user__email',
