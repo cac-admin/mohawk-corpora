@@ -61,8 +61,12 @@ class QualityControl(models.Model):
                                            object_id=self.object_id)
         avg = qc.aggregate(
             value=models.Avg(models.F('good') - models.F('bad')))
-        vote = self.good - self.bad
-        return 1 - abs(vote - avg['value']) / 2
+
+        # normalise to between -1 and 1 - TODO check this is correct
+        avg = max(-1, min(1, avg['value'] or 0))
+        vote = max(-1, min(1, self.good - self.bad))
+
+        return 1 - decimal.Decimal(abs(vote - avg)) / 2
 
 
 class Source(models.Model):
