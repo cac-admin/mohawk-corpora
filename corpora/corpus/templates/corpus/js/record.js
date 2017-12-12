@@ -192,7 +192,7 @@ if (!Recorder.isRecordingSupported()) {
             $.ajax({
 
                 type: 'POST',
-                url: '/record/',
+                url: '{% url "corpus:record" %}',
                 data: fd,
                 processData: false,
                 contentType: false,

@@ -338,6 +338,7 @@ class Listen{
   }
 
   post_put(){
+    var self = this
     var method = 'POST'
     this.quality_control.object_id = this.recording.id
     this.audio.pause()

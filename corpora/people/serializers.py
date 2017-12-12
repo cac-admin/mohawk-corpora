@@ -41,7 +41,7 @@ class DemographicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Demographic
-        fields = ('age', 'sex', 'tribe', 'id')
+        fields = ('age', 'gender', 'tribe', 'id')
 
 
 class KnownLanguageSerializer(serializers.HyperlinkedModelSerializer):
@@ -71,9 +71,9 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         demo, created = Demographic.objects.get_or_create(person=instance)
 
         try:
-            demo.sex = demographic['sex']
+            demo.gender = demographic['gender']
         except KeyError:
-            demo.sex = None
+            demo.gender = None
 
         try:
             demo.age = demographic['age']
