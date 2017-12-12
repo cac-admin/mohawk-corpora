@@ -29,6 +29,21 @@ class Tribe(models.Model):
         return self.name
 
 
+class Group(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                                   editable=False)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')
+
+
 class Person(models.Model):
     user = models.OneToOneField(
         User,
@@ -49,6 +64,8 @@ class Person(models.Model):
         null=True,
         help_text="This is a placeholder for users that don't sign up.")
     # accept_terms = models.BooleanField(editable=False, default=False)
+
+    groups = models.ManyToManyField(Group, blank=True)
 
     def email(self):
         if self.user:

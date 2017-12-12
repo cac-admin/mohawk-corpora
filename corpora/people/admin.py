@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import \
     Person, Demographic, KnownLanguage,\
-    Tribe
+    Tribe, Group
 
 from people.forms import DemographicFormAdmin
 from corpus.models import Recording
@@ -15,9 +15,15 @@ class PersonRecordingsInline(admin.StackedInline):
     can_delete = True
     fields = ['sentence', 'sentence_text', 'user_agent', 'audio_file_admin']
     readonly_fields = ['user_agent', 'audio_file_admin']
-
+    raw_id_fields = ('sentence', )
     # def myaudio_file_admin(self, obj):
     #     return obj.audio_file_admin()
+
+
+class PersonGroupInline(admin.TabularInline):
+    model = Person.groups.through
+    extra = 0
+    raw_id_fields = ('group', )
 
 
 @admin.register(Person)
@@ -27,9 +33,15 @@ class PersonAdmin(admin.ModelAdmin):
         'email',
         'user',
         'uuid',
+        'get_groups'
         )
     readonly_fields = ('profile_email',)
-    inlines = [PersonRecordingsInline]
+    inlines = [PersonRecordingsInline, PersonGroupInline]
+    exclude = ('groups', )  # see PersonGroupInline
+
+    def get_groups(self, obj):
+        return ', '.join([g.name for g in obj.groups.all()])
+    get_groups.short_description = 'groups'
 
 
 @admin.register(Demographic)
@@ -51,3 +63,8 @@ class KnownLanguageAdmin(admin.ModelAdmin):
         'dialect',
         'accent',
         )
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created', 'created_by', )
