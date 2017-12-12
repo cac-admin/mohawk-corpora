@@ -4,7 +4,7 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 
-.actions{
+.actions, .buttons{
     text-align: center;
     margin-top: 15px;
     @include media-breakpoint-down(md) {
@@ -82,7 +82,7 @@
       color: lighten($brand_lightest,10%);
     }     
 
-    a.auto-play.auto-play-on{
+    a.auto-play.auto-play-on, a.on{
       background-color: $brand_primary;
       color: $brand_lightest;
     }
