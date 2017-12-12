@@ -85,7 +85,9 @@ class RecordingAdmin(admin.ModelAdmin):
         'sentence_text',
         'person',
         'get_approved',
-        'get_approved_by')
+        'get_approved_by',
+        'calculate_score',
+    )
 
     inlines = [QualityControlInline]
 

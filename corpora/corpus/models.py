@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import math
+import decimal
 from django.utils.translation import ugettext_lazy as _
 
 from django.core.exceptions import ValidationError
@@ -222,6 +224,16 @@ class Recording(models.Model):
             return self.person.full_name
         else:
             return _('None')
+
+    def calculate_score(self):
+        """Score awarded for uploading this recording. """
+
+        net_votes = self.quality_control \
+            .aggregate(value=models.Sum(models.F('good') - models.F('bad')))
+
+        net_votes = decimal.Decimal(net_votes['value'] or 0)
+        damper = 4
+        return max(0, 1 - math.exp(-(net_votes + 1) / damper))
 
 
 class Text(models.Model):
