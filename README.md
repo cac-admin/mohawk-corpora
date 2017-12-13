@@ -17,7 +17,7 @@ We are always looking for more support either financially or through in kind con
 ## Current Funding
 - Ka Hao Fund, Te Puni Kōkiri - https://www.tpk.govt.nz/en
 
-## Porject Partners
+## Project Partners
 - Te Reo Irirangi o Te Hiku o Te Ika (Te Hiku Media) - https://tehiku.nz/
 - Dragonfly Data Science - https://www.dragonfly.co.nz/
 - Te Pūnaha Matatini - http://www.tepunahamatatini.ac.nz/
