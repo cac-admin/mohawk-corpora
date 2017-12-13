@@ -101,7 +101,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'sekizai.context_processors.sekizai',
-                'license.context_processors.license'
+                'license.context_processors.license',
+                'corpora.context_processors.site',
             ],
         },
     },

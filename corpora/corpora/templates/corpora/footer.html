@@ -29,7 +29,7 @@
   <div class="row"> 
       <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
         <h4>Site Map</h4>
-        <p><a href="{% url 'account_login' %}">{% trans "Login" %}</a> / <a href="{% url 'account_signup' %}">{% trans "Sign-Up" %}</a></p>
+        <p><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a> / <a href="{% url 'account_signup' %}">{% trans "Sign-Up" %}</a></p>
         <p><a href="{% url 'corpus:record' %}">{% trans "Record" %}</a></p>
         <p><a href="{% url 'corpus:listen' %}">{% trans "Listen" %}</a></p>
       </div>
@@ -53,7 +53,7 @@
   
   <div class="row">
     <div class="col-12" style="text-align: center; padding-top: 15px;">
-      {% blocktrans %}Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content collected at {{request.site}} falls under our Kaitiaki License.{% endblocktrans %}
+      {% blocktrans %}Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content collected at {{site}} falls under the {{license}} License.{% endblocktrans %}
     </div>
   </div>
 

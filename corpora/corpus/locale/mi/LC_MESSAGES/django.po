@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-12 21:59+0000\n"
+"POT-Creation-Date: 2017-12-13 00:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr "Marikena"
 
 #: corpus/models.py:223
 msgid "language"
-msgstr ""
+msgstr "reo"
 
 #: corpus/models.py:228
 msgid "updated"

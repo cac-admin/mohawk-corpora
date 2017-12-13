@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-12 21:59+0000\n"
+"POT-Creation-Date: 2017-12-13 00:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,93 +21,157 @@ msgstr ""
 msgid "Name of tribe."
 msgstr "Ingoa o te iwi."
 
-#: people/models.py:25
+#: people/models.py:23
+msgid "name"
+msgstr "ingoa"
+
+#: people/models.py:26
 msgid "Tribe"
 msgstr "Iwi"
 
-#: people/models.py:26 people/models.py:105
+#: people/models.py:27 people/models.py:119
 msgid "Tribes"
 msgstr "Ngā Iwi"
 
-#: people/models.py:39
+#: people/models.py:40
 msgid "Full Name"
 msgstr "Ingoa"
 
-#: people/models.py:60
+#: people/models.py:43
+#, fuzzy
+#| msgid "Full Name"
+msgid "full name"
+msgstr "ingoa"
+
+#: people/models.py:64
 msgid "Person"
 msgstr "Tangata"
 
-#: people/models.py:61
+#: people/models.py:65
 msgid "People"
 msgstr "Tāngata"
 
-#: people/models.py:69
+#: people/models.py:73
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:70
+#: people/models.py:74
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:71
+#: people/models.py:75
 msgid "Other"
 msgstr "Āhua Kē"
 
-#: people/models.py:72
+#: people/models.py:76
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:73
+#: people/models.py:77
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:79
+#: people/models.py:83
 msgid "How old are you?"
 msgstr "E hia ō tau?"
 
-#: people/models.py:81
+#: people/models.py:84
+msgid "age"
+msgstr "ō tau"
+
+#: people/models.py:87
 msgid "Gender"
 msgstr "Tāne/Wahine"
 
-#: people/models.py:95
+#: people/models.py:92
+#, fuzzy
+#| msgid "Gender"
+msgid "gender"
+msgstr "Tāne/Wahine"
+
+#: people/models.py:100 people/models.py:150
+#, fuzzy
+#| msgid "Person"
+msgid "person"
+msgstr "tangata"
+
+#: people/models.py:104
 msgid "Which tribe(s) do you identify with?"
 msgstr "Nō (t)ēhea iwi koe?"
 
-#: people/models.py:110
+#: people/models.py:107
+#, fuzzy
+#| msgid "Tribe"
+msgid "tribe"
+msgstr "iwi"
+
+#: people/models.py:114
+msgid "Demographic"
+msgstr ""
+
+#: people/models.py:115
+msgid "Demographics"
+msgstr ""
+
+#: people/models.py:124
 msgid "Native Speaker - Beginner"
 msgstr "He Reo Ūkaipō - Mātau iti nei"
 
-#: people/models.py:111
+#: people/models.py:125
 msgid "Native Speaker - Intermediate"
 msgstr "He Reo Ūkaipō - Āhua Mātau nei"
 
-#: people/models.py:112
+#: people/models.py:126
 msgid "Native Speaker - Advanced"
 msgstr "He Reo Ūkaipō - Tino Mātau nei"
 
-#: people/models.py:113
+#: people/models.py:127
 msgid "Near Native Speaker - Beginner"
 msgstr "He Reo Tuarua - Mātau iti nei"
 
-#: people/models.py:114
+#: people/models.py:128
 msgid "Near Native Speaker - Intermediate"
 msgstr "He Reo Tuarua - Āhua Mātau nei"
 
-#: people/models.py:115
+#: people/models.py:129
 msgid "Near Native Speaker - Advanced"
 msgstr "He Reo Tuarua - Tino Mātau nei"
 
-#: people/models.py:116
+#: people/models.py:130
 msgid "Second Language Learner - Beginner"
 msgstr "He Ākonga Reo - Mātau iti nei"
 
-#: people/models.py:117
+#: people/models.py:131
 msgid "Second Language Learner - Intermediate"
 msgstr "He Ākonga Reo - Āhua Mātau nei"
 
-#: people/models.py:118
+#: people/models.py:132
 msgid "Second Language Learner - Advanced"
 msgstr "He Ākonga Reo - Tino Mātau nei"
+
+#: people/models.py:138
+msgid "language"
+msgstr "reo"
+
+#: people/models.py:144
+msgid "level of proficiency"
+msgstr ""
+
+#: people/models.py:159
+msgid "accent"
+msgstr ""
+
+#: people/models.py:166
+msgid "dialect"
+msgstr ""
+
+#: people/models.py:171
+msgid "known language"
+msgstr ""
+
+#: people/models.py:172
+msgid "known languages"
+msgstr ""
 
 #: people/templates/account/account_inactive.html:5
 #: people/templates/account/account_inactive.html:8
