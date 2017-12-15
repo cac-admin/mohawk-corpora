@@ -34,6 +34,10 @@
   .intro{
     margin-top: 15px;
   }
+  .start{
+    font-size: 2em;
+    margin: 20px 0px;
+  }
 
 </style>
 {% endaddtoblock %}
@@ -41,10 +45,6 @@
 
   <div class="row justify-content-center actions">
 
-    <div class="col-12 col-md-4 col-lg-3" >
-      <a href="{% url 'corpus:record' %}" class="btn btn-default btn-lg " >
-        <i class="fa fa-comment fa-fw"></i>{% trans "Start" %}</a>
-    </div>
 
 <!--     <div class="col-12 col-md-4 col-lg-3">
       <a href="/listen" class="btn btn-default btn-lg " >
@@ -53,6 +53,12 @@
 
   </div> 
 
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-4 col-lg-3" >
+      <a href="{% url 'corpus:record' %}" class="btn btn-default btn-lg start" >
+        <i class="fa fa-microphone fa-fw"></i>&nbsp;{% trans "Start" %}&nbsp;</a>
+    </div>
+  </div>
   <div class="row intro">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left-card">
       <p class="dropcase">{{request.site.name}} {% blocktrans %} is an opensource app designed to collect spoken 
@@ -62,9 +68,13 @@
       available at <a href="https://tehiku.nz">tehiku.nz</a> and to enhance access 
       to Māori media. We also wanted to bring te reo Māori, and other indigenous languages,
       to voice operated digital assistants like Siri.{% endblocktrans %}</p>
+    </div>
+  </div>
 
-      <div>
-        <h2>{% trans "Available Languages" %}</h2>
+
+  <div class="row ">
+    <div class="col">
+        <h4>{% trans "Available Languages" %}</h4>
         <p>{% blocktrans %}Translations for {% endblocktrans %}{{request.site.name}}{% blocktrans %} are provided in the following langauges:{% endblocktrans %}</p>
         <ul>
         {% for lang_code in languages %}
@@ -74,18 +84,10 @@
         </ul>
 
         <p>{% blocktrans %}Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.{% endblocktrans %}</p>
-        </div>
-
+        
     </div>
-
-
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 right-card">
-      <span></span>
-      <p></p>
-    </div>
-
-
   </div>
+
 </div>
 
 {% addtoblock "js" %}

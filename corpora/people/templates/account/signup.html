@@ -66,8 +66,10 @@ $('#submit_choose_language_form').hide();
 var email
 $(document).ready(function(){
   email = '{{person.email}}';
-  if (email != ''){
+  console.log(email)
+  if (email != 'None'){
     var em_obj = $('#id_email').get(0)
+
     em_obj.value = email
   }
 })

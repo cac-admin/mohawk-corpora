@@ -48,7 +48,7 @@ class KnownLanguageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = KnownLanguage
-        fields = ('language', 'level_of_proficiency', 'active', 'accent', 'dialect', 'id')
+        fields = ('language', 'level_of_proficiency', 'active', 'dialect', 'id')
 
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
@@ -108,7 +108,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                 )
 
                 kl.level_of_proficiency = vl['level_of_proficiency']
-                kl.accent = vl['accent']
+                # kl.accent = vl['accent']
                 kl.dialect = vl['dialect']
 
             except ObjectDoesNotExist:
@@ -116,7 +116,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                     person=instance,
                     level_of_proficiency=vl['level_of_proficiency'],
                     dialect=vl['dialect'],
-                    accent=vl['accent'],
+                    # accent=vl['accent'],
                     language=vl['language']
                 )
             kl.save()

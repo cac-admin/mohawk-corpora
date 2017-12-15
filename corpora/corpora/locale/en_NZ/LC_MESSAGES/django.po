@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 00:19+0000\n"
+"POT-Creation-Date: 2017-12-15 03:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: corpora/templates/corpora/footer.html:32
-msgid "Sign In"
+msgid "Login"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:32
@@ -58,23 +58,23 @@ msgstr ""
 #: corpora/templates/corpora/footer.html:56
 #, python-format
 msgid ""
-"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content "
-"collected at %(site)s falls under the %(license)s License."
+"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content "
+"collected at %(request.site)s falls under our Kaitiaki License."
 msgstr ""
 
 #: corpora/templates/corpora/home.html:14
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:46
-msgid "Start"
-msgstr ""
-
 #: corpora/templates/corpora/home.html:51
 msgid "Listen to Recordings"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:58
+#: corpora/templates/corpora/home.html:59
+msgid "Start"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:64
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -90,19 +90,19 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:67
+#: corpora/templates/corpora/home.html:77
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:68
+#: corpora/templates/corpora/home.html:78
 msgid "Translations for "
 msgstr ""
 
-#: corpora/templates/corpora/home.html:68
+#: corpora/templates/corpora/home.html:78
 msgid " are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:76
+#: corpora/templates/corpora/home.html:86
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."
