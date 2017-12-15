@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-15 03:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,7 +164,9 @@ msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
-"Kāhore anō koe kia whakaatu mai i tō īmēra.  Me whakaatu mārika mai kia whiwhi ai koe ki ngā pānui, kia āhei ai anō hoki te whakahōu i tō kupu huna, aha noa."
+"Kāhore anō koe kia whakaatu mai i tō īmēra.  Me whakaatu mārika mai kia "
+"whiwhi ai koe ki ngā pānui, kia āhei ai anō hoki te whakahōu i tō kupu huna, "
+"aha noa."
 
 #: people/templates/account/email.html:52
 msgid "Add E-mail Address"
@@ -192,8 +194,7 @@ msgstr ""
 "Tēnā koe,\n"
 "\n"
 "I whiwhi ai koe ki tēnei īmēra nā te mea nā %(user_display)s i "
-"%(site_domain)s i homai tō īmēra kia tūhonotia ki tōna "
-"kaute.\n"
+"%(site_domain)s i homai tō īmēra kia tūhonotia ki tōna kaute.\n"
 "\n"
 "Mehemea e tika ana tēnei, whāia tēnei hononga %(activate_url)s\n"
 
@@ -222,9 +223,10 @@ msgid ""
 msgstr ""
 "Tēnei te mihi a %(site_name)s ki a koe!\n"
 "\n"
-"I whiwhi ai koe ki tēnei īmēra nā te mea e mea ana tētahi tangata kē ki te tiki i te kupu huna o tō kaute i %(site_domain)s.\n"
-"Mehemea ehara i a koe, kaua e āwangawanga. Patoa "
-"te hononga e whai ake nei hei whakahōu i tō kupu huna."
+"I whiwhi ai koe ki tēnei īmēra nā te mea e mea ana tētahi tangata kē ki te "
+"tiki i te kupu huna o tō kaute i %(site_domain)s.\n"
+"Mehemea ehara i a koe, kaua e āwangawanga. Patoa te hononga e whai ake nei "
+"hei whakahōu i tō kupu huna."
 
 #: people/templates/account/email/password_reset_key_message.txt:8
 #, python-format
@@ -236,7 +238,8 @@ msgstr "Kia mahara ai koe, koia tēnei ko tō kupu huna %(username)s."
 msgid ""
 "Thank you for using %(site_name)s!\n"
 "%(site_domain)s"
-msgstr "Tēnā anō koe e toro mai nei ki te %(site_name)s!\n"
+msgstr ""
+"Tēnā anō koe e toro mai nei ki te %(site_name)s!\n"
 "%(site_domain)s"
 
 #: people/templates/account/email/password_reset_key_subject.txt:3
@@ -254,8 +257,8 @@ msgid ""
 "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
 "address for user %(user_display)s."
 msgstr ""
-"E tika ana rānei ko <a href=\"mailto:%(email)s\">%(email)s</a> "
-"te īmēra o user %(user_display)s."
+"E tika ana rānei ko <a href=\"mailto:%(email)s\">%(email)s</a> te īmēra o "
+"user %(user_display)s."
 
 #: people/templates/account/email_confirm.html:20
 msgid "Confirm"
@@ -290,8 +293,8 @@ msgid ""
 "Don't have an account?<br><a href=\"%(signup_url)s\">Sign Up</a>\n"
 "  "
 msgstr ""
-"Kāhore anō koe kia rēhita? Rēhita ki konei."
-"<br><a href=\"%(signup_url)s\">Rēhita</a>\n"
+"Kāhore anō koe kia rēhita? Rēhita ki konei.<br><a href=\"%(signup_url)s"
+"\">Rēhita</a>\n"
 "  "
 
 #: people/templates/account/login.html:112
@@ -299,8 +302,9 @@ msgstr ""
 msgid ""
 "If you have not created an account yet, then please\n"
 "  <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr "Mehemea kāhore anō koe kia rēhita, whakakīngia mai koa te puka "
-"<a href=\"%(signup_url)s\">rēhita</a> i te tuatahi."
+msgstr ""
+"Mehemea kāhore anō koe kia rēhita, whakakīngia mai koa te puka <a href="
+"\"%(signup_url)s\">rēhita</a> i te tuatahi."
 
 #: people/templates/account/logout.html:5
 #: people/templates/account/logout.html:8
@@ -376,7 +380,8 @@ msgstr "Whakahōungia tō kupu huna"
 
 #: people/templates/account/password_reset.html:19
 msgid "Enter your e-mail address and we'll send you a reset link."
-msgstr "Tuhia mai tō īmēra ka tukua atu ai he hononga hei whakahōu i tō kupu huna."
+msgstr ""
+"Tuhia mai tō īmēra ka tukua atu ai he hononga hei whakahōu i tō kupu huna."
 
 #: people/templates/account/password_reset.html:46
 msgid "Reset My Password"
@@ -387,16 +392,16 @@ msgid ""
 "Please <a href=\"mailto:info@tehiku.nz\">contact us</a> if you have any "
 "trouble resetting your password."
 msgstr ""
-"<a href=\"mailto:info@tehiku.nz\">Whakapā mai koa</a> inā kore e "
-"taea e koe te whakahōu i tō kupu huna."
+"<a href=\"mailto:info@tehiku.nz\">Whakapā mai koa</a> inā kore e taea e koe "
+"te whakahōu i tō kupu huna."
 
 #: people/templates/account/password_reset_done.html:15
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
-"Kua tukua atu e mātou he īmēra ki a koe. Whakapā mai koa inā "
-"kore e tae wawe atu ki a koe ā ngā mīneti tata e haere ake nei."
+"Kua tukua atu e mātou he īmēra ki a koe. Whakapā mai koa inā kore e tae wawe "
+"atu ki a koe ā ngā mīneti tata e haere ake nei."
 
 #: people/templates/account/password_reset_from_key.html:7
 msgid "Bad Token"
@@ -409,9 +414,9 @@ msgid ""
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
 "a>."
 msgstr ""
-"Kāhore i whakaaetia te whakahōutanga o tō kupu huna nā te mea "
-"pea kua whakamahia kētia. <a href=\"%(passwd_reset_url)s\">Whakaritea "
-"anō koa tētahi kupu huna mōu.</a>"
+"Kāhore i whakaaetia te whakahōutanga o tō kupu huna nā te mea pea kua "
+"whakamahia kētia. <a href=\"%(passwd_reset_url)s\">Whakaritea anō koa tētahi "
+"kupu huna mōu.</a>"
 
 #: people/templates/account/password_reset_from_key.html:17
 msgid "change password"
@@ -459,10 +464,9 @@ msgid ""
 "We're not taking sign ups. If you're keen to get involved please <a href="
 "\"mailto:info@tehiku.nz?subject=corpora.io\">contact</a> us. "
 msgstr ""
-"Kāhore atu he rēhitatanga i tēnei wā engari ki te hiahia tonu "
-"koe ki te āwhina i te kaupapa nei, "
-"<a href=\"mailto:info@tehiku.nz?subject=corpora.io\">whakapā mai ki a "
-"mātou</a>."
+"Kāhore atu he rēhitatanga i tēnei wā engari ki te hiahia tonu koe ki te "
+"āwhina i te kaupapa nei, <a href=\"mailto:info@tehiku.nz?subject=corpora.io"
+"\">whakapā mai ki a mātou</a>."
 
 #: people/templates/account/snippets/already_logged_in.html:5
 msgid "Note"
@@ -486,10 +490,9 @@ msgid ""
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
-"Kua tukua atu e mātou he īmēra ki a koe māu e whakatūturu mai."
-"Whāia te hononga e whai ake nei hei whakatutuki i ngā whakaritenga."
-"Inā kore e tae wawe atu ki a koe ā ngā mīneti tata e haere ake nei, "
-"whakapā mai koa."
+"Kua tukua atu e mātou he īmēra ki a koe māu e whakatūturu mai.Whāia te "
+"hononga e whai ake nei hei whakatutuki i ngā whakaritenga.Inā kore e tae "
+"wawe atu ki a koe ā ngā mīneti tata e haere ake nei, whakapā mai koa."
 
 #: people/templates/account/verified_email_required.html:12
 msgid ""
@@ -497,8 +500,8 @@ msgid ""
 "you are who you claim to be. For this purpose, we require that you\n"
 "verify ownership of your e-mail address. "
 msgstr ""
-"Kia mōhio mārika mātou, e kōrero pono mai ana koe mōu."
-"Koia i meinga ai, me whakatūturu mārika mai koe i tōu ingoa īmēra."
+"Kia mōhio mārika mātou, e kōrero pono mai ana koe mōu.Koia i meinga ai, me "
+"whakatūturu mārika mai koe i tōu ingoa īmēra."
 
 #: people/templates/account/verified_email_required.html:16
 msgid ""
@@ -506,9 +509,9 @@ msgid ""
 "verification. Please click on the link inside this e-mail. Please\n"
 "contact us if you do not receive it within a few minutes."
 msgstr ""
-"Kua tukua atu e mātou he īmēra ki a koe māu e whakatūturu mai."
-"Kia whiwhi koe, ka pato ai i te hononga kei roto.  Inā kore e "
-"tae wawe atu ki a koe ā ngā mīneti tata e haere ake nei, whakapā mai koa."
+"Kua tukua atu e mātou he īmēra ki a koe māu e whakatūturu mai.Kia whiwhi "
+"koe, ka pato ai i te hononga kei roto.  Inā kore e tae wawe atu ki a koe ā "
+"ngā mīneti tata e haere ake nei, whakapā mai koa."
 
 #: people/templates/account/verified_email_required.html:20
 #, python-format
@@ -516,8 +519,8 @@ msgid ""
 "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
 "mail address</a>."
 msgstr ""
-"E āhei tonu ana koe ki te <a href=\"%(email_url)s\">whakarerekē i tō īmēra.</a>"
-
+"E āhei tonu ana koe ki te <a href=\"%(email_url)s\">whakarerekē i tō īmēra.</"
+"a>"
 
 #: people/templates/people/choose_language_form.html:106
 msgid "Save"
@@ -563,8 +566,7 @@ msgstr ""
 #: people/templates/socialaccount/authentication_error.html:10
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr ""
-"I a koe e mea ana ki te tomo mai ka pā mai te raruraru."
+msgstr "I a koe e mea ana ki te tomo mai ka pā mai te raruraru."
 
 #: people/templates/socialaccount/connections.html:5
 #: people/templates/socialaccount/connections.html:8
@@ -598,9 +600,9 @@ msgid ""
 "accounts. If this was a mistake, please proceed to <a href=\"%(login_url)s"
 "\">sign in</a>."
 msgstr ""
-"Kua whakakorengia e koe tō tomokanga mai ki tō mātou pae tukutuku mā "
-"tētahi o ō kaute.  Mehemea e hiahia ana anō kē koe ki te "
-"<a href=\"%(login_url)s\">tomo mai</a>, me rā konei mai."
+"Kua whakakorengia e koe tō tomokanga mai ki tō mātou pae tukutuku mā tētahi "
+"o ō kaute.  Mehemea e hiahia ana anō kē koe ki te <a href=\"%(login_url)s"
+"\">tomo mai</a>, me rā konei mai."
 
 #: people/templates/socialaccount/signup.html:11
 #, python-format
@@ -610,7 +612,6 @@ msgid ""
 msgstr ""
 "Ko te whakamahia e koe tō kaute %(provider_name)s hei tomo mai ki "
 "%(site_name)s. E tutuki ai, whakakīngia mai koa te puka e whai ake nei:"
-
 
 #: people/views/api.py:53
 msgid "Only staff can view this information."

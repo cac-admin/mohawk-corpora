@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-15 03:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,6 +33,10 @@ msgstr ""
 msgid "Accepted licenses"
 msgstr ""
 
+#: license/templates/license/license_modal.html:32
+msgid "Loading..."
+msgstr ""
+
 #: license/templates/license/license_modal.html:87
 msgid "License"
 msgstr ""
@@ -42,8 +46,20 @@ msgstr ""
 msgid "You must accept the above %(license.name|title)s license to continue."
 msgstr ""
 
-#: license/templates/license/license_modal.html:112
+#: license/templates/license/license_modal.html:100
+msgid "Cancel"
+msgstr ""
+
+#: license/templates/license/license_modal.html:102
+msgid "Accept"
+msgstr ""
+
+#: license/templates/license/license_modal.html:114
 msgid "Woops"
+msgstr ""
+
+#: license/templates/license/license_modal.html:117
+msgid "Something went wrong. Please try again later or refresh your browser."
 msgstr ""
 
 #: license/views/api.py:36
