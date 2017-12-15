@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 03:42+0000\n"
+"POT-Creation-Date: 2017-12-15 04:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,8 +38,8 @@ msgstr ""
 msgid "Te Tai Hauauru"
 msgstr ""
 
-#: corpus/base_settings.py:54 corpus/base_settings.py:67
-msgid "Te Tai Tonga"
+#: corpus/base_settings.py:56
+msgid "Te Waipounamu"
 msgstr ""
 
 #: corpus/base_settings.py:65
@@ -48,6 +48,10 @@ msgstr ""
 
 #: corpus/base_settings.py:66
 msgid "Te Tai Hauāuru"
+msgstr ""
+
+#: corpus/base_settings.py:67
+msgid "Te Tai Tonga"
 msgstr ""
 
 #: corpus/base_settings.py:84
@@ -173,15 +177,15 @@ msgstr ""
 msgid "^record/"
 msgstr ""
 
-#: corpus/urls.py:9
+#: corpus/urls.py:11
 msgid "^listen/"
 msgstr ""
 
-#: corpus/urls.py:15
+#: corpus/urls.py:18
 msgid "^sentences/"
 msgstr ""
 
-#: corpus/urls.py:17
+#: corpus/urls.py:20
 msgid "^stats/"
 msgstr ""
 
