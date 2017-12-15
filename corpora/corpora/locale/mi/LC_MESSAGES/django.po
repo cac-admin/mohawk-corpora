@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 03:42+0000\n"
+"POT-Creation-Date: 2017-12-13 00:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: corpora/templates/corpora/footer.html:32
-msgid "Login"
+msgid "Sign In"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:32
@@ -27,7 +27,7 @@ msgstr ""
 
 #: corpora/templates/corpora/footer.html:33
 msgid "Record"
-msgstr ""
+msgstr "Hopu"
 
 #: corpora/templates/corpora/footer.html:34
 #: corpora/templates/corpora/logged_in_nav_buttons.html:38
@@ -60,23 +60,23 @@ msgstr ""
 #: corpora/templates/corpora/footer.html:56
 #, python-format
 msgid ""
-"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika. All content "
-"collected at %(request.site)s falls under our Kaitiaki License."
+"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content "
+"collected at %(site)s falls under the %(license)s License."
 msgstr ""
 
 #: corpora/templates/corpora/home.html:14
 msgid "teaching computers indigenous languages"
 msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 
+#: corpora/templates/corpora/home.html:46
+msgid "Start"
+msgstr "Tīmata"
+
 #: corpora/templates/corpora/home.html:51
 msgid "Listen to Recordings"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:59
-msgid "Start"
-msgstr "Tīmata"
-
-#: corpora/templates/corpora/home.html:64
+#: corpora/templates/corpora/home.html:58
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -104,19 +104,19 @@ msgstr ""
 "Māori, me ērā atu reo taketake,\n"
 "      e ngā mīhini reo kōrero pērā i a Siri."
 
-#: corpora/templates/corpora/home.html:77
+#: corpora/templates/corpora/home.html:67
 msgid "Available Languages"
 msgstr "Ngā reo e taea ana"
 
-#: corpora/templates/corpora/home.html:78
+#: corpora/templates/corpora/home.html:68
 msgid "Translations for "
 msgstr "Ngā whakamāoritanga mō te "
 
-#: corpora/templates/corpora/home.html:78
+#: corpora/templates/corpora/home.html:68
 msgid " are provided in the following langauges:"
 msgstr " koia ēnei ko ngā reo e taea ana:"
 
-#: corpora/templates/corpora/home.html:86
+#: corpora/templates/corpora/home.html:76
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."

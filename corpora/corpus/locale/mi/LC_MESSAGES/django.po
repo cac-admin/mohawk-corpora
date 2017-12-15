@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 03:42+0000\n"
+"POT-Creation-Date: 2017-12-13 00:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,45 +26,37 @@ msgstr "Hore kau"
 msgid "Maori"
 msgstr "Māori"
 
-#: corpus/base_settings.py:51 corpus/base_settings.py:64
-msgid "Te Tai Tokerau"
-msgstr "Te Tai Tokerau"
+#: corpus/base_settings.py:44
+msgid "Kaitahu"
+msgstr "Kāi Tahu"
 
-#: corpus/base_settings.py:52
-msgid "Te Tai Rawhiti"
-msgstr "Te Tai Rāwhiti"
+#: corpus/base_settings.py:45
+msgid "Muriwhenua"
+msgstr "Muriwhenua"
 
-#: corpus/base_settings.py:53
-msgid "Te Tai Hauauru"
-msgstr "Te Tai Hauāuru"
+#: corpus/base_settings.py:46
+msgid "Taranaki"
+msgstr "Taranaki"
 
-#: corpus/base_settings.py:54 corpus/base_settings.py:67
-msgid "Te Tai Tonga"
-msgstr "Te Tai Tonga"
+#: corpus/base_settings.py:47
+msgid "Tuhoe"
+msgstr "Tūhoe"
 
-#: corpus/base_settings.py:65
-msgid "Te Tai Rāwhiti"
-msgstr ""
-
-#: corpus/base_settings.py:66
-msgid "Te Tai Hauāuru"
-msgstr ""
-
-#: corpus/base_settings.py:84
+#: corpus/base_settings.py:61
 msgid "Australian"
 msgstr "Ahitereiria"
 
-#: corpus/base_settings.py:85
+#: corpus/base_settings.py:62
 msgid "New Zealand"
 msgstr "Aotearoa"
 
-#: corpus/base_settings.py:86
+#: corpus/base_settings.py:63
 msgid "American"
 msgstr "Marikena"
 
 #: corpus/models.py:223
 msgid "language"
-msgstr ""
+msgstr "reo"
 
 #: corpus/models.py:228
 msgid "updated"
@@ -225,15 +217,3 @@ msgstr "E kore koe e āhei ki te pānui i tēnei kapohanga reo."
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr "{0} e kore e āhei koia tēnei te API whakamutunga."
-
-#~ msgid "Kaitahu"
-#~ msgstr "Kāi Tahu"
-
-#~ msgid "Muriwhenua"
-#~ msgstr "Muriwhenua"
-
-#~ msgid "Taranaki"
-#~ msgstr "Taranaki"
-
-#~ msgid "Tuhoe"
-#~ msgstr "Tūhoe"
