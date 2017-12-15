@@ -32,11 +32,11 @@
   {% csrf_token %}
   {% for field in form %}
   <div class="form-group row justify-content-end">
-      {{ field.errors }}
       {{ field.label_tag }}
-      <div class="col-sm-12 col-md-10">{{ field }}</div>
+      <div class="col-sm-12 col-md-12">{{ field }}</div>
+      <div class="col-sm-12 col-md-12">{{ field.errors }}</div>
       {% if field.help_text %}
-      <div class="col-sm-12 col-md-10">
+      <div class="col-sm-12 col-md-12">
       <small class="form-text text-muted">{{ field.help_text|safe }}</small>
       </div>
       {% endif %}
@@ -57,7 +57,7 @@
 {% addtoblock 'js-end' %}
 <script type="text/javascript">
   
-$('#signup_form').find('label').addClass('col-form-label col-sm-12 col-md-2');
+$('#signup_form').find('label').addClass('col-form-label col-sm-12 col-md-12');
 $('#signup_form').find('input').addClass('form-control');
 $('#signup_form').find('select').addClass('form-control');
 
