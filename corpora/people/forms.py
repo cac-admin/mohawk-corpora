@@ -4,6 +4,8 @@ from people.models import KnownLanguage, Person, Demographic
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from dal import autocomplete
 from django.db.models.fields import BLANK_CHOICE_DASH
+from django.utils.translation import ugettext as _
+
 
 # from django.conf.settings import LANGUAGES
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 04:22+0000\n"
+"POT-Creation-Date: 2017-12-15 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,49 +26,61 @@ msgstr "Hore kau"
 msgid "Maori"
 msgstr "Māori"
 
-#: corpus/base_settings.py:51 corpus/base_settings.py:64
+#: corpus/base_settings.py:51 corpus/base_settings.py:65
 msgid "Te Tai Tokerau"
 msgstr "Te Tai Tokerau"
 
 #: corpus/base_settings.py:52
+msgid "Tainui"
+msgstr "Tainui"
+
+#: corpus/base_settings.py:53
 msgid "Te Tai Rawhiti"
 msgstr "Te Tai Rāwhiti"
 
-#: corpus/base_settings.py:53
+#: corpus/base_settings.py:54
 msgid "Te Tai Hauauru"
 msgstr "Te Tai Hauāuru"
 
-#: corpus/base_settings.py:56
-msgid "Te Waipounamu"
-msgstr ""
+#: corpus/base_settings.py:55
+msgid "Mataatua"
+msgstr "Mātaatua"
 
-#: corpus/base_settings.py:65
+#: corpus/base_settings.py:56
+msgid "Te Puku o te Ika"
+msgstr "Te Puku o te Ika"
+
+#: corpus/base_settings.py:57
+msgid "Te Waipounamu"
+msgstr "Te Waipounamu"
+
+#: corpus/base_settings.py:66
 msgid "Te Tai Rāwhiti"
 msgstr ""
 
-#: corpus/base_settings.py:66
+#: corpus/base_settings.py:67
 msgid "Te Tai Hauāuru"
 msgstr ""
 
-#: corpus/base_settings.py:67
+#: corpus/base_settings.py:68
 msgid "Te Tai Tonga"
-msgstr "Te Tai Tonga"
+msgstr ""
 
-#: corpus/base_settings.py:84
+#: corpus/base_settings.py:85
 msgid "Australian"
 msgstr "Ahitereiria"
 
-#: corpus/base_settings.py:85
+#: corpus/base_settings.py:86
 msgid "New Zealand"
 msgstr "Aotearoa"
 
-#: corpus/base_settings.py:86
+#: corpus/base_settings.py:87
 msgid "American"
 msgstr "Marikena"
 
 #: corpus/models.py:223
 msgid "language"
-msgstr ""
+msgstr "reo"
 
 #: corpus/models.py:228
 msgid "updated"
@@ -177,17 +189,17 @@ msgstr "Whakakāhore"
 msgid "^record/"
 msgstr "^hopu/"
 
-#: corpus/urls.py:11
+#: corpus/urls.py:9
 msgid "^listen/"
 msgstr "^whakarongo/"
 
-#: corpus/urls.py:18
+#: corpus/urls.py:15
 #, fuzzy
 #| msgid "Sentences"
 msgid "^sentences/"
 msgstr "rerenga_korero/"
 
-#: corpus/urls.py:20
+#: corpus/urls.py:17
 msgid "^stats/"
 msgstr "^tatauranga/"
 

@@ -49,10 +49,11 @@ DIALECTS = (
 
     ('mi', (
             ('tokerau', _('Te Tai Tokerau')),
+            ('tainui', _('Tainui')),
             ('rawhiti', _('Te Tai Rawhiti')),
             ('hauauru', _('Te Tai Hauauru')),
-            # ('taitonga', _('Te Tai Tonga')),
-            # ('tepuku', _('Te Puku o te Ika')),
+            ('matatua', _('Mataatua')),
+            ('tepuku', _('Te Puku o te Ika')),
             ('waipouna', _('Te Waipounamu')),
     )),
 
