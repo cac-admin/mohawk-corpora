@@ -17,10 +17,11 @@ def get_uuid():
 
 class Tribe(models.Model):
     name = models.CharField(
+        _('name'),
         help_text=_('Name of tribe.'),
         max_length=200,
         unique=True,
-        verbose_name=_('name'))
+        )
 
     class Meta:
         verbose_name = _('Tribe')
@@ -84,12 +85,13 @@ class Demographic(models.Model):
         verbose_name=_('age'))
 
     gender = models.CharField(
+        _('gender'),
         help_text=_('Gender'),
         choices=SEX_CHOICES,
         max_length=2,
         null=True,
         blank=True,
-        verbose_name=_('gender'))
+        )
 
     person = models.OneToOneField(
         Person,
