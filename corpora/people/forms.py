@@ -50,6 +50,9 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         self.fields['accent'].choices = BLANK_CHOICE_DASH + list(language_accents)
         self.fields['dialect'].choices = BLANK_CHOICE_DASH + list(language_dialects)
 
+        # temporarily disabling accents
+        del self.fields['accent']
+
         if require_proficiency:
             self.fields['level_of_proficiency'].required = require_proficiency
 
