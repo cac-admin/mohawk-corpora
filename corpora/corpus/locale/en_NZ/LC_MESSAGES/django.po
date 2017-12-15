@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 03:08+0000\n"
+"POT-Creation-Date: 2017-12-15 03:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,31 +26,39 @@ msgstr ""
 msgid "Maori"
 msgstr ""
 
-#: corpus/base_settings.py:44
-msgid "Kaitahu"
+#: corpus/base_settings.py:51 corpus/base_settings.py:64
+msgid "Te Tai Tokerau"
 msgstr ""
 
-#: corpus/base_settings.py:45
-msgid "Muriwhenua"
+#: corpus/base_settings.py:52
+msgid "Te Tai Rawhiti"
 msgstr ""
 
-#: corpus/base_settings.py:46
-msgid "Taranaki"
+#: corpus/base_settings.py:53
+msgid "Te Tai Hauauru"
 msgstr ""
 
-#: corpus/base_settings.py:47
-msgid "Tuhoe"
+#: corpus/base_settings.py:54 corpus/base_settings.py:67
+msgid "Te Tai Tonga"
 msgstr ""
 
-#: corpus/base_settings.py:61
+#: corpus/base_settings.py:65
+msgid "Te Tai Rāwhiti"
+msgstr ""
+
+#: corpus/base_settings.py:66
+msgid "Te Tai Hauāuru"
+msgstr ""
+
+#: corpus/base_settings.py:84
 msgid "Australian"
 msgstr ""
 
-#: corpus/base_settings.py:62
+#: corpus/base_settings.py:85
 msgid "New Zealand"
 msgstr ""
 
-#: corpus/base_settings.py:63
+#: corpus/base_settings.py:86
 msgid "American"
 msgstr ""
 
