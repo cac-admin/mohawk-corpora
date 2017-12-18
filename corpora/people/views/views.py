@@ -85,7 +85,8 @@ class ProfileDetail(APIView, TemplateView):
         # else:
             # context['person_form'] = PersonForm(instance=person)
 
-        context['groups_form'] = GroupsForm(instance=person)
+        context['groups_form'] = GroupsForm(instance=person,
+                                            request=self.request)
 
         known_languages = KnownLanguage.objects.filter(person=person).count()
         if known_languages > 0:
