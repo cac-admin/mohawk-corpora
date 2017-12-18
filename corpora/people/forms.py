@@ -68,6 +68,15 @@ class PersonForm(forms.ModelForm):
 
 
 class GroupsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super(GroupsForm, self).__init__(*args, **kwargs)
+
+        if not request.user.is_authenticated():
+            self.fields['groups'].help_text = \
+                "If you can't find your group, log in or sign up to create " \
+                "a new one."
+
     class Meta:
         model = Person
         fields = ('groups', )
