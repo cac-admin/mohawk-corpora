@@ -92,6 +92,7 @@ div.content{
 .error-message, .errorlist {
 	animation: error-flash .5s ease-in;
 	color: $light;
+	margin: 0px;
 }
 
 @keyframes error-flash {

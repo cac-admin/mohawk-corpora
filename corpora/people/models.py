@@ -17,9 +17,11 @@ def get_uuid():
 
 class Tribe(models.Model):
     name = models.CharField(
+        _('name'),
         help_text=_('Name of tribe.'),
         max_length=200,
-        unique=True)
+        unique=True,
+        )
 
     class Meta:
         verbose_name = _('Tribe')
@@ -53,12 +55,15 @@ class Person(models.Model):
     full_name = models.CharField(
         help_text=_('Full Name'),
         max_length=200,
-        blank=True)
+        blank=True,
+        verbose_name=_('full name'))
+
     uuid = models.CharField(
         max_length=64,
         default=get_uuid,
         editable=False,
         unique=True)
+
     profile_email = models.EmailField(
         blank=True,
         null=True,
@@ -93,29 +98,40 @@ class Demographic(models.Model):
     age = models.PositiveIntegerField(
         null=True,
         blank=True,
-        help_text=_('How old are you?'))
-    sex = models.CharField(
+        help_text=_('How old are you?'),
+        verbose_name=_('age'))
+
+    gender = models.CharField(
+        _('gender'),
         help_text=_('Gender'),
         choices=SEX_CHOICES,
         max_length=2,
         null=True,
-        blank=True)
+        blank=True,
+        )
+
     person = models.OneToOneField(
         Person,
         related_name='demographic',
         on_delete=models.CASCADE,
         null=True,
-        unique=True)
+        unique=True,
+        verbose_name=_('person'))
 
     tribe = models.ManyToManyField(
         Tribe,
         help_text=_('Which tribe(s) do you identify with?'),
         null=True,
-        blank=True)
+        blank=True,
+        verbose_name=_('tribe'))
     # tribe - This should be many field - many to many?
     # where did you grow up
     # ethnicities
     # anthing else?
+
+    class Meta:
+        verbose_name = _('Demographic')
+        verbose_name_plural = _('Demographics')
 
     def tribe_names(self):
         return u', '.join([a.name for a in self.tribe.all()])
@@ -135,16 +151,22 @@ class KnownLanguage(models.Model):
             (9, _('Second Language Learner - Advanced')),
         )
 
-    language = models.CharField(choices=LANGUAGES, max_length=16)
+    language = models.CharField(
+        choices=LANGUAGES,
+        max_length=16,
+        verbose_name=_('language'))
+
     level_of_proficiency = models.IntegerField(
         choices=PROFICIENCIES,
         null=True,
-        blank=True)
+        blank=True,
+        verbose_name=_('level of proficiency'))
 
     person = models.ForeignKey(
         Person,
         related_name='known_languages',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        verbose_name=_('person'))
 
     active = models.BooleanField(default=False)
 
@@ -152,16 +174,21 @@ class KnownLanguage(models.Model):
         choices=ACCENTS,
         max_length=8,
         null=True,
-        blank=True)
+        blank=True,
+        verbose_name=_('accent'))
+
     dialect = models.CharField(
         choices=DIALECTS,
         max_length=8,
         null=True,
-        blank=True)
+        blank=True,
+        verbose_name=_('dialect'))
     # where did you learn your reo?
 
     class Meta:
         unique_together = (('person', 'language'))
+        verbose_name = _('known language')
+        verbose_name_plural = _('known languages')
 
 
 @receiver(models.signals.post_save, sender=KnownLanguage)

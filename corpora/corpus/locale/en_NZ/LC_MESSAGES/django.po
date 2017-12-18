@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-15 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:69 corpus/admin.py:121 corpus/models.py:195
-#: corpus/models.py:201
+#: corpus/admin.py:72 corpus/admin.py:139 corpus/models.py:212
+#: corpus/models.py:218
 msgid "None"
 msgstr ""
 
@@ -26,32 +26,84 @@ msgstr ""
 msgid "Maori"
 msgstr ""
 
-#: corpus/base_settings.py:45
-msgid "Kaitahu"
+#: corpus/base_settings.py:51 corpus/base_settings.py:65
+msgid "Te Tai Tokerau"
 msgstr ""
 
-#: corpus/base_settings.py:46
-msgid "Muriwhenua"
+#: corpus/base_settings.py:52
+msgid "Tainui"
 msgstr ""
 
-#: corpus/base_settings.py:47
-msgid "Taranaki"
+#: corpus/base_settings.py:53
+msgid "Te Tai Rawhiti"
 msgstr ""
 
-#: corpus/base_settings.py:48
-msgid "Tuhoe"
+#: corpus/base_settings.py:54
+msgid "Te Tai Hauauru"
 msgstr ""
 
-#: corpus/base_settings.py:62
+#: corpus/base_settings.py:55
+msgid "Mataatua"
+msgstr ""
+
+#: corpus/base_settings.py:56
+msgid "Te Puku o te Ika"
+msgstr ""
+
+#: corpus/base_settings.py:57
+msgid "Te Waipounamu"
+msgstr ""
+
+#: corpus/base_settings.py:66
+msgid "Te Tai Rāwhiti"
+msgstr ""
+
+#: corpus/base_settings.py:67
+msgid "Te Tai Hauāuru"
+msgstr ""
+
+#: corpus/base_settings.py:68
+msgid "Te Tai Tonga"
+msgstr ""
+
+#: corpus/base_settings.py:85
 msgid "Australian"
 msgstr ""
 
-#: corpus/base_settings.py:63
+#: corpus/base_settings.py:86
 msgid "New Zealand"
 msgstr ""
 
-#: corpus/base_settings.py:64
+#: corpus/base_settings.py:87
 msgid "American"
+msgstr ""
+
+#: corpus/models.py:223
+msgid "language"
+msgstr ""
+
+#: corpus/models.py:228
+msgid "updated"
+msgstr ""
+
+#: corpus/models.py:229
+msgid "source"
+msgstr ""
+
+#: corpus/models.py:230
+msgid "uploaded file"
+msgstr ""
+
+#: corpus/models.py:232
+msgid ".txt format"
+msgstr ""
+
+#: corpus/models.py:235
+msgid "text"
+msgstr ""
+
+#: corpus/models.py:236
+msgid "texts"
 msgstr ""
 
 #: corpus/templates/corpus/listen.html:52
@@ -183,7 +235,7 @@ msgstr ""
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:229 corpus/views/api.py:244
+#: corpus/views/api.py:232 corpus/views/api.py:247
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

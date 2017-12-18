@@ -40,12 +40,36 @@ LANGUAGES = (
 
 DIALECTS = (
 
+    # ('mi', (
+    #         ('kaitahu',  _('Kaitahu')),
+    #         ('muriwhen', _('Muriwhenua')),
+    #         ('taranaki', _('Taranaki')),
+    #         ('tuhoe', _('Tuhoe')),
+    # )),
+
     ('mi', (
-            ('kaitahu',  _('Kaitahu')),
-            ('muriwhen', _('Muriwhenua')),
-            ('taranaki', _('Taranaki')),
-            ('tuhoe', _('Tuhoe')),
+            ('tokerau', _('Te Tai Tokerau')),
+            ('tainui', _('Tainui')),
+            ('rawhiti', _('Te Tai Rawhiti')),
+            ('hauauru', _('Te Tai Hauauru')),
+            ('matatua', _('Mataatua')),
+            ('tepuku', _('Te Puku o te Ika')),
+            ('waipouna', _('Te Waipounamu')),
     )),
+
+)
+
+DIALECTS_HELP_TEXT = (
+
+    ('mi', (
+            ('tokerau', _('Te Tai Tokerau')),
+            ('rawhiti', _('Te Tai Rāwhiti')),
+            ('hauauru', _('Te Tai Hauāuru')),
+            ('taitonga', _('Te Tai Tonga')),
+            # ('tepuku', _('Te Puku o te Ika')),
+            # ('waipouna', _('Te Waipounamu')),
+    )),
+
 
 )
 

@@ -4,6 +4,8 @@ from people.models import KnownLanguage, Person, Demographic
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from dal import autocomplete
 from django.db.models.fields import BLANK_CHOICE_DASH
+from django.utils.translation import ugettext as _
+
 
 # from django.conf.settings import LANGUAGES
 
@@ -50,6 +52,9 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         self.fields['accent'].choices = BLANK_CHOICE_DASH + list(language_accents)
         self.fields['dialect'].choices = BLANK_CHOICE_DASH + list(language_dialects)
 
+        # temporarily disabling accents
+        del self.fields['accent']
+
         if require_proficiency:
             self.fields['level_of_proficiency'].required = require_proficiency
 
@@ -81,7 +86,7 @@ class DemographicForm(forms.ModelForm):
 
     class Meta:
         model = Demographic
-        fields = ('age', 'sex', 'tribe')
+        fields = ('age', 'gender', 'tribe')
         widgets = {
             'tribe': autocomplete.ModelSelect2Multiple(url='people:tribe-autocomplete')
         }

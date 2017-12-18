@@ -78,8 +78,13 @@ class ProfileDetail(APIView, TemplateView):
         elif person.profile_email:
             email = person.profile_email
         else:
-            email = None
+            email = ''
+
+        # if email is None:
         context['person_form'] = PersonForm(instance=person, initial={'email': email})
+        # else:
+            # context['person_form'] = PersonForm(instance=person)
+
         context['groups_form'] = GroupsForm(instance=person)
 
         known_languages = KnownLanguage.objects.filter(person=person).count()

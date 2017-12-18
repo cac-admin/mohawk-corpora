@@ -59,6 +59,10 @@ def failed_submit(request):
     return render(request, 'corpus/failed_submit.html')
 
 
+def record_redirect(request):
+    return redirect(reverse('corpus:record'))
+
+
 def record(request):
     # Get the person object from the user
 
@@ -266,6 +270,9 @@ class StatsView(ListView):
         context['recordings_by_proficiency'] = stats_by_proficiency
         return context
 
+
+def listen_redirect(request):
+    return redirect(reverse('corpus:listen'))
 
 class ListenView(TemplateView):
     template_name = "corpus/listen.html"

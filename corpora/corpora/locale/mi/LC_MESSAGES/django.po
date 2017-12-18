@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-04 23:36+0000\n"
+"POT-Creation-Date: 2017-12-15 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,66 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/templates/corpora/home.html:14
-msgid "teaching computers indigenous languages"
+#: corpora/templates/corpora/footer.html:32
+msgid "Sign In"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:56
+#: corpora/templates/corpora/footer.html:32
+msgid "Sign-Up"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:33
+msgid "Record"
+msgstr "Hopu"
+
+#: corpora/templates/corpora/footer.html:34
+#: corpora/templates/corpora/logged_in_nav_buttons.html:38
+#: corpora/templates/corpora/logged_in_nav_buttons.html:126
+msgid "Listen"
+msgstr "Whakarongo"
+
+#: corpora/templates/corpora/footer.html:37
+msgid "Get Involved"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:39
+#, fuzzy
+#| msgid "Translations for "
+msgid "Translate"
+msgstr "Ngā whakamāoritanga mō te "
+
+#: corpora/templates/corpora/footer.html:40
+msgid "Wānanga"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:42
+msgid "Supporters"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:49
+msgid "Powered by"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:56
+#, python-format
+msgid ""
+"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content "
+"collected at %(site)s falls under the %(license)s License."
+msgstr ""
+
+#: corpora/templates/corpora/home.html:14
+msgid "teaching computers indigenous languages"
+msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
+
+#: corpora/templates/corpora/home.html:51
+msgid "Listen to Recordings"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:59
+msgid "Start"
+msgstr "Tīmata"
+
+#: corpora/templates/corpora/home.html:64
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -36,17 +91,35 @@ msgid ""
 "indigenous languages,\n"
 "      to voice operated digital assistants like Siri."
 msgstr ""
+"he tikanga hei toro atu ki te iwi whānui hei kohikohi i te reo \n"
+"      kōrero&mdash;ngā kapohanga reo&mdash;hei whakaako i te rorohiko kia "
+"mārama ai \n"
+"      ki te reo kōrero mā te ako-ā-mīhini nei. I tīmata ai tēnei kaupapa kia "
+"riro ai\n"
+"      mā te mīhini e tuhituhi mai te hia mano haora kōrero reo Māori kua oti "
+"te kohikohii ngā tau ki muri\n"
+"      kei <a href=\"https://tehiku.nz\">tehiku.nz</a> kia māmā ake ai te "
+"toro mai a te Māori\n"
+"      ki ngā kohinga reo Māori. E hiahia ana anō hoki mātou kia taea te reo "
+"Māori, me ērā atu reo taketake,\n"
+"      e ngā mīhini reo kōrero pērā i a Siri."
 
-#: corpora/templates/corpora/home.html:65
+#: corpora/templates/corpora/home.html:77
 msgid "Available Languages"
-msgstr ""
+msgstr "Ngā reo e taea ana"
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:78
 msgid "Translations for "
-msgstr ""
+msgstr "Ngā whakamāoritanga mō te "
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:78
 msgid " are provided in the following langauges:"
+msgstr " koia ēnei ko ngā reo e taea ana:"
+
+#: corpora/templates/corpora/home.html:86
+msgid ""
+"Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
+"tree/translate\">translating</a> this app."
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:31
@@ -54,44 +127,39 @@ msgstr ""
 msgid "Speak"
 msgstr "Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:38
-#: corpora/templates/corpora/logged_in_nav_buttons.html:126
-msgid "Listen"
-msgstr "Whakarongo"
-
 #: corpora/templates/corpora/logged_in_nav_buttons.html:47
 msgid "Sentences"
-msgstr ""
+msgstr "Rerenga Kōrero"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:54
 msgid "Stats"
-msgstr ""
+msgstr "Tatauranga"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:61
 msgid "Admin"
-msgstr ""
+msgstr "Kaiwhakahaere"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:69
 #: corpora/templates/corpora/logged_in_nav_buttons.html:133
 msgid "Profile"
-msgstr ""
+msgstr "Ngā Kōrero Mōu"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:77
 msgid "Edit Info"
-msgstr ""
+msgstr "Whakatikatika Kōrero"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:90
 #: corpora/templates/corpora/logged_in_nav_buttons.html:146
 msgid "Language"
-msgstr ""
+msgstr "Reo"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:110
 msgid "Log Out"
-msgstr ""
+msgstr "Puta Atu"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:166
 msgid "Log In"
-msgstr ""
+msgstr "Tomo Mai"
 
 #: corpora/urls.py:42
 msgid "^people/"
@@ -99,21 +167,21 @@ msgstr "^tangata/"
 
 #: corpora/views/api.py:18
 msgid "Only staff can view this information."
-msgstr ""
+msgstr "Mā ngā kaimahi anake ēnei kōrero e titiro."
 
 #: corpora/views/api.py:23 corpora/views/api.py:44 corpora/views/api.py:46
 msgid "You're not allowed to view this information."
-msgstr ""
+msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero"
 
 #: corpora/views/api.py:41
 msgid "You must sign in to edit your info."
-msgstr ""
+msgstr "Me matua tomo mai koe ka taea ai te whakarerekē i ō kōrero."
 
 #~ msgid "Maori"
 #~ msgstr "Māori"
 
 #~ msgid "New Zealand English"
-#~ msgstr "Te Reo Pākeha mō Aoteroa"
+#~ msgstr "Te Reo Ingarihi o Aoteroa"
 
 #~ msgid "English"
-#~ msgstr "Te Reo Pākeha"
+#~ msgstr "Te Reo Ingarihi"
