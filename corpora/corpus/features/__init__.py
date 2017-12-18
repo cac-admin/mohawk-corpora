@@ -1,5 +1,6 @@
 from __future__ import print_function, absolute_import
 from importlib import import_module
+import sys
 
 from collections import Counter
 
@@ -12,6 +13,7 @@ def import_finder(lang):
             m = import_module(lang, 'features')
             return m.get_features
         except ImportError as e:
+            print("unknown language %s" % lang, file=sys.stderr)
             return default_feature_finder
         except AttributeError as e:
             return default_feature_finder
