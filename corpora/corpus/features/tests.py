@@ -46,7 +46,11 @@ class TestFeaturesImport(unittest.TestCase):
                  "«m, oa, «iŋ, re, iŋ, «to, o», too, «t, oo, mar, oku, ok, "
                  "ŋo, ŋ, ō, ook, e», ma, a», ku», re», e, «ma, i, oa», m, "
                  "ko», r, u, t, ku, iŋo"),
-                ("ko Iha tōku ingoa 123", ""),
+                ("ko Iha tōku ingoa 123",
+                 " *4, «i*2, a»*2, a*2, i*2, k*2, o*2, 3», «iŋ, ŋoa, oa», ih, "
+                 "«ko, «ih, oa, 23», iha, u», 23, «k, iŋ, 1, to, 3, 2, o», "
+                 "too, «t, oo, oku, ŋo, ŋ, ō, ook, 123, «to, ku», ha, «12, "
+                 "12, ok, h, ko, «1, ko», ha», u, t, ku, iŋo"),
                 ("aeiouāēīōū hīkōmānūngīpērītēwāwhī",
                  "ii*5, ī*5, ā*3, ee*3, aa*3, ē*3, ei*2, ō*2, oo*2, ou*2, "
                  "uu*2, ae*2, io*2, ū*2, uu», ite,  , te, ri, ŋi, uŋ, hii, h, "

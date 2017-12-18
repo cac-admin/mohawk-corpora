@@ -87,13 +87,17 @@ def generate_n_grams(n, prefix, diphthongs, macrons):
     return ngrams
 
 
-has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw ]', re.UNICODE).search
+has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw 0-9]', re.UNICODE).search
 has_bad_cluster = re.compile('[fhkmnŋprtw][fhkmnŋprtw]', re.UNICODE).search
-has_bad_end = re.compile('[^aeiouāēīōū ]\\b', re.UNICODE).search
+has_bad_end = re.compile('[^aeiouāēīōū 0-9]\\b', re.UNICODE).search
+has_alphanumeric_mix = re.compile('([a-z][0-9])|([0-9][a-z])', re.UNICODE).search
 
 
 def has_english(text):
-    if has_bad_letter(text) or has_bad_cluster(text) or has_bad_end(text):
+    if (has_bad_letter(text) or
+        has_bad_cluster(text) or
+        has_bad_end(text) or
+        has_alphanumeric_mix(text)):
         return True
     return False
 
