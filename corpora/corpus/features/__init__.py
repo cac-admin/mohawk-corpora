@@ -1,11 +1,10 @@
 from __future__ import print_function, absolute_import
 from importlib import import_module
 
-def default_feature_finder(x):
-    # rely only on the set of characters.
-    from collections import Counter
-    return Counter
+from collections import Counter
 
+# rely only on the set of characters.
+default_feature_finder = Counter
 
 def import_finder(lang):
     if lang.isalpha():
@@ -16,3 +15,4 @@ def import_finder(lang):
             return default_feature_finder
         except AttributeError as e:
             return default_feature_finder
+    return default_feature_finder
