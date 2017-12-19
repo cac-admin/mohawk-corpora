@@ -87,17 +87,15 @@ def generate_n_grams(n, prefix, diphthongs, macrons):
     return ngrams
 
 
-has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw 0-9]', re.UNICODE).search
+has_bad_letter = re.compile('[^aeiouāēīōūfhkmnŋprtw ]', re.UNICODE).search
 has_bad_cluster = re.compile('[fhkmnŋprtw][fhkmnŋprtw]', re.UNICODE).search
-has_bad_end = re.compile('[^aeiouāēīōū 0-9]\\b', re.UNICODE).search
-has_alphanumeric_mix = re.compile('([a-z][0-9])|([0-9][a-z])', re.UNICODE).search
+has_bad_end = re.compile('[^aeiouāēīōū ]\\b', re.UNICODE).search
 
 
 def has_english(text):
     if (has_bad_letter(text) or
         has_bad_cluster(text) or
-        has_bad_end(text) or
-        has_alphanumeric_mix(text)):
+        has_bad_end(text)):
         return True
     return False
 
@@ -118,6 +116,7 @@ def normalise_text(text):
     text = unicodedata.normalize('NFC', text)
     text = text.lower()
     text = re.sub(r'[^\wāēōūī]+', ' ', text, flags=re.UNICODE)
+    text = re.sub(r'\b[0-9]+\d', ' ', text, flags=re.UNICODE)
     text = re.sub(r'ng', 'ŋ', text, flags=re.UNICODE)
     text = re.sub(r'wh', 'f', text, flags=re.UNICODE)
     return text
