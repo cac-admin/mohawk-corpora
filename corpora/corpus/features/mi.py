@@ -168,6 +168,18 @@ def mangle_text(text, diphthongs, macrons, no_english=True,
     if not macrons:
         text = demacronise(text)
     if diphthongs:
+        new = []
+        i = 0
+        while i < len(text):
+            pair = text[i: i + 2]
+            if pair in DIPHTHONGS:
+                new.append(DIPHTHONGS[pair])
+                i += 2
+            else:
+                new.append(pair[0])
+                i += 1
+        text = ''.join(new)
+
         for k, v in DIPHTHONGS.items():
             text = re.sub(k, v, text, flags=re.UNICODE)
     text = text.strip()
