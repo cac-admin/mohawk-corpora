@@ -123,8 +123,8 @@ player = new Player('.sentence-block');
 
       $('.recording-info').empty()
       var agent = "<br><p><b>User Agent:&nbsp;</b>"+listen.recording.user_agent+"</p>"
-      var url = window.location.hostname + "/admin/corpus/recording/" + listen.recording.id
-      var url_elem = "<p><i class='fa fa-link fa-fw'></i><a target='_blank' href='"+url+"'>"+url+"</a></p>"
+      var url = "https://" + window.location.hostname + "/admin/corpus/recording/" + listen.recording.id
+      var url_elem = "<p><i class='fa fa-link fa-fw'></i><a target='_blank' href='"+url+"'>Recording "+listen.recording.id+"</a></p>"
       $('.recording-info').append(agent)
       $('.recording-info').append(url_elem)
     })
