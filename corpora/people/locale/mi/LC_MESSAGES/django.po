@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 17:43+0000\n"
+"POT-Creation-Date: 2017-12-19 04:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,139 +29,147 @@ msgstr "Ingoa o te iwi."
 msgid "Tribe"
 msgstr "Iwi"
 
-#: people/models.py:28 people/models.py:121
+#: people/models.py:28 people/models.py:138
 msgid "Tribes"
 msgstr "Ngā Iwi"
 
-#: people/models.py:41
+#: people/models.py:45
+msgid "group"
+msgstr "rōpū"
+
+#: people/models.py:46
+msgid "groups"
+msgstr "rōpū"
+
+#: people/models.py:56
 msgid "Full Name"
 msgstr "Ingoa"
 
-#: people/models.py:44
+#: people/models.py:59
 msgid "full name"
 msgstr "ingoa"
 
-#: people/models.py:65
+#: people/models.py:82
 msgid "Person"
 msgstr "Tangata"
 
-#: people/models.py:66
+#: people/models.py:83
 msgid "People"
 msgstr "Tāngata"
 
-#: people/models.py:74
+#: people/models.py:91
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:75
+#: people/models.py:92
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:76
+#: people/models.py:93
 msgid "Other"
 msgstr "Āhua Kē"
 
-#: people/models.py:77
+#: people/models.py:94
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:78
+#: people/models.py:95
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:84
+#: people/models.py:101
 msgid "How old are you?"
 msgstr "E hia ō tau?"
 
-#: people/models.py:85
+#: people/models.py:102
 msgid "age"
 msgstr "ō tau"
 
-#: people/models.py:88
+#: people/models.py:105
 msgid "gender"
 msgstr "tāne/wahine"
 
-#: people/models.py:89
+#: people/models.py:106
 msgid "Gender"
 msgstr "Tāne/Wahine"
 
-#: people/models.py:102 people/models.py:152
+#: people/models.py:119 people/models.py:169
 msgid "person"
 msgstr "tangata"
 
-#: people/models.py:106
+#: people/models.py:123
 msgid "Which tribe(s) do you identify with?"
 msgstr "Nō (t)ēhea iwi koe?"
 
-#: people/models.py:109
+#: people/models.py:126
 msgid "tribe"
 msgstr "iwi"
 
-#: people/models.py:116
+#: people/models.py:133
 msgid "Demographic"
 msgstr ""
 
-#: people/models.py:117
+#: people/models.py:134
 msgid "Demographics"
 msgstr ""
 
-#: people/models.py:126
+#: people/models.py:143
 msgid "Native Speaker - Beginner"
 msgstr "He Reo Ūkaipō - Mātau iti nei"
 
-#: people/models.py:127
+#: people/models.py:144
 msgid "Native Speaker - Intermediate"
 msgstr "He Reo Ūkaipō - Āhua Mātau nei"
 
-#: people/models.py:128
+#: people/models.py:145
 msgid "Native Speaker - Advanced"
 msgstr "He Reo Ūkaipō - Tino Mātau nei"
 
-#: people/models.py:129
+#: people/models.py:146
 msgid "Near Native Speaker - Beginner"
 msgstr "He Reo Tuarua - Mātau iti nei"
 
-#: people/models.py:130
+#: people/models.py:147
 msgid "Near Native Speaker - Intermediate"
 msgstr "He Reo Tuarua - Āhua Mātau nei"
 
-#: people/models.py:131
+#: people/models.py:148
 msgid "Near Native Speaker - Advanced"
 msgstr "He Reo Tuarua - Tino Mātau nei"
 
-#: people/models.py:132
+#: people/models.py:149
 msgid "Second Language Learner - Beginner"
 msgstr "He Ākonga Reo - Mātau iti nei"
 
-#: people/models.py:133
+#: people/models.py:150
 msgid "Second Language Learner - Intermediate"
 msgstr "He Ākonga Reo - Āhua Mātau nei"
 
-#: people/models.py:134
+#: people/models.py:151
 msgid "Second Language Learner - Advanced"
 msgstr "He Ākonga Reo - Tino Mātau nei"
 
-#: people/models.py:140
+#: people/models.py:157
 msgid "language"
 msgstr "reo"
 
-#: people/models.py:146
+#: people/models.py:163
 msgid "level of proficiency"
 msgstr ""
 
-#: people/models.py:161
+#: people/models.py:178
 msgid "accent"
 msgstr ""
 
-#: people/models.py:168
+#: people/models.py:185
 msgid "dialect"
 msgstr ""
 
-#: people/models.py:173
+#: people/models.py:190
 msgid "known language"
 msgstr ""
 
-#: people/models.py:174
+#: people/models.py:191
 msgid "known languages"
 msgstr ""
 
@@ -316,11 +324,11 @@ msgstr ""
 "E tika ana rānei ko <a href=\"mailto:%(email)s\">%(email)s</a> te īmēra o "
 "user %(user_display)s."
 
-#: people/templates/account/email_confirm.html:20
+#: people/templates/account/email_confirm.html:23
 msgid "Confirm"
 msgstr "Aē"
 
-#: people/templates/account/email_confirm.html:27
+#: people/templates/account/email_confirm.html:33
 #, python-format
 msgid ""
 "This e-mail confirmation link expired or is invalid. Please <a href="
@@ -681,7 +689,7 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
-#: people/views/views.py:171
+#: people/views/views.py:172
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."

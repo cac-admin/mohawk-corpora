@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 17:43+0000\n"
+"POT-Creation-Date: 2017-12-19 04:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,45 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/templates/corpora/footer.html:32
+#: corpora/templates/corpora/footer.html:35
 msgid "Sign In"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:32
-msgid "Sign-Up"
+#: corpora/templates/corpora/footer.html:35
+msgid "Sign Up"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:33
+#: corpora/templates/corpora/footer.html:37
+#: corpora/templates/corpora/logged_in_nav_buttons.html:110
+msgid "Log Out"
+msgstr "Takiputa"
+
+#: corpora/templates/corpora/footer.html:41
 msgid "Record"
 msgstr "Rekoata"
 
-#: corpora/templates/corpora/footer.html:34
+#: corpora/templates/corpora/footer.html:42
 #: corpora/templates/corpora/logged_in_nav_buttons.html:38
 #: corpora/templates/corpora/logged_in_nav_buttons.html:126
 msgid "Listen"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:37
+#: corpora/templates/corpora/footer.html:45
 msgid "Get Involved"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:39
+#: corpora/templates/corpora/footer.html:47
 msgid "Translate"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:40
+#: corpora/templates/corpora/footer.html:48
 msgid "Wānanga"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:42
+#: corpora/templates/corpora/footer.html:50
 msgid "Supporters"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:49
+#: corpora/templates/corpora/footer.html:57
 msgid "Powered by"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:56
+#: corpora/templates/corpora/footer.html:64
 #, python-format
 msgid ""
 "Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content "
@@ -138,10 +143,6 @@ msgstr "Whakarerekē"
 #: corpora/templates/corpora/logged_in_nav_buttons.html:146
 msgid "Language"
 msgstr "Reo"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:110
-msgid "Log Out"
-msgstr "Takiputa"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:166
 msgid "Log In"

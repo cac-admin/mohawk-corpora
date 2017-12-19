@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-15 17:43+0000\n"
+"POT-Creation-Date: 2017-12-19 04:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:72 corpus/admin.py:139 corpus/models.py:212
-#: corpus/models.py:218
+#: corpus/admin.py:73 corpus/admin.py:145 corpus/models.py:235
+#: corpus/models.py:241
 msgid "None"
 msgstr "Hore kau"
 
@@ -78,31 +78,31 @@ msgstr "Aotearoa"
 msgid "American"
 msgstr "Marikena"
 
-#: corpus/models.py:223
+#: corpus/models.py:256
 msgid "language"
 msgstr "reo"
 
-#: corpus/models.py:228
+#: corpus/models.py:266
 msgid "updated"
 msgstr ""
 
-#: corpus/models.py:229
+#: corpus/models.py:267
 msgid "source"
 msgstr ""
 
-#: corpus/models.py:230
+#: corpus/models.py:268
 msgid "uploaded file"
 msgstr ""
 
-#: corpus/models.py:232
+#: corpus/models.py:270
 msgid ".txt format"
 msgstr ""
 
-#: corpus/models.py:235
+#: corpus/models.py:273
 msgid "text"
 msgstr ""
 
-#: corpus/models.py:236
+#: corpus/models.py:274
 msgid "texts"
 msgstr ""
 
@@ -189,17 +189,17 @@ msgstr "Whakakāhore"
 msgid "^record/"
 msgstr "^hopu/"
 
-#: corpus/urls.py:9
+#: corpus/urls.py:11
 msgid "^listen/"
 msgstr "^whakarongo/"
 
-#: corpus/urls.py:15
+#: corpus/urls.py:18
 #, fuzzy
 #| msgid "Sentences"
 msgid "^sentences/"
 msgstr "rerenga_korero/"
 
-#: corpus/urls.py:17
+#: corpus/urls.py:20
 msgid "^stats/"
 msgstr "^tatauranga/"
 
