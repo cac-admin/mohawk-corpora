@@ -70,7 +70,7 @@ class TestFeaturesImport(unittest.TestCase):
                   "oou", "hi", "iio", "iik", "aae", "aaf", "ma", "f", "aan",
                   "ik", "n", "r", "eii", "ua", "eri", "eio", "uŋi", "af",
                   "ip", "it", "ii»", "an", "anu", "rii", "uaa", "afi", "u»",
-                  "ė", "nu", "iou", "m", "maa", "«hi", "fi", "a", "ko",
+                  "i", "nu", "iou", "m", "maa", "«hi", "fi", "æ", "ko",
                   "uuŋ", "ö", "ewa"}),
         ]:
             c = f(s)
