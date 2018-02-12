@@ -1,0 +1,25 @@
+#!/usr/bin/python
+import requests
+import json
+import sys
+
+DEFAULT_URL = 'https://corpora.io/api/sentences/?format=json'
+
+def main():
+    if len(sys.argv) == 1:
+        url = DEFAULT_URL
+    else:
+        url = sys.argv[1]
+
+    while url:
+        r = requests.get(url)
+        j = r.json()
+        for s in j['results']:
+            t = s['text'].encode('utf-8')
+            if t[:3] == '\xef\xbb\xbf':
+                t = t[3:]
+            print t
+            print
+        url = j.get('next')
+
+main()
