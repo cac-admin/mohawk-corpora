@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 21:50+0000\n"
+"POT-Creation-Date: 2018-02-15 22:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,13 @@ msgstr ""
 msgid "The actual license text."
 msgstr ""
 
-#: license/models.py:39
+#: license/models.py:22
+msgid ""
+"How the license should be displayed. This field is meant                    "
+"to include style e.g. html."
+msgstr ""
+
+#: license/models.py:42
 msgid "Accepted licenses"
 msgstr ""
 

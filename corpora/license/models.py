@@ -18,7 +18,10 @@ class License(models.Model):
     license = models.TextField(
         help_text=_('The actual license text.'),
         null=True)
-
+    license_display = models.TextField(
+        help_text=_('How the license should be displayed. This field is meant\
+                    to include style e.g. html.'),
+        null=True)
     # should the site have alink to this? or each person can choose a icense?
     # initially just have one license in the database and that's the only one
     # they can use

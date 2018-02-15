@@ -87,18 +87,18 @@ accept_license_button.addEventListener('click',function(event){
         <h5 class="modal-title" id="exampleModalLabel">{{license.license_name|title}} {% trans "License" %}</h5>
       </div>
       <div class="modal-body">
-        {{license.description}}
+        {% if license.license_display %}{{license.license_display|safe}}{% else %}{{license.description|safe}}{% endif %}
       </div>
       <div class="modal-footer">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12" title="You must accept the above {{license.name|title}} license to continue.">
             {% blocktrans %}You must accept the above {{license.name|title}} license to continue.{% endblocktrans %}
           </div>
             
           <div class="col-12">
-            <button type="button" class="btn btn-secondary" id="cancel_license_button">
+            <button type="button" class="btn btn-secondary" id="cancel_license_button" title="Cancel - you won't be able to contribute recordings">
               {% trans "Cancel" %}</button>
-            <button type="button" class="btn btn-default" id="accept_license_button">
+            <button type="button" class="btn btn-default" id="accept_license_button" title="Accept">
               {% trans "Accept" %}</button>
           </div>
         </div>
