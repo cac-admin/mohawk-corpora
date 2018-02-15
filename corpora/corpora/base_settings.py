@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import sys
+import analytical
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,6 +70,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+
+    'analytical',
 ]
 
 MIDDLEWARE = [
@@ -424,3 +427,13 @@ CELERY_TIMEZONE = TIME_ZONE
 
 
 # from company.scheduled_tasks import *
+
+# DJANGO ANALYTICAL
+GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-114290321-1'
+# GOOGLE_ANALYTICS_TRACKING_STYLE = \
+#     analytical.templatetags.google_analytics.SCOPE_TRACK_MULTIPLE_DOMAINS
+GOOGLE_ANALYTICS_DISPLAY_ADVERTISING = True
+GOOGLE_ANALYTICS_SITE_SPEED = True
+GOOGLE_ANALYTICS_ANONYMIZE_IP = True
+FACEBOOK_PIXEL_ID = '131550720860815'
+# INTERCOM_APP_ID =''

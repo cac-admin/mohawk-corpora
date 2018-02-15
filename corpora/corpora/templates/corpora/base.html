@@ -1,6 +1,7 @@
-{% load static sekizai_tags compress  %}<!DOCTYPE html>
+{% load static sekizai_tags compress analytical %}<!DOCTYPE html>
 <html lang="en">
 <head>
+  {% analytical_head_top %}
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width" />
 
@@ -39,9 +40,11 @@
   {% render_block "js-include" %}
   {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
 
+  {% analytical_head_bottom %}
 </head>
 
 <body>
+  {% analytical_body_top %}
 
   {% block navbuttons %}{% endblock %}
   <div class="header">{% block header %}{% endblock %}</div>
@@ -54,7 +57,7 @@
 
 
   {% render_block "js-end" %}
-
+  {% analytical_body_bottom %}
 </body>
 
 </html>

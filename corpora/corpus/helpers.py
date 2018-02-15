@@ -19,6 +19,7 @@ def get_sentences(request,
     if current_language is None:
         current_language = get_current_language(request)
 
+    # Only get approved sentences
     sentences = Sentence.objects.filter(language=current_language)\
         .annotate(sum_approved=Sum(
             Case(
@@ -32,6 +33,7 @@ def get_sentences(request,
                 output_field=IntegerField())))\
         .filter(sum_approved__gte=1)
 
+    # Only return sentences which the person hasn't recorded
     sentences = sentences\
         .annotate(person_no_more_recording=Sum(
             Case(

@@ -54,3 +54,7 @@ django-autocomplete-light
 
 #Support
 pyyaml
+
+
+# Analytics
+django-analytical
