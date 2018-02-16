@@ -125,17 +125,31 @@ class MyRecorder extends Player{
             $('#recorder-container').children().remove();
             var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
                 <h2>Browser Recording Not Supported</h2>\
-                <p>We\'re working on alternatives - and hoping browsers support WebRTC moving forward.</p>\
+                <p>Please use Chrome or Firefox on Desktop.</p>\
+                <p>If you\'re in Facebook, open this link in your device broswer (e.g. Open in Safari).</p>\
+                <p>If you\'re on iOS, please use Safari.</p>\
+                <p>If you\'re on Adroid, please use Chrome or Firefox.</p>\
                 </div>');
             $('#recorder-container').append(info);
             console.log("Recorder not supported");
             return undefined;
         } else {
 
-
             if (navigator.userAgent.match('Safari')!=null
               && navigator.userAgent.match('Macintosh')!=null 
               && navigator.userAgent.match('Chrome')==null){
+              
+                $('#recorder-container').children().remove();
+                var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
+                    <h2>Browser Recording Not Supported</h2>\
+                    <p>Please use Chrome or Firefox.</p>\
+                    </div>');
+                $('#recorder-container').append(info);
+                console.log("Recorder not supported");
+                return undefined;
+            }
+
+            if (navigator.userAgent.match('SamsungBrowser')!=null){
               
                 $('#recorder-container').children().remove();
                 var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
