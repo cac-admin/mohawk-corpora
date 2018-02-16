@@ -161,6 +161,20 @@ class MyRecorder extends Player{
                 return undefined;
             }
 
+            if (navigator.userAgent.match('FBAV')!=null
+                && ( navigator.userAgent.match('FBAN')!=null || navigator.userAgent.match('FB_IAB')!=null
+                || navigator.userAgent.match('FB4A')!=null )){
+              
+                $('#recorder-container').children().remove();
+                var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
+                    <h2>Facebook Browser Recording Not Supported</h2>\
+                    <p>Please open this in Chrome or Firefox.</p>\
+                    </div>');
+                $('#recorder-container').append(info);
+                console.log("Recorder not supported");
+                return undefined;
+            }
+
             console.log("Recorder supported");
 
         }
