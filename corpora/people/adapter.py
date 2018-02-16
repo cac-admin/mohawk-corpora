@@ -1,6 +1,6 @@
 
 '''
-Custom adapter methods for allauth. 
+Custom adapter methods for allauth.
 See https://django-allauth.readthedocs.io/en/latest/advanced.html#creating-and-populating-user-instances
 '''
 
@@ -13,6 +13,7 @@ from datetime import datetime
 
 import logging
 logger = logging.getLogger('corpora')
+
 
 class PersonAccountAdapter(DefaultAccountAdapter):
 

@@ -150,9 +150,9 @@ AUTHENTICATION_BACKENDS = (
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
-    
+
 )
-LOGIN_REDIRECT_URL = 'people:profile' # is there a more fool proof option?
+LOGIN_REDIRECT_URL = 'people:profile'  # is there a more fool proof option?
 ACCOUNT_ADAPTER = "people.adapter.PersonAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "people.adapter.PersonSocialAccountAdapter"
 SOCIALACCOUNT_PROVIDERS = \

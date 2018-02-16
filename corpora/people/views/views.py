@@ -62,6 +62,12 @@ class ProfileDetail(APIView, TemplateView):
                 url = reverse('people:choose_language') + '?next=people:profile'
                 return redirect(url)
 
+        num_recordings = Recording.objects.filter(person=person).count()
+
+        if num_recordings == 0:
+            url = reverse('corpus:record')  # onboard?
+            return redirect(url)
+
         return super(ProfileDetail, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -110,55 +116,59 @@ class ProfileDetail(APIView, TemplateView):
 
         return context
 
+# No longer used - flag for deletion
+# def profile(request):
 
-def profile(request):
+#     if request.user.is_authenticated():
+#         sentence = get_next_sentence(request)
+#         current_language = get_current_language(request)
+#         person = Person.objects.get(user=request.user)
+#         known_languages = KnownLanguage.objects.filter(person=person)
+#         unknown_languages = get_unknown_languages(person)
 
-    if request.user.is_authenticated():
-        sentence = get_next_sentence(request)
-        current_language = get_current_language(request)
-        person = Person.objects.get(user=request.user)
-        known_languages = KnownLanguage.objects.filter(person=person)
-        unknown_languages = get_unknown_languages(person)
+#         if len(known_languages) == 0:
+#             url = reverse('people:choose_language') + '?next=people:profile'
+#             return redirect(url)
+#         elif len(known_languages) >= 1:
+#             set_current_language_for_person(person, known_languages[0].language)
+#             current_language = known_languages[0].language
 
-        if len(known_languages) == 0:
-            url = reverse('people:choose_language') + '?next=people:profile'
-            return redirect(url)
-        elif len(known_languages) >= 1:
-            set_current_language_for_person(person, known_languages[0].language)
-            current_language = known_languages[0].language
+#             if current_language.level_of_proficiency is None:
+#                 url = reverse('people:choose_language') + '?next=people:profile'
+#                 return redirect(url)
 
-            if current_language.level_of_proficiency is None:
-                url = reverse('people:choose_language') + '?next=people:profile'
-                return redirect(url)
+#         else:
+#             logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
+#             raise Http404("Something went wrong. We're working on this...")
 
-        else:
-            logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
-            raise Http404("Something went wrong. We're working on this...")
+#         if person.just_signed_up:
+#             person.just_signed_up = False
+#             send_signup_tracking = True
 
+#         recordings = Recording.objects\
+#             .filter(
+#                 person__user=request.user,
+#                 sentence__language=current_language)\
+#             .order_by('-updated')
 
-        recordings = Recording.objects\
-            .filter(
-                person__user=request.user,
-                sentence__language=current_language)\
-            .order_by('-updated')
+#         sentences = get_sentences(request, recordings)
+#         known_languages = [i.language for i in known_languages]
 
-        sentences = get_sentences(request, recordings)
-        known_languages = [i.language for i in known_languages]
-
-        return render(request, 'people/profile.html',
-            {'request': request,
-             'user': request.user,
-             'sentence': sentence,
-             'current_language': current_language,
-             'person': person,
-             'recordings': recordings,
-             'sentences': sentences,
-             'known_languages': known_languages
-             })
-    else:
-        # We should enable someone to provide recordings without loging in - and we can show their recordings - user coockies to track
-        # BUt for now we'll redirect to login
-        return redirect(reverse('account_login'))
+#         return render(request, 'people/profile.html',
+#             {'request': request,
+#              'user': request.user,
+#              'sentence': sentence,
+#              'current_language': current_language,
+#              'person': person,
+#              'recordings': recordings,
+#              'sentences': sentences,
+#              'known_languages': known_languages,
+#              'send_signup_tracking': send_signup_tracking,
+#              })
+#     else:
+#         # We should enable someone to provide recordings without loging in - and we can show their recordings - user coockies to track
+#         # BUt for now we'll redirect to login
+#         return redirect(reverse('account_login'))
 
 
 def person(request, uuid):
@@ -207,6 +217,12 @@ def choose_language(request):
             form_kwargs={'person': person, 'require_proficiency': True})
 
     if request.method == 'POST':
+
+        # Upon first post to the person choosing their language
+        # We can ensure that the user just signed up
+        person.just_signed_up = False
+        person.save()
+
         formset = KnownLanguageFormset(
                     request.POST, request.FILES,
                     instance=person,
@@ -247,15 +263,16 @@ def choose_language(request):
                 #     return redirect(reverse('people:choose_language'))
             # formset = KnownLanguageFormsetWithPerson(instance=person)
 
-
-
-        # for form in formset:
     response = render(
         request,
         'people/choose_language.html',
-        {'known_language_form': formset,
+        {
+            'known_language_form': formset,
             'known_languages': known_languages,
-            'unknown_languages': unknown})
+            'unknown_languages': unknown,
+            'just_signup_track': person.just_signed_up,
+        }
+    )
 
     current_language = get_current_language(request)
     if current_language:

@@ -70,6 +70,15 @@ class Person(models.Model):
         help_text="This is a placeholder for users that don't sign up.")
     # accept_terms = models.BooleanField(editable=False, default=False)
 
+    on_board = models.BooleanField(
+        default=True,
+        help_text="Flag to dertmine whether to show an intro.")
+
+    just_signed_up = models.BooleanField(
+        default=False,
+        help_text="Flag to track when an account is created",
+        editable=True)
+
     groups = models.ManyToManyField(Group, blank=True)
 
     def email(self):

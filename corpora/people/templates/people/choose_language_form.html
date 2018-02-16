@@ -101,7 +101,7 @@
     <div class="row"><div class="col-12 " style="text-align: center;">
     <!-- <input id="submit_choose_language_form" type="submit" value="Save Language" class="btn btn-default btn-lg"> -->
 
-    <a id="submit_choose_language_form" class="btn btn-default btn-lg" href="javascript:{}" onclick="document.getElementById('choose_language_form').submit();">
+    <a id="submit_choose_language_form" class="btn btn-default btn-lg" href="javascript:{}" onclick="submit_form();">
         {% trans 'Save' %}
     </a>
 
@@ -111,3 +111,13 @@
 
 
 </form>
+
+{% addtoblock 'js-end' %}<script type="text/javascript">
+
+var submit_form = function(){
+    {% if just_signup_track %}fbq('track', 'CompleteRegistration');{% endif %}
+    document.getElementById('choose_language_form').submit();
+}
+
+
+</script>{% endaddtoblock %}
