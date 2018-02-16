@@ -204,7 +204,7 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django_ses.SESBackend' # Use AWS Simple Email Service
 AWS_SES_REGION_NAME = 'us-west-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com'
-DEFAULT_FROM_EMAIL = '"Te Hiku Support" <support@tehiku.nz>'
+DEFAULT_FROM_EMAIL = '"Te Hiku Media" <webapp@tehiku.nz>'
 
 
 # Password validation
