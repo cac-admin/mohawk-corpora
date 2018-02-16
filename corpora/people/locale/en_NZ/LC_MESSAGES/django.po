@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 22:55+0000\n"
+"POT-Creation-Date: 2018-02-16 23:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Tribe"
 msgstr ""
 
-#: people/models.py:28 people/models.py:138
+#: people/models.py:28 people/models.py:147
 msgid "Tribes"
 msgstr ""
 
@@ -49,127 +49,127 @@ msgstr ""
 msgid "full name"
 msgstr ""
 
-#: people/models.py:82
+#: people/models.py:91
 msgid "Person"
 msgstr ""
 
-#: people/models.py:83
+#: people/models.py:92
 msgid "People"
 msgstr ""
 
-#: people/models.py:91
+#: people/models.py:100
 msgid "Male"
 msgstr ""
 
-#: people/models.py:92
+#: people/models.py:101
 msgid "Female"
 msgstr ""
 
-#: people/models.py:93
+#: people/models.py:102
 msgid "Other"
 msgstr ""
 
-#: people/models.py:94
+#: people/models.py:103
 msgid "Transexual (Male to Female)"
 msgstr ""
 
-#: people/models.py:95
+#: people/models.py:104
 msgid "Transexual (Female to Male)"
 msgstr ""
 
-#: people/models.py:101
+#: people/models.py:110
 msgid "How old are you?"
 msgstr ""
 
-#: people/models.py:102
+#: people/models.py:111
 msgid "age"
 msgstr ""
 
-#: people/models.py:105
+#: people/models.py:114
 msgid "gender"
 msgstr ""
 
-#: people/models.py:106
+#: people/models.py:115
 msgid "Gender"
 msgstr ""
 
-#: people/models.py:119 people/models.py:169
+#: people/models.py:128 people/models.py:178
 msgid "person"
 msgstr ""
 
-#: people/models.py:123
+#: people/models.py:132
 msgid "Which tribe(s) do you identify with?"
 msgstr ""
 
-#: people/models.py:126
+#: people/models.py:135
 msgid "tribe"
 msgstr ""
 
-#: people/models.py:133
+#: people/models.py:142
 msgid "Demographic"
 msgstr ""
 
-#: people/models.py:134
+#: people/models.py:143
 msgid "Demographics"
 msgstr ""
 
-#: people/models.py:143
+#: people/models.py:152
 msgid "Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:144
+#: people/models.py:153
 msgid "Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:145
+#: people/models.py:154
 msgid "Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:146
+#: people/models.py:155
 msgid "Near Native Speaker - Beginner"
 msgstr ""
 
-#: people/models.py:147
+#: people/models.py:156
 msgid "Near Native Speaker - Intermediate"
 msgstr ""
 
-#: people/models.py:148
+#: people/models.py:157
 msgid "Near Native Speaker - Advanced"
 msgstr ""
 
-#: people/models.py:149
+#: people/models.py:158
 msgid "Second Language Learner - Beginner"
 msgstr ""
 
-#: people/models.py:150
+#: people/models.py:159
 msgid "Second Language Learner - Intermediate"
 msgstr ""
 
-#: people/models.py:151
+#: people/models.py:160
 msgid "Second Language Learner - Advanced"
 msgstr ""
 
-#: people/models.py:157
+#: people/models.py:166
 msgid "language"
 msgstr ""
 
-#: people/models.py:163
+#: people/models.py:172
 msgid "level of proficiency"
 msgstr ""
 
-#: people/models.py:178
+#: people/models.py:187
 msgid "accent"
 msgstr ""
 
-#: people/models.py:185
+#: people/models.py:194
 msgid "dialect"
 msgstr ""
 
-#: people/models.py:190
+#: people/models.py:199
 msgid "known language"
 msgstr ""
 
-#: people/models.py:191
+#: people/models.py:200
 msgid "known languages"
 msgstr ""
 
@@ -635,7 +635,7 @@ msgstr ""
 msgid "You must sign in to edit your info."
 msgstr ""
 
-#: people/views/views.py:172
+#: people/views/views.py:182
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr ""

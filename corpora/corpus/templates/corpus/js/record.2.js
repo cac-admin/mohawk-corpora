@@ -126,7 +126,7 @@ class MyRecorder extends Player{
             var info = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">\
                 <h2>Browser Recording Not Supported</h2>\
                 <p>Please use Chrome or Firefox on Desktop.</p>\
-                <p>If you\'re in Facebook, open this link in your device broswer (e.g. Open in Safari).</p>\
+                <p>If you\'re in Facebook or another in-app browser, open this link in your device broswer (e.g. hit the Open in Safari button).</p>\
                 <p>If you\'re on iOS, please use Safari.</p>\
                 <p>If you\'re on Adroid, please use Chrome or Firefox.</p>\
                 </div>');
