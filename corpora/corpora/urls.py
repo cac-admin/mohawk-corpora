@@ -5,6 +5,7 @@ from django.conf.urls import url, include
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 
 from corpora.views import views
 from django.views.generic import RedirectView
@@ -43,9 +44,11 @@ urlpatterns = [
 
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 
-    url(r'^', include('corpora.urls_api', namespace='api') ),
-    url(r'^docs/', include_docs_urls(title='Corpora API'))
+    url(r'^', include('corpora.urls_api', namespace='api')),
+    url(r'^docs/', include_docs_urls(title='Corpora API')),
 
+    # url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    #     name='django.contrib.sitemaps.views.sitemap')
 
 ]
 
