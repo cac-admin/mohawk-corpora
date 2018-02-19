@@ -76,3 +76,6 @@ ENV/
 
 # Bower Components
 bower_components/
+
+#backup files
+*~
