@@ -160,9 +160,12 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
         people = people.annotate(num_recordings=models.Count('recording'))
 
         for person in context['people']:
-            # recordings = Recording.objects\
-            #     .filter(person=person, sentence__language=language)
-            # stats = build_recordings_stat_dict(recordings)
+            recordings = Recording.objects\
+                .filter(person=person, sentence__language=language)
+            score = 0
+            for recording in recordings:
+                score = score + recording.calculate_score()
+            person.score = int(score*100)
             person.num_recordings = person.recording_set.count()
             if person.user is None:
                 person.name = 'Anonymous Kumara'

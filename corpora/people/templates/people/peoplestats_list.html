@@ -26,6 +26,7 @@ div.content{
       <th scope="col">#</th>
       <th scope="col">Username</th>
       <th scope="col">Number of Recordings</th>
+      <th scope="col">Score <small>[beta]</small></th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +35,7 @@ div.content{
   <th scope="row">{{ forloop.counter }}</th>
   <td>{{person.name}}</td>
   <td>{{person.num_recordings}}</td>
+  <td>{{person.score}}</td>
 </tr>
 {% endfor %}
 </tbody>

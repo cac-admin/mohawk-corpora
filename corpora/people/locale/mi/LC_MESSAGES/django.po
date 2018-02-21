@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 05:29+0000\n"
+"POT-Creation-Date: 2018-02-21 06:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -603,7 +603,7 @@ msgid "Today"
 msgstr "I tēnei rā"
 
 #: people/templates/people/person_recording_stats_view_detail.html:71
-#: people/views/stats_views.py:60
+#: people/views/stats_views.py:65
 msgid "seconds"
 msgstr "hēkona"
 
@@ -702,7 +702,7 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
-#: people/views/stats_views.py:60
+#: people/views/stats_views.py:65
 msgid "minutes"
 msgstr "mīneti"
 
