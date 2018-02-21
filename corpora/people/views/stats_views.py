@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.utils.translation import ugettext as _
 from django.shortcuts import render, redirect
 from django.template.context import RequestContext
 from django.forms import modelform_factory
@@ -55,7 +56,8 @@ def build_recordings_stat_dict(recording_queryset):
         'down_votes': recording_votes[1],
         'duration_display': "{:02d}:{:02d}:{:02d} ".format(
             hours, minutes, seconds),
-        'total_seconds': int(total_seconds)
+        'total_seconds': int(total_seconds),
+        'dimension_string': _('seconds') if total_seconds < 60 else _('minutes')
     }
 
 

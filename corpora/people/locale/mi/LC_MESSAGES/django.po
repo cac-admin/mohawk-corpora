@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-20 21:57+0000\n"
+"POT-Creation-Date: 2018-02-21 04:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -598,6 +598,19 @@ msgstr "Haere Mai!"
 msgid "This is a long welcome message."
 msgstr "Ka nui te roa o tēnei mihi."
 
+#: people/templates/people/person_recording_stats_view_detail.html:66
+msgid "Today"
+msgstr "I nāianei"
+
+#: people/templates/people/person_recording_stats_view_detail.html:71
+#: people/views/stats_views.py:60
+msgid "seconds"
+msgstr "hēkena"
+
+#: people/templates/people/person_recording_stats_view_detail.html:76
+msgid "recordings"
+msgstr "kapohanga reo"
+
 #: people/templates/people/profile.html:66
 msgid "Recordings"
 msgstr "Kapohanga Reo"
@@ -689,7 +702,11 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
-#: people/views/views.py:182
+#: people/views/stats_views.py:60
+msgid "minutes"
+msgstr "mineti"
+
+#: people/views/views.py:183
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."

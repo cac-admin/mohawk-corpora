@@ -1,3 +1,4 @@
+{% load static sekizai_tags i18n %}
 
 class Stats{
 
@@ -47,7 +48,8 @@ class Stats{
     if (selector.indexOf('seconds')>0){
       if (value>60){
         value = (value/60).toFixed(1)
-        $(self.stat_block).find('.stat.stat-dimension.stat-total-seconds').text('minutes')
+        $(self.stat_block).find('.stat.stat-dimension.stat-total-seconds').html("<br>"+
+          self.stats['recordings_today']['dimension_string'])
       }
     }
     $(self.stat_block).find(selector).text(value)

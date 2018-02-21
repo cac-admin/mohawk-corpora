@@ -17,8 +17,8 @@
 
 .stat{
   font-family: 'Roboto', sans-serif;
-  font-size: .8em;
-  line-height: .8em;
+  font-size: .85em;
+  line-height: .85em;
   text-align: right;
   color: $brand_primary;
 }
@@ -63,17 +63,17 @@
   <div class="row justify-content-end">
     <div class="col-12">
       <div class="row stat" {% if not stats %}style="display: none;"{% endif %}>
-        <div class="col-12"><span class="stat stat-heading">Today</span></div>
+        <div class="col-12"><span class="stat stat-heading">{% trans 'Today' %}</span></div>
         <div class="col-6">
           <span></span>
           <span class="stat stat-icon stat-total-seconds"><i class="fa fa-lg fa-fw fa-clock-o"></i></span>
           <span class="stat stat-value stat-total-seconds" data-value="">{{stats.recordings_today.total_seconds}}</span>
-          <span class="stat stat-dimension stat-total-seconds"><br>seconds</span>
+          <span class="stat stat-dimension stat-total-seconds"><br>{% trans 'seconds' %}</span>
         </div>
         <div class="col-6">
           <span class="stat stat-icon stat-total-recordings"><i class="fa fa-lg fa-fw fa-microphone"></i></span>
           <span class="stat stat-value stat-total-recordings" data-value="">{{stats.recordings_today.total}}</span>
-          <span class="stat stat-dimension stat-total-recordings"><br>recordings</span>
+          <span class="stat stat-dimension stat-total-recordings"><br>{% trans 'recordings' %}</span>
         </div>
       </div>
     </div>
