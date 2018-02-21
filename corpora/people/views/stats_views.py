@@ -165,7 +165,7 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
             score = 0
             for recording in recordings:
                 score = score + recording.calculate_score()
-            person.score = int(score*100)
+            person.score = int(score)
             person.num_recordings = person.recording_set.count()
             if person.user is None:
                 person.name = 'Anonymous Kumara'
