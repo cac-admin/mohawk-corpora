@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 04:27+0000\n"
+"POT-Creation-Date: 2018-02-21 05:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,43 +121,43 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:18
+#: corpus/templates/corpus/qualitycontrol_list.html:21
 msgid "Stats"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:24
+#: corpus/templates/corpus/qualitycontrol_list.html:27
 msgid "Recordings"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:26
-#: corpus/templates/corpus/qualitycontrol_list.html:36
+#: corpus/templates/corpus/qualitycontrol_list.html:29
+#: corpus/templates/corpus/qualitycontrol_list.html:39
 msgid "Number"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:27
+#: corpus/templates/corpus/qualitycontrol_list.html:30
 msgid "Duration"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:28
-#: corpus/templates/corpus/qualitycontrol_list.html:37
+#: corpus/templates/corpus/qualitycontrol_list.html:31
+#: corpus/templates/corpus/qualitycontrol_list.html:40
 msgid "Approved"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:29
-#: corpus/templates/corpus/qualitycontrol_list.html:38
+#: corpus/templates/corpus/qualitycontrol_list.html:32
+#: corpus/templates/corpus/qualitycontrol_list.html:41
 msgid "Good"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:30
-#: corpus/templates/corpus/qualitycontrol_list.html:39
+#: corpus/templates/corpus/qualitycontrol_list.html:33
+#: corpus/templates/corpus/qualitycontrol_list.html:42
 msgid "Bad"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:34
+#: corpus/templates/corpus/qualitycontrol_list.html:37
 msgid "Sentences"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:47
+#: corpus/templates/corpus/qualitycontrol_list.html:50
 msgid "Recordings by Language Proficiency"
 msgstr ""
 

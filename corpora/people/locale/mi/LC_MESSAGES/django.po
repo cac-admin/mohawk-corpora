@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 04:27+0000\n"
+"POT-Creation-Date: 2018-02-21 05:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -600,12 +600,12 @@ msgstr "Ka nui te roa o tēnei mihi."
 
 #: people/templates/people/person_recording_stats_view_detail.html:66
 msgid "Today"
-msgstr "I nāianei"
+msgstr "I tēnei rā"
 
 #: people/templates/people/person_recording_stats_view_detail.html:71
 #: people/views/stats_views.py:60
 msgid "seconds"
-msgstr "hēkena"
+msgstr "hēkona"
 
 #: people/templates/people/person_recording_stats_view_detail.html:76
 msgid "recordings"
@@ -704,7 +704,7 @@ msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
 #: people/views/stats_views.py:60
 msgid "minutes"
-msgstr "mineti"
+msgstr "mīneti"
 
 #: people/views/views.py:183
 #, python-format
