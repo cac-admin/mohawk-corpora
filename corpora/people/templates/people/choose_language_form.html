@@ -119,5 +119,23 @@ var submit_form = function(){
     document.getElementById('choose_language_form').submit();
 }
 
-
 </script>{% endaddtoblock %}
+
+
+{% addtoblock 'js-head' %}
+{% if just_signup_track %}
+<!-- Global site tag (gtag.js) - Google AdWords: 957072996 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-957072996"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-957072996');
+</script>
+<!-- Event snippet for Register conversion page -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-957072996/0FZBCLyXzX0Q5IyvyAM'});
+</script>
+{% endif %}
+{% endaddtoblock %}

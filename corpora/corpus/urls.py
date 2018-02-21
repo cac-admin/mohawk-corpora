@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^recording-file/(?P<pk>[\d]+)/$',
         views.RecordingFileView.as_view(),
         name='recording_file'),
+
 ]

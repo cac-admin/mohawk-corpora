@@ -132,7 +132,8 @@ def record(request):
                # 'sentence': sentence,
                'content_type': ct.id,
                'user': request.user,
-               'uuid': request.get_signed_cookie('uuid', 'none')}
+               'uuid': request.get_signed_cookie('uuid', 'none'),
+               'show_stats': True}
 
     response = render(request, 'corpus/record.html', context)
     response.set_signed_cookie('uuid', person.uuid, max_age=60*60*24*365)
@@ -212,8 +213,6 @@ class StatsView(ListView):
 
         approved_sentences = sentences.filter(quality_control__approved=True)
         approved_recordings = recordings.filter(quality_control__approved=True)
-
-
 
         seconds = float(length['duration__sum'])
         hours = int(seconds/(60.0*60))

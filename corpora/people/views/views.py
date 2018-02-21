@@ -113,6 +113,7 @@ class ProfileDetail(APIView, TemplateView):
 
         context['known_language_form'] = kl_formset
         context['known_languages'] = known_languages
+        context['show_stats'] = True
 
         return context
 

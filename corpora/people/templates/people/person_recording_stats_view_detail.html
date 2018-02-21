@@ -1,0 +1,106 @@
+{% load static sekizai_tags compress i18n %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+</style>
+{% endaddtoblock %}
+
+{% addtoblock "head" %}<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,900" rel="stylesheet">{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+
+.stat{
+  font-family: 'Roboto', sans-serif;
+  font-size: .8em;
+  line-height: .8em;
+  text-align: right;
+  color: $brand_primary;
+}
+
+.stat.stat-heading{ 
+  line-height: 1.5em;
+  font-size: 1em;
+  color: $brand_dark;
+}
+
+.stat.stat-value{
+  font-size: 2.5em;
+  font-weight: 100;
+  line-height: 1.0em;
+  display: inline-block;
+}
+.stat.stat-icon i{
+  font-size: 1.5em;
+  /*line-height: 20px;*/
+  display: none;
+}
+
+.stat.stat-dimension{
+  font-size: .8em;
+  line-height: 0px;
+  color: $brand_dark;
+}
+
+.stat-value-animate-up{
+  transform: scale(2);
+  transition: transform 100ms ease-in-out;
+}
+.stat-value-animate-down{
+  transform: scale(1);
+  transition: transform 100ms ease-in-out;
+}
+
+</style>
+{% endaddtoblock %}
+
+
+  <div class="row justify-content-end">
+    <div class="col-12">
+      <div class="row stat" {% if not stats %}style="display: none;"{% endif %}>
+        <div class="col-12"><span class="stat stat-heading">Today</span></div>
+        <div class="col-6">
+          <span></span>
+          <span class="stat stat-icon stat-total-seconds"><i class="fa fa-lg fa-fw fa-clock-o"></i></span>
+          <span class="stat stat-value stat-total-seconds" data-value="">{{stats.recordings_today.total_seconds}}</span>
+          <span class="stat stat-dimension stat-total-seconds"><br>seconds</span>
+        </div>
+        <div class="col-6">
+          <span class="stat stat-icon stat-total-recordings"><i class="fa fa-lg fa-fw fa-microphone"></i></span>
+          <span class="stat stat-value stat-total-recordings" data-value="">{{stats.recordings_today.total}}</span>
+          <span class="stat stat-dimension stat-total-recordings"><br>recordings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% addtoblock "js-end" %}<script type="text/javascript">{% include 'people/js/stats.js' %}</script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  stats = new Stats('.stat', "{% url 'people:person_stats' %}?format=json")
+
+  if (typeof sentences != 'undefined'){
+    sentences.sentence_block.addEventListener('sentence.ready', function(){
+      window.setTimeout(function(){
+        stats.get_stats()
+      }, 1000);
+    })
+  }
+
+  window.setTimeout(function(){stats.get_stats()}, 1000)
+
+})
+
+</script>
+{% endaddtoblock %}
+

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
-from people.views import views, autocomplete
+from people.views import views, autocomplete, stats_views
 
 urlpatterns = [
     url(r'^profile', views.ProfileDetail.as_view(), name='profile'),
@@ -10,6 +10,10 @@ urlpatterns = [
     # url(r'^(?P<uuid>[\w-]+)', views.person, name='person'),
     url(r'^demographics', views.create_demographics, name='demographics'),
     url(r'^create_account', views.create_user, name='create_user'),
+
+    url(r'^recording_stats',
+        stats_views.PersonRecordingStatsView.as_view(),
+        name='person_stats'),
 
     # autocomplete
     url(
