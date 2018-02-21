@@ -101,23 +101,29 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
             person=person)
 
         # Assume for now user is in NZ timezone = UTC + 12 hours
-        now = timezone.now() + datetime.timedelta(hours=12)
+        time_offset = 12
+        now = timezone.now() + datetime.timedelta(hours=time_offset)
         logger.debug(now)
 
         # Find the day for NZ, then take us back to utc time.
         today_begining = \
-            datetime.datetime.combine(now.today(), datetime.time()) - \
-            datetime.timedelta(hours=12)
+            datetime.datetime.combine(now.today(), datetime.time()) + \
+            datetime.timedelta(hours=time_offset)
         logger.debug(today_begining)
 
         # This logical is compared against utc time - the default timezone for our data
         # I presume django deals with this timezoen stuff anyway?
-        todays_recordings = recordings.filter(created__gte=today_begining)
+        todays_recordings = recordings.filter(created__gte=today_begining).order_by('created')
 
         stats = {
             'recordings': build_recordings_stat_dict(recordings),
             'recordings_today': build_recordings_stat_dict(todays_recordings)
         }
+
+        stats['recordings_today']['start_time'] = today_begining
+        stats['recordings_today']['end_time'] = now
+        # stats['recordings_today']['earliest_time'] = todays_recordings[0].created
+        # stats['recordings_today']['latest_time'] = todays_recordings[todays_recordings.count()-1].created
 
         context['person'] = person
         context['stats'] = stats

@@ -50,7 +50,7 @@ div.col.table{
   <div class="col">
 <div class="pagination">
     <span class="step-links">
-        {% if paginator.has_previous %}
+        {% if page_obj.has_previous %}
             <a href="?page={{ paginator.previous_page_number }}">previous</a>
         {% endif %}
 
@@ -58,7 +58,7 @@ div.col.table{
             Page {{ page_obj.number }} of {{ paginator.num_pages }}.
         </span>
 
-        {% if paginator.has_next %}
+        {% if page_obj.has_next %}
             <a href="?page={{ paginator.next_page_number }}">next</a>
         {% endif %}
     </span>
