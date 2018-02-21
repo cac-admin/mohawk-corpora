@@ -7,8 +7,12 @@
 .actions, .buttons{
     text-align: center;
     margin-top: 15px;
+    margin-bottom: 30px;
     @include media-breakpoint-down(md) {
       text-align: center;
+    }
+    @include media-breakpoint-down(sm) {
+      margin-top: 5px;
     }
     a{
       font-size: 1.3em;
@@ -22,6 +26,9 @@
 
       @include media-breakpoint-down(md) {
         font-size: 1.1em;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: 0.8em;
       }
 
       -webkit-tap-highlight-color: rgba($brand_primary,.5);

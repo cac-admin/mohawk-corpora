@@ -8,11 +8,15 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 .container.name{
-  margin-top: -40px;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  padding-top: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
   border-bottom: 1px solid rgba(gray, .5);
-
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 10px;
+    font-size: .9em;
+    padding-top: 10px;
+  }
   h4{
     @include media-breakpoint-down(md) {
       font-size: 1.2em;
@@ -25,6 +29,12 @@
       font-size: .7em;
     }
   }
+  .name{
+    padding-right: 0px;
+  }
+  .stats{
+    padding-left: 0px;
+  }
 }
 
 .alert-area .alert{
@@ -34,12 +44,14 @@
   margin-right: 15px;
 }
 
+
+
 </style>
 {% endaddtoblock %}
 
 <div class="container name" >
   <div class="row justify-content-end">
-    <div class="col-11 col-sm-6 col-md-7 col-lg-9" >
+    <div class="col-7 col-sm-7 col-md-8 col-lg-9 name" >
       {% if person.full_name %}
         <h4>{{person.full_name}}</h4><small>Not you?
         {% if user.is_authenticated %}
@@ -62,12 +74,12 @@
         {% endif %}</small>
       {% endif %}
     </div>
-    <div class="col-1"><div class="alert-area"></div></div>
-    <div class="col-6 col-sm-5 col-md-4 col-lg-2">
+    <div class="col-5 col-sm-5 col-md-4 col-lg-3 stats">
       {% if show_stats %}
       {% include 'people/person_recording_stats_view_detail.html' %}
       {% endif %}
     </div>
+    <div class="col-12"><div class="alert-area"></div></div>    
   </div>
 </div>
   
