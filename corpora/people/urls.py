@@ -15,6 +15,11 @@ urlpatterns = [
         stats_views.PersonRecordingStatsView.as_view(),
         name='person_stats'),
 
+    url(r'^stats/$',
+        stats_views.PeopleRecordingStatsView.as_view(),
+        name='people_stats'),
+
+
     # autocomplete
     url(
         r'^tribe-autocomplete/$',

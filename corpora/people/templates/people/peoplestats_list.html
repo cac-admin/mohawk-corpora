@@ -1,0 +1,71 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+<table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Number of Recordings</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for person in people %}
+<tr>
+  <th scope="row">{{ forloop.counter }}</th>
+  <td>{{person.name}}</td>
+  <td>{{person.num_recordings}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+    </div>
+  </div>
+
+<div class="row">
+  <div class="col">
+<div class="pagination">
+    <span class="step-links">
+        {% if paginator.has_previous %}
+            <a href="?page={{ paginator.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if paginator.has_next %}
+            <a href="?page={{ paginator.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+
+  </div>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}

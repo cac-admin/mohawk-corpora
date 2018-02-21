@@ -11,6 +11,7 @@ import datetime
 from django.core.exceptions import ValidationError
 import json
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView, MultipleObjectMixin
 
 from django.contrib.contenttypes.models import ContentType
 
@@ -30,6 +31,10 @@ from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q
 from django.core.cache import cache
 
 from corpus.aggregate import get_num_approved, get_net_votes
+
+from django.contrib.auth.mixins import UserPassesTestMixin
+
+from django.db import models
 
 import logging
 logger = logging.getLogger('corpora')
@@ -127,3 +132,43 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
 
     def get_data(self, context):
         return context['stats']
+
+
+class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
+    model = Person
+    template_name = 'people/peoplestats_list.html'
+    paginate_by = 50
+    context_object_name = 'people'
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get_queryset(self):
+        language = get_current_language(self.request)
+        return Person.objects.filter(recording__sentence__language=language)\
+            .annotate(num_recordings=models.Count('recording'))\
+            .order_by('num_recordings')
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(PeopleRecordingStatsView, self).get_context_data(**kwargs)
+
+        language = get_current_language(self.request)
+
+        people = context['people']
+
+        people = people.annotate(num_recordings=models.Count('recording'))
+
+        for person in context['people']:
+            # recordings = Recording.objects\
+            #     .filter(person=person, sentence__language=language)
+            # stats = build_recordings_stat_dict(recordings)
+            person.num_recordings = person.recording_set.count()
+            if person.user is None:
+                person.name = 'Anonymous Kumara'
+            elif person.user.username == '':
+                person.name = 'Anonymous Kumara'
+            else:
+                person.name = person.user.username
+
+        return context
