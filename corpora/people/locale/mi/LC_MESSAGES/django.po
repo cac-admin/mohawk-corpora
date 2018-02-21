@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 06:30+0000\n"
+"POT-Creation-Date: 2018-02-21 06:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -590,6 +590,21 @@ msgstr ""
 msgid "Save"
 msgstr "Tiakina"
 
+#: people/templates/people/peoplestats_list.html:30
+#, fuzzy
+#| msgid "name"
+msgid "Username"
+msgstr "Ingoa"
+
+#: people/templates/people/peoplestats_list.html:31
+#: people/templates/people/profile.html:66
+msgid "Recordings"
+msgstr "Kapohanga Reo"
+
+#: people/templates/people/peoplestats_list.html:32
+msgid "Score"
+msgstr "Tatau"
+
 #: people/templates/people/person.html:9
 msgid "Welcome to People!"
 msgstr "Haere Mai!"
@@ -610,10 +625,6 @@ msgstr "hēkona"
 #: people/templates/people/person_recording_stats_view_detail.html:76
 msgid "recordings"
 msgstr "kapohanga reo"
-
-#: people/templates/people/profile.html:66
-msgid "Recordings"
-msgstr "Kapohanga Reo"
 
 #: people/templates/people/profile.html:75
 msgid "You haven't recorded any corpus yet."
