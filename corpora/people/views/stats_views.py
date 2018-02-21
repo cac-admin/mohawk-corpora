@@ -147,7 +147,7 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
         language = get_current_language(self.request)
         return Person.objects.filter(recording__sentence__language=language)\
             .annotate(num_recordings=models.Count('recording'))\
-            .order_by('num_recordings')
+            .order_by('-num_recordings')
 
     def get_context_data(self, **kwargs):
         context = \
