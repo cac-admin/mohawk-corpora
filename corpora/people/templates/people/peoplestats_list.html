@@ -23,7 +23,7 @@ div.col.table{
   <div class="row">
     <div class="col table">
 
-<table class="table">
+<table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
@@ -71,6 +71,16 @@ div.col.table{
 
 </div>
 
-
+{% addtoblock "js-end" %}
+<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+-->
+{% endaddtoblock %} 
+{% addtoblock "js-end" %}
+<!-- <script type="text/javascript">
+$(document).ready(function() {
+  // $('#stats-table').DataTable();
+} );
+</script> -->
+{% endaddtoblock %}
 
 {% endblock %}

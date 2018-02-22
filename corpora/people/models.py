@@ -100,6 +100,10 @@ class Person(models.Model):
 
     groups = models.ManyToManyField(Group, blank=True)
 
+    score = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
     def email(self):
         if self.user:
             return self.user.email

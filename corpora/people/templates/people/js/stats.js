@@ -9,6 +9,7 @@ class Stats{
     this.stats = null
     // this.get_stats()
     this.refetch = false
+    this.data_key = 'recordings_today'
     // var event = document.createEvent('Event');
     // event.initEvent('sentence.ready', true, true);
     // this.sentence_block_ready_event = event;
@@ -49,7 +50,7 @@ class Stats{
       if (value>60){
         value = (value/60).toFixed(1)
         $(self.stat_block).find('.stat.stat-dimension.stat-total-seconds').html("<br>"+
-          self.stats['recordings_today']['dimension_string'])
+          self.stats[self.data_key]['dimension_string'])
       }
     }
     $(self.stat_block).find(selector).text(value)
@@ -64,11 +65,17 @@ class Stats{
     var old_num_recordings = undefined
     var old_duration = undefined
 
+    if (window.location.href.search('profile') > 0){
+      self.data_key = 'recordings'
+      $(self.stat_block).find('.stat.stat-heading').text("{% trans 'Ngā rā katoa' %}")
+
+    }
+
     old_num_recordings = parseInt($(self.stat_block).find('.stat-value.stat-total-recordings').attr('data-value'))
     old_duration = parseInt($(self.stat_block).find('.stat-value.stat-total-seconds').attr('data-value'))
 
-    var recordings = self.stats['recordings_today']['total']
-    var duration = self.stats['recordings_today']['total_seconds']
+    var recordings = self.stats[self.data_key]['total']
+    var duration = self.stats[self.data_key]['total_seconds']
 
     self.logger(old_num_recordings)
     if (isNaN(old_num_recordings)){

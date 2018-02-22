@@ -5,7 +5,7 @@ from .models import Sentence, Recording, QualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
-
+from people.tasks import update_person_score
 
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
@@ -91,7 +91,33 @@ def set_sentence_text_when_recording_created(
 def set_recording_length_on_save(sender, instance, created, **kwargs):
     if instance.audio_file:
         if instance.duration <= 0:
-            set_recording_length.apply_async(args=[instance.pk], countdown=3)
+            set_recording_length.apply_async(
+                args=[instance.pk],
+                countdown=2,
+                task_id='set_recording_length-{0}-{1}-{2}'.format(
+                    instance.person.pk,
+                    instance.pk,
+                    instance.__class__.__name__))
 
         if not instance.audio_file_aac:
-            transcode_audio.apply_async(args=[instance.pk], countdown=3)
+            transcode_audio.apply_async(
+                args=[instance.pk],
+                countdown=3,
+                task_id='transcode_audio-{0}-{1}-{2}'.format(
+                    instance.person.pk,
+                    instance.pk,
+                    instance.__class__.__name__))
+
+
+@receiver(models.signals.post_save, sender=QualityControl)
+@receiver(models.signals.post_save, sender=Recording)
+def update_person_score_when_model_saved(sender, instance, **kwargs):
+    update_person_score.apply_async(
+        args=[instance.person.pk],
+        countdown=4,
+        task_id='update_person_score-{0}-{1}-{2}'.format(
+            instance.person.pk,
+            instance.pk,
+            instance.__class__.__name__))
+
+

@@ -9,4 +9,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'people.tasks.clean_empty_person_models',
         'schedule': crontab(minute='42', hour='*', day_of_week='*'),
     },
+    'calculate_person_scores': {
+        'task': 'people.tasks.calculate_person_scores',
+        'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
+    },
 }

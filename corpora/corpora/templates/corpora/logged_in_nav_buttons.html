@@ -64,6 +64,13 @@
     {% endif %}
 
     <li class="nav-item">
+      <a class="nav-link" href="{% url 'people:people_stats' %}" >
+        <i class="fa fa-lg fa-fw fa-bar-chart"></i>
+        <div >{% trans 'Stats' %}</div>
+      </a>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link" href="{% url 'people:profile' %}" >
         <i class="fa fa-lg fa-fw fa-user"></i>
         <div >{% trans 'Profile' %}</div>
@@ -103,6 +110,8 @@
     </li>
     {% endif %}
 
+
+
     <li class="nav-item">
       <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
         <i class="fa fa-fw fa-lg fa-sign-out"></i>
@@ -125,6 +134,13 @@
         <div >{% trans 'Listen' %}</div>
       </a>
     </li>  
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'people:people_stats' %}" >
+        <i class="fa fa-lg fa-fw fa-bar-chart"></i>
+        <div >{% trans 'Stats' %}</div>
+      </a>
+    </li>
 
     <li class="nav-item">
       <a class="nav-link" href="{% url 'people:profile' %}" >

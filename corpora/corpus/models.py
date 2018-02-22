@@ -275,3 +275,7 @@ class Text(models.Model):
 
     def __unicode__(self):
         return str(self.uploaded_file)
+
+
+
+

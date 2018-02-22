@@ -33,6 +33,7 @@ class PersonAdmin(admin.ModelAdmin):
         'email',
         'user',
         'uuid',
+        'score',
         'get_groups'
         )
     readonly_fields = ('profile_email',)
