@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 06:46+0000\n"
+"POT-Creation-Date: 2018-02-22 07:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr "Ingoa o te iwi."
 msgid "Tribe"
 msgstr "Iwi"
 
-#: people/models.py:28 people/models.py:147
+#: people/models.py:28 people/models.py:170
 msgid "Tribes"
 msgstr "Ngā Iwi"
 
@@ -49,127 +49,131 @@ msgstr "Ingoa"
 msgid "full name"
 msgstr "ingoa"
 
-#: people/models.py:91
+#: people/models.py:75
+msgid "Username - this will be publicly viewable"
+msgstr ""
+
+#: people/models.py:114
 msgid "Person"
 msgstr "Tangata"
 
-#: people/models.py:92
+#: people/models.py:115
 msgid "People"
 msgstr "Tāngata"
 
-#: people/models.py:100
+#: people/models.py:123
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:101
+#: people/models.py:124
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:102
+#: people/models.py:125
 msgid "Other"
 msgstr "Āhua Kē"
 
-#: people/models.py:103
+#: people/models.py:126
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:104
+#: people/models.py:127
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:110
+#: people/models.py:133
 msgid "How old are you?"
 msgstr "E hia ō tau?"
 
-#: people/models.py:111
+#: people/models.py:134
 msgid "age"
 msgstr "ō tau"
 
-#: people/models.py:114
+#: people/models.py:137
 msgid "gender"
 msgstr "tāne/wahine"
 
-#: people/models.py:115
+#: people/models.py:138
 msgid "Gender"
 msgstr "Tāne/Wahine"
 
-#: people/models.py:128 people/models.py:178
+#: people/models.py:151 people/models.py:201
 msgid "person"
 msgstr "tangata"
 
-#: people/models.py:132
+#: people/models.py:155
 msgid "Which tribe(s) do you identify with?"
 msgstr "Nō (t)ēhea iwi koe?"
 
-#: people/models.py:135
+#: people/models.py:158
 msgid "tribe"
 msgstr "iwi"
 
-#: people/models.py:142
+#: people/models.py:165
 msgid "Demographic"
 msgstr ""
 
-#: people/models.py:143
+#: people/models.py:166
 msgid "Demographics"
 msgstr ""
 
-#: people/models.py:152
+#: people/models.py:175
 msgid "Native Speaker - Beginner"
 msgstr "He Reo Ūkaipō - Mātau iti nei"
 
-#: people/models.py:153
+#: people/models.py:176
 msgid "Native Speaker - Intermediate"
 msgstr "He Reo Ūkaipō - Āhua Mātau nei"
 
-#: people/models.py:154
+#: people/models.py:177
 msgid "Native Speaker - Advanced"
 msgstr "He Reo Ūkaipō - Tino Mātau nei"
 
-#: people/models.py:155
+#: people/models.py:178
 msgid "Near Native Speaker - Beginner"
 msgstr "He Reo Tuarua - Mātau iti nei"
 
-#: people/models.py:156
+#: people/models.py:179
 msgid "Near Native Speaker - Intermediate"
 msgstr "He Reo Tuarua - Āhua Mātau nei"
 
-#: people/models.py:157
+#: people/models.py:180
 msgid "Near Native Speaker - Advanced"
 msgstr "He Reo Tuarua - Tino Mātau nei"
 
-#: people/models.py:158
+#: people/models.py:181
 msgid "Second Language Learner - Beginner"
 msgstr "He Ākonga Reo - Mātau iti nei"
 
-#: people/models.py:159
+#: people/models.py:182
 msgid "Second Language Learner - Intermediate"
 msgstr "He Ākonga Reo - Āhua Mātau nei"
 
-#: people/models.py:160
+#: people/models.py:183
 msgid "Second Language Learner - Advanced"
 msgstr "He Ākonga Reo - Tino Mātau nei"
 
-#: people/models.py:166
+#: people/models.py:189
 msgid "language"
 msgstr "reo"
 
-#: people/models.py:172
+#: people/models.py:195
 msgid "level of proficiency"
 msgstr ""
 
-#: people/models.py:187
+#: people/models.py:210
 msgid "accent"
 msgstr ""
 
-#: people/models.py:194
+#: people/models.py:217
 msgid "dialect"
 msgstr ""
 
-#: people/models.py:199
+#: people/models.py:222
 msgid "known language"
 msgstr ""
 
-#: people/models.py:200
+#: people/models.py:223
 msgid "known languages"
 msgstr ""
 
@@ -717,7 +721,7 @@ msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 msgid "minutes"
 msgstr "mīneti"
 
-#: people/views/views.py:183
+#: people/views/views.py:191
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."

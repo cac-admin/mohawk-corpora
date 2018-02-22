@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 06:46+0000\n"
+"POT-Creation-Date: 2018-02-22 07:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:37
-#: corpora/templates/corpora/logged_in_nav_buttons.html:110
+#: corpora/templates/corpora/logged_in_nav_buttons.html:119
 msgid "Log Out"
 msgstr "Puta Atu"
 
@@ -36,7 +36,7 @@ msgstr "Hopu"
 
 #: corpora/templates/corpora/footer.html:42
 #: corpora/templates/corpora/logged_in_nav_buttons.html:38
-#: corpora/templates/corpora/logged_in_nav_buttons.html:126
+#: corpora/templates/corpora/logged_in_nav_buttons.html:135
 msgid "Listen"
 msgstr "Whakarongo"
 
@@ -128,7 +128,7 @@ msgid ""
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:31
-#: corpora/templates/corpora/logged_in_nav_buttons.html:119
+#: corpora/templates/corpora/logged_in_nav_buttons.html:128
 msgid "Speak"
 msgstr "Kōrero"
 
@@ -137,6 +137,8 @@ msgid "Sentences"
 msgstr "Rerenga Kōrero"
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:54
+#: corpora/templates/corpora/logged_in_nav_buttons.html:69
+#: corpora/templates/corpora/logged_in_nav_buttons.html:142
 msgid "Stats"
 msgstr "Tatauranga"
 
@@ -144,21 +146,21 @@ msgstr "Tatauranga"
 msgid "Admin"
 msgstr "Kaiwhakahaere"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:69
-#: corpora/templates/corpora/logged_in_nav_buttons.html:133
+#: corpora/templates/corpora/logged_in_nav_buttons.html:76
+#: corpora/templates/corpora/logged_in_nav_buttons.html:149
 msgid "Profile"
 msgstr "Ngā Kōrero Mōu"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:77
+#: corpora/templates/corpora/logged_in_nav_buttons.html:84
 msgid "Edit Info"
 msgstr "Whakatikatika Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:90
-#: corpora/templates/corpora/logged_in_nav_buttons.html:146
+#: corpora/templates/corpora/logged_in_nav_buttons.html:97
+#: corpora/templates/corpora/logged_in_nav_buttons.html:162
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:166
+#: corpora/templates/corpora/logged_in_nav_buttons.html:182
 msgid "Log In"
 msgstr "Tomo Mai"
 

@@ -74,7 +74,15 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         current_user = person.user
         new_username = validated_data
         if new_username:
-            if new_username != current_user.username:
+            if current_user is None:
+                # Check if username already exists
+                try:
+                    user = User.objects.get(username=new_username)
+                    raise serializers.ValidationError('Username already exists.')
+                except ObjectDoesNotExist:
+                    pass
+
+            elif new_username != current_user.username:
                 # Check user with uname doesn't already exist
                 if User.objects.filter(username=new_username).exists():
                     # Raise validation error 
@@ -121,9 +129,20 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                     email=new_email)
                 user.save()
                 instance.user = user
+        elif 'username' in validated_data.keys():
+            new_username = validated_data['username']
+            user, created = User.objects.get_or_create(
+                    username=new_username)
+            user.save()
+            instance.user = user
 
-        if validated_data['profile_email']:
+        if 'profile_email' in validated_data.keys():
             instance.profile_email = validated_data['profile_email']
+            if instance.user:
+                if instance.user.email =='':
+                    instance.user.email = instance.profile_email
+                    instance.user.save()
+
 
         if 'username' in validated_data.keys():
             instance.username = validated_data['username']

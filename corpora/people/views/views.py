@@ -64,7 +64,7 @@ class ProfileDetail(APIView, TemplateView):
 
         num_recordings = Recording.objects.filter(person=person).count()
 
-        if num_recordings == 0:
+        if num_recordings == 0 and person.just_signed_up:
             url = reverse('corpus:record')  # onboard?
             return redirect(url)
 
@@ -79,19 +79,26 @@ class ProfileDetail(APIView, TemplateView):
         context['serializer'] = serializer
 
         context['demographic_form'] = DemographicForm(instance=person.demographic)
-        if person.user:
-            email = person.user.email
-        elif person.profile_email:
-            email = person.profile_email
-        else:
-            email = ''
+        email = None
+        username = None
 
-        # if email is None:
+        if person.user:
+            if person.user.email:
+                email = person.user.email
+            username = person.user.username
+        else:
+            if person.profile_email:
+                email = person.profile_email
+            else:
+                email = ''
+            if person.username:
+                username = person.username
+            else:
+                username = ''
+
         context['person_form'] = PersonForm(
             instance=person,
-            initial={'email': email, 'username': person.user.username})
-        # else:
-            # context['person_form'] = PersonForm(instance=person)
+            initial={'email': email, 'username': username})
 
         context['groups_form'] = GroupsForm(instance=person,
                                             request=self.request)
