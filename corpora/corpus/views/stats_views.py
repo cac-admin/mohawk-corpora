@@ -74,12 +74,17 @@ class RecordingStatsView(ListView):
         total_recordings = 0
         counter = 0
         while next_day <= end_day:
+            tomorrow = next_day + day_offset
+            if counter == 0:
+                start_30days_back = tomorrow - datetime.timedelta(days=30)
+                if start_30days_back > tomorrow:
+                    tomorrow = start_30days_back
             r = recordings.filter(
                 created__gte=next_day,
-                created__lte=next_day + day_offset).aggregate(Sum('duration'))
+                created__lte=tomorrow).aggregate(Sum('duration'))
             if r['duration__sum'] is None:
                 r['duration__sum'] = 0
-            total_recordings = int(r['duration__sum']) + total_recordings
+            total_recordings = int(r['duration__sum']/60) + total_recordings
 
             data['recordings']['labels'].append(next_day.strftime('%d-%m-%y'))
             data['recordings']['values'].append(total_recordings)
@@ -92,6 +97,7 @@ class RecordingStatsView(ListView):
                 data['growth_rate']['values'].append(total_recordings)
 
             next_day = next_day + day_offset
+            counter = counter + 1
 
         context['labels'] = [key for key in data['recordings']]
         context['values'] = [data['recordings'][i] for i in data['recordings']]
