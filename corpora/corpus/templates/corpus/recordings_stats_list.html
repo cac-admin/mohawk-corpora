@@ -12,6 +12,13 @@
 div.content{
   padding: 15px 0px 15px 0px;
 }
+
+
+  .styling{
+    background-color: $brand_lighter;
+    border-color: $brand;
+  }
+
 </style>
 {% endaddtoblock %}
   
@@ -30,6 +37,15 @@ div.content{
 
 {% addtoblock 'js-end' %}
 <script type="text/javascript">
+var bg = ''
+var border = ''
+
+    var $p = $("<p class='styling'></p>").hide().appendTo("body");
+    bg = $p.css("backgroundColor");
+    border = $p.css("borderColor");
+    $p.remove();
+
+
   var ctx = document.getElementById('myChart').getContext('2d');
 var chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -40,8 +56,8 @@ var chart = new Chart(ctx, {
         labels: {{ labels|safe }},
         datasets: [{
             label: "{% trans 'Recordings' %}",
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: bg,
+            borderColor: border,
             data: {{values}},
         }]
     },

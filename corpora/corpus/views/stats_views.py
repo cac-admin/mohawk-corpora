@@ -59,21 +59,25 @@ class RecordingStatsView(ListView):
         day_offset = datetime.timedelta(days=day_counter)
         next_day = start_day
         data = {'recordings': {}, 'growth_rate': {}}
+        total_recordings = 0
         while next_day <= end_day:
             r = recordings.filter(
                 created__gte=next_day,
                 created__lte=next_day + day_offset).aggregate(Sum('duration'))
+            if r['duration__sum'] is None:
+                r['duration__sum'] = 0
+            total_recordings = int(r['duration__sum']) + total_recordings
             data['recordings'][next_day.strftime('%d-%m-%y')] \
-                = int(r['duration__sum'])
+                = total_recordings
 
             try:
                 data['growth_rate'][next_day.strftime('%d-%m-%y')] = \
-                    int(r['duration__sum']) - \
+                    total_recordings - \
                     data['recordings'][
                         (next_day-day_offset).strftime('%d-%m-%y')]
             except KeyError:
                 data['growth_rate'][next_day.strftime('%d-%m-%y')] = \
-                    int(r['duration__sum'])
+                    total_recordings
 
             next_day = next_day + day_offset
 
