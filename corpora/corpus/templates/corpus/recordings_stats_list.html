@@ -53,12 +53,12 @@ var chart = new Chart(ctx, {
 
     // The data for our dataset
     data: {
-        labels: {{ labels|safe }},
+        labels: {{ data.recordings.labels|safe }},
         datasets: [{
             label: "{% trans 'Recordings' %}",
             backgroundColor: bg,
             borderColor: border,
-            data: {{values}},
+            data: {{data.recordings.values}},
         }]
     },
 
