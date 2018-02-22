@@ -65,7 +65,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        fields = ('full_name', 'email', 'username', 'receive_weekly_updates')
+        fields = ('full_name', 'email', 'username', 'receive_weekly_updates', 'leaderboard')
 
 
 class GroupsForm(forms.ModelForm):

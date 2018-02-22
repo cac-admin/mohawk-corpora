@@ -134,7 +134,13 @@ class Profile{
     }
     
     this.data.profile_email = $(this.target_element).find('#id_email').val()
-    this.data.receive_weekly_updates = $(this.target_element).find('#id_receive_weekly_updates').is(':checked');
+
+    var check_items = ['receive_weekly_updates', 'leaderboard']
+    for (var i=0; i<check_items.length; i++){
+      this.logger(check_items[i])
+      this.data[check_items[i]] = 
+        $(this.target_element).find('#id_'+check_items[i]).is(':checked');
+    }
 
     // Set Known Languages
     // Note will need to test this works when extra forms available!

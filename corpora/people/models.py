@@ -84,6 +84,11 @@ class Person(models.Model):
         default=True,
         help_text="Check to get weekly updates on your progress.")
 
+    leaderboard = models.BooleanField(
+        default=True,
+        help_text="Check to show your progress on the leaderboard.",
+        verbose_name="Show me on the leaderboard")
+
     on_board = models.BooleanField(
         default=True,
         help_text="Flag to dertmine whether to show an intro.")
