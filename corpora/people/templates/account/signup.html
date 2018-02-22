@@ -63,15 +63,21 @@ $('#signup_form').find('select').addClass('form-control');
 
 $('#submit_choose_language_form').hide();
 
-var email
+var email;
+var username;
 $(document).ready(function(){
   email = '{{person.email}}';
-  console.log(email)
+  username = '{{person.username}}'
   if (email != 'None'){
     var em_obj = $('#id_email').get(0)
-
     em_obj.value = email
   }
+  if (username != 'None'){
+    var username_obj = $('#id_username').get(0)
+    username_obj.value = username
+  }
+
+
 })
 
 

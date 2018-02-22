@@ -234,6 +234,7 @@ class Profile{
             }
           })
         } else{
+          if (key=='profile_email'){key='email'}
           $('#id_'+key).addClass('invalid')
           console.log(value)
           $(".error-"+key).text(value.join(' '))

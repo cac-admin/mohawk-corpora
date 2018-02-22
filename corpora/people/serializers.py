@@ -7,6 +7,7 @@ from rest_framework import serializers
 from dal import autocomplete
 
 from django.core.exceptions import ObjectDoesNotExist
+from allauth.account.models import EmailAddress
 
 import logging
 logger = logging.getLogger('corpora')
@@ -69,7 +70,6 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         validators = []
 
     def validate_username(self, validated_data):
-        logger.debug('\n\n validating username!\n\n')
         person = self.instance
         current_user = person.user
         new_username = validated_data
@@ -93,7 +93,37 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
         return validated_data
 
+    def validate_profile_email(self, validated_data):
+        person = self.instance
+        current_user = person.user
+        if current_user:
+            old_email = person.user.email
+        else:
+            old_email = None
+        new_email = validated_data
+
+        if new_email:
+            if new_email != old_email:
+                if current_user is None:
+                    # Check if the email already exists
+                    if EmailAddress.objects.filter(email=new_email).exists():
+                        raise serializers.ValidationError(
+                            'Email already exists.\
+                            Please choose another one or login with your email.')
+                else:
+                    old_email = EmailAddress.objects.get(user=current_user)
+                    if old_email != new_email:
+                        if EmailAddress.objects.filter(email=new_email).exists():
+                            raise serializers.ValidationError(
+                                'Email already exists. Please choose another one\
+                                or login with your email.')
+
+        return validated_data
+        # return super(PersonSerializer, serlf).validated_data
+
     def update(self, instance, validated_data):
+        person_object = self.instance
+        user_object = person_object.user
         instance.full_name = validated_data['full_name']
 
         instance.receive_weekly_updates = \
@@ -116,12 +146,18 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         except KeyError:
             demo.age = None
 
+        # I found my problem. I first need to check the the value of the
+        # validated data isn't '' - because if it is we shoulnd't be 
+        # setting it! This is what caused my strange username already 
+        # exists error I'm sur eof it
         if 'user' in validated_data.keys():
             new_username = validated_data['username']
             new_email = validated_data['user']['email']
             if instance.user:
-                instance.user.username = new_username
-                instance.user.email = new_email
+                if new_username:
+                    instance.user.username = new_username
+                if new_email:
+                    instance.user.email = new_email
                 instance.user.save()
             else:
                 user, created = User.objects.get_or_create(
@@ -130,19 +166,41 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                 user.save()
                 instance.user = user
         elif 'username' in validated_data.keys():
-            new_username = validated_data['username']
-            user, created = User.objects.get_or_create(
-                    username=new_username)
-            user.save()
-            instance.user = user
+            # Don't create a user!
+            instance.username = validated_data['username']
+            new_email = None
+        else:
+            new_email = None
 
         if 'profile_email' in validated_data.keys():
-            instance.profile_email = validated_data['profile_email']
-            if instance.user:
-                if instance.user.email =='':
-                    instance.user.email = instance.profile_email
+            profile_email = validated_data['profile_email']
+            if profile_email:
+                instance.profile_email = profile_email
+                if user_object:
+                    instance.user.email = profile_email
                     instance.user.save()
+                    email_object, created = EmailAddress.objects.get_or_create(
+                        user=user_object)
+                    email_object.email = profile_email
+                    if created:
+                        email_object.primary = created
+                    email_object.verified = False
+                    email_object.save()
+            elif new_email:
+                instance.profile_email = new_email
+                if instance.user:
+                    user = instance.user
+                    user_dict = validated_data['user']
+                    if instance.user.email == '':
+                        instance.user.email = instance.profile_email
+                        instance.user.save()
+                    email_object = EmailAddress.objects.get(user__pk=user_object.pk)
+                    email_object.email = instance.profile_email
+                    email_object.verified = False
 
+                    email_object.save()
+            else:
+                pass
 
         if 'username' in validated_data.keys():
             instance.username = validated_data['username']
