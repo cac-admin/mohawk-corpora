@@ -16,6 +16,7 @@ from corpus.models import Recording
 from people.helpers import get_current_language
 
 import datetime
+from django.utils import timezone
 # from django.conf import settings
 
 # from django import http
@@ -76,7 +77,7 @@ class RecordingStatsView(ListView):
         while next_day <= end_day:
             tomorrow = next_day + day_offset
             if counter == 0:
-                start_30days_back = tomorrow - datetime.timedelta(days=30)
+                start_30days_back = datetime.datetime.today() - datetime.timedelta(days=30)
                 if start_30days_back > tomorrow:
                     tomorrow = start_30days_back
             r = recordings.filter(
