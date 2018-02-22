@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 07:13+0000\n"
+"POT-Creation-Date: 2018-02-22 22:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,6 +122,7 @@ msgid "Skip"
 msgstr "Haere tonu"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:21
+#: corpus/templates/corpus/recordings_stats_list.html:22
 msgid "Stats"
 msgstr "Tatauranga"
 
@@ -185,21 +186,21 @@ msgstr "Hoki Whakamuri"
 msgid "Delete"
 msgstr "Whakakāhore"
 
-#: corpus/urls.py:8
+#: corpus/urls.py:9
 msgid "^record/"
 msgstr "^hopu/"
 
-#: corpus/urls.py:11
+#: corpus/urls.py:12
 msgid "^listen/"
 msgstr "^whakarongo/"
 
-#: corpus/urls.py:18
+#: corpus/urls.py:19
 #, fuzzy
 #| msgid "Sentences"
 msgid "^sentences/"
 msgstr "rerenga_korero/"
 
-#: corpus/urls.py:20
+#: corpus/urls.py:23
 msgid "^stats/"
 msgstr "^tatauranga/"
 

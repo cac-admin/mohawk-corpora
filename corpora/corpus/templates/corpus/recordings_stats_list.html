@@ -1,0 +1,60 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+</style>
+{% endaddtoblock %}
+  
+<div class="container">
+  <div class="row">
+    <div class="col">
+      
+      <h1>{% trans "Recordings" %}</h1>
+
+
+<canvas id="myChart"></canvas>
+
+{% addtoblock 'js-end' %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+{% endaddtoblock %}
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+            label: "{% trans 'Recordings' %}",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: {{values}},
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+{% endaddtoblock %}
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

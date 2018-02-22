@@ -263,6 +263,7 @@ BOWER_INSTALLED_APPS = {
     'components-font-awesome',
     'js-cookie',
     'popper.js',
+    'chart.js',
 }
 
 # STATICFILES_DIRS = (

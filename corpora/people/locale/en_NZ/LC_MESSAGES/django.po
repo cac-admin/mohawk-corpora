@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 07:13+0000\n"
+"POT-Creation-Date: 2018-02-22 22:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -477,11 +477,11 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
-#: people/templates/account/signup.html:86
+#: people/templates/account/signup.html:92
 msgid "You can also sign up with: "
 msgstr ""
 
-#: people/templates/account/signup.html:98
+#: people/templates/account/signup.html:104
 #, python-format
 msgid "Already have an account? <a href=\"%(login_url)s\">Sign in</a>."
 msgstr ""
@@ -665,7 +665,7 @@ msgstr ""
 msgid "minutes"
 msgstr ""
 
-#: people/views/views.py:191
+#: people/views/views.py:192
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr ""

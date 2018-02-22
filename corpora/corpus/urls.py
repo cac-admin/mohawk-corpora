@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import url, include
 from corpus.views import views
 from corpus.views.views import SentenceListView, StatsView, ListenView
+from corpus.views.stats_views import RecordingStatsView
 from django.views.decorators.cache import cache_page
 
 urlpatterns = [
@@ -17,7 +18,10 @@ urlpatterns = [
     url(r'^failed_submit/', views.failed_submit, name='failed_submit'),
     url(_(r'^sentences/'), SentenceListView.as_view(), name='sentence-list'),
 
+    url(r'^stats/recordings', RecordingStatsView.as_view(), name='recording-stats'),
+
     url(_(r'^stats/'), StatsView.as_view(), name='stats'),
+
 
     url(r'^recording-file/(?P<pk>[\d]+)/$',
         views.RecordingFileView.as_view(),

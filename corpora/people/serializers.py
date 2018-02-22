@@ -147,8 +147,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             demo.age = None
 
         # I found my problem. I first need to check the the value of the
-        # validated data isn't '' - because if it is we shoulnd't be 
-        # setting it! This is what caused my strange username already 
+        # validated data isn't '' - because if it is we shoulnd't be
+        # setting it! This is what caused my strange username already
         # exists error I'm sur eof it
         if 'user' in validated_data.keys():
             new_username = validated_data['username']

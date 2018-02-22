@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 07:13+0000\n"
+"POT-Creation-Date: 2018-02-22 22:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -513,11 +513,11 @@ msgstr "Rēhita"
 msgid "Sign Up"
 msgstr "Rēhita"
 
-#: people/templates/account/signup.html:86
+#: people/templates/account/signup.html:92
 msgid "You can also sign up with: "
 msgstr "E taea anō te tomo mai mā te:"
 
-#: people/templates/account/signup.html:98
+#: people/templates/account/signup.html:104
 #, python-format
 msgid "Already have an account? <a href=\"%(login_url)s\">Sign in</a>."
 msgstr "Kua whai kaute kē koe? <a href=\"%(login_url)s\">Tomo mai</a>."
@@ -721,7 +721,7 @@ msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 msgid "minutes"
 msgstr "mīneti"
 
-#: people/views/views.py:191
+#: people/views/views.py:192
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."
