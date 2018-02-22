@@ -9,7 +9,7 @@ logger = logging.getLogger('corpora')
 
 @shared_task
 def clean_empty_person_models():
-    from corpus.models import QualityControl
+    from corpus.models import Recording
 
     people = Person.objects\
         .filter(full_name='')\
