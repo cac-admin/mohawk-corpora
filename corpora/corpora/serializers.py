@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
+import logging
+logger = logging.getLogger('corpora')
+
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -8,14 +11,9 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     # groups = GroupSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ('email', 'pk')
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.email
-        instance.save()
-        return instance
+        fields = ('email', 'pk',)

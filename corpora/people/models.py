@@ -70,6 +70,20 @@ class Person(models.Model):
         help_text="This is a placeholder for users that don't sign up.")
     # accept_terms = models.BooleanField(editable=False, default=False)
 
+    username = models.CharField(
+        max_length=254,
+        help_text=_('Username - this will be publicly viewable'),
+        blank=True,
+        null=True)
+
+    # receive_daily_updates = models.BooleanField(
+    #     default=False,
+    #     help_text="Check to get a daily update on your progress.")
+
+    receive_weekly_updates = models.BooleanField(
+        default=True,
+        help_text="Check to get weekly updates on your progress.")
+
     on_board = models.BooleanField(
         default=True,
         help_text="Flag to dertmine whether to show an intro.")

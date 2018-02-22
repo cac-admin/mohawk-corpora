@@ -7,6 +7,14 @@
 
 
 {% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+div.content{
+  padding: 30px 0px 30px 0px;
+}
+</style>
+{% endaddtoblock %}
+
 <div class="container">
 
 {% include 'people/choose_language_form.html' %}

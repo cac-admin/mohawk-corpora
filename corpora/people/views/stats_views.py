@@ -122,8 +122,9 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
 
         stats['recordings_today']['start_time'] = today_begining
         stats['recordings_today']['end_time'] = now
-        # stats['recordings_today']['earliest_time'] = todays_recordings[0].created
-        # stats['recordings_today']['latest_time'] = todays_recordings[todays_recordings.count()-1].created
+        if todays_recordings:
+            stats['recordings_today']['earliest_time'] = todays_recordings[0].created
+            stats['recordings_today']['latest_time'] = todays_recordings[todays_recordings.count()-1].created
 
         context['person'] = person
         context['stats'] = stats

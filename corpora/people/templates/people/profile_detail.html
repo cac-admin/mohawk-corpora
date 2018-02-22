@@ -25,7 +25,11 @@ span.select2.select2-container{
 span.select2-container{
     min-width: 50px;
 }
-
+small.form-text-error{
+    color: $brand_dark;
+    font-weight: bold;
+    display: none;
+}
 </style>
 {% endaddtoblock %}
   
@@ -45,12 +49,15 @@ span.select2-container{
     <div class="form-group row justify-content-end">
         {{ field.errors }}
         {{ field.label_tag }}
-        <div class="col-sm-12 col-md-10">{{ field }}</div>
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
+        
+        <div class="col-sm-12 col-md-12">
         {% if field.help_text %}
-        <div class="col-sm-12 col-md-10">
-        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
-        </div>
+        <small class="form-text text-muted {{field.name}}">{{ field.help_text|safe }}</small>
         {% endif %}
+        <small class="form-text-error error-{{field.name}}"></small>
+        </div>
+        
     </div>
     {% endfor %}
     
@@ -58,9 +65,9 @@ span.select2-container{
     <div class="form-group row justify-content-end">
         {{ field.errors }}
         {{ field.label_tag }}
-        <div class="col-sm-12 col-md-10">{{ field }}</div>
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
         {% if field.help_text %}
-        <div class="col-sm-12 col-md-10">
+        <div class="col-sm-12 col-md-12">
         <small class="form-text text-muted">{{ field.help_text|safe }}</small>
         </div>
         {% endif %}
@@ -75,9 +82,9 @@ span.select2-container{
     <div class="form-group row justify-content-end">
         {{ field.errors }}
         {{ field.label_tag }}
-        <div class="col-sm-12 col-md-10">{{ field }}</div>
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
         {% if field.help_text %}
-        <div class="col-sm-12 col-md-10">
+        <div class="col-sm-12 col-md-12">
         <small class="form-text text-muted">{{ field.help_text|safe }}</small>
         </div>
         {% endif %}
@@ -106,7 +113,7 @@ span.select2-container{
 {% addtoblock 'js-end' %}
 <script type="text/javascript">
   
-$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('label').addClass('col-form-label col-sm-12 col-md-2');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('label').addClass('col-form-label col-sm-12 col-md-12');
 $('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('input').addClass('form-control');
 $('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('select').addClass('form-control');
 

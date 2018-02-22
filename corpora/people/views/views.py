@@ -87,7 +87,9 @@ class ProfileDetail(APIView, TemplateView):
             email = ''
 
         # if email is None:
-        context['person_form'] = PersonForm(instance=person, initial={'email': email})
+        context['person_form'] = PersonForm(
+            instance=person,
+            initial={'email': email, 'username': person.user.username})
         # else:
             # context['person_form'] = PersonForm(instance=person)
 

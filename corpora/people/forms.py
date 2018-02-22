@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from people.models import KnownLanguage, Person, Demographic
+from people.helpers import get_or_create_person
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS, ACCENTS
 from dal import autocomplete
 from django.db.models.fields import BLANK_CHOICE_DASH
@@ -64,7 +65,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        fields = ('full_name', 'email')
+        fields = ('full_name', 'email', 'username', 'receive_weekly_updates')
 
 
 class GroupsForm(forms.ModelForm):

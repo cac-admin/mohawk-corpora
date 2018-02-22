@@ -1,5 +1,6 @@
 from people.models import \
     Person, Tribe, Demographic, KnownLanguage, Group
+from django.contrib.auth.models import User
 
 from corpora.serializers import UserSerializer
 from rest_framework import serializers
@@ -60,14 +61,36 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('full_name', 'uuid', 'user',
+        fields = ('full_name', 'username', 'uuid', 'user',
                   'demographic', 'known_languages', 'id',
-                  'profile_email', 'groups', )
+                  'profile_email', 'groups', 'receive_weekly_updates')
+        extra_kwargs = {"username": {"error_messages": {"required": "Give yourself a username"}}}
+        validators = []
+
+    def validate_username(self, validated_data):
+        logger.debug('\n\n validating username!\n\n')
+        person = self.instance
+        current_user = person.user
+        new_username = validated_data
+        if new_username:
+            if new_username != current_user.username:
+                # Check user with uname doesn't already exist
+                if User.objects.filter(username=new_username).exists():
+                    # Raise validation error 
+                    raise serializers.ValidationError('Username already exists.')
+                else:
+                    # Everything is ka pai
+                    pass
+
+        return validated_data
 
     def update(self, instance, validated_data):
         instance.full_name = validated_data['full_name']
-        # instance.uuid = validated_data['uuid']
 
+        instance.receive_weekly_updates = \
+            validated_data['receive_weekly_updates']
+
+        logger.debug('executing udpate on person model')
         demographic = validated_data['demographic']
 
         demo, created = Demographic.objects.get_or_create(person=instance)
@@ -83,10 +106,24 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             demo.age = None
 
         if 'user' in validated_data.keys():
-            instance.user.email = validated_data['user']['email']
-            instance.user.save()
-        elif validated_data['profile_email']:
+            new_username = validated_data['username']
+            new_email = validated_data['user']['email']
+            if instance.user:
+                instance.user.username = new_username
+                instance.user.email = new_email
+                instance.user.save()
+            else:
+                user, created = User.objects.get_or_create(
+                    username=new_username,
+                    email=new_email)
+                user.save()
+                instance.user = user
+
+        if validated_data['profile_email']:
             instance.profile_email = validated_data['profile_email']
+
+        if 'username' in validated_data.keys():
+            instance.username = validated_data['username']
 
         logger.debug(demographic)
         # remove all current relations

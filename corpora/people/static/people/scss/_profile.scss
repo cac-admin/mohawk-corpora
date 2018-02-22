@@ -26,9 +26,9 @@
 
 
 input.invalid{
-	border: 2px solid red;
-  border-color: #900;
-  background-color: #FDD;
+	border: 2px solid red !important;
+  border-color: #900 !important;
+  background-color: #FDD !important;
 }
 
 // input:focus:invalid {

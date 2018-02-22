@@ -107,7 +107,7 @@ class Profile{
     var demo = this.data.demographic
     this.logger('Saving....')
     demo.age = $(this.target_element).find('#id_age').val()
-    demo.sex = $(this.target_element).find('#id_sex').val()
+    demo.gender = $(this.target_element).find('#id_gender').val()
 
     $.each(demo, function(key, value){
       if (value == ''){
@@ -127,12 +127,14 @@ class Profile{
 
     this.data.demographic = demo
     this.data.full_name = $(this.target_element).find('#id_full_name').val()
-    
+    this.data.username = $(this.target_element).find('#id_username').val()
+
     if (this.data.user != null){
       this.data.user.email = $(this.target_element).find('#id_email').val()
-    } else{
-      this.data.profile_email = $(this.target_element).find('#id_email').val()
     }
+    
+    this.data.profile_email = $(this.target_element).find('#id_email').val()
+    this.data.receive_weekly_updates = $(this.target_element).find('#id_receive_weekly_updates').is(':checked');
 
     // Set Known Languages
     // Note will need to test this works when extra forms available!
@@ -155,7 +157,7 @@ class Profile{
     this.data.known_languages = known_languages
 
     this.data.groups = $(this.target_element).find('#id_groups').val()
-    
+    this.logger(this.data)
     window.setTimeout(function(){
       self.change_counter -= 1
       if (self.change_counter<=0){
@@ -188,6 +190,7 @@ class Profile{
       }
     })
 
+
     data = JSON.stringify(data)
     $.ajax({
       type: "PUT",
@@ -196,12 +199,19 @@ class Profile{
       dataType: 'json',
       contentType:"application/json; charset=utf-8",
     }).done(function(e){
+      $(".form-text-error").hide()
+      $(".form-text").show()
+      $('#person_form .invalid').removeClass('invalid')
+
       self.logger(e)
       self.saving = false
       self.show_success()
     }).fail(function(e){
       
       self.saving = false
+      $(".form-text-error").hide()
+      $(".form-text").show()
+      $('#person_form .invalid').removeClass('invalid')
 
       var errorData = e.responseJSON
       self.logger(errorData)
@@ -209,9 +219,20 @@ class Profile{
         if (key == 'user'){
           $.each(value, function(k, v){
             if (k=='email'){
-              $('#id_email').addClass('invalid')
+              // $('#id_email').addClass('invalid')
+              $('#id_'+k).addClass('invalid')
+              console.log(v)
+              $(".error-"+k).text(v.join(' '))
+              $(".error-"+k).show()
+              $(".form-text."+k).hide()
             }
           })
+        } else{
+          $('#id_'+key).addClass('invalid')
+          console.log(value)
+          $(".error-"+key).text(value.join(' '))
+          $(".error-"+key).show()
+          $(".form-text."+key).hide()
         }
       })
 

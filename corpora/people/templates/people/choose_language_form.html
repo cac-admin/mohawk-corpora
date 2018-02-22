@@ -58,7 +58,7 @@
                 {% get_language_info for field.value as lang %}
                 
                 {{ field.label_tag }} 
-                <div class="col-sm-12 col-md-10" >
+                <div class="col-sm-12 col-md-12" >
                     <select id="{{field.id_for_label}}" name="{{field.html_name}}">
                         <option value="{{field.value}}" selected="selected">{{ lang.name_translated }}</option>
                     </select>
@@ -66,7 +66,7 @@
                 {% else %}
 
                 {{ field.label_tag }} 
-                <div class="col-sm-12 col-md-10">
+                <div class="col-sm-12 col-md-12">
                     <select id="{{field.id_for_label}}" name="{{field.html_name}}">                
                         <option value=""{% if field.value == lang_code %} selected{% endif %}>---------</option>
                         {% for lang_code in unknown_languages %}
@@ -82,11 +82,11 @@
             {% else %}
 
                 {{ field.label_tag }}
-                <div class="col-sm-12 col-md-10">{{ field }}</div>
+                <div class="col-sm-12 col-md-12">{{ field }}</div>
 
             {% endif %}
 
-            {% if field.errors %}<div class="col-sm-12 col-md-10"><div class="alert alert-danger" role="alert">{{ field.errors }}</div></div>{% endif %}
+            {% if field.errors %}<div class="col-sm-12 col-md-12"><div class="alert alert-danger" role="alert">{{ field.errors }}</div></div>{% endif %}
         
     </div>
     {% endfor %}
