@@ -101,13 +101,13 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
             person=person)
 
         # Assume for now user is in NZ timezone = UTC + 12 hours
-        time_offset = 12
+        time_offset = 13
         now = timezone.now() + datetime.timedelta(hours=time_offset)
         logger.debug(now)
 
         # Find the day for NZ, then take us back to utc time.
         today_begining = \
-            datetime.datetime.combine(now.today(), datetime.time()) + \
+            datetime.datetime.combine(now.today(), datetime.time()) - \
             datetime.timedelta(hours=time_offset)
         logger.debug(today_begining)
 
