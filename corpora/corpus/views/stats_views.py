@@ -100,12 +100,12 @@ class RecordingStatsView(ListView):
             total_recordings = int(r['duration__sum']/1 ) + total_recordings
 
             data['recordings']['labels'].append(
-                (tomorrow-day_offset+timezone_shift).strftime('%d-%m-%y'))
+                (tomorrow).strftime('%d-%m-%y'))
             data['recordings']['values'].append(total_recordings)
 
             try:
                 data['growth_rate']['labels'].append(
-                    (tomorrow-day_offset+timezone_shift).strftime('%d-%m-%y'))
+                    (tomorrow).strftime('%d-%m-%y'))
                 data['growth_rate']['values'].append(
                     total_recordings - data['recordings']['values'][counter-1])
             except IndexError:
