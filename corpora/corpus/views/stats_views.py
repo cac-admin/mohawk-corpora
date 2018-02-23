@@ -80,12 +80,14 @@ class RecordingStatsView(ListView):
         total_recordings = 0
         counter = 0
         tomorrow = next_day + day_offset
-        while next_day < end_day + day_offset:
+        while next_day < timezone.now() :
 
             if counter == 0:
                 start_30days_back = timezone.now() - datetime.timedelta(days=30)
                 if start_30days_back > next_day:
-                    tomorrow = datetime.datetime.combine(start_30days_back, datetime.time())
+                    tomorrow = timezone.make_aware(
+                        datetime.datetime.combine(start_30days_back, datetime.time()),
+                        timezone.get_default_timezone())
             r = recordings.filter(
                 created__gte=next_day,
                 created__lt=tomorrow).aggregate(Sum('duration'))
@@ -95,20 +97,23 @@ class RecordingStatsView(ListView):
             total_recordings = int(r['duration__sum']/60) + total_recordings
 
             data['recordings']['labels'].append(
-                (tomorrow).strftime('%d-%m-%y'))
+                (tomorrow-day_offset).strftime('%d-%m-%y'))
             data['recordings']['values'].append(total_recordings)
 
             try:
                 data['growth_rate']['labels'].append(
-                    (tomorrow).strftime('%d-%m-%y'))
+                    (tomorrow-day_offset).strftime('%d-%m-%y'))
                 data['growth_rate']['values'].append(
                     total_recordings - data['recordings']['values'][counter-1])
             except IndexError:
                 data['growth_rate']['values'].append(total_recordings)
 
-            next_day = timezone.make_aware(
-                tomorrow,
-                timezone.get_default_timezone())
+            # try:
+            #     next_day = timezone.make_aware(
+            #         tomorrow,
+            #         timezone.get_default_timezone())
+            # except:
+            next_day = tomorrow
             tomorrow = tomorrow + day_offset
             counter = counter + 1
 
@@ -118,4 +123,7 @@ class RecordingStatsView(ListView):
         context['data'] = data
         context['start_day'] = start_day
         context['end_day'] = end_day
+        context['start_date'] = start_date
+        context['end_date'] = end_date
+        
         return context
