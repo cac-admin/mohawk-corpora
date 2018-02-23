@@ -97,7 +97,7 @@ class RecordingStatsView(ListView):
             if r['duration__sum'] is None:
                 r['duration__sum'] = 0
 
-            total_recordings = int(r['duration__sum']/60) + total_recordings
+            total_recordings = int(r['duration__sum']/1) + total_recordings
 
             data['recordings']['labels'].append(
                 (tomorrow-day_offset).strftime('%d-%m-%y'))
