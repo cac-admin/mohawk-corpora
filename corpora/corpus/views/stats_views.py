@@ -82,7 +82,7 @@ class RecordingStatsView(ListView):
         counter = 0
         tomorrow = next_day + day_offset
         # next_day = next_day 
-        while next_day < timezone.now() :
+        while next_day < timezone.now() - timezone_shift:
 
             if counter == 0:
                 start_30days_back = timezone.now() - datetime.timedelta(days=30)
@@ -97,7 +97,7 @@ class RecordingStatsView(ListView):
             if r['duration__sum'] is None:
                 r['duration__sum'] = 0
 
-            total_recordings = int(r['duration__sum']/1) + total_recordings
+            total_recordings = int(r['duration__sum']/1 ) + total_recordings
 
             data['recordings']['labels'].append(
                 (tomorrow-day_offset).strftime('%d-%m-%y'))
