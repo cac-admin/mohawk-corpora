@@ -106,7 +106,9 @@ class RecordingStatsView(ListView):
             except IndexError:
                 data['growth_rate']['values'].append(total_recordings)
 
-            next_day = tomorrow
+            next_day = timezone.make_aware(
+                tomorrow,
+                timezone.get_default_timezone())
             tomorrow = tomorrow + day_offset
             counter = counter + 1
 
