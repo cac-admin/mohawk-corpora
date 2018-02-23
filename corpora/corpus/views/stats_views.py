@@ -52,9 +52,14 @@ class RecordingStatsView(ListView):
         end_date = recordings.first().created
 
         start_day = \
-            datetime.datetime.combine(start_date, datetime.time())
+            timezone.make_aware(
+                datetime.datetime.combine(start_date, datetime.time()),
+                timezone.get_default_timezone())
+
         end_day = \
-            datetime.datetime.combine(end_date, datetime.time())
+            timezone.make_aware(
+                datetime.datetime.combine(end_date, datetime.time()),
+                timezone.get_default_timezone())
 
         day_counter = 1
         day_offset = datetime.timedelta(days=day_counter)
@@ -78,7 +83,7 @@ class RecordingStatsView(ListView):
         while next_day < end_day + day_offset:
 
             if counter == 0:
-                start_30days_back = datetime.datetime.today() - datetime.timedelta(days=30)
+                start_30days_back = timezone.now() - datetime.timedelta(days=30)
                 if start_30days_back > next_day:
                     tomorrow = datetime.datetime.combine(start_30days_back, datetime.time())
             r = recordings.filter(
