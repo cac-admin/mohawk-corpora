@@ -74,8 +74,9 @@ class RecordingStatsView(ListView):
 
         total_recordings = 0
         counter = 0
+        tomorrow = next_day + day_offset
         while next_day <= end_day:
-            tomorrow = next_day + day_offset
+            
             if counter == 0:
                 start_30days_back = datetime.datetime.today() - datetime.timedelta(days=30)
                 if start_30days_back > tomorrow:
@@ -99,7 +100,9 @@ class RecordingStatsView(ListView):
             except IndexError:
                 data['growth_rate']['values'].append(total_recordings)
 
-            next_day = next_day + day_offset
+            next_day = tomorrow
+            tomorrow = tomorrow + day_offset
+
             counter = counter + 1
 
         context['labels'] = [key for key in data['recordings']]
