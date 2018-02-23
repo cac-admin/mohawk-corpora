@@ -75,12 +75,12 @@ class RecordingStatsView(ListView):
         total_recordings = 0
         counter = 0
         tomorrow = next_day + day_offset
-        while next_day <= end_day + day_offset:
+        while next_day < end_day + day_offset:
 
             if counter == 0:
                 start_30days_back = datetime.datetime.today() - datetime.timedelta(days=30)
                 if start_30days_back > next_day:
-                    tomorrow = start_30days_back
+                    tomorrow = datetime.datetime.combine(start_30days_back, datetime.time())
             r = recordings.filter(
                 created__gte=next_day,
                 created__lt=tomorrow).aggregate(Sum('duration'))
