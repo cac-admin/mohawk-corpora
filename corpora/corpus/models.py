@@ -184,8 +184,8 @@ class Recording(models.Model):
         on_delete=models.SET_NULL)
 
     audio_file = models.FileField(upload_to=upload_directory)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(default=timezone.now())
+    updated = models.DateTimeField(default=timezone.now())
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
     audio_file_aac = models.FileField(

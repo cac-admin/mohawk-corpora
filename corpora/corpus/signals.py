@@ -9,6 +9,8 @@ from people.tasks import update_person_score
 
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
+
+
 def create_quality_control_instance_when_object_created(
         sender, instance, **kwargs):
     qc, created = QualityControl.objects.get_or_create(
@@ -85,6 +87,13 @@ def set_sentence_text_when_recording_created(
     if created:
         instance.sentence_text = instance.sentence.text
         instance.save()
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def set_upadted_when_recording_saved(
+        sender, instance, created, **kwargs):
+    instance.updated = timezone.now()
+    instance.save()
 
 
 @receiver(models.signals.post_save, sender=Recording)
