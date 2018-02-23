@@ -66,8 +66,18 @@ var border = ''
     },
 
     // Configuration options go here
-    options: {}
-    });
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Minutes of Recordings'
+          }
+        }]
+      }
+    },
+
+  });
 
   var ctx2 = document.getElementById('growthrate').getContext('2d');
   var chart2 = new Chart(ctx2, {
@@ -86,8 +96,18 @@ var border = ''
     },
 
     // Configuration options go here
-    options: {}
-    });
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Minutes / Day'
+          }
+        }]
+      }
+    },
+
+  });
 
 
 </script>
