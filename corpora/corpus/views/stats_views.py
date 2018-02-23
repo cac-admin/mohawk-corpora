@@ -62,6 +62,7 @@ class RecordingStatsView(ListView):
                 timezone.get_default_timezone())
 
         day_counter = 1
+        timezone_shift = datetime.timedelta(days=13)
         day_offset = datetime.timedelta(days=day_counter)
         next_day = start_day
         data = {'recordings': {}, 'growth_rate': {}}
@@ -80,21 +81,23 @@ class RecordingStatsView(ListView):
         total_recordings = 0
         counter = 0
         tomorrow = next_day + day_offset
+        # next_day = next_day 
         while next_day < timezone.now() :
 
             if counter == 0:
                 start_30days_back = timezone.now() - datetime.timedelta(days=30)
-                if start_30days_back > next_day:
-                    tomorrow = timezone.make_aware(
+                # if start_30days_back > next_day:
+                tomorrow = timezone.make_aware(
                         datetime.datetime.combine(start_30days_back, datetime.time()),
                         timezone.get_default_timezone())
             r = recordings.filter(
-                created__gte=next_day,
-                created__lt=tomorrow).aggregate(Sum('duration'))
+                created__gte=next_day+timezone_shift,
+                created__lt=tomorrow+timezone_shift)\
+                .aggregate(Sum('duration'))
             if r['duration__sum'] is None:
                 r['duration__sum'] = 0
 
-            total_recordings = int(r['duration__sum']/60) + total_recordings
+            total_recordings = int(r['duration__sum']/1) + total_recordings
 
             data['recordings']['labels'].append(
                 (tomorrow-day_offset).strftime('%d-%m-%y'))

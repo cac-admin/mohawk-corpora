@@ -89,11 +89,11 @@ def set_sentence_text_when_recording_created(
         instance.save()
 
 
-@receiver(models.signals.post_save, sender=Recording)
-def set_upadted_when_recording_saved(
-        sender, instance, created, **kwargs):
-    instance.updated = timezone.now()
-    instance.save()
+# @receiver(models.signals.post_save, sender=Recording)
+# def set_upadted_when_recording_saved(
+#         sender, instance, created, **kwargs):
+#     instance.updated = timezone.now()
+#     instance.save()
 
 
 @receiver(models.signals.post_save, sender=Recording)
