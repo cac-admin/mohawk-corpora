@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 22:25+0000\n"
+"POT-Creation-Date: 2018-02-25 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,11 +122,12 @@ msgid "Skip"
 msgstr "Haere tonu"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:21
-#: corpus/templates/corpus/recordings_stats_list.html:22
 msgid "Stats"
 msgstr "Tatauranga"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:27
+#: corpus/templates/corpus/recordings_stats_list.html:29
+#: corpus/templates/corpus/recordings_stats_list.html:65
 msgid "Recordings"
 msgstr "Kapohanga Reo"
 
@@ -169,6 +170,10 @@ msgstr "Mahia anō"
 #: corpus/templates/corpus/record.html:107
 msgid "Save"
 msgstr "Tiakina"
+
+#: corpus/templates/corpus/recordings_stats_list.html:95
+msgid "Growth Rate"
+msgstr ""
 
 #: corpus/templates/corpus/sentence_list.html:67
 msgid "Confirm Delete"

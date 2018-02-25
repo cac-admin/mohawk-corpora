@@ -199,7 +199,10 @@ class Recording(models.Model):
         unique_together = (("person", "sentence"),)
 
     def __unicode__(self):
-        return self.get_sentence_text() + " by " + self.get_person_name()
+        try:
+            return self.get_sentence_text() + u" by " + self.get_person_name()
+        except:
+            return self.get_sentence_text()
 
     def audio_file_admin(self):
         url = self.get_recording_file_url()
@@ -232,13 +235,13 @@ class Recording(models.Model):
         elif self.sentence:
             return self.sentence.text
         else:
-            return _('None')
+            return _(u'None')
 
     def get_person_name(self):
         if self.person:
             return self.person.full_name
         else:
-            return _('None')
+            return _(u'None')
 
     def calculate_score(self):
         """Score awarded for uploading this recording. """
