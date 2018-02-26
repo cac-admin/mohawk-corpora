@@ -192,6 +192,7 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
     template_name = 'people/people_email_list.html'
     context_object_name = 'people'
     raise_exception = True
+    paginate_by = 495
 
     def test_func(self):
         return self.request.user.is_superuser
