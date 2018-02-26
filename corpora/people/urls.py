@@ -19,6 +19,9 @@ urlpatterns = [
         stats_views.PeopleRecordingStatsView.as_view(),
         name='people_stats'),
 
+    url(r'^emails/$',
+        stats_views.PeopleEmailsView.as_view(),
+        name='people_stats'),
 
     # autocomplete
     url(

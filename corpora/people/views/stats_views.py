@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.utils import timezone
 import datetime
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 import json
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView, MultipleObjectMixin
@@ -20,6 +20,8 @@ from people.models import Person, KnownLanguage
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person, get_person, get_current_language
 from django.conf import settings
+
+from allauth.account.models import EmailAddress
 
 from django import http
 from django.shortcuts import get_object_or_404
@@ -181,5 +183,39 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
                 person.name = 'Anonymous Kumara'
             else:
                 person.name = person.user.username
+
+        return context
+
+
+class PeopleEmailsView(UserPassesTestMixin, ListView):
+    model = Person
+    template_name = 'people/people_email_list.html'
+    context_object_name = 'people'
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return Person.objects\
+            .exclude(receive_weekly_updates=False)
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(PeopleEmailsView, self).get_context_data(**kwargs)
+
+        people = context['people']
+
+        for person in context['people']:
+            if person.user is not None:
+                try:
+                    email = EmailAddress.objects.get(user=person.user)
+                    email = email.email
+                except ObjectDoesNotExist:
+                    email = person.user.email
+            else:
+                email = person.profile_email
+
+            person.email = email
 
         return context

@@ -1,0 +1,48 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+div.col.table{
+  overflow-x: auto;
+}
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col table">
+
+{% for person in people %}
+
+{% if person.email %}
+
+{% if person.full_name %}
+
+"{{ person.full_name }}"&nbsp;&lt;{{ person.email}}&gt;,<br>
+
+{% else %}
+
+{{ person.email}},<br>
+
+{% endif %}
+{% endif %}
+
+{% endfor %}
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
