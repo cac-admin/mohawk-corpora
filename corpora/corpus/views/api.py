@@ -118,7 +118,6 @@ class SentencesView(generics.ListCreateAPIView):
                 queryset = queryset.filter(pk=sentence.pk)
             else:
                 return []
-            return queryset
 
         else:
 

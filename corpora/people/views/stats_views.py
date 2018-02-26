@@ -151,7 +151,9 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         language = get_current_language(self.request)
-        return Person.objects.filter(recording__sentence__language=language)\
+        return Person.objects\
+            .filter(recording__sentence__language=language)\
+            .exclude(leaderboard=False)\
             .annotate(num_recordings=models.Count('recording'))\
             .order_by('-num_recordings')
 
