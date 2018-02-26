@@ -214,10 +214,11 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
                 except ObjectDoesNotExist:
                     email = person.user.email
                 except MultipleObjectsReturned:
-                    email = EmailAddress.objects.get(user=person.user, verified=True)
-                    if email.exists():
+                    try:
+                        email = EmailAddress.objects.get(
+                            user=person.user, verified=True)
                         email = email.email
-                    else:
+                    except ObjectDoesNotExist:
                         email = EmailAddress.objects.first(user=person.user)
                         email = email.email
             else:
