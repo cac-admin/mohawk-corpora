@@ -143,7 +143,7 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
 
 class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
     model = Person
-    template_name = 'people/peoplestats_list.html'
+    template_name = 'people/leaderboard.html'
     paginate_by = 50
     context_object_name = 'people'
 
@@ -219,7 +219,7 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
                             user=person.user, verified=True)
                         email = email.email
                     except ObjectDoesNotExist:
-                        email = EmailAddress.objects.first(user=person.user)
+                        email = EmailAddress.objects.filter(user=person.user).first()
                         email = email.email
             else:
                 email = person.profile_email

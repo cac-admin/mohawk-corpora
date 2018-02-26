@@ -21,7 +21,7 @@ urlpatterns = [
 
     url(r'^emails/$',
         stats_views.PeopleEmailsView.as_view(),
-        name='people_stats'),
+        name='email_list'),
 
     # autocomplete
     url(
