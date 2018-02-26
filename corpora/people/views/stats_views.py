@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.utils import timezone
 import datetime
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 import json
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView, MultipleObjectMixin
@@ -213,6 +213,13 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
                     email = email.email
                 except ObjectDoesNotExist:
                     email = person.user.email
+                except MultipleObjectsReturned:
+                    email = EmailAddress.objects.get(user=person.user, verified=True)
+                    if email.exists():
+                        email = email.email
+                    else:
+                        email = EmailAddress.objects.first(user=person.user)
+                        email = email.email
             else:
                 email = person.profile_email
 
