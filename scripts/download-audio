@@ -1,0 +1,103 @@
+#!/usr/bin/python3
+import requests
+import json
+import os
+import argparse
+
+DEFAULT_URL = 'https://koreromaori.com/'
+DEFAULT_API_PATH = 'api/recordings/?format=json'
+DEFAULT_LOGIN_PATH = 'accounts/login/'
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', '--base-url', default=DEFAULT_URL,
+                        help="corpora.io base url")
+    parser.add_argument('--api-url', default=DEFAULT_API_PATH,
+                        help="API url (if not $base/%s)" % DEFAULT_API_PATH)
+    parser.add_argument('--login-url', default=DEFAULT_LOGIN_PATH,
+                        help="login url (if not $base/%s)" % DEFAULT_LOGIN_PATH)
+    parser.add_argument('-t', '--text-file',
+                        help="append sentence text to this file")
+    parser.add_argument('-d', '--audio-directory',
+                        help="save audio files here")
+    parser.add_argument('-l', '--limit', type=int,
+                        help="stop after this many files")
+    parser.add_argument('-U', '--username',
+                        help="login with this username")
+    parser.add_argument('-P', '--password',
+                        help="login with this password")
+    parser.add_argument('--overwrite', action='store_true',
+                        help="overwrite already downloaded files")
+    args = parser.parse_args()
+
+    if args.password is None:
+        args.password = input('Password: ')
+
+    url = args.base_url
+    if '://' in args.login_url:
+        login_url = args.login_url
+    else:
+        login_url = url + args.login_url
+
+    if '://' in args.api_url:
+        api_url = args.api_url
+    else:
+        api_url = url + args.api_url
+
+    session = requests.Session()
+    r = session.get(login_url)
+
+    session.headers['Referer'] = url
+
+    csrftoken = ''
+    for c in session.cookies:
+        if c.name == 'csrftoken':
+            csrftoken = c.value
+
+    r = session.post(login_url,
+                     data={'login': args.username,
+                           'password': args.password,
+                           'remember': 'on',
+                           'csrfmiddlewaretoken': csrftoken
+                     })
+
+    text_file = open(args.text_file, "a")
+
+    downloaded = 0
+    while api_url:
+        print("fetching a JSON page: %s" % api_url)
+        r = session.get(api_url)
+        j = r.json()
+
+        for s in j['results']:
+            recording_id = '%s' % s['id']
+            person_id = '%s' % s['person']
+            d = os.path.join(args.audio_directory, person_id)
+            fn = os.path.join(d, recording_id)
+            audio_url = s['audio_file_url']
+            if os.path.exists(fn) and not args.overwrite:
+                print("not downloading %s: file %s exists" % (audio_url, fn))
+                continue
+
+            print("saving %s as %s" % (audio_url, fn))
+
+            if not os.path.isdir(d):
+                os.makedirs(d)
+
+            # at one point, some sentences had this nonsense
+            t = s['sentence_text'].encode('utf-8')
+            if t[:3] == '\xef\xbb\xbf':
+                t = t[3:]
+            print("<s> %s </s> (%s)" % (t.decode('utf-8'), recording_id),
+                  file=text_file)
+
+            audio_req = session.get(audio_url)
+            f = open(fn, 'wb')
+            f.write(audio_req.content)
+            downloaded += 1
+            if downloaded == args.limit:
+                return
+        print("downloaded %d files" % downloaded)
+        api_url = j.get('next')
+
+main()
