@@ -69,7 +69,6 @@ def get_person(request):
                 return None
         else:
             return None
-        return person
     else:
         try:
             person = Person.objects.get(user=user)
@@ -81,7 +80,15 @@ def get_person(request):
             else:
                 return None
             person.save()
-        return person
+
+    if person:
+        try:
+            person.last_user_agent = request.META['HTTP_USER_AGENT']
+            person.save()
+        except:
+            pass
+
+    return person
 
 
 def set_language_cookie(response, language):

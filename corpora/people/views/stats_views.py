@@ -200,7 +200,8 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
     def get_queryset(self):
         return Person.objects\
             .filter(Q(profile_email__isnull=False) | Q(user__isnull=False))\
-            .exclude(receive_weekly_updates=False)
+            .exclude(receive_weekly_updates=False)\
+            .order_by('full_name')
 
     def get_context_data(self, **kwargs):
         context = \

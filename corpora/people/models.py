@@ -104,6 +104,9 @@ class Person(models.Model):
         editable=False,
         default=0)
 
+    last_user_agent = models.CharField(
+                        max_length=512, blank=True, null=True)
+
     def email(self):
         if self.user:
             return self.user.email
