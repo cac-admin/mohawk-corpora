@@ -26,7 +26,6 @@ def get_or_create_person(request):
             # Create person and set uuid
             person = Person.objects.create()
         request.session['uuid'] = person.uuid
-        return person
     else:
         try:
             person = Person.objects.get(user=user)
@@ -53,7 +52,15 @@ def get_or_create_person(request):
                 person.full_name = full_name
             person.save()
         request.session['uuid'] = person.uuid
-        return person
+
+    if person:
+        try:
+            person.last_user_agent = request.META['HTTP_USER_AGENT']
+            person.save()
+        except:
+            pass
+
+    return person
 
 
 def get_person(request):
