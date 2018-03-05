@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import render, redirect
 from django.template.context import RequestContext
 from django.forms import modelform_factory
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 
 from django.urls import reverse, resolve
 from django.utils import timezone
@@ -13,11 +13,13 @@ import json
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
+from django.middleware.csrf import CsrfViewMiddleware
 
 from django.contrib.contenttypes.models import ContentType
 
 from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person, KnownLanguage, Group
+from people.tasks import send_person_weekly_emails
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person, get_person, get_current_language
 from django.conf import settings
@@ -258,7 +260,8 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
     paginate_by = 495
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser \
+            and self.request.user.is_authenticated
 
     def get_queryset(self):
         return Person.objects\
@@ -293,3 +296,17 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
             person.email = email
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        reason = CsrfViewMiddleware().process_view(request, None, (), {})
+        if reason:
+            raise PermissionException()
+
+        if not self.request.user.is_superuser and \
+                self.request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+        # Everything is okay - so let's send emails?
+        send_person_weekly_emails.apply_async()
+
+        return super(PeopleEmailsView, self).get(request, *args, **kwargs)

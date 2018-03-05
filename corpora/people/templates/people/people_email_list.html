@@ -20,6 +20,19 @@ div.col.table{
 
 
 <div class="container">
+
+  
+  <div class="row">
+    <div class="col table">
+      <form action="{% url 'people:email_list' %}" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Send weekly emails NOW" />
+      </form>
+
+    </div>
+  </div>
+
   <div class="row">
     <div class="col table">
 

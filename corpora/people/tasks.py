@@ -118,15 +118,23 @@ def send_person_weekly_emails():
     purposes but also so we can send different emails to staff with different
     priviledges'''
 
+    counter = 0
     # Check if site is development
     if settings.DEBUG:
         print "This is a dev envrionment!"
+        return "This is a dev environment!"
     else:
+        counter = 0
         people = Person.objects.filter(receive_weekly_updates=True)
         for person in people:
-            print "Sending email to {0}".format(person)
-            result = send_weekly_status_email(person.pk)
-            print result
+            try:
+                print "Sending email to {0}".format(person)
+                result = send_weekly_status_email(person.pk)
+                print result
+                counter = counter + 1
+            except:
+                print "Email did not send for {0}".format(person)
+    return "Sent {0} weekly emails.".format(counter)
 
 
 @shared_task
