@@ -1,0 +1,31 @@
+{% extends 'people/email/base_email.txt' %}
+{% load static %}
+
+{% block heading %}
+Weekly Progress
+{% endblock %}
+
+{% block main    %}
+- {{stats.total}} Recordings
+- {% if 'seconds' in dimension_string %}{{stats.total_seconds}} {{stats.dimension_string}}{% else %}{{stats.total_minutes}} {{stats.dimension_string}}{% endif %}
+- {{stats.num_approved}} Approved
+- {{stats.up_votes}} Good
+- {{stats.down_votes}} Bad
+{% endblock %}
+
+{% block footer  %}
+You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of 200 hours by reading for 5 minutes every day.
+
+Record More Sentences => {{url_append}}{% url 'corpus:record' %}
+
+
+--------------
+You are receiveing this email because you've opted in to weekly email updates. Visit
+your profile page ({{url_append}}{% url 'people:profile' %}) to update your preferences.
+
+Te Reo Irirangi o Te Hiku o Te Ika
+1 Melba Street<br>
+Level 2
+Kaitaia 0483
+New Zealand
+{% endblock %}

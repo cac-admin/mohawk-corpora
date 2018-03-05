@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 22:36+0000\n"
+"POT-Creation-Date: 2018-03-05 09:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:73 corpus/admin.py:145 corpus/models.py:235
-#: corpus/models.py:241
+#: corpus/admin.py:73 corpus/admin.py:145 corpus/models.py:238
+#: corpus/models.py:244
 msgid "None"
 msgstr ""
 
@@ -78,31 +78,31 @@ msgstr ""
 msgid "American"
 msgstr ""
 
-#: corpus/models.py:256
+#: corpus/models.py:259
 msgid "language"
 msgstr ""
 
-#: corpus/models.py:266
+#: corpus/models.py:269
 msgid "updated"
 msgstr ""
 
-#: corpus/models.py:267
+#: corpus/models.py:270
 msgid "source"
 msgstr ""
 
-#: corpus/models.py:268
+#: corpus/models.py:271
 msgid "uploaded file"
 msgstr ""
 
-#: corpus/models.py:270
+#: corpus/models.py:273
 msgid ".txt format"
 msgstr ""
 
-#: corpus/models.py:273
+#: corpus/models.py:276
 msgid "text"
 msgstr ""
 
-#: corpus/models.py:274
+#: corpus/models.py:277
 msgid "texts"
 msgstr ""
 
@@ -221,27 +221,27 @@ msgstr ""
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:163
+#: corpus/views/api.py:162
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:169
+#: corpus/views/api.py:168
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:174
+#: corpus/views/api.py:173
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:185
+#: corpus/views/api.py:184
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:187
+#: corpus/views/api.py:186
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:232 corpus/views/api.py:247
+#: corpus/views/api.py:231 corpus/views/api.py:246
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

@@ -39,8 +39,9 @@ pylibmc
 django-ses
 
 # Used to turn CSS to inline styles
-# lxml
-# premailer
+# Also used in email
+lxml
+premailer
 
 # API
 djangorestframework

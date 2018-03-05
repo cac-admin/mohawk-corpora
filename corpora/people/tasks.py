@@ -1,7 +1,18 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from people.models import Person
+from people.helpers import get_email
+
+from corpus.aggregate import build_recordings_stat_dict
+from corpus.models import Recording
+
+from celery.task.control import revoke, inspect
+
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.sites.models import Site
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -28,7 +39,8 @@ def clean_empty_person_models():
             logger.debug('Removing: {0}'.format(person))
             person.delete()
         else:
-            logger.debug('Not removing {0} as recordings exist.'.format(person))
+            logger.debug(
+                'Not removing {0} as recordings exist.'.format(person))
 
 
 @shared_task
@@ -82,3 +94,72 @@ def update_person_score(person_pk):
 
     person.score = score
     person.save()
+
+
+@shared_task
+def send_person_weekly_emails_staff():
+    '''Send a weekly email to all staff. This is being implemented for testing
+    purposes but also so we can send different emails to staff with different
+    priviledges'''
+    people = Person.objects.filter(user__is_staff=True)
+    for person in people:
+        print "Sending email to {0}".format(person)
+        result = send_weekly_status_email(person.pk)
+        print result
+
+
+@shared_task
+def send_person_weekly_emails():
+    '''Send a weekly email to all staff. This is being implemented for testing
+    purposes but also so we can send different emails to staff with different
+    priviledges'''
+    people = Person.objects.filter(receive_weekly_updates=True)
+    for person in people:
+        print "Sending email to {0}".format(person)
+        result = send_weekly_status_email(person.pk)
+        print result
+
+
+@shared_task
+def send_weekly_status_email(person_pk):
+    from corpora.email_utils import EMail
+
+    try:
+        person = Person.objects.get(pk=person_pk)
+    except ObjectDoesNotExist:
+        return "No person with id {0} found.".format(person_pk)
+
+    recordings = Recording.objects.all()
+    stats = build_recordings_stat_dict(recordings)
+    total_seconds = stats['total_seconds']
+    hours = total_seconds/60.0/60.0
+    recordings = recordings.filter(person=person)
+
+    stats = build_recordings_stat_dict(recordings)
+
+    email = get_email(person)
+
+    if email:
+
+        url_append = 'https://' + Site.objects.get_current().domain
+
+        subject = "Your weekly update!"
+
+        e = EMail(to=email, subject=subject)
+        context = {
+            'subject': subject,
+            'person': person,
+            'stats': stats,
+            'total_duration': "{0:.1f}".format(hours),
+            'url_append': url_append,
+            'site': Site.objects.get_current()}
+
+        e.text('people/email/weekly_stats_update.txt', context)
+        e.html('people/email/weekly_stats_update.html', context)
+
+        return e.send(
+            from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
+            fail_silently='False')
+
+    else:
+        return "No email associated with person."

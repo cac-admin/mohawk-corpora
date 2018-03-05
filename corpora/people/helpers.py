@@ -6,8 +6,11 @@ from django.conf import settings
 from corpus.base_settings import \
     LANGUAGES
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import Person, KnownLanguage
+
+from allauth.account.models import EmailAddress
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -173,3 +176,31 @@ def get_unknown_languages(person):
         if LANGUAGES[i][0] not in known_languages:
             alter_choices.append(LANGUAGES[i][0])
     return alter_choices
+
+
+def get_email(person):
+    '''This method looks for and returns a verified email. If no verified email
+    exists, then the next available email is returned.'''
+
+    if person.user:
+        try:
+            email = EmailAddress.objects.get(user=person.user, verified=True)
+            return email.email
+        except ObjectDoesNotExist:
+            try:
+                email = EmailAddress.objects.get(user=person.user)
+                return email.email
+            except MultipleObjectsReturned:
+                email = EmailAddress.objects.filter(user=person.user)
+                if email.exists():
+                    return email.email.first()
+            except ObjectDoesNotExist:
+                if person.user.email:
+                    return person.user.email
+
+    if person.profile_email:
+        return person.profile_email
+    else:
+        return None
+
+
