@@ -13,8 +13,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'people.tasks.calculate_person_scores',
         'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
     },
-    'send_person_weekly_emails_staff': {
-        'task': 'people.tasks.send_person_weekly_emails_staff',
-        'schedule': crontab(minute='32', hour='7', day_of_week='Monday'),
+    'send_person_weekly_emails': {
+        'task': 'people.tasks.send_person_weekly_emails',
+        'schedule': crontab(minute='00', hour='9', day_of_week='Sunday'),
     },
 }
