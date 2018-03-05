@@ -9,7 +9,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from corpora.views import views
 from django.views.generic import RedirectView
-
+# from people.views import profile_redirect
 from rest_framework.documentation import include_docs_urls
 
 
@@ -41,6 +41,7 @@ urlpatterns = [
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 
     url(_(r'^people/'), include('people.urls', namespace='people')),
+    # url(r'^people/profile', profile_redirect, name='profile-backwards-comp'),
 
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 

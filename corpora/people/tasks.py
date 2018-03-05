@@ -3,8 +3,11 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from django.conf import settings
-from people.models import Person
-from people.helpers import get_email
+from django.utils import translation
+from django.core.exceptions import ObjectDoesNotExist
+
+from people.models import Person, KnownLanguage
+from people.helpers import get_email, set_current_language_for_person
 
 from corpus.aggregate import build_recordings_stat_dict
 from corpus.models import Recording
@@ -134,6 +137,16 @@ def send_weekly_status_email(person_pk):
         person = Person.objects.get(pk=person_pk)
     except ObjectDoesNotExist:
         return "No person with id {0} found.".format(person_pk)
+
+    # Set the language - this is used when rendering the templates.
+    language = translation.get_language()
+    try:
+        active_language = \
+            KnownLanguage.objects.get(person=person, active=True)
+        language = active_language.language
+    except ObjectDoesNotExist:
+        pass
+    translation.activate(language)
 
     recordings = Recording.objects.all()
     stats = build_recordings_stat_dict(recordings)
