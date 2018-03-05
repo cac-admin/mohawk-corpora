@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
+from django.conf import settings
 from people.models import Person
 from people.helpers import get_email
 
@@ -113,11 +114,16 @@ def send_person_weekly_emails():
     '''Send a weekly email to all staff. This is being implemented for testing
     purposes but also so we can send different emails to staff with different
     priviledges'''
-    people = Person.objects.filter(receive_weekly_updates=True)
-    for person in people:
-        print "Sending email to {0}".format(person)
-        result = send_weekly_status_email(person.pk)
-        print result
+
+    # Check if site is development
+    if settings.DEBUG:
+        print "This is a dev envrionment!"
+    else:
+        people = Person.objects.filter(receive_weekly_updates=True)
+        for person in people:
+            print "Sending email to {0}".format(person)
+            result = send_weekly_status_email(person.pk)
+            print result
 
 
 @shared_task
