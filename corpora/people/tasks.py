@@ -122,6 +122,7 @@ def send_person_weekly_emails():
     # Check if site is development
     if settings.DEBUG:
         print "This is a dev envrionment!"
+        send_person_weekly_emails_staff()
         return "This is a dev environment!"
     else:
         counter = 0

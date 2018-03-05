@@ -26,6 +26,6 @@ your profile page ({{url_append}}{% url 'people:profile' %}) to update your pref
 Te Reo Irirangi o Te Hiku o Te Ika
 1 Melba Street<br>
 Level 2
-Kaitaia 0483
+Kaitaia 0410
 New Zealand
 {% endblock %}
