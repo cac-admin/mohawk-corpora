@@ -48,8 +48,8 @@ span{
 <li>{% if 'seconds' in stats.dimension_string %}<span>{{stats.total_seconds}}</span> {{stats.dimension_string}}
    {% else %}<span>{{stats.total_minutes}}</span> {{stats.dimension_string}}{% endif %}</li>
 <li><span>{{stats.num_approved}}</span> approved recordings</li>
-<li><span>{{stats.up_votes}}</span> good recordings</li>
-<li><span>{{stats.down_votes}}</span> bad recordings</li>
+<li><span>{{stats.up_votes}}</span> thumbs up</li>
+<li><span>{{stats.down_votes}}</span> thumbs down</li>
 
 {% endblock %}
 
