@@ -51,10 +51,14 @@ class MyRecorder extends Player{
             }
         });
 
+        // Add popover info element to save button
+        $('#save').popover()
+
         // When audio is done playing back, revert button to initial state
         $(this.audio).bind('ended', function(){        
             $('.redo').removeClass('disabled');
             $('.save').removeClass('disabled');
+            $('#save').popover('disable')
         });
 
         // Only redo button causes audio to pause?
@@ -106,11 +110,16 @@ class MyRecorder extends Player{
             }
         });
 
+
+
         $('.save').click(function(e){
             if (!$(e.currentTarget).hasClass('disabled')){       
                 self.save_recording()
-        }})
-
+                $('#save').popover('disable')
+            } else{
+                $('#save').popover('enable')
+            }
+        })
 
         $(self.skip_button).click(function(){
             if (!$(self.skip_button).hasClass('disabled')){
@@ -199,6 +208,8 @@ class MyRecorder extends Player{
         // $('.foreground-circle.play').addClass('unclicked-circle').removeClass('clicked-circle');
         $('.redo').addClass('disabled');
         $('.save').addClass('disabled');
+        $(self.skip_button).removeClass('disabled')
+        $('#save').popover('enable')
         
         $(self.loading_button).show();
         // $(self.record_button).show();
@@ -227,6 +238,7 @@ class MyRecorder extends Player{
                     self.audio.src  = URL.createObjectURL( self.audioBlob );
                     self.audio.load()
                     $(self.play_button).show()
+                    $(self.skip_button).addClass('disabled')
                 } else{
                     self.skipped=false
                 }
@@ -350,7 +362,7 @@ class MyRecorder extends Player{
                 $(self.record_button).show()
 
                 sentences.next()
-
+                
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 // Display an error message if views return saving error
