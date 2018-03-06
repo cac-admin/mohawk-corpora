@@ -53,6 +53,7 @@ class MyRecorder extends Player{
 
         // Add popover info element to save button
         $('#save').popover()
+        $('#save').popover('disable')
 
         // When audio is done playing back, revert button to initial state
         $(this.audio).bind('ended', function(){        
@@ -115,9 +116,9 @@ class MyRecorder extends Player{
         $('.save').click(function(e){
             if (!$(e.currentTarget).hasClass('disabled')){       
                 self.save_recording()
-                $('#save').popover('disable')
+                // $('#save').popover('disable')
             } else{
-                $('#save').popover('enable')
+                // $('#save').popover('enable')
             }
         })
 
@@ -209,7 +210,6 @@ class MyRecorder extends Player{
         $('.redo').addClass('disabled');
         $('.save').addClass('disabled');
         $(self.skip_button).removeClass('disabled')
-        $('#save').popover('enable')
         
         $(self.loading_button).show();
         // $(self.record_button).show();
@@ -239,6 +239,7 @@ class MyRecorder extends Player{
                     self.audio.load()
                     $(self.play_button).show()
                     $(self.skip_button).addClass('disabled')
+                    $('#save').popover('enable')
                 } else{
                     self.skipped=false
                 }
@@ -362,7 +363,7 @@ class MyRecorder extends Player{
                 $(self.record_button).show()
 
                 sentences.next()
-                
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 // Display an error message if views return saving error
