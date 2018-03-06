@@ -289,6 +289,29 @@ class Profile{
       }
       this.display_element.append($('<div class="col-12 tribe" id="id_tribe"><span>Tribes:</span> '+tribes+'</div>'))
     }
+
+    if (this.data.known_languages != null){ 
+      for (var i = 0; i < this.data.known_languages.length; i++){
+        var language_obj = this.data.known_languages[i]
+        var language = null;
+        if (typeof listen !== 'undefined'){
+          language = listen.sentence.language
+        } else if (language_obj.active) {
+          language = language_obj.language
+        }
+
+        if (language_obj.language == language){
+          this.display_element.append($('<div class="col-12 dialect" id="id_language"><span>Language:</span>&nbsp;'+language_obj.language+'</div>'))
+          this.display_element.append($('<div class="col-12 dialect" id="id_dialect"><span>Dialect:</span>&nbsp;'+language_obj.dialect+'</div>'))
+          this.display_element.append($('<div class="col-12 proficiency" id="id_proficiency"><span>Proficiency:</span>&nbsp;'+language_obj.level_of_proficiency+'</div>'))  
+        }
+
+      }
+    }
+
+
+
+
     $(this.target_element).append(this.display_element)
   }
 
