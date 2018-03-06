@@ -90,11 +90,9 @@ def main():
                       recording_id)
                 continue
             # at one point, some sentences had this nonsense
-            t = s['sentence_text'].encode('utf-8')
-            if t[:3] == '\xef\xbb\xbf':
-                t = t[3:]
-            print("<s> %s </s> (%s)" % (t.decode('utf-8'), recording_id),
-                  file=text_file)
+            if t[0] == '\uFEFF':
+                t = t[1:]
+            print("<s> %s </s> (%s)" % (t, recording_id), file=text_file)
 
             audio_req = session.get(audio_url)
             f = open(fn, 'wb')
