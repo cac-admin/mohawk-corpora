@@ -86,9 +86,9 @@ def main():
 
             t = s['sentence_text']
             if t is None:
-                print("skipping null sentence text for recording %s" %
-                      recording_id)
-                continue
+                print("sentence_text is null; using sentence->text "
+                      "for recording %s" % recording_id)
+                t = s['sentence']['text']
             # at one point, some sentences had this nonsense
             if t[0] == '\uFEFF':
                 t = t[1:]
