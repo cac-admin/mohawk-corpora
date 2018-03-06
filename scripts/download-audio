@@ -84,6 +84,11 @@ def main():
             if not os.path.isdir(d):
                 os.makedirs(d)
 
+            t = s['sentence_text']
+            if t is None:
+                print("skipping null sentence text for recording %s" %
+                      recording_id)
+                continue
             # at one point, some sentences had this nonsense
             t = s['sentence_text'].encode('utf-8')
             if t[:3] == '\xef\xbb\xbf':
