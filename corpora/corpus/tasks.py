@@ -139,7 +139,6 @@ def encode_audio(recording, test=False, codec='aac'):
         'aac': ['libfdk_aac', 'm4a']
     }
 
-
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(recording)
 
@@ -187,4 +186,50 @@ def encode_audio(recording, test=False, codec='aac'):
     data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
     logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
 
-    return True
+    set_s3_content_deposition.apply_async(
+        args=[recording.pk],
+        countdown=2,
+        task_id='set_recording_content_deposition-{0}'.format(
+            recording.pk)
+        )
+
+    return "Encoded {0}".format(recording)
+
+
+@shared_task
+def set_s3_content_deposition(recording_pk):
+    import mimetypes
+
+    if 's3boto' in settings.DEFAULT_FILE_STORAGE.lower():
+        instance = Recording.objects.get(pk=recording_pk)
+
+        from boto.s3.connection import S3Connection
+        c = S3Connection(
+            settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        b = c.get_bucket(settings.AWS_STORAGE_BUCKET_NAME)  # , validate=False)
+
+        attrs = ['audio_file', 'audio_file_aac']
+        for attr in attrs:
+            file = instance[attr]
+            if file:
+
+                k = file.name
+                key = b.get_key(k)  # validate=False)
+
+                if key is None:
+                    return "Error: key {0} doesn't exist in S3.".format(key)
+                else:
+                    metadata = key.metadata
+                    metadata['Content-Disposition'] = \
+                        "attachment; filename={0}".format(file.name)
+                    metadata['Content-Type'] = \
+                        mimetypes.guess_type(file.url)[0]
+                    key.copy(
+                        key.bucket,
+                        key.name,
+                        preserve_acl=True,
+                        metadata=metadata)
+        return metadata
+
+    else:
+        return 'Non s3 storage - not setting s3 content deposition.'

@@ -88,6 +88,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'get_approved',
         'get_approved_by',
         'calculate_score',
+        'created',
     )
 
     inlines = [QualityControlInline]
@@ -154,7 +155,7 @@ class SourceAdmin(admin.ModelAdmin):
 
 @admin.register(Text)
 class TextAdmin(admin.ModelAdmin):
-    list_display = ('uploaded_file', 'source', 'language', 'dialect', 
+    list_display = ('uploaded_file', 'source', 'language', 'dialect',
                     'updated', )
     raw_id_fields = ('source', )
     actions = ('save_sentences', )

@@ -99,6 +99,8 @@ def update_person_score(person_pk):
     person.score = score
     person.save()
 
+    return "New score for {0}: {1}".format(person_pk, score)
+
 
 @shared_task
 def send_person_weekly_emails_staff():
@@ -108,7 +110,12 @@ def send_person_weekly_emails_staff():
     people = Person.objects.filter(user__is_staff=True)
     for person in people:
         print "Sending email to {0}".format(person)
-        result = send_weekly_status_email(person.pk)
+        result = send_weekly_status_email.apply_async(
+            args=[person.pk],
+            countdown=2,
+            task_id='send_weekly_email-staff-{0}'.format(
+                person.pk)
+            )
         print result
 
 
@@ -130,7 +137,12 @@ def send_person_weekly_emails():
         for person in people:
             try:
                 print "Sending email to {0}".format(person)
-                result = send_weekly_status_email(person.pk)
+                result = send_weekly_status_email.apply_async(
+                    args=[person.pk],
+                    countdown=2,
+                    task_id='send_weekly_email-{0}'.format(
+                        person.pk)
+                    )
                 print result
                 counter = counter + 1
             except:
@@ -185,9 +197,14 @@ def send_weekly_status_email(person_pk):
         e.text('people/email/weekly_stats_update.txt', context)
         e.html('people/email/weekly_stats_update.html', context)
 
-        return e.send(
+        result = e.send(
             from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
             fail_silently='False')
+        if result == 1:
+            return "Sent email to {0}".format(person_pk)
+        else:
+            return \
+                "Error sending email to {0} - {1}.".format(person_pk, result)
 
     else:
         return "No email associated with person."
