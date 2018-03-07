@@ -360,6 +360,7 @@ class Profile{
   }
 
   display(){
+    var self = this;
     this.form_element = $(this.target_element).clone()
     $(this.target_element).empty()
     this.display_element = $("<div class='row profile profile-display-element'></div>")
