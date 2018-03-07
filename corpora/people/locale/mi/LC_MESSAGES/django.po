@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-07 02:09+0000\n"
+"POT-Creation-Date: 2018-03-07 03:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -758,7 +758,43 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
-#: people/views/views.py:192
+#: people/views/stats_views.py:128
+msgid "Leaderboard"
+msgstr ""
+
+#: people/views/stats_views.py:130
+msgid "Leaderboard for people who've contributed to our corpus."
+msgstr ""
+
+#: people/views/stats_views.py:177
+msgid "Group Leaderboard"
+msgstr ""
+
+#: people/views/stats_views.py:178
+msgid "Group leaderboard of all the groups contributing corpusto our project."
+msgstr ""
+
+#: people/views/stats_views.py:222
+msgid "Individual Group Leaderboard"
+msgstr ""
+
+#: people/views/stats_views.py:223
+msgid "Leaderboard for people of a particular group."
+msgstr ""
+
+#: people/views/stats_views.py:238
+msgid "Leaderboard: "
+msgstr ""
+
+#: people/views/views.py:45
+msgid "Profile"
+msgstr ""
+
+#: people/views/views.py:46
+msgid "Edit your profile to help us enhance our corpus."
+msgstr ""
+
+#: people/views/views.py:141
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."

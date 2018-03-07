@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-07 02:09+0000\n"
+"POT-Creation-Date: 2018-03-07 03:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,6 +130,7 @@ msgid "Skip"
 msgstr "Haere tonu"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:21
+#: corpus/views/views.py:207
 msgid "Stats"
 msgstr "Tatauranga"
 
@@ -164,6 +165,7 @@ msgid "Bad"
 msgstr "E hē ana"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:37
+#: corpus/views/views.py:42
 msgid "Sentences"
 msgstr "Rerenga Kōrero"
 
@@ -255,6 +257,44 @@ msgstr "E kore koe e āhei ki te pānui i tēnei kapohanga reo."
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr "{0} e kore e āhei koia tēnei te API whakamutunga."
+
+#: corpus/views/stats_views.py:25
+msgid "Recording Growth Rate."
+msgstr ""
+
+#: corpus/views/stats_views.py:26
+msgid "Graph of recording growth over the last month."
+msgstr ""
+
+#: corpus/views/views.py:41
+msgid "Approve sentences to use when gathering recordings."
+msgstr ""
+
+#: corpus/views/views.py:144
+#, fuzzy
+#| msgid "Recordings"
+msgid "Record"
+msgstr "Kapohanga Reo"
+
+#: corpus/views/views.py:145
+msgid "Help us teach computers the sounds of a language by reading sentences."
+msgstr ""
+
+#: corpus/views/views.py:208
+msgid "Statistics for all data."
+msgstr ""
+
+#: corpus/views/views.py:291
+#, fuzzy
+#| msgid "^listen/"
+msgid "Listen"
+msgstr "^whakarongo/"
+
+#: corpus/views/views.py:292
+msgid ""
+"Listen to and vote on recordings. This helps us improvethe quality of "
+"recordings we use."
+msgstr ""
 
 #~ msgid "Kaitahu"
 #~ msgstr "Kāi Tahu"
