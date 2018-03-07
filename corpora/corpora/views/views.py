@@ -10,6 +10,8 @@ from people.helpers import get_unknown_languages
 
 from corpus import views
 
+from django.contrib.sites.shortcuts import get_current_site
+
 
 def home(request):
     if request.user.is_authenticated():
@@ -17,9 +19,20 @@ def home(request):
     else:
 
         context = {
-            'request': request, 
+            'request': request,
             'languages': get_unknown_languages(None),
         }
 
         return render(request, 'corpora/home.html', context)
-        #return redirect('account/login')
+        # return redirect('account/login')
+
+
+def privacy(request):
+    site = get_current_site(request)
+    context = {
+        'request': request,
+        'languages': get_unknown_languages(None),
+        'site': site
+    }
+
+    return render(request, 'corpora/privacy.html', context)

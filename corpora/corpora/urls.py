@@ -16,6 +16,7 @@ from rest_framework.documentation import include_docs_urls
 urlpatterns = [
 
     url(r'^$', views.home, name='home'),
+    url(r'^privacy', views.privacy, name='privacy'),
     url(r'^', include('corpus.urls', namespace='corpus')),
 
     url(r'^i18n/', include('django.conf.urls.i18n')),

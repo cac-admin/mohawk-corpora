@@ -1,0 +1,137 @@
+{% extends 'corpora/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load i18n %}
+
+{% block title %}Privacy Policy{% endblock %}
+{% block header %}
+<div class="jumbotron">
+  <div class="container"><div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <h1><a href="/">{{request.site.name}}</a></h1>
+      <h3 class="sub-header-text">{% blocktrans %}teaching computers indigenous languages{% endblocktrans %}</h3>
+    </div>
+  </div></div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/home.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+  .actions{
+    text-align: center;
+    div[class*='col']{
+      margin-top: 15px;
+    }
+  }
+  .intro{
+    padding-top: 30px;
+  }
+  .jumbotron a{
+    color: $brand_lightest;
+  }
+  h2{
+    padding-bottom: 30px;
+  }
+  h3{
+    padding-bottom: 10px;
+    padding-top: 15px;
+  }
+
+</style>
+{% endaddtoblock %}
+<div class="container">
+  <div class="row intro">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+    <h2>Privacy policy</h2>
+     
+    <h3>Introduction</h3>
+    <p>Te Reo Irirangi o Te Hiku o Te Ika (we, us, our) complies with the New Zealand Privacy Act 1993 (the Act) when dealing with personal information.  Personal information is information about an identifiable individual (a natural person).</p>
+
+    <p>This policy sets out how we will collect, use, disclose and protect your personal information.</p>
+
+    <p>This policy does not limit or exclude any of your rights under the Act.  If you wish to seek further information on the Act, see <a href="http://www.privacy.org.nz">www.privacy.org.nz</a>.</p>
+     
+    <h3>Changes to this policy</h3>
+    <p>We may change this policy by uploading a revised policy onto the website.  The change will apply from the date that we upload the revised policy.</p>
+     
+    <h3>Who do we collect your personal information from</h3>
+    <p>We collect personal information about you from:</p>
+
+    <ul>
+      <li>
+        you, when you provide that personal information to us, including via the website and any related service, through any registration or subscription process, through any contact with us (e.g. telephone call or email), or when you buy or use our services and products</li>
+      <li>third parties where you have authorised this or the information is publicly available.</li>
+    </ul>
+
+    <p>If possible, we will collect personal information from you directly. </p>
+     
+
+    <h3>How we use your personal information</h3>
+    <p>We will use your personal information:</p>
+    <ul>
+      <li>to verify your identity</li>
+      <li>to provide services and products to you</li>
+      <li>to market our services and products to you, including contacting you electronically (e.g. by text or email for this purpose)</li>
+      <li>to improve the services and products that we provide to you</li>
+      <li>to respond to communications from you, including a complaint</li>
+      <li>to conduct research and statistical analysis (on an anonymised basis)</li>
+      <li>to protect and/or enforce our legal rights and interests, including defending any claim</li>
+      <li>for any other purpose authorised by you or the Act.</li>
+    </ul>
+
+    <h3>Disclosing your personal information</h3>
+    <p>We may disclose your personal information to:</p>
+    <ul>
+      <li>another company within our group</li>
+      <li>any business that supports our services and products, including any person that hosts or maintains any underlying IT system or data centre that we use to provide the website or other services and products</li>
+      <li>other third parties (for anonymised statistical information)</li>
+      <li>a person who can require us to supply your personal information (e.g. a regulatory authority)</li>
+      <li>any other person authorised by the Act or another law (e.g. a law enforcement agency)</li>
+      <li>any other person authorised by you.</li>
+    </ul>
+
+      <p>A business that supports our services and products may be located outside New Zealand.  This may mean your personal information is held and processed outside New Zealand.</p>
+       
+      <h3>Protecting your personal information</h3>
+      <p>We will take reasonable steps to keep your personal information safe from loss, unauthorised activity, or other misuse.</p>
+       
+      <h3>Accessing and correcting your personal information</h3>
+      <p>Subject to certain grounds for refusal set out in the Act, you have the right to access your readily retrievable personal information that we hold and to request a correction to your personal information.  Before you exercise this right, we will need evidence to confirm that you are the individual to whom the personal information relates.</p>
+
+      <p>In respect of a request for correction, if we think the correction is reasonable and we are reasonably able to change the personal information, we will make the correction.  If we do not make the correction, we will take reasonable steps to note on the personal information that you requested the correction.</p>
+
+      <p>If you want to exercise either of the above rights, email us at privacy@tehiku.nz.  Your email should provide evidence of who you are and set out the details of your request (e.g. the personal information, or the correction, that you are requesting).</p>
+       
+      <h3>Internet use</h3>
+      <p>While we take reasonable steps to maintain secure internet connections, if you provide us with personal information over the internet, the provision of that information is at your own risk.</p>
+
+      <p>If you post your personal information on the website, you acknowledge and agree that the information you post is publicly available.</p>
+
+      <p>If you follow a link on our website to another site, the owner of that site will have its own privacy policy relating to your personal information.  We suggest you review that site’s privacy policy before you provide personal information.</p>
+
+      <p>We use cookies (an alphanumeric identifier that we transfer to your computer’s hard drive so that we can recognise your browser) to monitor your use of the website.  You may disable cookies by changing the settings on your browser, although this may mean that you cannot use all of the features of the website.</p>
+
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+      <h4><br>Back to <a href="/">{{site.name}}</a>.<br><br></h4>
+    </div>
+  </div>
+</div>
+
+{% addtoblock "js" %}
+{% endaddtoblock %}
+{% endblock %}
+
+{% block footer %}
+{% include 'corpora/footer.html' %}
+{% endblock %}
