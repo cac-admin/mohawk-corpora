@@ -5,6 +5,7 @@ class Profile{
     this.target_element = $(target_element_selector)
     this.alert_element = (target_alert_element_selector==null) ? null : $(target_alert_element_selector);
     this.data = null
+    this.old_data = null
     this.alert = null
     this.change_counter = 0
     this.saving = false
@@ -28,9 +29,30 @@ class Profile{
     this.get_data()
   }
 
+  clone(a){
+    var self = this
+    var d;
+
+    if (typeof a === 'object'){
+      d = {}
+    } else if (typeof a === 'list'){
+      d = []
+    }
+
+    $.each(a, function(key, value){
+      if (typeof value === 'object'){
+        d[key] = self.clone(value)
+      } else {
+        d[key] = value
+      }
+    })
+    return d
+  }
+
   initialize_elements(){
     var self = this
-
+    self.old_data = self.clone(self.data);
+    self.logger(self.old_data)
     self.email = document.getElementById('id_email');
 
     try{
@@ -96,8 +118,8 @@ class Profile{
           self.data = d;
           self.initialize_elements();
         }).fail(function(e){
-          console.log(e)
-          console.log('FAILED')
+          self.logger(e)
+          self.logger('FAILED')
           // do something usefule!
         });
   }
@@ -135,7 +157,7 @@ class Profile{
     
     this.data.profile_email = $(this.target_element).find('#id_email').val()
 
-    var check_items = ['receive_weekly_updates', 'leaderboard']
+    var check_items = ['receive_weekly_updates', 'leaderboard', 'receive_daily_updates']
     for (var i=0; i<check_items.length; i++){
       this.logger(check_items[i])
       this.data[check_items[i]] = 
@@ -196,7 +218,6 @@ class Profile{
       }
     })
 
-
     data = JSON.stringify(data)
     $.ajax({
       type: "PUT",
@@ -212,6 +233,7 @@ class Profile{
       self.logger(e)
       self.saving = false
       self.show_success()
+      self.old_data = self.clone(self.data);
     }).fail(function(e){
       
       self.saving = false
@@ -224,19 +246,19 @@ class Profile{
       $.each(errorData, function(key, value){
         if (key == 'user'){
           $.each(value, function(k, v){
-            if (k=='email'){
+            // if (k=='email'){
               // $('#id_email').addClass('invalid')
               $('#id_'+k).addClass('invalid')
-              console.log(v)
+              self.logger(v)
               $(".error-"+k).text(v.join(' '))
               $(".error-"+k).show()
               $(".form-text."+k).hide()
-            }
+            // }
           })
         } else{
           if (key=='profile_email'){key='email'}
           $('#id_'+key).addClass('invalid')
-          console.log(value)
+          self.logger(value)
           $(".error-"+key).text(value.join(' '))
           $(".error-"+key).show()
           $(".form-text."+key).hide()
@@ -249,8 +271,77 @@ class Profile{
     return true;    
   }
 
+  compare_dicts(a,b, append_key=''){
+    var self = this
+    var results = []
+    var parent_key
+
+    $.each(a, function(key, value){
+      if (append_key!=''){
+        parent_key = append_key+'-'+key
+      } else{
+        parent_key = key
+      }
+
+      if (typeof value === 'object'){
+        results.push.apply(results, self.compare_dicts(value, b[key], parent_key))
+      } else {
+
+        if (typeof b === 'undefined'){
+          // New object perhaps
+          results.push(parent_key)
+        } else if (typeof b[key] === 'undefined'){
+          if (parent_key.search('group')>=0){results.push(parent_key)}
+        } else if (value != b[key]){
+          self.logger(value + " vs " + b[key])
+          results.push(parent_key)
+        } else if (typeof b === 'array'){
+          self.logger('list')
+          if (b[key].length != value.length){
+            results.push(parent_key)
+          }
+        } else{
+          
+        }
+      }
+    })
+    return results
+  }
+
   show_success(){
-      $(this.alert).addClass('alert-info').html('Profile&nbsp;updated').fadeIn().delay(500).fadeOut()
+    var self=this
+    $(this.alert).addClass('alert-info').html('Profile&nbsp;updated').fadeIn().delay(500).fadeOut()
+    var result;
+    result = this.compare_dicts(this.data, this.old_data)
+    self.logger( result )
+
+    $.each(result, function(key, value){
+      if (value=='profile_email'){value='email'}
+      var objs = $('#id_'+value)
+      var selector;
+      if (objs.length==0){
+        var parts = value.split('-')
+        for (var i=0; i< parts.length; i++){
+            objs = $('#id_'+parts[i])
+            if (objs.length>0){
+              selector = objs
+            }
+        }
+      } else{
+        selector = objs
+      }
+
+      if (typeof selector !== 'undefined'){
+        selector.addClass('valid')
+        window.setTimeout(function(){
+          selector.removeClass('valid')
+        }, 2000)        
+      }
+
+
+
+    })
+
   }
 
   post(data){
@@ -263,7 +354,7 @@ class Profile{
       contentType:"application/json; charset=utf-8",
     }).done(function(){
     }).fail(function(){
-      console.log('POST Failed.')
+      self.logger('POST Failed.')
     })
     return true;    
   }
@@ -284,7 +375,7 @@ class Profile{
       this.display_element.append($('<div class="col-12 age" id="id_age"><span>Age:</span>&nbsp;'+this.data.demographic.age+'</div>'))
       var tribes = []
       for (var i in this.data.demographic.tribe){
-        console.log(this.data.demographic.tribe[i])
+        self.logger(this.data.demographic.tribe[i])
         tribes.push(this.data.demographic.tribe[i].name)
       }
       this.display_element.append($('<div class="col-12 tribe" id="id_tribe"><span>Tribes:</span> '+tribes+'</div>'))

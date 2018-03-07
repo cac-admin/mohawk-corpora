@@ -50,7 +50,8 @@ class KnownLanguageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = KnownLanguage
-        fields = ('language', 'level_of_proficiency', 'active', 'dialect', 'id')
+        fields = (
+            'language', 'level_of_proficiency', 'active', 'dialect', 'id')
 
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
@@ -65,7 +66,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('full_name', 'username', 'uuid', 'user',
                   'demographic', 'known_languages', 'id',
                   'profile_email', 'groups', 'receive_weekly_updates',
-                  'leaderboard')
+                  'leaderboard', 'receive_daily_updates')
         extra_kwargs = {"username": {"error_messages": {"required": "Give yourself a username"}}}
         validators = []
 
@@ -128,6 +129,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.receive_weekly_updates = \
             validated_data['receive_weekly_updates']
+        instance.receive_daily_updates = \
+            validated_data['receive_daily_updates']
         instance.leaderboard = \
             validated_data['leaderboard']
 
