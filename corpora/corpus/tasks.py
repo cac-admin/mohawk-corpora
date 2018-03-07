@@ -201,7 +201,7 @@ def set_s3_content_deposition(recording_pk):
     import mimetypes
 
     if 's3boto' in settings.DEFAULT_FILE_STORAGE.lower():
-        instance = Recording.objects.get(pk=recording_pk)
+        recording = Recording.objects.get(pk=recording_pk)
 
         from boto.s3.connection import S3Connection
         c = S3Connection(
@@ -210,7 +210,7 @@ def set_s3_content_deposition(recording_pk):
 
         attrs = ['audio_file', 'audio_file_aac']
         for attr in attrs:
-            file = instance[attr]
+            file = getattr(recording, attr)
             if file:
 
                 k = file.name
