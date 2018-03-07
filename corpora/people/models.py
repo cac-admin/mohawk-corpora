@@ -76,10 +76,6 @@ class Person(models.Model):
         blank=True,
         null=True)
 
-    # receive_daily_updates = models.BooleanField(
-    #     default=False,
-    #     help_text="Check to get a daily update on your progress.")
-
     receive_weekly_updates = models.BooleanField(
         default=True,
         help_text="Check to get weekly updates on your progress.")
