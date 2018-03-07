@@ -1,5 +1,5 @@
 {% extends 'people/email/base_email.txt' %}
-{% load static %}
+{% load static i18n %}
 
 {% block heading %}
 {% trans 'Weekly Progress' %}

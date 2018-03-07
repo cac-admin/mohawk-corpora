@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-05 09:17+0000\n"
+"POT-Creation-Date: 2018-03-07 02:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,12 @@ msgid ""
 "collected at %(site)s falls under the %(license)s License."
 msgstr ""
 
+#: corpora/templates/corpora/footer.html:67
+msgid "Privacy Policy"
+msgstr ""
+
 #: corpora/templates/corpora/home.html:14
+#: corpora/templates/corpora/privacy.html:14
 msgid "teaching computers indigenous languages"
 msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 
@@ -164,7 +169,7 @@ msgstr "Reo"
 msgid "Log In"
 msgstr "Tomo Mai"
 
-#: corpora/urls.py:43
+#: corpora/urls.py:44
 msgid "^people/"
 msgstr "^tangata/"
 

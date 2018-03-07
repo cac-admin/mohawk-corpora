@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-05 09:17+0000\n"
+"POT-Creation-Date: 2018-03-07 02:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:73 corpus/admin.py:145 corpus/models.py:238
+#: corpus/admin.py:73 corpus/admin.py:146 corpus/models.py:238
 #: corpus/models.py:244
 msgid "None"
 msgstr "Hore kau"
+
+#: corpus/aggregate.py:59
+msgid "seconds"
+msgstr ""
+
+#: corpus/aggregate.py:59
+msgid "minutes"
+msgstr ""
 
 #: corpus/base_settings.py:36
 msgid "Maori"
@@ -117,7 +125,7 @@ msgid "Approve for recording?"
 msgstr "Kapohia te reo?"
 
 #: corpus/templates/corpus/listen.html:65
-#: corpus/templates/corpus/record.html:110
+#: corpus/templates/corpus/record.html:121
 msgid "Skip"
 msgstr "Haere tonu"
 
@@ -163,11 +171,11 @@ msgstr "Rerenga Kōrero"
 msgid "Recordings by Language Proficiency"
 msgstr "Ngā Kapohanga Reo i te Pakari o te Reo"
 
-#: corpus/templates/corpus/record.html:103
+#: corpus/templates/corpus/record.html:109
 msgid "Redo"
 msgstr "Mahia anō"
 
-#: corpus/templates/corpus/record.html:107
+#: corpus/templates/corpus/record.html:118
 msgid "Save"
 msgstr "Tiakina"
 

@@ -5,7 +5,7 @@
 
 {% block heading %}
 <h1>{{site.name}}</h1>
-<h3>{% blocktrans %}{% trans 'Weekly Progress' %}{% endblocktrans %}</h3>
+<h3>{% trans 'Weekly Progress' %}</h3>
 {% endblock %}
 
 
@@ -41,7 +41,7 @@ span{
 {% endcompress %}
 <p>{% trans 'Hello'%} {{person}},</p>
 
-<p>{% trans 'Here's your current progress:' %}</p>
+<p>{% trans "Here's your current progress:" %}</p>
 
 <ul>
 <li><span>{{stats.total}}</span> {% trans 'recordings' %}</li>
