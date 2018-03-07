@@ -5,7 +5,7 @@
 
 {% block heading %}
 <h1>{{site.name}}</h1>
-<h3>{% blocktrans %}Weekly Progress{% endblocktrans %}</h3>
+<h3>{% blocktrans %}{% trans 'Weekly Progress' %}{% endblocktrans %}</h3>
 {% endblock %}
 
 
@@ -39,17 +39,17 @@ span{
 }
 </style>
 {% endcompress %}
-<p>Kia ora {{person}},</p>
+<p>{% trans 'Hello'%} {{person}},</p>
 
-<p>Here's your current progress:</p>
+<p>{% trans 'Here's your current progress:' %}</p>
 
 <ul>
-<li><span>{{stats.total}}</span> recordings</li>
+<li><span>{{stats.total}}</span> {% trans 'recordings' %}</li>
 <li>{% if 'seconds' in stats.dimension_string %}<span>{{stats.total_seconds}}</span> {{stats.dimension_string}}
    {% else %}<span>{{stats.total_minutes}}</span> {{stats.dimension_string}}{% endif %}</li>
-<li><span>{{stats.num_approved}}</span> approved recordings</li>
-<li><span>{{stats.up_votes}}</span> thumbs up</li>
-<li><span>{{stats.down_votes}}</span> thumbs down</li>
+<li><span>{{stats.num_approved}}</span> {% trans 'approved recordings' %}</li>
+<li><span>{{stats.up_votes}}</span> {% trans 'thumbs up' %}</li>
+<li><span>{{stats.down_votes}}</span> {% trans 'thumbs down' %}</li>
 
 {% endblock %}
 
@@ -57,6 +57,6 @@ span{
 
 {% block footer  %}
 <p>You've helped us collect more than <b>{{total_duration}} hours</b> of recordings.</p>
-<em>Help us reach our goal of 200 hours by reading for 5 minutes every day.</em>
-<div style="text-align: center;"><h3><a class='btn' href="{{url_append}}{% url 'corpus:record' %}">Record More Sentences</a></h3></div>
+<em>Help us reach our goal of 200 hours by reading only 10 sentences each day.</em>
+<div style="text-align: center;"><h3><a class='btn' href="{{url_append}}{% url 'corpus:record' %}">{% trans 'Record Sentences' %}</a></h3></div>
 {% endblock %}

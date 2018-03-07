@@ -221,7 +221,8 @@ def set_s3_content_deposition(recording_pk):
                 else:
                     metadata = key.metadata
                     metadata['Content-Disposition'] = \
-                        "attachment; filename={0}".format(file.name)
+                        "attachment; filename={0}".format(
+                            file.name.split('/')[-1])
                     metadata['Content-Type'] = \
                         mimetypes.guess_type(file.url)[0]
                     key.copy(

@@ -2,21 +2,21 @@
 {% load static %}
 
 {% block heading %}
-Weekly Progress
+{% trans 'Weekly Progress' %}
 {% endblock %}
 
 {% block main    %}
-- {{stats.total}} Recordings
+- {{stats.total}} {% trans 'Recordings' %}
 - {% if 'seconds' in dimension_string %}{{stats.total_seconds}} {{stats.dimension_string}}{% else %}{{stats.total_minutes}} {{stats.dimension_string}}{% endif %}
-- {{stats.num_approved}} Approved
-- {{stats.up_votes}} thumbs up
-- {{stats.down_votes}} thumbs down
+- {{stats.num_approved}} {% trans 'Approved' %}
+- {{stats.up_votes}} {% trans 'thumbs up' %}
+- {{stats.down_votes}} {% trans 'thumbs down' %}
 {% endblock %}
 
 {% block footer  %}
-You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of 200 hours by reading for 5 minutes every day.
+You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of 200 hours by reading only 10 sentences each day.
 
-Record More Sentences => {{url_append}}{% url 'corpus:record' %}
+{% trans 'Record Sentences' %} => {{url_append}}{% url 'corpus:record' %}
 
 
 --------------
