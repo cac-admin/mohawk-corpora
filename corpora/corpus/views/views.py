@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import render, redirect
 from django.template.context import RequestContext
 from django.forms import modelform_factory
@@ -27,12 +30,16 @@ from django.core.cache import cache
 
 from corpus.aggregate import get_num_approved, get_net_votes
 
+from corpora.mixins import SiteInfoMixin
+
 import logging
 logger = logging.getLogger('corpora')
 
 
-class SentenceListView(ListView):
+class SentenceListView(SiteInfoMixin, ListView):
     model = Sentence
+    x_description = _('Approve sentences to use when gathering recordings.')
+    x_title = _('Sentences')
 
     def get(self, request, *args, **kwargs):
         self.request = request
@@ -133,7 +140,10 @@ def record(request):
                'content_type': ct.id,
                'user': request.user,
                'uuid': request.get_signed_cookie('uuid', 'none'),
-               'show_stats': True}
+               'show_stats': True,
+               'x_title': _('Record'),
+               'x_description': _('Help us teach computers the sounds of a language by reading sentences.'),
+               }
 
     response = render(request, 'corpus/record.html', context)
     response.set_signed_cookie('uuid', person.uuid, max_age=60*60*24*365)
@@ -192,8 +202,10 @@ class RecordingFileView(RedirectView):
             raise http.Http404
 
 
-class StatsView(ListView):
+class StatsView(SiteInfoMixin, ListView):
     model = QualityControl
+    x_title = _('Stats')
+    x_description = _('Statistics for all data.')
 
     def get_context_data(self, **kwargs):
         context = super(StatsView, self).get_context_data(**kwargs)
@@ -273,8 +285,12 @@ class StatsView(ListView):
 def listen_redirect(request):
     return redirect(reverse('corpus:listen'))
 
-class ListenView(TemplateView):
+
+class ListenView(SiteInfoMixin, TemplateView):
     template_name = "corpus/listen.html"
+    x_title = _('Listen')
+    x_description = _('Listen to and vote on recordings. This helps us improve\
+the quality of recordings we use.')
 
     def get_context_data(self, **kwargs):
         context = super(ListenView, self).get_context_data(**kwargs)

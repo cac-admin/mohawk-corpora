@@ -1,13 +1,15 @@
-{% load static sekizai_tags compress analytical %}<!DOCTYPE html>
+{% load static sekizai_tags compress analytical i18n %}<!DOCTYPE html>
 <html lang="en">
 <head>
   {% analytical_head_top %}
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width" />
 
+  {% block meta %}{% include 'corpora/meta.html' %}{% endblock %}
+
   <title>{% block title %}{{request.site.name}}{% endblock %}</title>
 
-  {# Uses sekizai to load all css at start of page & compressor to minify it #}
+  {# Uses sekizai to load all css at start of page and compressor to minify it #}
   {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
 
   <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,400i,500,600,700,700i,800,900" rel="stylesheet">

@@ -28,6 +28,7 @@ from people.forms import \
     DemographicForm,\
     PersonForm, GroupsForm
 
+from corpora.mixins import SiteInfoMixin
 
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
@@ -38,9 +39,11 @@ logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
 
 
-class ProfileDetail(APIView, TemplateView):
+class ProfileDetail(SiteInfoMixin, APIView, TemplateView):
     template_name = "people/profile_detail.html"
     renderer_classes = [TemplateHTMLRenderer]
+    x_title = _('Profile')
+    x_description = _('Edit your profile to help us enhance our corpus.')
 
     def get(self, request, *args, **kwargs):
         person = get_or_create_person(self.request)
@@ -125,60 +128,6 @@ class ProfileDetail(APIView, TemplateView):
         context['show_stats'] = True
 
         return context
-
-# No longer used - flag for deletion
-# def profile(request):
-
-#     if request.user.is_authenticated():
-#         sentence = get_next_sentence(request)
-#         current_language = get_current_language(request)
-#         person = Person.objects.get(user=request.user)
-#         known_languages = KnownLanguage.objects.filter(person=person)
-#         unknown_languages = get_unknown_languages(person)
-
-#         if len(known_languages) == 0:
-#             url = reverse('people:choose_language') + '?next=people:profile'
-#             return redirect(url)
-#         elif len(known_languages) >= 1:
-#             set_current_language_for_person(person, known_languages[0].language)
-#             current_language = known_languages[0].language
-
-#             if current_language.level_of_proficiency is None:
-#                 url = reverse('people:choose_language') + '?next=people:profile'
-#                 return redirect(url)
-
-#         else:
-#             logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
-#             raise Http404("Something went wrong. We're working on this...")
-
-#         if person.just_signed_up:
-#             person.just_signed_up = False
-#             send_signup_tracking = True
-
-#         recordings = Recording.objects\
-#             .filter(
-#                 person__user=request.user,
-#                 sentence__language=current_language)\
-#             .order_by('-updated')
-
-#         sentences = get_sentences(request, recordings)
-#         known_languages = [i.language for i in known_languages]
-
-#         return render(request, 'people/profile.html',
-#             {'request': request,
-#              'user': request.user,
-#              'sentence': sentence,
-#              'current_language': current_language,
-#              'person': person,
-#              'recordings': recordings,
-#              'sentences': sentences,
-#              'known_languages': known_languages,
-#              'send_signup_tracking': send_signup_tracking,
-#              })
-#     else:
-#         # We should enable someone to provide recordings without loging in - and we can show their recordings - user coockies to track
-#         # BUt for now we'll redirect to login
-#         return redirect(reverse('account_login'))
 
 
 def person(request, uuid):

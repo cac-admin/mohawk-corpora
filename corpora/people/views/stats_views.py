@@ -41,6 +41,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.db import models
 
+from corpora.mixins import SiteInfoMixin
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -118,11 +120,14 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
         return context['stats']
 
 
-class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
+class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Person
     template_name = 'people/leaderboard.html'
     paginate_by = 50
     context_object_name = 'people'
+    x_title = _('Leaderboard')
+    x_description = \
+        _("Leaderboard for people who've contributed to our corpus.")
 
     def test_func(self):
         return True
@@ -164,11 +169,14 @@ class PeopleRecordingStatsView(UserPassesTestMixin, ListView):
         return context
 
 
-class GroupsRecordingStatsView(UserPassesTestMixin, ListView):
+class GroupsRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/groups_leaderboard.html'
     paginate_by = 50
     context_object_name = 'groups'
+    x_title = _('Group Leaderboard')
+    x_description = _("Group leaderboard of all the groups contributing corpus\
+to our project.")
 
     def test_func(self):
         return True
@@ -206,11 +214,13 @@ class GroupsRecordingStatsView(UserPassesTestMixin, ListView):
         return context
 
 
-class GroupRecordingStatsView(UserPassesTestMixin, DetailView):
+class GroupRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group
     template_name = 'people/group_leaderboard.html'
     paginate_by = 50
     context_object_name = 'people'
+    x_title = _('Individual Group Leaderboard')
+    x_description = _("Leaderboard for people of a particular group.")
 
     def test_func(self):
         return True
@@ -225,6 +235,7 @@ class GroupRecordingStatsView(UserPassesTestMixin, DetailView):
             .order_by('-num_recordings')
 
     def get_context_data(self, **kwargs):
+        x_title = _('Leaderboard: ') + self.get_object()
         context = \
             super(PeopleRecordingStatsView, self).get_context_data(**kwargs)
 
