@@ -7,21 +7,25 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'clean_empty_person_models': {
         'task': 'people.tasks.clean_empty_person_models',
+        'options': {'task_id': 'clean_empty_person_models'},
         'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
     },
     'clean_empty_group_models': {
         'task': 'people.tasks.clean_empty_group_models',
+        'options': {'task_id': 'clean_empty_group_models'},
         'schedule': crontab(minute='*/20', hour='*', day_of_week='*'),
     },
     'send_person_weekly_emails': {
         'task': 'people.tasks.send_person_emails',
-        'args': ('weekly'),
-        'schedule': crontab(minute='00', hour='9', day_of_week='Tuesday'),
+        'kwargs': {'frequency': 'weekly'},
+        'options': {'task_id': 'send_person_weekly_emails'},
+        'schedule': crontab(minute='0', hour='9', day_of_week='tuesday'),
     },
     'send_person_daily_emails': {
         'task': 'people.tasks.send_person_emails',
-        'args': ('daily'),
-        'schedule': crontab(minute='15', hour='10', day_of_week='*'),
+        'kwargs': {'frequency': 'daily'},
+        'options': {'task_id': 'send_person_daily_emails'},
+        'schedule': crontab(minute='0', hour='11', day_of_week='*'),
     },
     # 'calculate_person_scores': {
     #     'task': 'people.tasks.calculate_person_scores',
@@ -31,5 +35,4 @@ CELERYBEAT_SCHEDULE = {
     #     'task': 'people.tasks.calculate_group_scores',
     #     'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
     # },
-
 }

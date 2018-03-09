@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-09 02:03+0000\n"
+"POT-Creation-Date: 2018-03-10 10:50+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,24 +77,29 @@ msgid ""
 "<br>All content collected at %(site)s falls under the %(license)s License."
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:68 corpora/views/views.py:43
+#: corpora/templates/corpora/footer.html:68 corpora/views/views.py:45
 msgid "Privacy Policy"
 msgstr ""
 
 #: corpora/templates/corpora/home.html:14
 #: corpora/templates/corpora/privacy.html:14
+#: corpora/templates/corpora/rules.html:14
 msgid "teaching computers indigenous languages"
 msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 
-#: corpora/templates/corpora/home.html:51
-msgid "Listen to Recordings"
-msgstr ""
-
-#: corpora/templates/corpora/home.html:59
+#: corpora/templates/corpora/home.html:105
 msgid "Start"
 msgstr "Tīmata"
 
-#: corpora/templates/corpora/home.html:64
+#: corpora/templates/corpora/home.html:112
+msgid "Hopu Kōrero Māori Group Competition"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:119
+msgid "rules"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:131
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -122,19 +127,19 @@ msgstr ""
 "Māori, me ērā atu reo taketake,\n"
 "      e ngā mīhini reo kōrero pērā i a Siri."
 
-#: corpora/templates/corpora/home.html:77
+#: corpora/templates/corpora/home.html:144
 msgid "Available Languages"
 msgstr "Ngā reo e taea ana"
 
-#: corpora/templates/corpora/home.html:78
+#: corpora/templates/corpora/home.html:145
 msgid "Translations for "
 msgstr "Ngā whakamāoritanga mō te "
 
-#: corpora/templates/corpora/home.html:78
+#: corpora/templates/corpora/home.html:145
 msgid " are provided in the following langauges:"
 msgstr " koia ēnei ko ngā reo e taea ana:"
 
-#: corpora/templates/corpora/home.html:86
+#: corpora/templates/corpora/home.html:153
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."
@@ -177,7 +182,7 @@ msgstr "Reo"
 msgid "Log In"
 msgstr "Tomo Mai"
 
-#: corpora/urls.py:44
+#: corpora/urls.py:46
 msgid "^people/"
 msgstr "^tangata/"
 
@@ -193,14 +198,22 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero"
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka taea ai te whakarerekē i ō kōrero."
 
-#: corpora/views/views.py:30
+#: corpora/views/views.py:32
 #, fuzzy
 #| msgid "teaching computers indigenous languages"
 msgid "Teaching computers indigenous languages."
 msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 
-#: corpora/views/views.py:44
+#: corpora/views/views.py:46
 msgid "Privacy policy for this website."
+msgstr ""
+
+#: corpora/views/views.py:58
+msgid "Rules"
+msgstr ""
+
+#: corpora/views/views.py:59
+msgid "Rules for our competitions."
 msgstr ""
 
 #~ msgid "Maori"
