@@ -7,11 +7,11 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'clean_empty_person_models': {
         'task': 'people.tasks.clean_empty_person_models',
-        'schedule': crontab(minute='42', hour='*', day_of_week='*'),
+        'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
     },
     'clean_empty_group_models': {
         'task': 'people.tasks.clean_empty_group_models',
-        'schedule': crontab(minute='43', hour='*', day_of_week='*'),
+        'schedule': crontab(minute='*/20', hour='*', day_of_week='*'),
     },
     'send_person_weekly_emails': {
         'task': 'people.tasks.send_person_emails',
