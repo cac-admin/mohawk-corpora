@@ -9,11 +9,13 @@ CELERYBEAT_SCHEDULE = {
         'task': 'people.tasks.clean_empty_person_models',
         'options': {'task_id': 'clean_empty_person_models'},
         'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
+        'relative': True,
     },
     'clean_empty_group_models': {
         'task': 'people.tasks.clean_empty_group_models',
         'options': {'task_id': 'clean_empty_group_models'},
         'schedule': crontab(minute='*/20', hour='*', day_of_week='*'),
+        'relative': True,
     },
     'send_person_weekly_emails': {
         'task': 'people.tasks.send_person_emails',
@@ -25,7 +27,7 @@ CELERYBEAT_SCHEDULE = {
         'task': 'people.tasks.send_person_emails',
         'kwargs': {'frequency': 'daily'},
         'options': {'task_id': 'send_person_daily_emails'},
-        'schedule': crontab(minute='6', hour='11', day_of_week='*'),
+        'schedule': crontab(minute='29', hour='11', day_of_week='*'),
     },
     # 'calculate_person_scores': {
     #     'task': 'people.tasks.calculate_person_scores',
