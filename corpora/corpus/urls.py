@@ -27,4 +27,6 @@ urlpatterns = [
         views.RecordingFileView.as_view(),
         name='recording_file'),
 
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
 ]

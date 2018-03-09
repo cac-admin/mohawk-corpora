@@ -45,3 +45,16 @@ def privacy(request):
     }
 
     return render(request, 'corpora/privacy.html', context)
+
+
+def rules(request):
+    site = get_current_site(request)
+    context = {
+        'request': request,
+        'languages': get_unknown_languages(None),
+        'site': site,
+        'x_title': _('Rules'),
+        'x_description': _("Rules for our competitions."),
+    }
+
+    return render(request, 'corpora/rules.html', context)

@@ -17,6 +17,8 @@ urlpatterns = [
 
     url(r'^$', views.home, name='home'),
     url(r'^privacy', views.privacy, name='privacy'),
+    url(r'^rules', views.rules, name='rules'),
+
     url(r'^', include('corpus.urls', namespace='corpus')),
 
     url(r'^i18n/', include('django.conf.urls.i18n')),

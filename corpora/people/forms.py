@@ -92,7 +92,7 @@ class GroupsForm(forms.ModelForm):
                 url='people:groups-autocomplete',
                 attrs={
                     # 'data-placeholder': '',
-                    'data-minimum-input-length': 3,
+                    # 'data-minimum-input-length': 3,
                 },)
         }
 

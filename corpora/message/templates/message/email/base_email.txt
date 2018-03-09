@@ -1,0 +1,9 @@
+{% load static %}
+{% block subject %}{% endblock %}
+
+{% block heading %}{% endblock %}
+=================================
+
+{% block main %}{% endblock %}
+
+{% block footer %}{% endblock %}

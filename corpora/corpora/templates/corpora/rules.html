@@ -1,0 +1,212 @@
+{% extends 'corpora/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load i18n %}
+
+{% block title %}Privacy Policy{% endblock %}
+{% block header %}
+<div class="jumbotron">
+  <div class="container"><div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <h1><a href="/">{{request.site.name}}</a></h1>
+      <h3 class="sub-header-text">{% blocktrans %}teaching computers indigenous languages{% endblocktrans %}</h3>
+    </div>
+  </div></div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/home.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+  .actions{
+    text-align: center;
+    div[class*='col']{
+      margin-top: 15px;
+    }
+  }
+  .intro{
+    padding-top: 30px;
+  }
+  .jumbotron a{
+    color: $brand_lightest;
+  }
+  h2{
+    padding-bottom: 30px;
+  }
+  h4{
+    padding-bottom: 10px;
+    padding-top: 15px;
+  }
+
+</style>
+{% endaddtoblock %}
+<div class="container">
+  <div class="row intro">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+
+<h1>Kōrero Māori Group Competition Rules</h1>
+
+<h4>Who may enter</h4>
+
+<ul>
+  <li>
+  <p>Anyone may enter the competition.</p>
+  </li>
+  <li>
+  <p>You must join a group in order to compete in the group competition.</p>
+  </li>
+</ul>
+
+<h4>Who may not enter</h4>
+
+<ul>
+  <li>
+  <p>Everyone's eligible to compete; however, all persons or groups affiliated with Te Reo Irirangi o Te Hiku o Te Ika are not eligible for prizes. This includes current staff, volunteers, and contractors as well as previous staff and contractors who were a part of the Kōrero Māori project.</p>
+  </li>
+</ul>
+
+<h4>How to enter</h4>
+
+<ul>
+  <li>
+  <p>Members must create an account at <a href="http://koreromaori.com/signup">koreromaori.com/signup</a> and verify their email address in order to compete.</p>
+  </li>
+  <li>
+  <p>To join a group, type the name of your group into the Groups box on the profile page, <a href="http://koreromaori.com/tangata/profile">koreromaori.com/tangata/profile</a>.</p>
+  </li>
+  <li>
+  <p>If your group has not been created yet, the Groups box will show a "Create" option - click that to create your group. Note you must be logged in to create a new group.</p>
+  </li>
+  <li>
+  <p>Make sure your group members use the exact group name when joining.</p>
+  </li>
+  <li>
+  <p>Each group must have at least 7 members and each group member must participate in reading Māori language sentences to earn points for your group.</p>
+  </li>
+  <li>
+  <p>You may enter at any time - e.g. a person may join mid way through the competition.</p>
+  </li>
+  <li>
+  <p>Anyone with an existing profile on Kōrero Māori may join a group by editing their profile - however, their existing recordings and points will not transfer to that group.</p>
+  </li>
+</ul>
+
+<h4>How to earn points</h4>
+
+<ul>
+  <li>
+  <p>You earn points for each correct recording you do during the competition period (from 1pm on the 15th of March to 6pm on the 25th of March - New Zealand time).</p>
+  </li>
+  <li>
+  <p>A correct recording equals good pronunciation and reading exactly what is in the sentence.</p>
+  </li>
+  <li>
+  <p>When you have completed the recording and saved it, you will receive a partial point.</p>
+  </li>
+  <li>
+  <p>When your recording has been reviewed and approved by the judging panel, you will receive the rest of the point.</p>
+  </li>
+  <li>
+  <p>If your recording is of a poor quality then you will not receive a point for that recording.</p>
+  </li>
+  <li>
+  <p>Your group's score is the sum of all your group member's scores. The more members in your group, the easier it is to earn points. There is no limit to the number of people you may have in your group.</p>
+  </li>
+  <li>
+  <p>If your group or a member of your group is found to be consistently submitting incorrect recordings, your group will be contacted and if it is found to be intentional, the group member's account may be temporarily deactivated.</p>
+  </li>
+</ul>
+
+<h4>How to win</h4>
+
+<ul>
+  <li>
+  <p>To qualify for the prizes, your group must have at least 7 members. Each member of the group must have contributed at least one approved recording. Each group must have contributed at least 4 hours of recordings.</p>
+  </li>
+  <li>
+  <p>The group with the most points earned during the competition period will win first place, the second most points earned will win second place, and the group with the third most points will win third place.</p>
+  </li>
+  <li>
+  <p>Prizes are,</p>
+
+  <ul>
+    <li>
+    <p>First Place $3k</p>
+    </li>
+    <li>
+    <p>Second Place $2k</p>
+    </li>
+    <li>
+    <p>Third Place $1k</p>
+    </li>
+  </ul>
+  </li>
+  <li>
+  <p>Your group can also win 1 of 3 spot prizes of $500.</p>
+  </li>
+  <li>
+  <p>Spot prizes will be randomly drawn from the qualifying groups that do not win one of the major prizes.</p>
+  </li>
+  <li>
+  <p>The winners will be announced by Wednesday the 28th of March at 12pm on the Kōrero Māori and Te Hiku Media Facebook pages. The winners will also be contacted by email.</p>
+  </li>
+</ul>
+
+<h4>Judging Panel</h4>
+
+<ul>
+  <li>
+  <p>Your recordings will be approved by a judging panel of Māori language experts.</p>
+  </li>
+  <li>
+  <p>The judging is based on correct pronunciation and the reading of the sentence as it is written.</p>
+  </li>
+  <li>
+  <p>The judging panel are objective and not able to participate in the competition.</p>
+  </li>
+  <li>
+  <p>The judging panel's decision is final.</p>
+  </li>
+</ul>
+
+<h4>Terms and Conditions</h4>
+
+<ul>
+  <li>
+  <p>These rules are subject to change without notice. If we do make any changes, we will publish those on our <a href="https://facebook.com/koreromaori1840/">Facebook Page</a>.</p>
+  </li>
+</ul>
+
+<h4>Privacy</h4>
+
+<ul>
+  <li>
+  <p>A copy of our privacy policy is available at <a href="https://koreromaori.com/privacy">https://koreromaori.com/privacy</a>.</p>
+  </li>
+</ul>
+
+    
+
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+      <h4><br>Back to <a href="/">{{site.name}}</a>.<br><br></h4>
+    </div>
+  </div>
+</div>
+
+{% addtoblock "js" %}
+{% endaddtoblock %}
+{% endblock %}
+
+{% block footer %}
+{% include 'corpora/footer.html' %}
+{% endblock %}

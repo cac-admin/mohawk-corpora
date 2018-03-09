@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'corpus',
     'people',
     'license',
+    'message',
 
     'storages',
     'djangobower',
@@ -73,6 +74,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'analytical',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +132,8 @@ AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
 AWS_SECRET_ACCESS_KEY_S3 =     os.environ['AWS_SECRET_S3']
 
 
+CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
+CKEDITOR_IMAGE_BACKEND = 'pillow'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 # We use ansible to create the environment variables to use.
@@ -235,8 +240,7 @@ SITE_ID = 1
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Pacific/Auckland'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True

@@ -32,7 +32,10 @@ class Tribe(models.Model):
 
 
 class Group(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        )
 
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
@@ -98,7 +101,10 @@ class Person(models.Model):
         help_text="Flag to track when an account is created",
         editable=True)
 
-    groups = models.ManyToManyField(Group, blank=True)
+    groups = models.ManyToManyField(
+        Group,
+        blank=True,
+        help_text=_('Choose a group, or enter a group name to create a new one.'))
 
     score = models.PositiveIntegerField(
         editable=False,

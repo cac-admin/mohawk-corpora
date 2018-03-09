@@ -23,7 +23,7 @@ certifi
 requests
 django-allauth
 
-# django-ckeditor==4.5.1 # When upgrading to v5 need to read this: https://github.com/django-ckeditor/django-ckeditor
+django-ckeditor
 
 simplejson
 
