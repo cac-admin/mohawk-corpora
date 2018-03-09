@@ -66,6 +66,12 @@ class KnownLanguageAdmin(admin.ModelAdmin):
         )
 
 
+class MembershipInline(admin.TabularInline):
+    extra = 0
+    model = Person.groups.through
+
+
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'created', 'created_by', )
+    inlines = [MembershipInline]
