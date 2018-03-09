@@ -87,7 +87,7 @@ class Person(models.Model):
         help_text="Check to get weekly updates on your progress.")
 
     receive_daily_updates = models.BooleanField(
-        default=False,
+        default=True,
         help_text="Check to get daily updates on your progress.")
 
     leaderboard = models.BooleanField(
