@@ -196,13 +196,13 @@ def send_status_email(person_pk, frequency='weekly'):
         period_of_time = _('this week')
         previous_period_of_time = _('last week')
 
-    period = recordings.filter(created__gte=timezone.now()-time_delta)
+    period = recordings.filter(created__gt=timezone.now()-time_delta)
     this_period_stats = build_recordings_stat_dict(period)
 
     period = recordings\
         .filter(created__lte=timezone.now()-time_delta)\
-        .filter(created__gte=timezone.now()-2*time_delta)
-    last_period_stats = build_recordings_stat_dict(recordings)
+        .filter(created__gt=timezone.now()-2*time_delta)
+    last_period_stats = build_recordings_stat_dict(period)
 
     email = get_email(person)
 

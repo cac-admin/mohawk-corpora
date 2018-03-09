@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-09 00:34+0000\n"
+"POT-Creation-Date: 2018-03-09 00:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -568,11 +568,13 @@ msgid "%(frequency)s Progress"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:42
+#: people/templates/people/email/freq_stats_update.txt:9
 #: people/templates/people/email/weekly_stats_update.html:42
 msgid "Hello"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:43
+#: people/templates/people/email/freq_stats_update.txt:11
 #, python-format
 msgid "Here's your progress for %(period_of_time)s:"
 msgstr ""
@@ -580,56 +582,50 @@ msgstr ""
 #: people/templates/people/email/freq_stats_update.html:46
 #: people/templates/people/email/freq_stats_update.html:53
 #: people/templates/people/email/freq_stats_update.html:60
+#: people/templates/people/email/freq_stats_update.txt:12
+#: people/templates/people/email/freq_stats_update.txt:16
+#: people/templates/people/email/freq_stats_update.txt:20
 #: people/templates/people/email/weekly_stats_update.html:47
 #: people/templates/people/person_recording_stats_view_detail.html:76
 msgid "recordings"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:51
+#: people/templates/people/email/freq_stats_update.txt:15
 #, python-format
 msgid "%(previous_period_of_time)s you did:"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:58
+#: people/templates/people/email/freq_stats_update.txt:19
 msgid "And here's your total progress to date:"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:62
+#: people/templates/people/email/freq_stats_update.txt:22
 #: people/templates/people/email/weekly_stats_update.html:50
 msgid "approved recordings"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:63
-#: people/templates/people/email/freq_stats_update.txt:12
+#: people/templates/people/email/freq_stats_update.txt:23
 #: people/templates/people/email/weekly_stats_update.html:51
 #: people/templates/people/email/weekly_stats_update.txt:12
 msgid "thumbs up"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:64
-#: people/templates/people/email/freq_stats_update.txt:13
+#: people/templates/people/email/freq_stats_update.txt:24
 #: people/templates/people/email/weekly_stats_update.html:52
 #: people/templates/people/email/weekly_stats_update.txt:13
 msgid "thumbs down"
 msgstr ""
 
 #: people/templates/people/email/freq_stats_update.html:73
-#: people/templates/people/email/freq_stats_update.txt:19
+#: people/templates/people/email/freq_stats_update.txt:30
 #: people/templates/people/email/weekly_stats_update.html:61
 #: people/templates/people/email/weekly_stats_update.txt:19
 msgid "Record Sentences"
-msgstr ""
-
-#: people/templates/people/email/freq_stats_update.txt:9
-#: people/templates/people/email/weekly_stats_update.txt:9
-#: people/templates/people/leaderboard.html:31
-#: people/templates/people/profile.html:66
-msgid "Recordings"
-msgstr ""
-
-#: people/templates/people/email/freq_stats_update.txt:11
-#: people/templates/people/email/weekly_stats_update.txt:11
-msgid "Approved"
 msgstr ""
 
 #: people/templates/people/email/weekly_stats_update.html:8
@@ -639,6 +635,16 @@ msgstr ""
 
 #: people/templates/people/email/weekly_stats_update.html:44
 msgid "Here's your current progress:"
+msgstr ""
+
+#: people/templates/people/email/weekly_stats_update.txt:9
+#: people/templates/people/leaderboard.html:31
+#: people/templates/people/profile.html:66
+msgid "Recordings"
+msgstr ""
+
+#: people/templates/people/email/weekly_stats_update.txt:11
+msgid "Approved"
 msgstr ""
 
 #: people/templates/people/leaderboard.html:30

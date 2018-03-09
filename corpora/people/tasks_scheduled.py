@@ -16,11 +16,11 @@ CELERYBEAT_SCHEDULE = {
     'send_person_weekly_emails': {
         'task': 'people.tasks.send_person_emails',
         'args': ('weekly'),
-        'schedule': crontab(minute='00', hour='9', day_of_week='Sunday'),
+        'schedule': crontab(minute='00', hour='9', day_of_week='Tuesday'),
     },
     'send_person_daily_emails': {
         'task': 'people.tasks.send_person_emails',
         'args': ('daily'),
-        'schedule': crontab(minute='00', hour='8', day_of_week='*'),
+        'schedule': crontab(minute='00', hour='9', day_of_week='*'),
     },
 }
