@@ -238,8 +238,6 @@ SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
-
-
 TIME_ZONE = 'Pacific/Auckland'
 USE_I18N = True
 USE_L10N = True
@@ -423,8 +421,8 @@ CELERY_TASK_RESULT_EXPIRES = 21600  # 6 hours.
 #     # 'media.tasks.check_all_media_items_async': {
 #    'queue': os.environ['CELERY_MEDIA_QUEUE']},
 # }
-CELERY_TIMEZONE = TIME_ZONE
-
+# CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = False
 # if 'media' in os.environ['SERVER_TYPE']:
 #     CELERYD_PREFETCH_MULTIPLIER = 1
 #     CELERYD_TASK_SOFT_TIME_LIMIT = 60*60*4
