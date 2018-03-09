@@ -51,6 +51,18 @@ def clean_empty_person_models():
 
 
 @shared_task
+def clean_empty_group_models():
+    from corpus.models import Recording
+
+    groups = Group.objects.all()
+
+    for group in groups:
+        if group.person_set.count() == 0:
+            logger.debug('Removing: {0}'.format(group))
+            group.delete()
+
+
+@shared_task
 def calculate_person_scores():
     from corpus.models import Recording, QualityControl
 
