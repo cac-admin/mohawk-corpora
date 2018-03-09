@@ -247,7 +247,7 @@ class Recording(models.Model):
         """Score awarded for uploading this recording. """
 
         approved = self.quality_control \
-            .filter(quality_control__approved=True)
+            .filter(approved=True)
 
         if approved.count() >= 1:
             return 1
