@@ -1,0 +1,74 @@
+{% extends 'people/email/base_email.html' %}
+{% load static sekizai_tags i18n compress %}
+{% block subject %}{{subject}}{% endblock %}
+
+
+{% block heading %}
+<h1>{{site.name}}</h1>
+<h3>{% blocktrans with frequency|capfirst as frequency %}{{frequency}} Progress{% endblocktrans %}</h3>
+{% endblock %}
+
+
+
+{% block main %}
+{% compress css inline %}
+<style type="text/x-scss">
+@import 'corpora/static/corpora/css/_colors.scss';
+h1{
+    color: $brand_primary;
+}
+p, ul, li, td{
+    font-family: 'Raleway', sans-serif;
+}
+li{
+    list-style-type: none;
+}
+span{
+    font-size: 1.5em;
+    color: $brand_primary;
+    font-weight: 700;
+}
+.btn{
+    display: inline-block;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: $brand_primary;
+    color: white;
+    margin: 5px;
+    font-weight: 400;
+}
+</style>
+{% endcompress %}
+<p>{% trans 'Hello'%} {{person}},<br><br>
+{% blocktrans %}Here's your progress for {{period_of_time}}:{% endblocktrans %}<br>
+
+<ul>
+  <li><span>{{this_period_stats.total}}</span> {% trans 'recordings' %}</li>
+  <li><span>{{this_period_stats.duration_string}}</span> {{this_period_stats.dimension_string}}</li>
+</ul>
+</p>
+
+<p>{% blocktrans with previous_period_of_time|capfirst as previous_period_of_time %}{{previous_period_of_time}} you did:{% endblocktrans %}<br>
+<ul>
+  <li><span>{{last_period_stats.total}}</span> {% trans 'recordings' %}</li>
+  <li><span>{{last_period_stats.duration_string}}</span> {{last_period_stats.dimension_string}}</li>
+</ul>
+</p>
+
+<p>{% trans "And here's your total progress to date:" %}<br>
+<ul>
+  <li><span>{{stats.total}}</span> {% trans 'recordings' %}</li>
+  <li><span>{{stats.duration_string}}</span> {{stats.dimension_string}}</li>
+  <li><span>{{stats.num_approved}}</span> {% trans 'approved recordings' %}</li>
+  <li><span>{{stats.up_votes}}</span> {% trans 'thumbs up' %}</li>
+  <li><span>{{stats.down_votes}}</span> {% trans 'thumbs down' %}</li>
+</ul>
+</p>
+{% endblock %}
+
+
+{% block footer  %}
+<p>You've helped us collect more than <b>{{total_duration}} hours</b> of recordings.</p>
+<em>Help us reach our goal of 200 hours by reading only 10 sentences each day.</em>
+<div style="text-align: center;"><h3><a class='btn' href="{{url_append}}{% url 'corpus:record' %}">{% trans 'Record Sentences' %}</a></h3></div>
+{% endblock %}

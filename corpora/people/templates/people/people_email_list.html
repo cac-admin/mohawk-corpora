@@ -30,9 +30,8 @@ div.col.table{
       <form action="{% url 'people:email_list' %}" method="post">
       {% csrf_token %}
       {{ form }}
-      <input type="submit" value="Send weekly emails NOW" />
+      <input type="submit" value="Send emails NOW" />
       </form>
-
     </div>
   </div>
 

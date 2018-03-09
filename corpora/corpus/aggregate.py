@@ -56,7 +56,8 @@ def build_recordings_stat_dict(recording_queryset):
             hours, minutes, seconds),
         'total_seconds': int(total_seconds),
         'total_minutes': int(total_seconds/60.0),
-        'dimension_string': _('seconds') if total_seconds < 60 else _('minutes')
+        'dimension_string': _('seconds') if total_seconds < 60 else _('minutes'),
+        'duration_string': int(total_seconds) if total_seconds < 60 else int(total_seconds/60.0)
     }
 
     if stats['up_votes'] is None:

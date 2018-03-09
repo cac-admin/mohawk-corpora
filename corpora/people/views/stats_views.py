@@ -19,7 +19,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person, KnownLanguage, Group
-from people.tasks import send_person_weekly_emails
+from people.tasks import send_person_emails
+from people.forms import SendEmailForm
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person, get_person, get_current_language
 from django.conf import settings
@@ -284,6 +285,9 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
         context = \
             super(PeopleEmailsView, self).get_context_data(**kwargs)
 
+        form = SendEmailForm()
+        context['form'] = form
+
         people = context['people']
 
         for person in context['people']:
@@ -318,6 +322,20 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
             return HttpResponseForbidden()
 
         # Everything is okay - so let's send emails?
-        send_person_weekly_emails.apply_async()
+
+        form = SendEmailForm(request.POST)
+        if form.is_valid():
+            freq = []
+            if form.cleaned_data['weekly']:
+                freq.append(_('weekly'))
+            if form.cleaned_data['daily']:
+                freq.append(_('daily'))
+
+            for f in freq:
+                send_person_emails.apply_async(
+                    countdown=2,
+                    task_id='send_{0}_emails-{1}'.format(
+                        f, timezone.now().strftime("%y%m%d-%H")),
+                    args=[f])
 
         return super(PeopleEmailsView, self).get(request, *args, **kwargs)

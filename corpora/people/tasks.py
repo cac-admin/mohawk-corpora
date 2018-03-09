@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
+from django.utils.translation import ugettext as _
 
 from django.conf import settings
-from django.utils import translation
+from django.utils import translation, timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 from people.models import Person, KnownLanguage
@@ -17,6 +18,7 @@ from celery.task.control import revoke, inspect
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
+import datetime
 
 import logging
 logger = logging.getLogger('corpora')
@@ -103,55 +105,63 @@ def update_person_score(person_pk):
 
 
 @shared_task
-def send_person_weekly_emails_staff():
-    '''Send a weekly email to all staff. This is being implemented for testing
+def send_person_emails_staff(frequency='weekly'):
+    '''Send an email to all staff. This is being implemented for testing
     purposes but also so we can send different emails to staff with different
     priviledges'''
-    people = Person.objects.filter(user__is_staff=True)
+    people = Person.objects\
+        .filter(user__is_staff=True)\
+        .filter(**{'receive_{0}_updates'.format(frequency): True})
+
+    count = 1
     for person in people:
-        print "Sending email to {0}".format(person)
-        result = send_weekly_status_email.apply_async(
-            args=[person.pk],
-            countdown=2,
-            task_id='send_weekly_email-staff-{0}'.format(
-                person.pk)
+        if settings.DEBUG:
+            p_display = person.profile_email
+        else:
+            p_display = person.pk
+        result = send_status_email.apply_async(
+            args=[person.pk, frequency],
+            countdown=count,
+            task_id='send_{1}_email-staff-{0}-{2}'.format(
+                p_display, frequency, timezone.now().strftime("%y%m%d-%H"))
             )
-        print result
+        count = count+1
+        logger.debug("Sending email to {0}".format(person))
+    return "Sent emails to {0} staff.".format(count)
 
 
 @shared_task
-def send_person_weekly_emails():
-    '''Send a weekly email to all staff. This is being implemented for testing
-    purposes but also so we can send different emails to staff with different
-    priviledges'''
+def send_person_emails(frequency='weekly'):
+    '''Send a email to all people.'''
 
     counter = 0
     # Check if site is development
     if settings.DEBUG:
-        print "This is a dev envrionment!"
-        send_person_weekly_emails_staff()
+        send_person_emails_staff(frequency)
         return "This is a dev environment!"
     else:
         counter = 0
-        people = Person.objects.filter(receive_weekly_updates=True)
+
+        people = Person.objects.filter(
+            **{'receive_{0}_updates'.format(frequency): True})
         for person in people:
             try:
-                print "Sending email to {0}".format(person)
-                result = send_weekly_status_email.apply_async(
-                    args=[person.pk],
+                logger.debug("Sending email to {0}".format(person))
+                result = send_status_email.apply_async(
+                    args=[person.pk, frequency],
                     countdown=2,
-                    task_id='send_weekly_email-{0}'.format(
-                        person.pk)
+                    task_id='send_{1}_email-{0}-{2}'.format(
+                        person.pk, frequency, timezone.now().strftime("%y%m%d-%H"))
                     )
-                print result
+                logger.debug(result)
                 counter = counter + 1
             except:
-                print "Email did not send for {0}".format(person)
-    return "Sent {0} weekly emails.".format(counter)
+                logger.debug("Email did not send for {0}".format(person))
+    return "Sent {0} {1} emails.".format(counter, frequency)
 
 
 @shared_task
-def send_weekly_status_email(person_pk):
+def send_status_email(person_pk, frequency='weekly'):
     from corpora.email_utils import EMail
 
     try:
@@ -173,9 +183,26 @@ def send_weekly_status_email(person_pk):
     stats = build_recordings_stat_dict(recordings)
     total_seconds = stats['total_seconds']
     hours = total_seconds/60.0/60.0
-    recordings = recordings.filter(person=person)
 
+    recordings = recordings.filter(person=person)
     stats = build_recordings_stat_dict(recordings)
+
+    if 'daily' in frequency:
+        time_delta = datetime.timedelta(days=1)
+        period_of_time = _('today')
+        previous_period_of_time = _('yesterday')
+    else:
+        time_delta = datetime.timedelta(days=7)
+        period_of_time = _('this week')
+        previous_period_of_time = _('last week')
+
+    period = recordings.filter(created__gte=timezone.now()-time_delta)
+    this_period_stats = build_recordings_stat_dict(period)
+
+    period = recordings\
+        .filter(created__lte=timezone.now()-time_delta)\
+        .filter(created__gte=timezone.now()-2*time_delta)
+    last_period_stats = build_recordings_stat_dict(recordings)
 
     email = get_email(person)
 
@@ -183,28 +210,38 @@ def send_weekly_status_email(person_pk):
 
         url_append = 'https://' + Site.objects.get_current().domain
 
-        subject = "Your weekly update!"
+        subject = "Your {0} update!".format(frequency)
 
         e = EMail(to=email, subject=subject)
         context = {
             'subject': subject,
             'person': person,
             'stats': stats,
+            'this_period_stats': this_period_stats,
+            'last_period_stats': last_period_stats,
             'total_duration': "{0:.1f}".format(hours),
             'url_append': url_append,
-            'site': Site.objects.get_current()}
+            'site': Site.objects.get_current(),
+            'period_of_time': period_of_time,
+            'previous_period_of_time': previous_period_of_time,
+            'frequency': frequency}
 
-        e.text('people/email/weekly_stats_update.txt', context)
-        e.html('people/email/weekly_stats_update.html', context)
+        e.text('people/email/freq_stats_update.txt', context)
+        e.html('people/email/freq_stats_update.html', context)
+
+        if settings.DEBUG:
+            p_display = email
+        else:
+            p_display = person_pk
 
         result = e.send(
             from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
             fail_silently='False')
         if result == 1:
-            return "Sent email to {0}".format(person_pk)
+            return "Sent email to {0}".format(p_display)
         else:
             return \
-                "Error sending email to {0} - {1}.".format(person_pk, result)
+                "Error sending email to {0} - {1}.".format(p_display, result)
 
     else:
         return "No email associated with person."

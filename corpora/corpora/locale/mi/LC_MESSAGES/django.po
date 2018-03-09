@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-07 03:13+0000\n"
+"POT-Creation-Date: 2018-03-09 00:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,14 +70,14 @@ msgstr ""
 msgid "Powered by"
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:64
+#: corpora/templates/corpora/footer.html:65
 #, python-format
 msgid ""
-"Copyright &copy; 2017 Te Reo Irirangi o Te Hiku o Te Ika.<br>All content "
-"collected at %(site)s falls under the %(license)s License."
+"Copyright &copy; 2017 - %(current_year)s Te Reo Irirangi o Te Hiku o Te Ika."
+"<br>All content collected at %(site)s falls under the %(license)s License."
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:67 corpora/views/views.py:43
+#: corpora/templates/corpora/footer.html:68 corpora/views/views.py:43
 msgid "Privacy Policy"
 msgstr ""
 

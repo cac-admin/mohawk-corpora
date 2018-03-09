@@ -117,3 +117,8 @@ class DemographicFormAdmin(forms.ModelForm):
         widgets = {
             'tribe': autocomplete.ModelSelect2Multiple(url='people:tribe-autocomplete')
         }
+
+
+class SendEmailForm(forms.Form):
+    daily = forms.BooleanField(required=False)
+    weekly = forms.BooleanField(required=False)
