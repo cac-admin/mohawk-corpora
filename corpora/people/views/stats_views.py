@@ -83,7 +83,7 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
             person=person)
 
         # Assume for now user is in NZ timezone = UTC + 12 hours
-        time_offset = 13
+        time_offset = 0
         now = timezone.now() + datetime.timedelta(hours=time_offset)
 
         # Find the day for NZ, then take us back to utc time.

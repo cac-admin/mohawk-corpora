@@ -47,9 +47,9 @@ class RecordingStatsView(SiteInfoMixin, ListView):
                 timezone.get_default_timezone())
 
         day_counter = 1
-        timezone_shift = datetime.timedelta(hours=13)
+        timezone_shift = datetime.timedelta(hours=0)
         day_offset = datetime.timedelta(days=day_counter)
-        next_day = start_day
+        next_day = start_day - day_offset
         data = {'recordings': {}, 'growth_rate': {}}
 
         data = {
@@ -66,7 +66,7 @@ class RecordingStatsView(SiteInfoMixin, ListView):
         total_recordings = 0
         counter = 0
         tomorrow = next_day + day_offset
-        # next_day = next_day 
+        # next_day = next_day
         while next_day < timezone.now() - timezone_shift:
 
             if counter == 0:
