@@ -60,15 +60,15 @@ def calculate_person_scores():
     # onto another?
     for person in people:
         recordings = Recording.objects.filter(person=person)
-        qcs = QualityControl.objects.filter(person=person)
+        # qcs = QualityControl.objects.filter(person=person)
 
         score = 0
 
         for r in recordings:
             score = score + float(r.calculate_score())
 
-        for q in qcs:
-            score = score + float(q.calculate_score())
+        # for q in qcs:
+        #     score = score + float(q.calculate_score())
 
         person.score = int(score)
         person.save()
@@ -88,15 +88,15 @@ def update_person_score(person_pk):
     # onto another?
 
     recordings = Recording.objects.filter(person=person)
-    qcs = QualityControl.objects.filter(person=person)
+    # qcs = QualityControl.objects.filter(person=person)
 
     score = 0
 
     for r in recordings:
         score = score + float(r.calculate_score())
 
-    for q in qcs:
-        score = score + float(q.calculate_score())
+    # for q in qcs:
+    #     score = score + float(q.calculate_score())
 
     person.score = score
     person.save()

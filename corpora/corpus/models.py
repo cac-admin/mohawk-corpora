@@ -246,6 +246,12 @@ class Recording(models.Model):
     def calculate_score(self):
         """Score awarded for uploading this recording. """
 
+        approved = self.quality_control \
+            .filter(quality_control__approved=True)
+
+        if approved.count() >= 1:
+            return 1
+
         net_votes = self.quality_control \
             .aggregate(value=models.Sum(models.F('good') - models.F('bad')))
 
