@@ -6,8 +6,9 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.utils import translation, timezone
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count, Sum
 
-from people.models import Person, KnownLanguage
+from people.models import Person, KnownLanguage, Group
 from people.helpers import get_email, set_current_language_for_person
 
 from corpus.aggregate import build_recordings_stat_dict
@@ -60,7 +61,7 @@ def calculate_person_scores():
     # onto another?
     for person in people:
         recordings = Recording.objects.filter(person=person)
-        # qcs = QualityControl.objects.filter(person=person)
+        qcs = QualityControl.objects.filter(person=person)
 
         score = 0
 
@@ -72,6 +73,49 @@ def calculate_person_scores():
 
         person.score = int(score)
         person.save()
+
+    return "Updated {0} scores".format(people.count())
+
+
+@shared_task
+def calculate_group_scores():
+    from corpus.models import Recording, QualityControl
+
+    groups = Group.objects.all()
+
+    for group in groups:
+
+        update_group_score.apply_async(
+            args=[group.pk],
+            task_id="update-group-score-{0}-{1}".format(
+                group.pk, timezone.now().strftime("%M")),
+            countdown=42)
+
+    return "Updated {0} scores".format(groups.count())
+
+
+@shared_task
+def update_group_score(g_pk):
+    from corpus.models import Recording, QualityControl
+
+    try:
+        group = Group.objects.get(pk=g_pk)
+    except ObjectDoesNotExist:
+        return "Group with pk {0} does not exsit.".format(g_pk)
+
+    people = Person.objects\
+        .annotate(num_groups=Count('groups'))\
+        .filter(groups__pk=g_pk)\
+        .filter(num_groups=1)
+
+    d = people.aggregate(total_score=Sum('score'))
+
+    if d['total_score']:
+        group.score = int(d['total_score'])
+        group.save()
+        return "New score for {0}: {1}.".format(g_pk, group.score)
+    else:
+        return "No score for {0}.".format(g_pk)
 
 
 @shared_task
@@ -88,7 +132,7 @@ def update_person_score(person_pk):
     # onto another?
 
     recordings = Recording.objects.filter(person=person)
-    # qcs = QualityControl.objects.filter(person=person)
+    qcs = QualityControl.objects.filter(person=person)
 
     score = 0
 
@@ -100,6 +144,14 @@ def update_person_score(person_pk):
 
     person.score = score
     person.save()
+
+    groups = person.groups.all()
+    for g in groups:
+        update_group_score.apply_async(
+            args=[g.pk],
+            task_id="update-group-score-{0}-{1}".format(
+                g.pk, timezone.now().strftime("%M")),
+            countdown=42)
 
     return "New score for {0}: {1}".format(person_pk, score)
 

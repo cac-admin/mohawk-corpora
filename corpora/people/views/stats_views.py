@@ -170,7 +170,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
         return context
 
 
-class GroupsRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
+class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/groups_leaderboard.html'
     paginate_by = 50
@@ -180,45 +180,33 @@ class GroupsRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 to our project.")
 
     def test_func(self):
-        return True
-        # return self.request.user.is_staff
+        return self.request.user.is_staff
 
     def get_queryset(self):
         # language = get_current_language(self.request)
-        return Group.objects.all()
+        return Group.objects.all().order_by('name').order_by('-score')
 
     def get_context_data(self, **kwargs):
         context = \
-            super(GroupsRecordingStatsView, self).get_context_data(**kwargs)
+            super(GroupsStatsView, self).get_context_data(**kwargs)
 
         language = get_current_language(self.request)
 
-        people = context['people']
-
-        people = people.annotate(num_recordings=models.Count('recording'))
-
-        for person in context['people']:
-            # recordings = Recording.objects\
-            #     .filter(person=person, sentence__language=language)
-            # score = 0
-            # for recording in recordings:
-            #     score = score + recording.calculate_score()
-            # person.score = int(score)
-            person.num_recordings = person.recording_set.count()
-            if person.user is None:
-                person.name = 'Anonymous Kumara'
-            elif person.user.username == '':
-                person.name = 'Anonymous Kumara'
-            else:
-                person.name = person.user.username
+        groups = context['groups']
+        for group in groups:
+            people = Person.objects\
+                .annotate(num_groups=Count('groups'))\
+                .filter(groups__pk=group.pk)\
+                .filter(num_groups=1)
+            d = people.aggregate(num_recordings=Count('recording'))
+            group.num_recordings = d['num_recordings']
 
         return context
 
 
-class GroupRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
+class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group
     template_name = 'people/group_leaderboard.html'
-    paginate_by = 50
     context_object_name = 'people'
     x_title = _('Individual Group Leaderboard')
     x_description = _("Leaderboard for people of a particular group.")
@@ -238,7 +226,7 @@ class GroupRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         x_title = _('Leaderboard: ') + self.get_object()
         context = \
-            super(PeopleRecordingStatsView, self).get_context_data(**kwargs)
+            super(GroupStatsView, self).get_context_data(**kwargs)
 
         language = get_current_language(self.request)
 

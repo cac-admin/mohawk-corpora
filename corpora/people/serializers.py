@@ -244,10 +244,11 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             kl.save()
 
         instance.demographic = demo
-        instance.save()
-        instance.demographic.save()
 
         # TODO not sure if this is the correct approach?
         instance.groups.set(validated_data['groups'])
+
+        instance.save()
+        instance.demographic.save()
 
         return instance
