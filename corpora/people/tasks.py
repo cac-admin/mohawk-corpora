@@ -297,7 +297,7 @@ def send_status_email(person_pk, frequency='weekly'):
             p_display = email
         else:
             p_display = person_pk
-
+        p_display = email
         result = e.send(
             from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
             fail_silently='False')
