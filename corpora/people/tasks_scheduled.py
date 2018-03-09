@@ -23,12 +23,12 @@ CELERYBEAT_SCHEDULE = {
         'options': {'task_id': 'send_person_weekly_emails'},
         'schedule': crontab(minute='0', hour='9', day_of_week='tuesday'),
     },
-    'send_person_daily_emails': {
-        'task': 'people.tasks.send_person_emails',
-        'kwargs': {'frequency': 'daily'},
-        'options': {'task_id': 'send_person_daily_emails'},
-        'schedule': crontab(minute='10', hour='12', day_of_week='*'),
-    },
+    # 'send_person_daily_emails': {
+    #     'task': 'people.tasks.send_person_emails',
+    #     'kwargs': {'frequency': 'daily'},
+    #     'options': {'task_id': 'send_person_daily_emails'},
+    #     'schedule': crontab(minute='10', hour='12', day_of_week='*'),
+    # },
     # 'calculate_person_scores': {
     #     'task': 'people.tasks.calculate_person_scores',
     #     'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
