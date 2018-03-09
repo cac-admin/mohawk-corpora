@@ -11,15 +11,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'clean_empty_group_models': {
         'task': 'people.tasks.clean_empty_group_models',
-        'schedule': crontab(minute='42', hour='*', day_of_week='*'),
-    },
-    'calculate_person_scores': {
-        'task': 'people.tasks.calculate_person_scores',
-        'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
-    },
-    'calculate_group_scores': {
-        'task': 'people.tasks.calculate_group_scores',
-        'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
+        'schedule': crontab(minute='43', hour='*', day_of_week='*'),
     },
     'send_person_weekly_emails': {
         'task': 'people.tasks.send_person_emails',
@@ -31,4 +23,13 @@ CELERYBEAT_SCHEDULE = {
         'args': ('daily'),
         'schedule': crontab(minute='00', hour='9', day_of_week='*'),
     },
+    # 'calculate_person_scores': {
+    #     'task': 'people.tasks.calculate_person_scores',
+    #     'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
+    # },
+    # 'calculate_group_scores': {
+    #     'task': 'people.tasks.calculate_group_scores',
+    #     'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
+    # },
+
 }
