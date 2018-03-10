@@ -25,7 +25,7 @@ CELERYBEAT_SCHEDULE = {
     'send_person_daily_emails': {
         'task': 'people.tasks.send_person_emails',
         'kwargs': {'frequency': 'daily'},
-        'schedule': crontab(minute='20', hour='13', day_of_week='*'),
+        'schedule': crontab(minute='20', hour='13', day_of_week='tuesday'),
     },
     # 'calculate_person_scores': {
     #     'task': 'people.tasks.calculate_person_scores',
