@@ -178,7 +178,7 @@ def send_person_emails_staff(frequency='weekly'):
         .filter(user__is_staff=True)\
         .filter(**{'receive_{0}_updates'.format(frequency): True})
 
-    count = 1
+    count = 0
     for person in people:
         if settings.DEBUG:
             p_display = "{0}{1}".format(person.pk, person.profile_email)
@@ -186,7 +186,7 @@ def send_person_emails_staff(frequency='weekly'):
             p_display = person.pk
         result = send_status_email.apply_async(
             args=[person.pk, frequency],
-            countdown=count,
+            countdown=count+2,
             task_id='send_{1}_email-staff-{0}-{2}'.format(
                 p_display, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
             )
@@ -211,7 +211,7 @@ def send_person_emails_daily():
 def send_person_emails(frequency='weekly'):
     '''Send a email to all people.'''
 
-    counter = 1
+    counter = 0
     # Check if site is development
     if settings.DEBUG:
         send_person_emails_staff.apply_async(

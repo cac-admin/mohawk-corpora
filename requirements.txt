@@ -3,7 +3,7 @@
 Django==1.11.8
 boto
 Pillow
-celery
+Celery
 flower #used to monitor Celery
 django-compressor
 django-libsass

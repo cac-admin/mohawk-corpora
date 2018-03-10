@@ -412,23 +412,12 @@ CELERY_RESULT_BACKEND = 'cache+memcached://%s:%s/' % (
     os.environ['DJANGO_MEMCACHED_IP'],
     os.environ['DJANGO_MEMCACHED_PORT'])
 
-# CELERY_RESULT_BACKEND = 'amqp'
 CELERY_TASK_RESULT_EXPIRES = 21600  # 6 hours.
-# CELERY_ROUTES = {
-#     'media.tasks.create_media_item_version_async': {
-#         'queue': os.environ['CELERY_MEDIA_QUEUE']
-#     },
-#     # 'media.tasks.check_all_media_items_async': {
-#    'queue': os.environ['CELERY_MEDIA_QUEUE']},
-# }
+
+### ERROS WITH UTC = FALSE!
 # CELERY_TIMEZONE = TIME_ZONE
-CELERY_ENABLE_UTC = False
-# if 'media' in os.environ['SERVER_TYPE']:
-#     CELERYD_PREFETCH_MULTIPLIER = 1
-#     CELERYD_TASK_SOFT_TIME_LIMIT = 60*60*4
+# CELERY_ENABLE_UTC = False
 
-
-# from company.scheduled_tasks import *
 
 # DJANGO ANALYTICAL
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-114290321-1'

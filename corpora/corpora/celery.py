@@ -24,6 +24,9 @@ CELERYBEAT_SCHEDULE.update(people_schedule)
 
 app.conf.beat_schedule = CELERYBEAT_SCHEDULE
 
+# EERRORS DO EVERYTHING IN UTC AND THEN CHECK GET A TASK TO SCHEDULE A JOB
+# app.conf.enable_utc = False
+# app.conf.timezone = settings.TIME_ZONE
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
