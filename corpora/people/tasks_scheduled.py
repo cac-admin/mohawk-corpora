@@ -30,7 +30,7 @@ CELERYBEAT_SCHEDULE = {
 
         # only UTC times supported. We could just run our own scheduled - just
         # get beat to run task to schedule task!
-        'schedule': crontab(minute=10, hour=3, day_of_week="*"),
+        'schedule': crontab(minute=15, hour=3, day_of_week="*"),
 
     },
 

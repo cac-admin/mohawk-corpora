@@ -312,11 +312,9 @@ def send_status_email(person_pk, frequency='weekly'):
         else:
             p_display = person_pk
 
-        # result = e.send(
-        #     from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
-        #     fail_silently='False')
-
-        result = 1
+        result = e.send(
+            from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
+            fail_silently='False')
 
         if result == 1:
             return "Sent email to {0}".format(p_display)
