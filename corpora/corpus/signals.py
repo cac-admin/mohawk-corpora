@@ -102,7 +102,6 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
         if instance.duration <= 0:
             set_recording_length.apply_async(
                 args=[instance.pk],
-                countdown=2,
                 task_id='set_recording_length-{0}-{1}-{2}'.format(
                     instance.person.pk,
                     instance.pk,
@@ -111,7 +110,6 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
         if not instance.audio_file_aac:
             transcode_audio.apply_async(
                 args=[instance.pk],
-                countdown=3,
                 task_id='transcode_audio-{0}-{1}-{2}'.format(
                     instance.person.pk,
                     instance.pk,
@@ -123,7 +121,6 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 def update_person_score_when_model_saved(sender, instance, **kwargs):
     update_person_score.apply_async(
         args=[instance.person.pk],
-        countdown=4,
         task_id='update_person_score-{0}-{1}-{2}'.format(
             instance.person.pk,
             instance.pk,
