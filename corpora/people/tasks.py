@@ -181,14 +181,14 @@ def send_person_emails_staff(frequency='weekly'):
     count = 1
     for person in people:
         if settings.DEBUG:
-            p_display = person.profile_email
+            p_display = "{0}{1}".format(person.pk, person.profile_email)
         else:
             p_display = person.pk
         result = send_status_email.apply_async(
             args=[person.pk, frequency],
             countdown=count,
             task_id='send_{1}_email-staff-{0}-{2}'.format(
-                p_display, frequency, timezone.now().strftime("%y%m%d-%H"))
+                p_display, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
             )
         count = count+1
         logger.debug("Sending email to {0}".format(person))
@@ -199,13 +199,14 @@ def send_person_emails_staff(frequency='weekly'):
 def send_person_emails(frequency='weekly'):
     '''Send a email to all people.'''
 
-    counter = 0
+    counter = 1
     # Check if site is development
     if settings.DEBUG:
-        send_person_emails_staff(frequency)
+        send_person_emails_staff.apply_async(
+            args=[frequency],
+            countdown=10)
         return "This is a dev environment!"
     else:
-        counter = 0
 
         people = Person.objects.filter(
             **{'receive_{0}_updates'.format(frequency): True})
@@ -214,7 +215,7 @@ def send_person_emails(frequency='weekly'):
                 logger.debug("Sending email to {0}".format(person))
                 result = send_status_email.apply_async(
                     args=[person.pk, frequency],
-                    countdown=2,
+                    countdown=counter+2,
                     task_id='send_{1}_email-{0}-{2}'.format(
                         person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
                     )
