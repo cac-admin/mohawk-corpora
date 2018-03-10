@@ -22,8 +22,7 @@ CELERYBEAT_SCHEDULE = {
 
     'send_person_emails_weekly': {
         'task': 'people.tasks.send_person_emails_weekly',
-        'schedule': crontab(minute=0, hour=20, day_of_week='tuesday'),
-        'relative': True,
+        'schedule': crontab(minute=0, hour=20, day_of_week='tue'),
     },
 
     'send_person_emails_daily': {
@@ -31,9 +30,8 @@ CELERYBEAT_SCHEDULE = {
 
         # only UTC times supported. We could just run our own scheduled - just
         # get beat to run task to schedule task!
-        'schedule': crontab(minute=0, hour=20, day_of_week="*"),
+        'schedule': crontab(minute=10, hour=3, day_of_week="*"),
 
-        'relative': True,
     },
 
     # 'calculate_person_scores': {
