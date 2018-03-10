@@ -216,7 +216,7 @@ def send_person_emails(frequency='weekly'):
                     args=[person.pk, frequency],
                     countdown=2,
                     task_id='send_{1}_email-{0}-{2}'.format(
-                        person.pk, frequency, timezone.now().strftime("%y%m%d-%H"))
+                        person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
                     )
                 logger.debug(result)
                 counter = counter + 1
@@ -299,9 +299,12 @@ def send_status_email(person_pk, frequency='weekly'):
         else:
             p_display = person_pk
 
-        result = e.send(
-            from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
-            fail_silently='False')
+        # result = e.send(
+        #     from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
+        #     fail_silently='False')
+
+        result = 1
+
         if result == 1:
             return "Sent email to {0}".format(p_display)
         else:
