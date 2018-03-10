@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 16:38+1300\n"
+"POT-Creation-Date: 2018-03-10 19:28+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:37
-#: corpora/templates/corpora/logged_in_nav_buttons.html:119
+#: corpora/templates/corpora/logged_in_nav_buttons.html:120
 msgid "Log Out"
 msgstr "Takiputa"
 
@@ -43,8 +43,8 @@ msgid "Record"
 msgstr "Rekoata"
 
 #: corpora/templates/corpora/footer.html:42
-#: corpora/templates/corpora/logged_in_nav_buttons.html:38
-#: corpora/templates/corpora/logged_in_nav_buttons.html:135
+#: corpora/templates/corpora/logged_in_nav_buttons.html:45
+#: corpora/templates/corpora/logged_in_nav_buttons.html:136
 msgid "Listen"
 msgstr ""
 
@@ -131,46 +131,71 @@ msgid ""
 "tree/translate\">translating</a> this app."
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:31
-#: corpora/templates/corpora/logged_in_nav_buttons.html:128
+#: corpora/templates/corpora/logged_in_nav_buttons.html:38
+#: corpora/templates/corpora/logged_in_nav_buttons.html:129
 msgid "Speak"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:47
+#: corpora/templates/corpora/logged_in_nav_buttons.html:54
 msgid "Sentences"
 msgstr "Ngā Rerenga Kōrero"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:54
-#: corpora/templates/corpora/logged_in_nav_buttons.html:69
-#: corpora/templates/corpora/logged_in_nav_buttons.html:142
-msgid "Stats"
-msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:61
 msgid "Admin"
 msgstr "Whakahaere"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:76
-#: corpora/templates/corpora/logged_in_nav_buttons.html:149
+#: corpora/templates/corpora/logged_in_nav_buttons.html:70
+#: corpora/templates/corpora/logged_in_nav_buttons.html:144
+msgid "Stats"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:77
+#: corpora/templates/corpora/logged_in_nav_buttons.html:151
 msgid "Profile"
 msgstr "Whakaritenga"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:84
+#: corpora/templates/corpora/logged_in_nav_buttons.html:85
 msgid "Edit Info"
 msgstr "Whakarerekē"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:97
-#: corpora/templates/corpora/logged_in_nav_buttons.html:162
+#: corpora/templates/corpora/logged_in_nav_buttons.html:98
+#: corpora/templates/corpora/logged_in_nav_buttons.html:164
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:182
+#: corpora/templates/corpora/logged_in_nav_buttons.html:184
 msgid "Log In"
 msgstr "Takiuru"
 
-#: corpora/urls.py:46
+#: corpora/urls.py:49
 msgid "^people/"
 msgstr "tangata"
+
+#: corpora/urls.py:53
+msgid "^stats/person"
+msgstr ""
+
+#: corpora/urls.py:57
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/people$"
+msgstr "tangata"
+
+#: corpora/urls.py:61
+msgid "^stats/groups$"
+msgstr ""
+
+#: corpora/urls.py:65
+msgid "^stats/group/(?P<pk>\\d+)/$"
+msgstr ""
+
+#: corpora/urls.py:69
+msgid "^stats/recordings"
+msgstr ""
+
+#: corpora/urls.py:73
+msgid "^stats/"
+msgstr ""
 
 #: corpora/views/api.py:18
 msgid "Only staff can view this information."

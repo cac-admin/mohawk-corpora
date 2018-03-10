@@ -189,7 +189,11 @@ class RecordingPermissions(permissions.BasePermission):
 
 class RecordingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows recordings to be viewed or edited.
+    API endpoint that allows recordings to be viewed or edited. This is used by
+    staff.
+
+    If a sort_by query is provided, we exclude approved recordings in the
+    returend queryset.
     """
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
@@ -199,22 +203,44 @@ class RecordingViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Recording.objects.all().order_by('-updated')
         sort_by = self.request.query_params.get('sort_by', '')
-
+        sort_by = sort_by.lower()
         person = get_person(self.request)
-        if 'listen' in sort_by.lower() or 'random' in sort_by.lower():
+
+        if sort_by in ['listen', 'random', 'recent']:
+
+            # Exclude approved items
+            queryset = queryset\
+                .annotate(num_approved=Sum(
+                    Case(
+                        When(
+                            quality_control__isnull=True,
+                            then=Value(0)),
+                        When(
+                            quality_control__approved=True,
+                            then=Value(1)),
+                        When(
+                            quality_control__approved=False,
+                            then=Value(0)),
+                        default=Value(0),
+                        output_field=IntegerField())))
+            queryset = queryset.exclude(num_approved__gte=1)
+
+            # Exclude things person listened to
             queryset = queryset\
                 .exclude(quality_control__person=person)
+
             # .annotate(num_qc=Count('quality_control'))\
             # .order_by('num_qc')
+
+            if 'recent' in sort_by:
+                queryset = queryset.order_by('-pk')
+                return queryset
 
             if len(queryset) > 1:
                 i = random.randint(0, len(queryset)-1)
                 return [queryset[i]]
             else:
                 return queryset
-
-        if 'recent' in sort_by.lower():
-            queryset = queryset.order_by('-pk')
 
         return queryset
 
@@ -253,6 +279,11 @@ class ListenViewSet(viewsets.ModelViewSet):
     API endpoint that allows a single recording to be viewed.
     This api obfuscates extra recording information and only provides the
     recording file link and the id.
+
+    By default we exclude approved recordings, and we exclude listening to
+    one's own recordings
+
+    TODO: Add a query so we can get all recordings (or just approved ones).
     """
     queryset = Recording.objects.all()
     pagination_class = OneResultPagination
@@ -261,7 +292,31 @@ class ListenViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
-        queryset = Recording.objects.exclude(quality_control__person=person)
+
+        # Don't listen to one's own recording
+        queryset = Recording.objects\
+            .exclude(person=person)
+
+        # Exclude all approved recordings
+        queryset = queryset\
+            .annotate(num_approved=Sum(
+                Case(
+                    When(
+                        quality_control__isnull=True,
+                        then=Value(0)),
+                    When(
+                        quality_control__approved=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__approved=False,
+                        then=Value(0)),
+                    default=Value(0),
+                    output_field=IntegerField())))
+        queryset = queryset.exclude(num_approved__gte=1)
+
+        # Exclude items you already listened to
+        queryset = queryset.exclude(quality_control__person=person)
+
         sort_by = self.request.query_params.get('sort_by', '')
 
         # Let's just get a random recording.

@@ -69,7 +69,7 @@ class JSONResponseMixin:
 
 
 class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
-    template_name = 'people/person_recording_stats_view_detail.html'
+    template_name = 'people/stats/person_recording_stats_view_detail.html'
 
     def get_context_data(self, **kwargs):
         context = \
@@ -123,7 +123,7 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
 
 class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Person
-    template_name = 'people/leaderboard.html'
+    template_name = 'people/stats/leaderboard.html'
     paginate_by = 50
     context_object_name = 'people'
     x_title = _('Leaderboard')
@@ -172,7 +172,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
-    template_name = 'people/groups_leaderboard.html'
+    template_name = 'people/stats/groups_leaderboard.html'
     paginate_by = 50
     context_object_name = 'groups'
     x_title = _('Group Leaderboard')
@@ -206,7 +206,7 @@ to our project.")
 
 class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group
-    template_name = 'people/group_leaderboard.html'
+    template_name = 'people/stats/group_leaderboard.html'
     context_object_name = 'people'
     x_title = _('Individual Group Leaderboard')
     x_description = _("Leaderboard for people of a particular group.")

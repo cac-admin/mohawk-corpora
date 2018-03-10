@@ -1,6 +1,7 @@
-{% extends 'corpus/base.html' %}
+{% extends 'people/stats/base.html' %}
 {% load static sekizai_tags compress i18n %}
 
+{% block title %}{{x_title}}{%endblock%}
 {% block content %}
 {% addtoblock "css" %}
 <style type="text/x-scss">
@@ -22,23 +23,23 @@ div.col.table{
 <div class="container">
   <div class="row">
     <div class="col table">
-
+<h1 style="text-align: center; font-weight: 900;">Group Leaderboard</h1>
 <table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">{% trans 'Username' %}</th>
+      <th scope="col">{% trans 'Group' %}</th>
       <th scope="col">{% trans 'Recordings' %}</th>
       <th scope="col">{% trans 'Score' %} <small>[beta]</small></th>
     </tr>
   </thead>
   <tbody>
-{% for person in people %}
+{% for g in groups %}
 <tr>
   <th scope="row">{{ forloop.counter0|add:page_obj.start_index }}</th>
-  <td>{{person.name}}</td>
-  <td>{{person.num_recordings}}</td>
-  <td>{{person.score}}</td>
+  <td>{{g.name}}</td>
+  <td>{{g.num_recordings}}</td>
+  <td>{{g.score}}</td>
 </tr>
 {% endfor %}
 </tbody>

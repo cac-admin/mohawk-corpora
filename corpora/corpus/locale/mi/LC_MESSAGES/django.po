@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 16:38+1300\n"
+"POT-Creation-Date: 2018-03-10 19:28+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -215,10 +215,6 @@ msgstr "^whakarongo/"
 msgid "^sentences/"
 msgstr "rerenga_korero/"
 
-#: corpus/urls.py:23
-msgid "^stats/"
-msgstr "^tatauranga/"
-
 #: corpus/views/api.py:39
 #, python-brace-format
 msgid "Only staff can {0}."
@@ -295,6 +291,9 @@ msgid ""
 "Listen to and vote on recordings. This helps us improvethe quality of "
 "recordings we use."
 msgstr ""
+
+#~ msgid "^stats/"
+#~ msgstr "^tatauranga/"
 
 #~ msgid "Kaitahu"
 #~ msgstr "Kāi Tahu"

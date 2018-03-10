@@ -6,6 +6,13 @@
 <style type="text/x-scss">
     
 .navbar{
+  ul{
+    flex-wrap: unset !important;
+    overflow: auto;
+    li{
+      display: inline-block;
+    }
+  }
     a{
         color: white;
     }
@@ -47,13 +54,6 @@
         <div >{% trans 'Sentences' %}</div>
       </a>
     </li>      
-
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'corpus:stats' %}" >
-        <i class="fa fa-lg fa-fw fa-bar-chart"></i>
-        <div >{% trans 'Stats' %}</div>
-      </a>
-    </li>
     
     <li class="nav-item">
       <a class="nav-link" href="/admin" >
@@ -63,8 +63,9 @@
     </li>
     {% endif %}
 
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'people:people_stats' %}" >
+    {% url 'stats_people' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
         <i class="fa fa-lg fa-fw fa-bar-chart"></i>
         <div >{% trans 'Stats' %}</div>
       </a>
@@ -135,8 +136,9 @@
       </a>
     </li>  
 
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'people:people_stats' %}" >
+    {% url 'stats_people' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
         <i class="fa fa-lg fa-fw fa-bar-chart"></i>
         <div >{% trans 'Stats' %}</div>
       </a>

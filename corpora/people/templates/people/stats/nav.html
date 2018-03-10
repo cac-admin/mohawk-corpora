@@ -1,0 +1,147 @@
+{% load account i18n socialaccount sekizai_tags static language %}
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/_colors';
+.navbar ul li.active{
+  border-bottom: 2px solid white;
+}
+.sub.navbar{
+  background-color: white;
+  padding: 0px;
+
+  .container{
+    /*background-color: #ddd;*/
+    /*border-bottom: 1px solid rgba($brand_darker, .5);*/
+   
+    ul:hover li{
+      border-bottom: 2px solid rgba($brand_darker, 0);
+    }
+
+    ul:hover li.active{
+      border-bottom: 2px solid rgba($brand_darker, 0);
+    }
+
+    ul:hover li.active:hover{
+      border-bottom: 2px solid rgba($brand_darker, .5);
+    }
+
+    ul{
+      flex-wrap: unset;
+      overflow: auto;
+      margin-left: auto;
+      margin-right: auto;
+      i{
+        display: none !important;
+      }
+
+      li{
+
+        a{
+          div{
+            display: block !important;
+          }
+        }
+        display: inline-block;
+        border: 0px solid $brand_darkest;
+        border-left: 0px;
+        padding: 0px 10px;
+        border-bottom: 2px solid white;
+        a{
+          color: $brand_darkest;  
+        }
+        
+        div{
+          font-size: 1em !important;
+          font-weight: 700;
+        }
+      }
+
+      li:first-of-type{
+        border: 0px solid $brand_darkest;
+      }
+
+      li:hover{
+        /*background-color: rgba($brand_lightest, .5);*/
+        border-bottom: 2px solid rgba($brand_darker, .5);
+      }
+      li:focus, li:active{
+        /*background-color: rgba($brand_lightest, .5);*/
+        border-bottom: 2px solid rgba($brand_darker, 1);
+      }
+
+      li.active{
+        border-bottom: 2px solid rgba($brand_darker, .5);
+        background-color: white;
+      }
+
+    }
+
+
+  }
+
+
+}
+.dropdown-toggle::after{
+  display: none !important;
+}
+</style>
+{% endaddtoblock %}
+<nav class="sub navbar navbar-expand ">
+  <div class="container ">
+  
+  {% get_available_languages as available_languages %}
+
+  <ul class="navbar-nav ">
+    {% url 'stats_people' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
+      <a href="{{ path }}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-users"></i>
+        <div >{% trans 'User Leaderboard' %}</div>
+      </a>
+    </li>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+
+    {% url 'stats' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fa fa-lg fa-fw fa-font"></i>
+        <div >{% trans 'Overall Statistics' %}</div>
+      </a>
+    </li>      
+
+    {% url 'stats_recordings' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
+      <a class="nav-link" href="{{path}}" >
+        <i class="fa fa-lg fa-fw fa-bar-chart"></i>
+        <div >{% trans 'Growth Rate' %}</div>
+      </a>
+    </li>
+
+    {% endif %}
+
+  </ul>
+  
+
+  <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
+      
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+      
+  </form>
+  <form class="hidden" action="{% url 'people:set_language' %}" method="post" id="language_selector_form" >
+      
+          {% csrf_token %}
+          <input name="language" type="hidden" value="{{current_language}}" />
+      
+  </form>
+
+
+
+</div>
+</nav>

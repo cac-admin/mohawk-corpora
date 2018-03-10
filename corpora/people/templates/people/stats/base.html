@@ -1,0 +1,11 @@
+{% extends "corpora/base.html" %}
+{% load account i18n socialaccount sekizai_tags static language %}
+
+{% block navbuttons %}
+{% include 'corpora/logged_in_nav_buttons.html' %}
+{% include 'people/stats/nav.html' %}
+{% endblock %}
+
+{% block footer %}
+{% include 'corpora/footer.html' %}
+{% endblock %}

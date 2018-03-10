@@ -87,7 +87,7 @@
 
 $(document).ready(function(){
 
-  stats = new Stats('.stat', "{% url 'people:person_stats' %}?format=json")
+  stats = new Stats('.stat', "{% url 'stats_person' %}?format=json")
 
   if (typeof sentences != 'undefined'){
     sentences.sentence_block.addEventListener('sentence.ready', function(){

@@ -73,5 +73,5 @@ class MembershipInline(admin.TabularInline):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created', 'created_by', )
+    list_display = ('name', 'created', 'created_by', 'score' )
     inlines = [MembershipInline]

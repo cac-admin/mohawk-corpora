@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 16:38+1300\n"
+"POT-Creation-Date: 2018-03-10 19:28+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -641,7 +641,7 @@ msgstr ""
 #: people/templates/people/email/freq_stats_update.txt:16
 #: people/templates/people/email/freq_stats_update.txt:20
 #: people/templates/people/email/weekly_stats_update.html:47
-#: people/templates/people/person_recording_stats_view_detail.html:76
+#: people/templates/people/stats/person_recording_stats_view_detail.html:76
 msgid "recordings"
 msgstr "kapohanga reo"
 
@@ -697,35 +697,16 @@ msgid "Here's your current progress:"
 msgstr ""
 
 #: people/templates/people/email/weekly_stats_update.txt:9
-#: people/templates/people/group_leaderboard.html:32
-#: people/templates/people/groups_leaderboard.html:32
-#: people/templates/people/leaderboard.html:31
 #: people/templates/people/profile.html:66
+#: people/templates/people/stats/group_leaderboard.html:32
+#: people/templates/people/stats/groups_leaderboard.html:32
+#: people/templates/people/stats/leaderboard.html:31
 msgid "Recordings"
 msgstr "Kapohanga Reo"
 
 #: people/templates/people/email/weekly_stats_update.txt:11
 msgid "Approved"
 msgstr "Kua whakaaetia"
-
-#: people/templates/people/group_leaderboard.html:31
-#: people/templates/people/groups_leaderboard.html:31
-#, fuzzy
-#| msgid "group"
-msgid "Group"
-msgstr "rōpū"
-
-#: people/templates/people/group_leaderboard.html:33
-#: people/templates/people/groups_leaderboard.html:33
-#: people/templates/people/leaderboard.html:32
-msgid "Score"
-msgstr "Tatau"
-
-#: people/templates/people/leaderboard.html:30
-#, fuzzy
-#| msgid "name"
-msgid "Username"
-msgstr "Ingoa"
 
 #: people/templates/people/person.html:9
 msgid "Welcome to People!"
@@ -734,14 +715,6 @@ msgstr "Haere Mai!"
 #: people/templates/people/person.html:10
 msgid "This is a long welcome message."
 msgstr "Ka nui te roa o tēnei mihi."
-
-#: people/templates/people/person_recording_stats_view_detail.html:66
-msgid "Today"
-msgstr "I tēnei rā"
-
-#: people/templates/people/person_recording_stats_view_detail.html:71
-msgid "seconds"
-msgstr "hēkona"
 
 #: people/templates/people/profile.html:75
 msgid "You haven't recorded any corpus yet."
@@ -762,6 +735,45 @@ msgstr "Kapohia"
 #: people/templates/people/profile.html:95
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr "Kua oti i a koe te kapo kōrero mō ngā rerenga katoa."
+
+#: people/templates/people/stats/group_leaderboard.html:31
+#: people/templates/people/stats/groups_leaderboard.html:31
+#, fuzzy
+#| msgid "group"
+msgid "Group"
+msgstr "rōpū"
+
+#: people/templates/people/stats/group_leaderboard.html:33
+#: people/templates/people/stats/groups_leaderboard.html:33
+#: people/templates/people/stats/leaderboard.html:32
+msgid "Score"
+msgstr "Tatau"
+
+#: people/templates/people/stats/leaderboard.html:30
+#, fuzzy
+#| msgid "name"
+msgid "Username"
+msgstr "Ingoa"
+
+#: people/templates/people/stats/nav.html:102
+msgid "User Leaderboard"
+msgstr ""
+
+#: people/templates/people/stats/nav.html:112
+msgid "Overall Statistics"
+msgstr ""
+
+#: people/templates/people/stats/nav.html:120
+msgid "Growth Rate"
+msgstr ""
+
+#: people/templates/people/stats/person_recording_stats_view_detail.html:66
+msgid "Today"
+msgstr "I tēnei rā"
+
+#: people/templates/people/stats/person_recording_stats_view_detail.html:71
+msgid "seconds"
+msgstr "hēkona"
 
 #: people/templates/socialaccount/authentication_error.html:5
 #: people/templates/socialaccount/authentication_error.html:8

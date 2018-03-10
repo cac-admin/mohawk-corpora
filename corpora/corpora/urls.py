@@ -12,6 +12,9 @@ from django.views.generic import RedirectView
 # from people.views import profile_redirect
 from rest_framework.documentation import include_docs_urls
 
+from corpus.views.stats_views import RecordingStatsView
+from corpus.views.views import StatsView
+from people.views import stats_views
 
 urlpatterns = [
 
@@ -45,6 +48,32 @@ urlpatterns = [
 
     url(_(r'^people/'), include('people.urls', namespace='people')),
     # url(r'^people/profile', profile_redirect, name='profile-backwards-comp'),
+
+
+    url(_(r'^stats/person'),
+        stats_views.PersonRecordingStatsView.as_view(),
+        name='stats_person'),
+
+    url(_(r'^stats/people$'),
+        stats_views.PeopleRecordingStatsView.as_view(),
+        name='stats_people'),
+
+    url(_(r'^stats/groups$'),
+        stats_views.GroupsStatsView.as_view(),
+        name='stats_groups'),
+
+    url(_(r'^stats/group/(?P<pk>\d+)/$'),
+        stats_views.GroupStatsView.as_view(),
+        name='stats_group'),
+
+    url(_(r'^stats/recordings'),
+        RecordingStatsView.as_view(),
+        name='stats_recordings'),
+
+    url(_(r'^stats/'),
+        StatsView.as_view(),
+        name='stats'),
+
 
     # url(r'^$', cache_on_auth(settings.SHORT_CACHE)(views.home), name='home'),
 

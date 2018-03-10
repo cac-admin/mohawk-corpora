@@ -11,22 +11,6 @@ urlpatterns = [
     url(r'^demographics', views.create_demographics, name='demographics'),
     url(r'^create_account', views.create_user, name='create_user'),
 
-    url(r'^recording_stats',
-        stats_views.PersonRecordingStatsView.as_view(),
-        name='person_stats'),
-
-    url(r'^stats/$',
-        stats_views.PeopleRecordingStatsView.as_view(),
-        name='people_stats'),
-
-    url(r'^stats/groups$',
-        stats_views.GroupsStatsView.as_view(),
-        name='groups_stats'),
-
-    url(r'^stats/group/(?P<pk>\d+)/$',
-        stats_views.GroupStatsView.as_view(),
-        name='group_stats'),
-
     url(r'^emails/$',
         stats_views.PeopleEmailsView.as_view(),
         name='email_list'),
