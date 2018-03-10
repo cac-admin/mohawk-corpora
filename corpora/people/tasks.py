@@ -283,7 +283,8 @@ def send_status_email(person_pk, frequency='weekly'):
         period_of_time = _('this week')
         previous_period_of_time = _('last week')
 
-        week_day = timezone.now().week()
+        now = timezone.now()
+        week_day = now.weekday()
 
         this_period_dt = \
             datetime.datetime.combine(
