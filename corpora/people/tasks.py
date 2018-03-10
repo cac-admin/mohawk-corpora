@@ -174,8 +174,6 @@ def send_person_emails_staff(frequency='weekly'):
     purposes but also so we can send different emails to staff with different
     priviledges'''
 
-    raise a
-
     people = Person.objects\
         .filter(user__is_staff=True)\
         .filter(**{'receive_{0}_updates'.format(frequency): True})
@@ -201,7 +199,6 @@ def send_person_emails_staff(frequency='weekly'):
 def send_person_emails(frequency='weekly'):
     '''Send a email to all people.'''
 
-    raise a
     counter = 0
     # Check if site is development
     if settings.DEBUG:
@@ -231,8 +228,6 @@ def send_person_emails(frequency='weekly'):
 @shared_task
 def send_status_email(person_pk, frequency='weekly'):
     from corpora.email_utils import EMail
-
-    raise a
 
     try:
         person = Person.objects.get(pk=person_pk)
