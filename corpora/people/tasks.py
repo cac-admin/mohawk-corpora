@@ -276,7 +276,7 @@ def send_status_email(person_pk, frequency='weekly'):
                 datetime.time())
 
         last_period_dt = \
-            this_period_dt-timedelta
+            this_period_dt-time_delta
 
     else:
         time_delta = datetime.timedelta(days=7)
@@ -291,7 +291,7 @@ def send_status_email(person_pk, frequency='weekly'):
                 datetime.time())
 
         last_period_dt = \
-            this_period_dt-timedelta
+            this_period_dt-time_delta
 
     period = recordings.filter(created__gt=this_period_dt)
     this_period_stats = build_recordings_stat_dict(period)
