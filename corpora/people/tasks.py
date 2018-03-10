@@ -269,17 +269,36 @@ def send_status_email(person_pk, frequency='weekly'):
         time_delta = datetime.timedelta(days=1)
         period_of_time = _('today')
         previous_period_of_time = _('yesterday')
+
+        this_period_dt = \
+            datetime.datetime.combine(
+                timezone.now(),
+                datetime.time())
+
+        last_period_dt = \
+            this_period_dt-timedelta
+
     else:
         time_delta = datetime.timedelta(days=7)
         period_of_time = _('this week')
         previous_period_of_time = _('last week')
 
-    period = recordings.filter(created__gt=timezone.now()-time_delta)
+        week_day = timezone.now().week()
+
+        this_period_dt = \
+            datetime.datetime.combine(
+                timezone.now()-datetime.timedelta(days=week_day),
+                datetime.time())
+
+        last_period_dt = \
+            this_period_dt-timedelta
+
+    period = recordings.filter(created__gt=this_period_dt)
     this_period_stats = build_recordings_stat_dict(period)
 
     period = recordings\
-        .filter(created__lte=timezone.now()-time_delta)\
-        .filter(created__gt=timezone.now()-2*time_delta)
+        .filter(created__lte=this_period_dt)\
+        .filter(created__gt=last_period_dt)
     last_period_stats = build_recordings_stat_dict(period)
 
     email = get_email(person)
