@@ -197,13 +197,13 @@ def send_person_emails_staff(frequency='weekly'):
 
 @shared_task
 def send_person_emails_weekly():
-    send_person_emails.aply_async(
+    send_person_emails.apply_async(
         args=['weekly'])
 
 
 @shared_task
 def send_person_emails_daily():
-    send_person_emails.aply_async(
+    send_person_emails.apply_async(
         args=['daily'])
 
 
