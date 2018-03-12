@@ -49,6 +49,11 @@ urlpatterns = [
     url(_(r'^people/'), include('people.urls', namespace='people')),
     # url(r'^people/profile', profile_redirect, name='profile-backwards-comp'),
 
+    url(r'^rules/$',
+        RedirectView.as_view(
+            permanent=True,
+            url='/competition/rules'),
+        name='rules-redirect'),
 
     url(_(r'^competition/rules'),
         views.rules,
