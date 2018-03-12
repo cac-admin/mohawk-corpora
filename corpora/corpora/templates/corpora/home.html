@@ -50,11 +50,11 @@
   .video{
     background-color: black;
     .container{
-
-      @include media-breakpoint-down(xs) {
-        padding: 0px;
-      }
-
+      .row > .col{
+        @include media-breakpoint-down(xs) {
+          padding: 0px;
+        }
+      } 
     }
   }
   div.r16x9{
