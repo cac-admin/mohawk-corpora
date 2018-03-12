@@ -10,6 +10,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db.models import Count
 
 from people.helpers import get_current_language,\
@@ -329,6 +330,8 @@ class Competition(SiteInfoMixin, ListView):
     x_title = _('Competition')
     x_description = \
         _("Compete with groups and others to win amaing prizes.")
+    x_image = \
+        static('people/images/competition/competition-80.jpg')
 
     def get_queryset(self):
         return Group.objects.all().order_by('name')\
