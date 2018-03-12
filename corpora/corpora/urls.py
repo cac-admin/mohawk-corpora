@@ -15,12 +15,12 @@ from rest_framework.documentation import include_docs_urls
 from corpus.views.stats_views import RecordingStatsView
 from corpus.views.views import StatsView
 from people.views import stats_views
+from people.views import views as people_views
 
 urlpatterns = [
 
     url(r'^$', views.home, name='home'),
     url(r'^privacy', views.privacy, name='privacy'),
-    url(r'^rules', views.rules, name='rules'),
 
     url(r'^', include('corpus.urls', namespace='corpus')),
 
@@ -49,6 +49,14 @@ urlpatterns = [
     url(_(r'^people/'), include('people.urls', namespace='people')),
     # url(r'^people/profile', profile_redirect, name='profile-backwards-comp'),
 
+
+    url(_(r'^competition/rules'),
+        views.rules,
+        name='rules'),
+
+    url(_(r'^competition'),
+        people_views.Competition.as_view(),
+        name='competition'),
 
     url(_(r'^stats/person'),
         stats_views.PersonRecordingStatsView.as_view(),

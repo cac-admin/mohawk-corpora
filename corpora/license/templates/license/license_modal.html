@@ -29,7 +29,7 @@ $(document).ready(function(){
   })
 })
 
-var load_click = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">{% trans "Loading..." %}</span>'
+var load_click = '<i class="fas fa-circle-notch fa-spin fa-3x fa-fw fa-lg"></i><span class="sr-only">{% trans "Loading..." %}</span>'
 
 cancel_license_button.addEventListener('click',function(event){
   console.log(event)
@@ -72,8 +72,8 @@ accept_license_button.addEventListener('click',function(event){
     button{
       font-size: 1em;
       cursor: pointer;
-      i{
-        font-size: 1em;
+      svg, i{
+        font-size: 1.2em;
       }
     }
   }

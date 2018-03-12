@@ -43,26 +43,26 @@ div.content{
     </div>
     <!-- <div class="col-lg-7"></div> -->
     <div class="col-lg-12 actions">
-      <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fa fa-play-circle fa-fw"></i></a>            
+      <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fas fa-play-circle fa-fw"></i></a>            
       {% if user.can_approve %}
      <a href="#" class="save disabled"
             data-toggle="popover" 
             data-trigger="hover" 
             title="Save" 
             data-content="{% trans 'Save changes.' %}"
-            ><i class="fa fa-save fa-fw"></i></a>
+            ><i class="fas fa-save fa-fw"></i></a>
 
       <a href="#" class="approve disabled"
         data-toggle="popover" 
         data-trigger="hover" 
         title="Approve" 
         data-content="{% trans 'Approve for recording?' %}"
-        ><i class="fa fa-check-circle-o fa-fw"></i><span>Approve</span></a>
+        ><i class="fas fa-check-circle fa-fw"></i><span>Approve</span></a>
       {% else %}
       {% endif %}
-      <a href="#" class="good disabled"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
-      <a href="#" class="bad disabled"><i class="fa fa-thumbs-o-down fa-fw"></i></a>
-      <a href="javascript:void(0)" id="next disabled" class="next"><i class="fa fa-step-forward fw"></i> {% trans "Skip" %}</a>    
+      <a href="#" class="good disabled"><i class="fas fa-thumbs-up fa-fw"></i></a>
+      <a href="#" class="bad disabled"><i class="fas fa-thumbs-down fa-fw"></i></a>
+      <a href="javascript:void(0)" id="next disabled" class="next"><i class="fas fa-step-forward fw"></i> {% trans "Skip" %}</a>    
     </div>
 
     {% if user.can_approve %}

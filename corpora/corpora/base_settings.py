@@ -254,15 +254,17 @@ MEDIA_ROOT = os.environ['MEDIA_PATH']
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'corpora/static')
 
+# BOWER IS DEPRICATED - FIND AN ALTERNATIVE!
 BOWER_INSTALLED_APPS = {
     'jquery',
     'jquery-ui',
     'bootstrap#v4.0.0-beta',
     'opus-recorderjs#v1.2.0',
-    'components-font-awesome',
+    'components-font-awesome#^4.7.0',
     'js-cookie',
     'popper.js',
     'chart.js',
+    # 'fortawesome-font-awesome',
 }
 
 # STATICFILES_DIRS = (

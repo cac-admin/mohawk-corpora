@@ -7,7 +7,10 @@ from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
+
+from django.db.models import Count
 
 from people.helpers import get_current_language,\
     get_num_supported_languages,\
@@ -18,7 +21,7 @@ from people.helpers import get_current_language,\
 
 from corpus.helpers import get_next_sentence, get_sentences
 
-from people.models import Person, KnownLanguage, Demographic
+from people.models import Person, KnownLanguage, Demographic, Group
 from people.serializers import PersonSerializer
 from corpus.models import Recording, Sentence
 
@@ -316,3 +319,33 @@ def create_demographics(request):
 
 def create_user(request):
     return render(request, 'people/create_account.html')
+
+
+class Competition(SiteInfoMixin, ListView):
+    model = Group
+    template_name = 'people/competition/competition.html'
+    paginate_by = 50
+    context_object_name = 'groups'
+    x_title = _('Competition')
+    x_description = \
+        _("Compete with groups and others to win amaing prizes.")
+
+    def get_queryset(self):
+        return Group.objects.all().order_by('name')
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(Competition, self).get_context_data(**kwargs)
+
+        # language = get_current_language(self.request)
+
+        groups = Group.objects.all().order_by('name').annotate(
+            size=Count('person'))
+        qualified = groups.filter(size__gte=7)
+        not_qualified = groups.exclude(size__gte=7)
+
+        context['qualified'] = qualified
+        context['not_qualified'] = not_qualified
+        # for group in groups:
+
+        return context

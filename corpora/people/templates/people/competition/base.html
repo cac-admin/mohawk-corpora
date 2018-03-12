@@ -5,10 +5,15 @@
 {% addtoblock 'css' %}
 <style type="text/x-scss">
 @import 'corpora/scss/stats';	
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+
 </style>
 {% endaddtoblock %}
 {% include 'corpora/logged_in_nav_buttons.html' %}
-{% include 'people/stats/nav.html' %}
+{% include 'people/competition/nav.html' %}
 {% endblock %}
 
 {% block footer %}

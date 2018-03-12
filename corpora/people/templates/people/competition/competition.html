@@ -1,0 +1,83 @@
+{% extends 'people/competition/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block title %}{{x_title}}{%endblock%}
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+div.col.table{
+  overflow-x: auto;
+}
+
+.ropu{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 2px;
+  background-color: $brand_light;
+  color: white;
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
+h3{
+  margin-top: 15px;
+  font-weight: 700;
+  color: $brand_darkest;
+}
+
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+      <h1>Hopu Kōrero Māori Competition</h1>
+    </div>
+  </div>
+
+  <div class="row ">
+    <div class="col">
+        <h3>Starts 1pm 15 March - Ends 6pm 25 March</h3>
+        <p>Win cash 💰 your rōpū by reading sentences during the Hopu Kōrero Māori Group Competition. 
+          Your group needs at least 7 members, and your members need to 
+          <a href="{% url 'account_signup' %}">create an account</a> and
+          verify their email address. Join a group by adding your group to your 
+          <a href="{% url 'people:profile' %}">profile</a>. Don't forget to check out the 
+          <a href="{% url 'rules' %}">{% trans 'rules' %}</a></p>
+
+        <h3 style="padding-top: 15px;">Qualifying Groups</h3>
+        <p>You need at least 7 people in your group to quality.
+          {% for g in qualified %}<div class="ropu">{{g}}</div>{% endfor %}
+        </p>
+        <h3 style="padding-top: 15px;">Groups</h3>
+        <p>These groups need more people to quality.
+        {% for g in not_qualified %}<div class="ropu">{{g}}</div>{% endfor %}
+        <!-- <p>Join a group</p> -->
+        </p>
+
+    </div>
+  </div>
+
+</div>
+
+{% addtoblock "js-end" %}
+<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+-->
+{% endaddtoblock %} 
+{% addtoblock "js-end" %}
+<!-- <script type="text/javascript">
+$(document).ready(function() {
+  // $('#stats-table').DataTable();
+} );
+</script> -->
+{% endaddtoblock %}
+
+{% endblock %}

@@ -59,4 +59,4 @@ def rules(request):
         'x_description': _("Rules for our competitions."),
     }
 
-    return render(request, 'corpora/rules.html', context)
+    return render(request, 'people/competition/rules.html', context)

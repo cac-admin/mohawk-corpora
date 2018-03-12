@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 19:28+1300\n"
+"POT-Creation-Date: 2018-03-12 15:17+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,47 +129,47 @@ msgstr "Kapohia te reo?"
 msgid "Skip"
 msgstr "Haere tonu"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:21
+#: corpus/templates/corpus/qualitycontrol_list.html:22
 #: corpus/views/views.py:207
 msgid "Stats"
 msgstr "Tatauranga"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:27
+#: corpus/templates/corpus/qualitycontrol_list.html:28
 #: corpus/templates/corpus/recordings_stats_list.html:29
 #: corpus/templates/corpus/recordings_stats_list.html:65
 msgid "Recordings"
 msgstr "Kapohanga Reo"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:29
-#: corpus/templates/corpus/qualitycontrol_list.html:39
+#: corpus/templates/corpus/qualitycontrol_list.html:30
+#: corpus/templates/corpus/qualitycontrol_list.html:40
 msgid "Number"
 msgstr "E hia"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:30
+#: corpus/templates/corpus/qualitycontrol_list.html:31
 msgid "Duration"
 msgstr "Pēhea te roa"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:31
-#: corpus/templates/corpus/qualitycontrol_list.html:40
+#: corpus/templates/corpus/qualitycontrol_list.html:32
+#: corpus/templates/corpus/qualitycontrol_list.html:41
 msgid "Approved"
 msgstr "Kua whakaaetia"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:32
-#: corpus/templates/corpus/qualitycontrol_list.html:41
+#: corpus/templates/corpus/qualitycontrol_list.html:33
+#: corpus/templates/corpus/qualitycontrol_list.html:42
 msgid "Good"
 msgstr "E tika ana"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:33
-#: corpus/templates/corpus/qualitycontrol_list.html:42
+#: corpus/templates/corpus/qualitycontrol_list.html:34
+#: corpus/templates/corpus/qualitycontrol_list.html:43
 msgid "Bad"
 msgstr "E hē ana"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:37
+#: corpus/templates/corpus/qualitycontrol_list.html:38
 #: corpus/views/views.py:42
 msgid "Sentences"
 msgstr "Rerenga Kōrero"
 
-#: corpus/templates/corpus/qualitycontrol_list.html:50
+#: corpus/templates/corpus/qualitycontrol_list.html:51
 msgid "Recordings by Language Proficiency"
 msgstr "Ngā Kapohanga Reo i te Pakari o te Reo"
 
@@ -249,7 +249,7 @@ msgstr "E kore koe e āhei ki te whakarerekē i tēnei kapohanga reo."
 msgid "Reading recording is not allowed."
 msgstr "E kore koe e āhei ki te pānui i tēnei kapohanga reo."
 
-#: corpus/views/api.py:231 corpus/views/api.py:246
+#: corpus/views/api.py:257 corpus/views/api.py:272
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr "{0} e kore e āhei koia tēnei te API whakamutunga."

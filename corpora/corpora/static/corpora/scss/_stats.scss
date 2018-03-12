@@ -1,0 +1,11 @@
+@import 'corpora/css/colors';
+
+h1{
+	text-align: center;
+	font-weight: 900;
+	padding-bottom: 13px;
+	padding-top: 5px;
+	border-bottom: 2px solid $brand_darker;
+	color: $brand_darker;
+	margin-bottom: 15px;
+}

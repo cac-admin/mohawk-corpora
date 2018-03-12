@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 19:28+1300\n"
+"POT-Creation-Date: 2018-03-12 15:17+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -700,7 +700,7 @@ msgstr ""
 #: people/templates/people/profile.html:66
 #: people/templates/people/stats/group_leaderboard.html:32
 #: people/templates/people/stats/groups_leaderboard.html:32
-#: people/templates/people/stats/leaderboard.html:31
+#: people/templates/people/stats/leaderboard.html:32
 msgid "Recordings"
 msgstr "Kapohanga Reo"
 
@@ -745,25 +745,29 @@ msgstr "rōpū"
 
 #: people/templates/people/stats/group_leaderboard.html:33
 #: people/templates/people/stats/groups_leaderboard.html:33
-#: people/templates/people/stats/leaderboard.html:32
+#: people/templates/people/stats/leaderboard.html:33
 msgid "Score"
 msgstr "Tatau"
 
-#: people/templates/people/stats/leaderboard.html:30
+#: people/templates/people/stats/leaderboard.html:31
 #, fuzzy
 #| msgid "name"
 msgid "Username"
 msgstr "Ingoa"
 
-#: people/templates/people/stats/nav.html:102
+#: people/templates/people/stats/nav.html:103
 msgid "User Leaderboard"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:112
+#: people/templates/people/stats/nav.html:113 people/views/stats_views.py:178
+msgid "Group Leaderboard"
+msgstr ""
+
+#: people/templates/people/stats/nav.html:121
 msgid "Overall Statistics"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:120
+#: people/templates/people/stats/nav.html:129
 msgid "Growth Rate"
 msgstr ""
 
@@ -848,10 +852,6 @@ msgstr ""
 
 #: people/views/stats_views.py:131
 msgid "Leaderboard for people who've contributed to our corpus."
-msgstr ""
-
-#: people/views/stats_views.py:178
-msgid "Group Leaderboard"
 msgstr ""
 
 #: people/views/stats_views.py:179

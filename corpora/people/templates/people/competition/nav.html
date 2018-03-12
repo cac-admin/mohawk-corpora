@@ -96,41 +96,23 @@
   {% get_available_languages as available_languages %}
 
   <ul class="navbar-nav ">
-    {% url 'stats_people' as path %}
+
+    {% url 'competition' as path %}
     <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
       <a href="{{ path }}" class="nav-link" >
-        <i class="fas fa-lg fa-fw fa-user-alt"></i>
-        <div >{% trans 'User Leaderboard' %}</div>
+        <i class="fab fa-lg fa-fw fa-fort-awesome"></i>
+        <div >{% trans 'Home' %}</div>
       </a>
     </li>
 
-    {% if request.user.is_authenticated and request.user.is_staff %}
-
-    {% url 'stats_groups' as path %}
-    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
-      <a class="nav-link" href="{{path}}" >
-        <i class="fas fa-lg fa-fw fa-users"></i>
-        <div >{% trans 'Group Leaderboard' %}</div>
-      </a>
-    </li>
-
-    {% url 'stats' as path %}
+    {% url 'rules' as path %}
     <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
-      <a href="{{path}}" class="nav-link" >
-        <i class="far fa-lg fa-fw fa-chart-bar"></i>
-        <div >{% trans 'Overall Statistics' %}</div>
-      </a>
-    </li>      
-
-    {% url 'stats_recordings' as path %}
-    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
-      <a class="nav-link" href="{{path}}" >
-        <i class="far fa-lg fa-fw fa-chart-line"></i>
-        <div >{% trans 'Growth Rate' %}</div>
+      <a href="{{ path }}" class="nav-link" >
+        <i class="far fa-lg fa-fw fa-book"></i>
+        <div >{% trans 'Rules' %}</div>
       </a>
     </li>
 
-    {% endif %}
 
   </ul>
   
