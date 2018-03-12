@@ -95,8 +95,8 @@ $sm-fg-circle-inset: 12px;
         width: 100%;
         height: 100%;
         color: $darker;
-        font-size: 25px;
-        
+        font-size: 75px;
+        line-height: 0;
     }
 }
 
@@ -141,9 +141,9 @@ $sm-fg-circle-inset: 12px;
         width: 55px;
         height: 55px;
         div{
-            i{
-                font-size: 55px;
-            }
+            color: $darker;
+            font-size: 55px;
+            line-height: 0;
         }
     }
 
