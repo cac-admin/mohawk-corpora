@@ -184,7 +184,8 @@ to our project.")
 
     def get_queryset(self):
         # language = get_current_language(self.request)
-        return Group.objects.all().order_by('name').order_by('-score')
+        return Group.objects.all().order_by('name').order_by('-score')\
+            .annotate(size=Count('person'))
 
     def get_context_data(self, **kwargs):
         context = \

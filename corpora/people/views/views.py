@@ -331,7 +331,8 @@ class Competition(SiteInfoMixin, ListView):
         _("Compete with groups and others to win amaing prizes.")
 
     def get_queryset(self):
-        return Group.objects.all().order_by('name')
+        return Group.objects.all().order_by('name')\
+            .annotate(size=Count("person"))
 
     def get_context_data(self, **kwargs):
         context = \
