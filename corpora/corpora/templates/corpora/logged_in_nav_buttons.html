@@ -57,13 +57,7 @@
       </a>
     </li>      
 
-    {% url 'people:profile' as path %}
-    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
-      <a class="nav-link" href="{{path}}" >
-        <i class="fa fa-lg fa-fw fa-user-circle"></i>
-        <div >{% trans 'Profile' %}</div>
-      </a>
-    </li>
+
 
     
 {% if request.user.is_authenticated %}
@@ -118,13 +112,6 @@
     </li>
     {% endif %}
 
-    <li class="nav-item">
-      <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
-        <i class="fas fa-fw fa-lg fa-sign-out"></i>
-        <div>{% trans 'Log Out' %}</div>
-      </a>        
-    </li>
-
 {% else %}
 
 
@@ -152,6 +139,27 @@
       </ul>    
     </li>
     {% endif %}
+
+{% endif %}
+
+    {% url 'people:profile' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
+        <i class="fa fa-lg fa-fw fa-user-circle"></i>
+        <div >{% trans 'Profile' %}</div>
+      </a>
+    </li>
+
+{% if request.user.is_authenticated %}
+
+    <li class="nav-item">
+      <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
+        <i class="fas fa-fw fa-lg fa-sign-out"></i>
+        <div>{% trans 'Log Out' %}</div>
+      </a>        
+    </li>
+
+{% else %}
 
     <li class="nav-item">
       <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >
