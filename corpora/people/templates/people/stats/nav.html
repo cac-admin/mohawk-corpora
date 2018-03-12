@@ -4,87 +4,9 @@
 {% endaddtoblock %}
 {% addtoblock "css" %}
 <style type="text/x-scss">
-@import 'corpora/css/_colors';
-.navbar ul li.active{
-  border-bottom: 2px solid white;
-}
-.sub.navbar{
-  background-color: white;
-  padding: 0px;
-
-  .container{
-    /*background-color: #ddd;*/
-    /*border-bottom: 1px solid rgba($brand_darker, .5);*/
-   
-    ul:hover li{
-      border-bottom: 2px solid rgba($brand_darker, 0);
-    }
-
-    ul:hover li.active{
-      border-bottom: 2px solid rgba($brand_darker, 0);
-    }
-
-    ul:hover li.active:hover{
-      border-bottom: 2px solid rgba($brand_darker, .5);
-    }
-
-    ul{
-      flex-wrap: unset;
-      overflow: auto;
-      margin-left: auto;
-      margin-right: auto;
-      i{
-        display: none !important;
-      }
-
-      li{
-        
-        a{
-          padding: 0px;
-          div{
-            display: block !important;
-          }
-        }
-        display: inline-block;
-        border: 0px solid $brand_darkest;
-        border-left: 0px;
-        margin: 6px 10px 4px 10px;
-        border-bottom: 2px solid white;
-        a{
-          color: $brand_darkest;  
-        }
-        
-        div{
-          font-size: .9em !important;
-          font-weight: 700;
-        }
-      }
-
-      li:first-of-type{
-        border: 0px solid $brand_darkest;
-      }
-
-      li:hover{
-        /*background-color: rgba($brand_lightest, .5);*/
-        border-bottom: 2px solid rgba($brand_darker, .5);
-      }
-      li:focus, li:active{
-        /*background-color: rgba($brand_lightest, .5);*/
-        border-bottom: 2px solid rgba($brand_darker, 1);
-      }
-
-      li.active{
-        border-bottom: 2px solid rgba($brand_darker, .5);
-        background-color: white;
-      }
-
-    }
+@import 'people/scss/nav';
 
 
-  }
-
-
-}
 .dropdown-toggle::after{
   display: none !important;
 }

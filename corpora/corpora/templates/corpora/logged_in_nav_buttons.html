@@ -77,7 +77,7 @@
       </a>
     </li>      
 
-    {% url 'stats_people' as path %}
+    {% url 'stats' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a class="nav-link" href="{{path}}" >
         <i class="far fa-lg fa-fw fa-chart-bar"></i>
