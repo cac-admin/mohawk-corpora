@@ -299,12 +299,6 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         if form.is_valid():
             email_object, created = get_email_object(person)
             email_object.send_confirmation()
-
-        else:
-            raise PermissionDenied
-        # 
-
-            # if form.cleaned_data['resend']:
                 
 
         return super(GroupStatsView, self).get(request, *args, **kwargs)

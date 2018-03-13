@@ -175,19 +175,20 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         else:
             new_email = None
 
-        try:
-            email_object, email_created = EmailAddress.objects.get_or_create(
-                        user=user_object)
-        except MultipleObjectsReturned:
-            email_objects = EmailAddress.objects.filter(user=user_object)
-            if email_objects.filter(verified=True).count() == 1:
-                email_object = email_objects.get(verified=True)
-            else:
-                email_object = email_objects.first()
-                for em in email_objects:
-                    if em != email_object:
-                        em.delete()
-            email_created = False
+        if user_object:
+            try:
+                email_object, email_created = EmailAddress.objects.get_or_create(
+                            user=user_object)
+            except MultipleObjectsReturned:
+                email_objects = EmailAddress.objects.filter(user=user_object)
+                if email_objects.filter(verified=True).count() == 1:
+                    email_object = email_objects.get(verified=True)
+                else:
+                    email_object = email_objects.first()
+                    for em in email_objects:
+                        if em != email_object:
+                            em.delete()
+                email_created = False
 
         if 'profile_email' in validated_data.keys():
             profile_email = validated_data['profile_email']
