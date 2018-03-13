@@ -1,0 +1,39 @@
+{% extends 'message/email/base_email.html' %}
+{% load static sekizai_tags i18n compress %}
+{% block subject %}{{subject}}{% endblock %}
+
+
+{% block heading %}
+<h1>Important message to members of {{group}}</h1>
+{% endblock %}
+
+
+
+{% block main %}
+{{content|safe}}
+{% endblock %}
+
+
+{% block footer  %}
+<hr>
+{% if valid.count > 6 %}<b>Your group qualifies for the competition</b>{% endif %}
+<p>There are {{people.count}} members in {{group}}.</p>
+<p>The following users have joined your group:
+<ul>
+	{% for p in people %}<li>{{p.username}}</li>{% endfor %}
+</ul>
+</p>
+
+
+<div style="text-align: center; width: 100%;">
+<small>You are receiving this email because you signed up to {{site.name}} and you
+are a part of the {{group}} group.</small>
+<br>
+<small>
+Te Reo Irirangi o Te Hiku o Te Ika<br>
+1 Melba Street<br>
+Level 2<br>
+Kaitaia 0410<br>
+New Zealand</small>
+
+{% endblock %}

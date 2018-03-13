@@ -30,6 +30,7 @@ class PersonGroupInline(admin.TabularInline):
 class PersonAdmin(admin.ModelAdmin):
     list_display = (
         'full_name',
+        'username',
         'email',
         'user',
         'uuid',

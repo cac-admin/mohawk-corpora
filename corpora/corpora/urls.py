@@ -75,19 +75,19 @@ urlpatterns = [
         stats_views.PeopleRecordingStatsView.as_view(),
         name='stats_people'),
 
+    url(_(r'^stats/group/(?P<pk>\d+)'),
+        stats_views.GroupStatsView.as_view(),
+        name='stats_group'),
+
     url(_(r'^stats/groups$'),
         stats_views.GroupsStatsView.as_view(),
         name='stats_groups'),
-
-    url(_(r'^stats/group/(?P<pk>\d+)/$'),
-        stats_views.GroupStatsView.as_view(),
-        name='stats_group'),
 
     url(_(r'^stats/recordings'),
         RecordingStatsView.as_view(),
         name='stats_recordings'),
 
-    url(_(r'^stats/'),
+    url(_(r'^stats/$'),
         StatsView.as_view(),
         name='stats'),
 

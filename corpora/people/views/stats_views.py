@@ -44,6 +44,12 @@ from django.db import models
 
 from corpora.mixins import SiteInfoMixin
 
+from people.competition import \
+    get_competition_group_score,\
+    get_valid_group_members,\
+    get_invalid_group_members
+
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -208,47 +214,64 @@ to our project.")
 class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group
     template_name = 'people/stats/group_leaderboard.html'
-    context_object_name = 'people'
+    context_object_name = 'group'
     x_title = _('Individual Group Leaderboard')
     x_description = _("Leaderboard for people of a particular group.")
 
     def test_func(self):
-        return True
-        # return self.request.user.is_staff
+        person = get_person(self.request)
+        path = self.request.get_full_path()
+        pk = int(path.split('/')[-1])
 
-    def get_queryset(self):
-        language = get_current_language(self.request)
-        return Person.objects\
-            .filter(recording__sentence__language=language)\
-            .exclude(leaderboard=False)\
-            .annotate(num_recordings=models.Count('recording'))\
-            .order_by('-num_recordings')
+        if self.request.user.is_staff:
+            return True
+        elif pk in person.groups.filter(pk__in=[pk]).exists():
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
-        x_title = _('Leaderboard: ') + self.get_object()
         context = \
             super(GroupStatsView, self).get_context_data(**kwargs)
 
+        group = context['group']
+
+        x_title = _('Group Leaderboard: {0}').format(group)
+        x_description = _("Leaderboard for members of {0}.").format(
+            group)
+
         language = get_current_language(self.request)
 
-        people = context['people']
+        people = Person.objects\
+            .filter(recording__sentence__language=language)
 
-        people = people.annotate(num_recordings=models.Count('recording'))
+        valid_members = people
+        valid_members = get_valid_group_members(group, valid_members)
 
-        for person in context['people']:
-            # recordings = Recording.objects\
-            #     .filter(person=person, sentence__language=language)
-            # score = 0
-            # for recording in recordings:
-            #     score = score + recording.calculate_score()
-            # person.score = int(score)
-            person.num_recordings = person.recording_set.count()
-            if person.user is None:
-                person.name = 'Anonymous Kumara'
-            elif person.user.username == '':
-                person.name = 'Anonymous Kumara'
-            else:
-                person.name = person.user.username
+        invalid_members = people
+        invalid_members = get_invalid_group_members(group, invalid_members)
+
+        score = get_competition_group_score(group)
+
+        if valid_members:
+            valid_members = valid_members\
+                .annotate(num_recordings=Count('recording'))
+
+        if invalid_members:
+            invalid_members = invalid_members\
+                .annotate(num_groups=Count('groups', distinct=True))
+            for p in invalid_members:
+                try:
+                    p.verified = p.user.emailaddress.verified
+                except:
+                    p.verified = False
+
+
+        # for person in invalid_members:
+            # person.num_groups = person.groups.all().count()
+
+        context['valid_members'] = valid_members
+        context['invalid_members'] = invalid_members
 
         return context
 

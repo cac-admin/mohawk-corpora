@@ -6,7 +6,7 @@ from corpora.serializers import UserSerializer
 from rest_framework import serializers
 from dal import autocomplete
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from allauth.account.models import EmailAddress
 
 import logging
@@ -175,6 +175,20 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         else:
             new_email = None
 
+        try:
+            email_object, email_created = EmailAddress.objects.get_or_create(
+                        user=user_object)
+        except MultipleObjectsReturned:
+            email_objects = EmailAddress.objects.filter(user=user_object)
+            if email_objects.filter(verified=True).count() == 1:
+                email_object = email_objects.get(verified=True)
+            else:
+                email_object = email_objects.first()
+                for em in email_objects:
+                    if em != email_object:
+                        em.delete()
+            email_created = False
+
         if 'profile_email' in validated_data.keys():
             profile_email = validated_data['profile_email']
             if profile_email:
@@ -182,13 +196,13 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                 if user_object:
                     instance.user.email = profile_email
                     instance.user.save()
-                    email_object, created = EmailAddress.objects.get_or_create(
-                        user=user_object)
-                    email_object.email = profile_email
-                    if created:
-                        email_object.primary = created
-                    email_object.verified = False
-                    email_object.save()
+                    if email_object.email != profile_email:
+                        email_object.email = profile_email
+                        if email_created:
+                            email_object.primary = created
+                        email_object.verified = False
+                        email_object.send_confirmation()
+                        email_object.save()
             elif new_email:
                 instance.profile_email = new_email
                 if instance.user:
@@ -197,11 +211,11 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                     if instance.user.email == '':
                         instance.user.email = instance.profile_email
                         instance.user.save()
-                    email_object = EmailAddress.objects.get(user__pk=user_object.pk)
-                    email_object.email = instance.profile_email
-                    email_object.verified = False
-
-                    email_object.save()
+                    if email_object.email != instance.profile_email:
+                        email_object.email = instance.profile_email
+                        email_object.verified = False
+                        email_object.send_confirmation()
+                        email_object.save()
             else:
                 pass
 
