@@ -122,3 +122,8 @@ class DemographicFormAdmin(forms.ModelForm):
 class SendEmailForm(forms.Form):
     daily = forms.BooleanField(required=False)
     weekly = forms.BooleanField(required=False)
+
+
+class ResendEmailVerificationForm(forms.Form):
+    resend = forms.BooleanField(required=True)
+    # redirect = forms.CharField(max_length=128)

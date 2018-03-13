@@ -201,7 +201,10 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                         if email_created:
                             email_object.primary = created
                         email_object.verified = False
-                        email_object.send_confirmation()
+                        try:
+                            email_object.send_confirmation()
+                        except:
+                            pass
                         email_object.save()
             elif new_email:
                 instance.profile_email = new_email
@@ -214,7 +217,10 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                     if email_object.email != instance.profile_email:
                         email_object.email = instance.profile_email
                         email_object.verified = False
-                        email_object.send_confirmation()
+                        try:
+                            email_object.send_confirmation()
+                        except:
+                            pass
                         email_object.save()
             else:
                 pass

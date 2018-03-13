@@ -40,15 +40,15 @@ div.col.table{
   <tbody>
 
 
-{% for person in valid_members %}
+{% for p in valid_members %}
 <tr>
   <th scope="row">{{ forloop.counter }}</th>
   <td>
 
-      {% if person.leaderboard %}
-        {% if person.username in '' %}
+      {% if p.leaderboard %}
+        {% if p.username in '' %}
           Anonymous Peruperu
-        {% else %}{{person.username}}
+        {% else %}{{p.username}}
         {% endif %}
       {% else %}
         Anonymous Peruperu
@@ -56,8 +56,8 @@ div.col.table{
   </td>
 
   </td>
-  <td>{{person.num_recordings}}</td>
-  <td>{{person.score}}</td>
+  <td>{{p.num_recordings}}</td>
+  <td>{{p.score}}</td>
 </tr>
 {% endfor %}
 
@@ -83,23 +83,51 @@ div.col.table{
     </tr>
   </thead>
   <tbody>
-{% for person in invalid_members %}
+{% for p in invalid_members %}
 <tr>
   <th scope="row">{{ forloop.counter }}</th>
   <td>
 
-      {% if person.leaderboard %}
-        {% if person.username in '' %}
+      {% if p.leaderboard %}
+        {% if p.username in '' %}
           Anonymous Peruperu
-        {% else %}{{person.username}}
+        {% else %}{{p.username}}
         {% endif %}
       {% else %}
         Anonymous Peruperu
       {% endif %}
 
   </td>
-  <td>{{person.num_groups}} </td>
-  <td>{{person.verified}} </td>
+  <td>{{p.num_groups}} </td>
+  <td>{{p.verified}} 
+  {% if not p.verified and p == person and request.user.is_authenticated %} 
+{% addtoblock "css" %}
+<style type="text/x-scss">
+form{
+  display: inline-block;
+  input{
+    display: inline-block;
+    display: none;
+  }
+  button{
+    display: inline-block;
+  }
+}
+</style>
+{% endaddtoblock %}
+
+    <form method="POST" action="{{request.path}}" id="resend-form">
+    {% csrf_token %}
+    <input type="checkbox" name="resend" value="true" checked>
+    <a href="#" onclick="document.getElementById('resend-form').submit();"type="submit">Resend Verification Email</a>
+    </form>
+
+
+  {% endif %}
+
+
+
+</td>
 </tr>
 {% endfor %}
 </tbody>

@@ -204,6 +204,29 @@ def get_email(person):
         return None
 
 
+def get_email_object(person):
+    try:
+        user_object = person.user
+    except:
+        return None
+
+    try:
+        email_object, email_created = EmailAddress.objects.get_or_create(
+                    user=user_object)
+    except MultipleObjectsReturned:
+        email_objects = EmailAddress.objects.filter(user=user_object)
+        if email_objects.filter(verified=True).count() == 1:
+            email_object = email_objects.get(verified=True)
+        else:
+            email_object = email_objects.first()
+            for em in email_objects:
+                if em != email_object:
+                    em.delete()
+        email_created = False
+
+    return email_object, email_created
+
+
 def email_verified(person):
     '''This method looks for a verified email and returns True if and only if
     1 verified email exists.'''

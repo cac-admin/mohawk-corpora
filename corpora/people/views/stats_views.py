@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.urls import reverse, resolve
 from django.utils import timezone
 import datetime
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied
 import json
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView, MultipleObjectMixin
@@ -26,7 +26,8 @@ from people.helpers import \
     get_or_create_person,\
     get_person,\
     get_current_language,\
-    email_verified
+    email_verified,\
+    get_email_object
 
 from django.conf import settings
 
@@ -54,6 +55,8 @@ from people.competition import \
     get_valid_group_members,\
     get_invalid_group_members
 
+from people.forms import \
+    ResendEmailVerificationForm
 
 import logging
 logger = logging.getLogger('corpora')
@@ -270,11 +273,41 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
             for p in invalid_members:
                 p.verified = email_verified(p)
 
+        form = ResendEmailVerificationForm()
+
+        context['form'] = form
         context['people'] = people.filter(groups=group)
         context['valid_members'] = valid_members
         context['invalid_members'] = invalid_members
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        reason = CsrfViewMiddleware().process_view(request, None, (), {})
+        if reason:
+            raise PermissionDenied
+
+        if not request.user.is_authenticated:
+            raise PermissionDenied
+
+        person = get_or_create_person(request)
+        person2 = Person.objects.get(user=request.user)
+        if person != person2:
+            raise PermissionDenied
+
+        form = ResendEmailVerificationForm(request.POST)
+        if form.is_valid():
+            email_object, created = get_email_object(person)
+            email_object.send_confirmation()
+
+        else:
+            raise PermissionDenied
+        # 
+
+            # if form.cleaned_data['resend']:
+                
+
+        return super(GroupStatsView, self).get(request, *args, **kwargs)
 
 
 class PeopleEmailsView(UserPassesTestMixin, ListView):
@@ -328,7 +361,7 @@ class PeopleEmailsView(UserPassesTestMixin, ListView):
     def post(self, request, *args, **kwargs):
         reason = CsrfViewMiddleware().process_view(request, None, (), {})
         if reason:
-            raise PermissionException()
+            raise PermissionDenied
 
         if not self.request.user.is_superuser and \
                 self.request.user.is_authenticated:
