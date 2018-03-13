@@ -18,7 +18,7 @@
 <hr>
 Check out your group's page here: <a href="{{ url_append }}{% url 'competition_group' group.pk %}">{{group.name}}</a>
 {% if valid.count > 6 %}<b>Your group qualifies for the competition</b>{% endif %}
-<p>There are {{people.count}} members in {{group}}.</p>
+<p>There are {{people.count}} members in {{group.name}}.</p>
 <p>The following users have joined your group:
 <ul>
 	{% for p in people %}<li>{{p.username}}</li>{% endfor %}
