@@ -211,7 +211,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 EMAIL_BACKEND = 'django_ses.SESBackend' # Use AWS Simple Email Service
 AWS_SES_REGION_NAME = 'us-west-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com'
-DEFAULT_FROM_EMAIL = '"Te Hiku Media" <webapp@tehiku.nz>'
+DEFAULT_FROM_EMAIL = '"Kōrero Māori" <koreromaori@tehiku.nz>'
 
 
 # Password validation
