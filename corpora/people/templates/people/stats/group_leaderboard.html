@@ -100,7 +100,7 @@ div.col.table{
   </td>
   <td>{{p.num_groups}} </td>
   <td>{{p.verified}} 
-  {% if not p.verified and p == person and request.user.is_authenticated %} 
+  {% if not p.verified and p == person  %} 
 {% addtoblock "css" %}
 <style type="text/x-scss">
 form{

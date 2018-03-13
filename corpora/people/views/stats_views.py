@@ -287,9 +287,6 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         if reason:
             raise PermissionDenied
 
-        if not request.user.is_authenticated:
-            raise PermissionDenied
-
         person = get_or_create_person(request)
         person2 = Person.objects.get(user=request.user)
         if person != person2:
@@ -299,7 +296,6 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         if form.is_valid():
             email_object, created = get_email_object(person)
             email_object.send_confirmation()
-                
 
         return super(GroupStatsView, self).get(request, *args, **kwargs)
 
