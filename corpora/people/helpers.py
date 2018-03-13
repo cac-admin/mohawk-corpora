@@ -204,3 +204,20 @@ def get_email(person):
         return None
 
 
+def email_verified(person):
+    '''This method looks for a verified email and returns True if and only if
+    1 verified email exists.'''
+
+    if person.user:
+        try:
+            email = EmailAddress.objects.get(user=person.user, verified=True)
+            return email.verified
+        except ObjectDoesNotExist:
+            try:
+                email = EmailAddress.objects.get(user=person.user)
+                return email.verified
+            except MultipleObjectsReturned:
+                return False
+            except ObjectDoesNotExist:
+                return False
+    return False

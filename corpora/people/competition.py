@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 
 from people.models import Person, KnownLanguage, Group
-from people.helpers import get_email, set_current_language_for_person
+from people.helpers import get_email, set_current_language_for_person, email_verified
 
 from corpus.aggregate import build_recordings_stat_dict
 from corpus.models import Recording
@@ -50,13 +50,9 @@ def get_invalid_group_members(group, queryset=None):
         # Must have a valid email address
         # Must have a username of length > 0
         # Can only belong to one group
-        if hasattr(p, 'user'):
-            if hasattr(p.user, 'emailaddress'):
-                if p.user.emailaddress.verified \
-                        and p.username.length > 0 \
-                        and p.num_groups == 0:
-
-                    valid_pks.append(p.pk)
+        verified_email = email_verified(p)
+        if verified_email and len(p.username)>1 and p.num_groups == 1:
+            valid_pks.append(p.pk)
 
     queryset = queryset.exclude(pk__in=valid_pks)
 
@@ -72,7 +68,6 @@ def get_valid_group_members(group, queryset=None):
     invalid_pks = [p.pk for p in invalid]
     queryset = queryset\
         .annotate(num_groups=Count('groups', distinct=True))\
-        .annotate(username_length=Length('username'))\
         .filter(groups=group)\
         .exclude(pk__in=invalid_pks)
 
@@ -85,6 +80,7 @@ def get_competition_group_score(group):
     end = parse_datetime("2018-03-25 18:00:00")
     end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
 
+    # ERROR! This doesn't consder language!
     members = get_valid_group_members(group)
     if members is None:
         return 0

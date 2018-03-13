@@ -22,7 +22,12 @@ from people.models import Person, KnownLanguage, Group
 from people.tasks import send_person_emails
 from people.forms import SendEmailForm
 from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person, get_person, get_current_language
+from people.helpers import \
+    get_or_create_person,\
+    get_person,\
+    get_current_language,\
+    email_verified
+
 from django.conf import settings
 
 from allauth.account.models import EmailAddress
@@ -225,7 +230,7 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
 
         if self.request.user.is_staff:
             return True
-        elif pk in person.groups.filter(pk__in=[pk]).exists():
+        elif person.groups.filter(pk__in=[pk]).exists():
             return True
         else:
             return False
@@ -242,14 +247,16 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
 
         language = get_current_language(self.request)
 
-        people = Person.objects\
-            .filter(recording__sentence__language=language)
+        people = Person.objects.all()
 
         valid_members = people
         valid_members = get_valid_group_members(group, valid_members)
 
         invalid_members = people
         invalid_members = get_invalid_group_members(group, invalid_members)
+
+        # people = people\
+        #     .filter(recording__sentence__language=language)
 
         score = get_competition_group_score(group)
 
@@ -261,15 +268,15 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
             invalid_members = invalid_members\
                 .annotate(num_groups=Count('groups', distinct=True))
             for p in invalid_members:
-                try:
-                    p.verified = p.user.emailaddress.verified
-                except:
-                    p.verified = False
+                p.verified = email_verified(p)
 
+        for p in people:
+            p.verified = email_verified(p)
 
         # for person in invalid_members:
             # person.num_groups = person.groups.all().count()
 
+        context['people'] = people.filter(groups=group)
         context['valid_members'] = valid_members
         context['invalid_members'] = invalid_members
 

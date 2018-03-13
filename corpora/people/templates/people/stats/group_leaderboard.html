@@ -27,8 +27,7 @@ div.col.table{
 
 <h1>{{group.name}} Leaderboard</h1>
 
-
-{% if valid_members.count > 0 %}
+{% if valid_members %}
 <table class="table" id='stats-table'>
     <thead>
     <tr>
@@ -39,6 +38,7 @@ div.col.table{
     </tr>
   </thead>
   <tbody>
+
 
 {% for person in valid_members %}
 <tr>
@@ -64,6 +64,7 @@ div.col.table{
 </tbody>
 </table>
 {% else %}
+{{valid_members}}
 <p>No valid members in this group.</p>
 {% endif %}
 
