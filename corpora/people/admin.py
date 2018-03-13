@@ -40,6 +40,8 @@ class PersonAdmin(admin.ModelAdmin):
     readonly_fields = ('profile_email',)
     inlines = [PersonRecordingsInline, PersonGroupInline]
     exclude = ('groups', )  # see PersonGroupInline
+    search_fields = ['username', 'profile_email', 'user__username', 'user__email',
+        'full_name', 'user__emailaddress__email']
 
     def get_groups(self, obj):
         return ', '.join([g.name for g in obj.groups.all()])
