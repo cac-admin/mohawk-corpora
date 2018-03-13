@@ -219,6 +219,8 @@ def send_email_to_group(group_pk, message_pk, ma_pk):
                     fail_silently='False')
 
             if result == 1:
+                # note that we save the state for the entire action yet it's depended on
+                # many little actions. This needs to be rethough or improved.
                 ma.completed = True
                 ma.save()
                 task_message.append("Sent email to {0}".format(p_display))
