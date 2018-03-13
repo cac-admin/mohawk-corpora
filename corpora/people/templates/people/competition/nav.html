@@ -29,10 +29,20 @@
     {% url 'user_leaderboard' as path %}
     <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
       <a href="{{ path }}" class="nav-link" >
-        <i class="fas fa-lg fa-fw fa-user-alt"></i>
+        <i class="far fa-lg fa-fw fa-user-alt"></i>
         <div >{% trans 'User Leaderboard' %}</div>
       </a>
     </li>
+
+    {% if person.group %}
+    {% url 'competition_group' person.group.pk as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
+      <a href="{{ path }}" class="nav-link" >
+        <i class="far fa-lg fa-fw fa-users"></i>
+        <div >{{person.group.name}}</div>
+      </a>
+    </li>
+    {% endif %}
 
     {% url 'rules' as path %}
     <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">

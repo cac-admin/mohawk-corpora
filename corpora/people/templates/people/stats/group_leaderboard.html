@@ -1,4 +1,4 @@
-{% extends 'people/stats/base.html' %}
+{% extends 'people/competition/base.html' %}
 {% load i18n static sekizai_tags compress  %}
 
 {% block content %}
@@ -25,7 +25,7 @@ div.col.table{
   <div class="row">
     <div class="col table">
 
-<h1>Group Members Leaderboard</h1>
+<h1>{{group.name}} Leaderboard</h1>
 
 
 {% if valid_members.count > 0 %}
@@ -71,7 +71,7 @@ div.col.table{
 
 {% if invalid_members %}
 <h1>Invalid Members</h1>
-<p>The followings either need to verify their email addresses or belong to more than one group. 
+<p>The following members need to verify their email addresses or they belong to more than one group. 
 <b><em>These user's scores will not contribute to {{group}} scores.</em></b></p>
 <table class="table" id='stats-table'>
     <thead>

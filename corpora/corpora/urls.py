@@ -63,6 +63,10 @@ urlpatterns = [
         stats_views.PeopleRecordingStatsView.as_view(),
         name='user_leaderboard'),
 
+    url(_(r'^competition/group/(?P<pk>\d+)'),
+        stats_views.GroupStatsView.as_view(),
+        name='competition_group'),
+
     url(_(r'^competition'),
         people_views.Competition.as_view(),
         name='competition'),
@@ -74,10 +78,6 @@ urlpatterns = [
     url(_(r'^stats/people$'),
         stats_views.PeopleRecordingStatsView.as_view(),
         name='stats_people'),
-
-    url(_(r'^stats/group/(?P<pk>\d+)'),
-        stats_views.GroupStatsView.as_view(),
-        name='stats_group'),
 
     url(_(r'^stats/groups$'),
         stats_views.GroupsStatsView.as_view(),
