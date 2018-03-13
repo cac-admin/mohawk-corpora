@@ -3,10 +3,24 @@ import requests
 import json
 import os
 import argparse
+import re
 
 DEFAULT_URL = 'https://koreromaori.com/'
 DEFAULT_API_PATH = 'api/recordings/?format=json'
 DEFAULT_LOGIN_PATH = 'accounts/login/'
+
+word_re = re.compile(r'^(?:(?:ng|wh|[hkmnpqrtw])?[aeiouāēīōū]+)+|\d+$',
+                     flags=re.IGNORECASE)
+
+def tidy_up_sentence(s):
+    words = re.split(r'[^a-z0-9āēīōū]+', s, flags=re.IGNORECASE)
+    for w in words:
+        if w and not word_re.match(w):
+            print("rejecting %s" % s)
+            print("...because of word %r" % w)
+            return None
+    return ' '.join(words)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -28,6 +42,12 @@ def main():
                         help="login with this password")
     parser.add_argument('--overwrite', action='store_true',
                         help="overwrite already downloaded files")
+    parser.add_argument('-A', '--approval-required', action='store_true',
+                        help="require an approval to include file")
+    parser.add_argument('-V', '--required-net-votes', type=int, default=0,
+                        help="require this many votes to include file")
+    parser.add_argument('-X', '--exclude-downvoted', action='store_true',
+                        default=False, help="negative votes veto files")
     args = parser.parse_args()
 
     if args.password is None:
@@ -72,6 +92,37 @@ def main():
         for s in j['results']:
             recording_id = '%s' % s['id']
             person_id = '%s' % s['person']
+            if (args.approval_required or
+                args.required_net_votes or
+                args.exclude_downvoted):
+                qc = s.get('quality_control')
+                if not qc and (args.required_net_votes or
+                               args.approval_required):
+                    continue
+                #print(qc)
+                good = sum(x.get('good', 0) for x in qc)
+                bad = sum(x.get('bad', 0) for x in qc)
+                approved = sum(x.get('approved', 0) for x in qc)
+                if (((args.approval_required and not approved) and
+                     good - bad < args.required_net_votes) or
+                    (bad > 0 and args.exclude_downvoted)):
+                    print("skipping %s/%s: votes +%d -%d, approvals: %d" %
+                          (person_id, recording_id, good, bad, approved))
+                    continue
+
+            t = s['sentence_text']
+            if t is None:
+                print("sentence_text is null; using sentence->text "
+                      "for recording %s" % recording_id)
+                t = s['sentence']['text']
+
+            t = tidy_up_sentence(t)
+            if t is None:
+                print("ignoring sentence %r" % t)
+                continue
+
+            print("<s> %s </s> (%s)" % (t, recording_id), file=text_file)
+
             d = os.path.join(args.audio_directory, person_id)
             fn = os.path.join(d, recording_id)
             audio_url = s['audio_file_url']
@@ -83,16 +134,6 @@ def main():
 
             if not os.path.isdir(d):
                 os.makedirs(d)
-
-            t = s['sentence_text']
-            if t is None:
-                print("sentence_text is null; using sentence->text "
-                      "for recording %s" % recording_id)
-                t = s['sentence']['text']
-            # at one point, some sentences had this nonsense
-            if t[0] == '\uFEFF':
-                t = t[1:]
-            print("<s> %s </s> (%s)" % (t, recording_id), file=text_file)
 
             audio_req = session.get(audio_url)
             f = open(fn, 'wb')
