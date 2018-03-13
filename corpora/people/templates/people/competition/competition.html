@@ -64,14 +64,12 @@ h3{
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a></p>
 
         <h3 style="padding-top: 15px;">Qualifying Groups</h3>
-        <p>You need at least 7 people in your group to qualify.
-          {% for g in qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}
-        </p>
+        <p>You need at least 7 people in your group to qualify.</p>
+        <p>{% for g in qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
         <h3 style="padding-top: 15px;">Groups</h3>
         <p>These groups need more people to quality.</p>
-        <p>{% for g in not_qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}
-        <!-- <p>Join a group</p> -->
-        </p>
+        <p>{% for g in not_qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
 
     </div>
   </div>
