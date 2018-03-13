@@ -287,11 +287,6 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         if reason:
             raise PermissionDenied
 
-        person = get_or_create_person(request)
-        person2 = Person.objects.get(user=request.user)
-        if person != person2:
-            raise PermissionDenied
-
         form = ResendEmailVerificationForm(request.POST)
         if form.is_valid():
             email_object, created = get_email_object(person)
