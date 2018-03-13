@@ -65,7 +65,7 @@ h3{
 
         <h3 style="padding-top: 15px;">Qualifying Groups</h3>
         <p>You need at least 7 people in your group to qualify.
-          {% for g in qualified %}<div class="ropu">{{g}}</div>{% endfor %}
+          {% for g in qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}
         </p>
         <h3 style="padding-top: 15px;">Groups</h3>
         <p>These groups need more people to quality.</p>
