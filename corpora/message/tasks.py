@@ -208,7 +208,7 @@ def send_email_to_group(group_pk, message_pk, ma_pk):
             if settings.DEBUG:
                 p_display = email
             else:
-                p_display = person_pk
+                p_display = person.pk
 
             # Do not send emails from dev/local environment.
             if not person.user.is_staff and settings.DEBUG:
