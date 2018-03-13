@@ -270,12 +270,6 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
             for p in invalid_members:
                 p.verified = email_verified(p)
 
-        for p in people:
-            p.verified = email_verified(p)
-
-        # for person in invalid_members:
-            # person.num_groups = person.groups.all().count()
-
         context['people'] = people.filter(groups=group)
         context['valid_members'] = valid_members
         context['invalid_members'] = invalid_members
