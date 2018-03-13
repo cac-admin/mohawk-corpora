@@ -65,7 +65,8 @@ var border = ''
             label: "{% trans 'Recordings' %}",
             backgroundColor: bg,
             borderColor: border,
-            data: {{data.recordings.values}},
+            lineTension: .2,
+            data: [{% for i in data.recordings.values %}{{i|floatformat:2}},{% endfor %}],
         }]
     },
 
@@ -95,7 +96,8 @@ var border = ''
             label: "{% trans 'Growth Rate' %}",
             backgroundColor: bg,
             borderColor: border,
-            data: {{data.growth_rate.values}},
+            lineTension: .2,
+            data: [{% for i in data.growth_rate.values %}{{i|floatformat:2}},{% endfor %}],
         }]
     },
 

@@ -82,15 +82,15 @@ class RecordingStatsView(SiteInfoMixin, ListView):
             if r['duration__sum'] is None:
                 r['duration__sum'] = 0
 
-            total_recordings = int(r['duration__sum']/60) + total_recordings
+            total_recordings = (r['duration__sum']/60) + total_recordings
 
             data['recordings']['labels'].append(
-                (tomorrow).strftime('%d-%m-%y'))
+                (next_day).strftime('%d-%m-%y'))
             data['recordings']['values'].append(total_recordings)
 
             try:
                 data['growth_rate']['labels'].append(
-                    (tomorrow).strftime('%d-%m-%y'))
+                    (next_day).strftime('%d-%m-%y'))
                 data['growth_rate']['values'].append(
                     total_recordings - data['recordings']['values'][counter-1])
             except IndexError:
@@ -105,8 +105,9 @@ class RecordingStatsView(SiteInfoMixin, ListView):
             tomorrow = tomorrow + day_offset
             counter = counter + 1
 
-        context['labels'] = [key for key in data['recordings']]
-        context['values'] = [data['recordings'][i] for i in data['recordings']]
+        # context['labels'] = [key for key in data['recordings']]
+        # context['values'] = [
+        #     "{0:0.2d}".format(data['recordings'][i]) for i in data['recordings']]
 
         context['data'] = data
         context['start_day'] = start_day
