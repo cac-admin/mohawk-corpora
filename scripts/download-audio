@@ -84,6 +84,7 @@ def main():
     text_file = open(args.text_file, "a")
 
     downloaded = 0
+    file_exists = 0
     while api_url:
         print("fetching a JSON page: %s" % api_url)
         r = session.get(api_url)
@@ -127,7 +128,7 @@ def main():
             fn = os.path.join(d, recording_id)
             audio_url = s['audio_file_url']
             if os.path.exists(fn) and not args.overwrite:
-                print("not downloading %s: file %s exists" % (audio_url, fn))
+                file_exists += 1
                 continue
 
             print("saving %s as %s" % (audio_url, fn))
@@ -141,7 +142,8 @@ def main():
             downloaded += 1
             if downloaded == args.limit:
                 return
-        print("downloaded %d files" % downloaded)
+        print("downloaded %d files, skipped %d that already exist" %
+              (downloaded, file_exists))
         api_url = j.get('next')
 
 main()
