@@ -119,7 +119,7 @@ form{
     <form method="POST" action="{{request.path}}" id="resend-form">
     {% csrf_token %}
     <input type="checkbox" name="resend" value="true" checked>
-    <a href="#" onclick="document.getElementById('resend-form').submit();"type="submit">Resend Verification Email</a>
+    <a href="#" onclick="document.getElementById('resend-form').submit();">Resend Verification Email</a>
     </form>
 
 
