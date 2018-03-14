@@ -307,6 +307,10 @@ the quality of recordings we use.')
         ct = ContentType.objects.get(model='recording')
         user.can_approve = user.is_staff and user.is_authenticated()
 
+        if user.can_approve:
+            kl = KnownLanguage()
+            level_of_proficiency_display = kl.PROFICIENCIES
+            context['proficiency_display'] = level_of_proficiency_display
         context['content_type'] = ct.id
         context['user'] = user
         context['person'] = person
