@@ -75,6 +75,7 @@ class Visualize{
 
         }
       }
+      
     } else {
       return;
     }

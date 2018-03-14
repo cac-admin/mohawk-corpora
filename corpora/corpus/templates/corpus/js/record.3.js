@@ -15,7 +15,7 @@ class MyRecorder extends Player{
         this.sampleRate = null
         this.dummy = null
         this.fd = null
-        this.should_vis = true
+        this.should_vis = false
         this.skip_button = document.getElementById('skip-button')
         this.skipped = false
         this.redo = false
@@ -23,7 +23,7 @@ class MyRecorder extends Player{
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
         
-        this.debug = false
+        this.debug = true
 
         var self = this
 
@@ -145,6 +145,7 @@ class MyRecorder extends Player{
             return undefined;
         } else {
 
+            // While safari is supported it's recording is shit! So disabling this.
             if (navigator.userAgent.match('Safari')!=null
               && navigator.userAgent.match('Macintosh')!=null 
               && navigator.userAgent.match('Chrome')==null){
@@ -223,7 +224,8 @@ class MyRecorder extends Player{
         if (self.recorder == null){
 
             self.recorder = new Recorder({
-                    encoderPath: '/static/bower_components/opus-recorderjs/dist/waveWorker.min.js',
+                    encoderPath: '/static/bower_components/opus-recorder/dist/waveWorker.min.js',
+                    bufferLength: 1024,
                     // encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
                 }); 
             
@@ -250,7 +252,7 @@ class MyRecorder extends Player{
             self.recorder.onstart = function() {
                 self.actions_element.dispatchEvent(self.event_record_start)
                 self.logger('recording started')
-                self.recorder.start()
+                // self.recorder.start()
                 $(self.loading_button).hide()
                 $(self.record_button).show()                
                 setTimeout(function(){
