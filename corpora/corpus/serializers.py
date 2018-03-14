@@ -112,7 +112,9 @@ class RecordingSerializer(serializers.ModelSerializer):
     )
     audio_file_url = serializers.CharField(source='get_recording_file_url',
                                            read_only=True)
-    created = serializers.DateTimeField(format="%d-%m-%y %H:%M %Z")
+    created = serializers.DateTimeField(
+        format="%d-%m-%y %H:%M %Z",
+        read_only=True)
 
     class Meta:
         model = Recording

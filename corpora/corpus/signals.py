@@ -117,14 +117,16 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                     time.strftime('%d%m%y%H%M%S')))
 
 
-@receiver(models.signals.post_save, sender=QualityControl)
+# This isn't correct - we want the person of the recording object of quality
+# control to get a new score not the person who done the QC.
+# Will need to update this later. for nwo it's ok
+# @receiver(models.signals.post_save, sender=QualityControl)
+
 @receiver(models.signals.post_save, sender=Recording)
 def update_person_score_when_model_saved(sender, instance, **kwargs):
     update_person_score.apply_async(
         args=[instance.person.pk],
-        task_id='update_person_score-{0}-{1}-{2}'.format(
+        task_id='update_person_score-{0}-{1}'.format(
             instance.person.pk,
-            instance.pk,
-            instance.__class__.__name__))
-
-
+            instance.__class__.__name__),
+        countdown=60)

@@ -34,13 +34,15 @@ CELERYBEAT_SCHEDULE = {
 
     },
 
-    'calculate_person_scores': {
-        'task': 'people.tasks.calculate_person_scores',
-        'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
-    },
+    # These aren't necessary as we calculate these on demand - these become redundant.
 
-    'calculate_group_scores': {
-        'task': 'people.tasks.calculate_group_scores',
-        'schedule': crontab(minute='13,33,53', hour='*', day_of_week='*'),
-    },
+    # 'calculate_person_scores': {
+    #     'task': 'people.tasks.calculate_person_scores',
+    #     'schedule': crontab(minute='12,32,52', hour='*', day_of_week='*'),
+    # },
+
+    # 'calculate_group_scores': {
+    #     'task': 'people.tasks.calculate_group_scores',
+    #     'schedule': crontab(minute='13,33,53', hour='*', day_of_week='*'),
+    # },
 }

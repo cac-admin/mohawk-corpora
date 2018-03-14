@@ -35,8 +35,8 @@ def update_group_score_when_person_changes_group(
                 update_group_score.apply_async(
                     args=[g.pk],
                     task_id="update-group-score-{0}-{1}".format(
-                        g.pk, timezone.now().strftime("%M")),
-                    countdown=42)
+                        g.pk, timezone.now().strftime("%H")),
+                    countdown=60*10)
 
     except ObjectDoesNotExist:
         pass
