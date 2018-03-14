@@ -108,12 +108,13 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                     instance.__class__.__name__))
 
         if not instance.audio_file_aac:
+            time = timezone.now()
             transcode_audio.apply_async(
                 args=[instance.pk],
                 task_id='transcode_audio-{0}-{1}-{2}'.format(
                     instance.person.pk,
                     instance.pk,
-                    instance.__class__.__name__))
+                    time.strftime('%d%m%y%H%M%S')))
 
 
 @receiver(models.signals.post_save, sender=QualityControl)
