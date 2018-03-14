@@ -66,8 +66,8 @@ def transcode_audio(recording_pk):
     is_running = cache.get(key)
 
     if is_running is None:
-        is_running = cache.set(key, True, 60*5)
         if not recording.audio_file_aac:
+            is_running = cache.set(key, True, 60*5)
             result = encode_audio(recording)
             cache.set(key, False, 60)
             return result
