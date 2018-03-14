@@ -59,6 +59,10 @@ urlpatterns = [
         views.rules,
         name='rules'),
 
+    url(_(r'^competition/help'),
+        people_views.Help.as_view(),
+        name='competition_help'),
+
     url(_(r'^competition/user_leaderboard'),
         stats_views.PeopleRecordingStatsView.as_view(),
         name='user_leaderboard'),

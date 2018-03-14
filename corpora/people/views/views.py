@@ -353,3 +353,34 @@ class Competition(SiteInfoMixin, ListView):
         # for group in groups:
 
         return context
+
+
+class Help(SiteInfoMixin, ListView):
+    model = Group
+    template_name = 'people/competition/help.html'
+    paginate_by = 50
+    context_object_name = 'groups'
+    x_title = _('Help')
+    x_description = \
+        _("Support and documentation for competitions.")
+
+    def get_queryset(self):
+        return Group.objects.all().order_by('name')\
+            .annotate(size=Count("person"))
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(Help, self).get_context_data(**kwargs)
+
+        # language = get_current_language(self.request)
+
+        groups = Group.objects.all().order_by('name').annotate(
+            size=Count('person'))
+        qualified = groups.filter(size__gte=7)
+        not_qualified = groups.exclude(size__gte=7)
+
+        context['qualified'] = qualified
+        context['not_qualified'] = not_qualified
+        # for group in groups:
+
+        return context
