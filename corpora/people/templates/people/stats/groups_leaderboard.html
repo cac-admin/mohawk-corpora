@@ -24,7 +24,7 @@
       <th scope="col">{% trans 'Group' %}</th>
       <th scope="col"><a href="?sort_by={% if '-members' in request.GET.urlencode %}members{% else %}-members{% endif %}">{% trans '# Members' %}</a></th>
       <th scope="col">{% trans 'Recordings' %}</th>
-      <th scope="col"><a href="?sort_by={% if '-score' in request.GET.urlencode %}score{% else %}-score{% endif %}">{% trans 'Score' %}</a><small>[beta]</small></th>
+      <th scope="col"><a href="?sort_by={% if '-score' in request.GET.urlencode %}score{% else %}-score{% endif %}">{% trans 'Score' %}</a></th>
     </tr>
   </thead>
   <tbody>

@@ -222,6 +222,8 @@ to our project.")
 
         groups = context['groups']
         for group in groups:
+            score = get_competition_group_score(group)
+            group.score = score
             people = Person.objects\
                 .annotate(num_groups=Count('groups'))\
                 .filter(groups__pk=group.pk)\
@@ -234,6 +236,7 @@ to our project.")
         #     path = path+'?'
 
         # context['path'] = path
+        # context['groups'] = groups
         return context
 
 
