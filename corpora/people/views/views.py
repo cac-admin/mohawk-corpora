@@ -61,19 +61,24 @@ class ProfileDetail(SiteInfoMixin, APIView, TemplateView):
             url = reverse('people:choose_language') + '?next=people:profile'
             return redirect(url)
         elif len(known_languages) >= 1:
+
+            # TODO: SUPPORT MULTIPLE LANGUAGES
             set_current_language_for_person(
                 person, known_languages[0].language)
             current_language = known_languages[0]
 
             if current_language.level_of_proficiency is None:
-                url = reverse('people:choose_language') + '?next=people:profile'
+                url = \
+                    reverse('people:choose_language') + '?next=people:profile'
                 return redirect(url)
 
         num_recordings = Recording.objects.filter(person=person).count()
 
-        if num_recordings == 0 and person.just_signed_up:
-            url = reverse('corpus:record')  # onboard?
-            return redirect(url)
+        # Disabling this for now as we're not onboarding.
+        # Also there seems to be a bug someone people
+        # if num_recordings == 0 and person.just_signed_up:
+        #     url = reverse('corpus:record')  # onboard?
+        #     return redirect(url)
 
         return super(ProfileDetail, self).get(request, *args, **kwargs)
 
@@ -85,7 +90,8 @@ class ProfileDetail(SiteInfoMixin, APIView, TemplateView):
         context['person'] = person
         context['serializer'] = serializer
 
-        context['demographic_form'] = DemographicForm(instance=person.demographic)
+        context['demographic_form'] = DemographicForm(
+            instance=person.demographic)
         email = None
         username = None
 
