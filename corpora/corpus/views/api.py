@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from corpus.models import QualityControl, Sentence, Recording, Source
 from django.db.models import Count, Q, Sum, Case, When, Value, IntegerField
 from people.helpers import get_person
+from people.competition import filter_recordings_for_competition
 from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
@@ -208,6 +209,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
         if sort_by in ['listen', 'random', 'recent']:
 
+            queryset = filter_recordings_for_competition(queryset)
+
             # Exclude approved items
             queryset = queryset\
                 .annotate(num_approved=Sum(
@@ -229,8 +232,17 @@ class RecordingViewSet(viewsets.ModelViewSet):
             queryset = queryset\
                 .exclude(quality_control__person=person)
 
-            # .annotate(num_qc=Count('quality_control'))\
-            # .order_by('num_qc')
+            # If we want to handle simultaneous but recent
+            # we could serve 5 sets of the most recent recordings
+            # We should make sure each set is the length of the
+            # pagination so that on getting the next page the dataset
+            # is reset based on the filters above. This allows
+            # us to keep hitting next. However the will eventull
+            # get the same sentences again and so will need to approve
+            # them. Otherwise we need to store a skip or "pass" on the
+            # QC object.
+            # shift = cache.get('recent_recording_shift')
+            # cache.set('recent_recording_shift')
 
             if 'recent' in sort_by:
                 queryset = queryset.order_by('-pk')
