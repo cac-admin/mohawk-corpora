@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:17+1300\n"
+"POT-Creation-Date: 2018-03-14 23:07+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -565,6 +565,27 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: people/templates/people/competition/competition.html:64
+msgid "rules"
+msgstr ""
+
+#: people/templates/people/competition/nav.html:25
+msgid "Home"
+msgstr ""
+
+#: people/templates/people/competition/nav.html:33
+#: people/templates/people/stats/nav.html:25
+msgid "User Leaderboard"
+msgstr ""
+
+#: people/templates/people/competition/nav.html:51
+msgid "Rules"
+msgstr ""
+
+#: people/templates/people/competition/nav.html:59 people/views/views.py:363
+msgid "Help"
+msgstr ""
+
 #: people/templates/people/email/freq_stats_update.html:8
 #: people/templates/people/email/freq_stats_update.txt:5
 #, python-format
@@ -643,9 +664,9 @@ msgstr ""
 
 #: people/templates/people/email/weekly_stats_update.txt:9
 #: people/templates/people/profile.html:66
-#: people/templates/people/stats/group_leaderboard.html:32
-#: people/templates/people/stats/groups_leaderboard.html:32
-#: people/templates/people/stats/leaderboard.html:32
+#: people/templates/people/stats/group_leaderboard.html:69
+#: people/templates/people/stats/groups_leaderboard.html:26
+#: people/templates/people/stats/leaderboard.html:29
 msgid "Recordings"
 msgstr ""
 
@@ -681,34 +702,45 @@ msgstr ""
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr ""
 
-#: people/templates/people/stats/group_leaderboard.html:31
-#: people/templates/people/stats/groups_leaderboard.html:31
-msgid "Group"
-msgstr ""
-
-#: people/templates/people/stats/group_leaderboard.html:33
-#: people/templates/people/stats/groups_leaderboard.html:33
-#: people/templates/people/stats/leaderboard.html:33
+#: people/templates/people/stats/group_leaderboard.html:55
+#: people/templates/people/stats/group_leaderboard.html:70
+#: people/templates/people/stats/group_leaderboard.html:116
+#: people/templates/people/stats/groups_leaderboard.html:27
+#: people/templates/people/stats/leaderboard.html:30
 msgid "Score"
 msgstr ""
 
-#: people/templates/people/stats/leaderboard.html:31
+#: people/templates/people/stats/group_leaderboard.html:68
+#: people/templates/people/stats/group_leaderboard.html:113
+#: people/templates/people/stats/leaderboard.html:28
 msgid "Username"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:103
-msgid "User Leaderboard"
+#: people/templates/people/stats/group_leaderboard.html:114
+msgid "# Groups"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:113 people/views/stats_views.py:178
+#: people/templates/people/stats/group_leaderboard.html:115
+msgid "Email Verified?"
+msgstr ""
+
+#: people/templates/people/stats/groups_leaderboard.html:24
+msgid "Group"
+msgstr ""
+
+#: people/templates/people/stats/groups_leaderboard.html:25
+msgid "# Members"
+msgstr ""
+
+#: people/templates/people/stats/nav.html:35 people/views/stats_views.py:193
 msgid "Group Leaderboard"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:121
+#: people/templates/people/stats/nav.html:43
 msgid "Overall Statistics"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:129
+#: people/templates/people/stats/nav.html:51
 msgid "Growth Rate"
 msgstr ""
 
@@ -782,47 +814,65 @@ msgstr ""
 msgid "You must sign in to edit your info."
 msgstr ""
 
-#: people/views/stats_views.py:129
+#: people/views/stats_views.py:144
 msgid "Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:131
+#: people/views/stats_views.py:146
 msgid "Leaderboard for people who've contributed to our corpus."
 msgstr ""
 
-#: people/views/stats_views.py:179
+#: people/views/stats_views.py:194
 msgid "Group leaderboard of all the groups contributing corpusto our project."
 msgstr ""
 
-#: people/views/stats_views.py:211
+#: people/views/stats_views.py:247
 msgid "Individual Group Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:212
+#: people/views/stats_views.py:248
 msgid "Leaderboard for people of a particular group."
 msgstr ""
 
-#: people/views/stats_views.py:227
-msgid "Leaderboard: "
+#: people/views/stats_views.py:268
+#, python-brace-format
+msgid "Group Leaderboard: {0}"
 msgstr ""
 
-#: people/views/stats_views.py:318
+#: people/views/stats_views.py:269
+#, python-brace-format
+msgid "Leaderboard for members of {0}."
+msgstr ""
+
+#: people/views/stats_views.py:389
 msgid "weekly"
 msgstr ""
 
-#: people/views/stats_views.py:320
+#: people/views/stats_views.py:391
 msgid "daily"
 msgstr ""
 
-#: people/views/views.py:45
+#: people/views/views.py:49
 msgid "Profile"
 msgstr ""
 
-#: people/views/views.py:46
+#: people/views/views.py:50
 msgid "Edit your profile to help us enhance our corpus."
 msgstr ""
 
-#: people/views/views.py:141
+#: people/views/views.py:145
 #, python-format
 msgid "Today is %(month)s %(day)s."
+msgstr ""
+
+#: people/views/views.py:330
+msgid "Competition"
+msgstr ""
+
+#: people/views/views.py:332
+msgid "Compete with groups and others to win amaing prizes."
+msgstr ""
+
+#: people/views/views.py:365
+msgid "Support and documentation for competitions."
 msgstr ""
