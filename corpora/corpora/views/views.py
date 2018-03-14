@@ -14,7 +14,7 @@ from people.helpers import get_unknown_languages
 from people.models import Group
 
 from corpus import views
-
+from people.helpers import get_or_create_person
 from django.contrib.sites.shortcuts import get_current_site
 
 
@@ -51,7 +51,17 @@ def privacy(request):
 
 def rules(request):
     site = get_current_site(request)
+
+    person = get_or_create_person(request)
+
+    if hasattr(person, 'groups'):
+        groups = person.groups
+        if groups.count() == 1:
+            group = groups.first()
+            person.group = group
+
     context = {
+        'person': person,
         'request': request,
         'languages': get_unknown_languages(None),
         'site': site,
