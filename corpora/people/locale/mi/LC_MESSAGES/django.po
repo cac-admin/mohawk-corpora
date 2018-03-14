@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-14 23:06+1300\n"
+"POT-Creation-Date: 2018-03-15 00:37+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-#: people/templates/people/competition/nav.html:59 people/views/views.py:363
+#: people/templates/people/competition/nav.html:59 people/views/views.py:369
 msgid "Help"
 msgstr ""
 
@@ -928,20 +928,20 @@ msgstr "Ngā Kōrero Mōu"
 msgid "Edit your profile to help us enhance our corpus."
 msgstr ""
 
-#: people/views/views.py:145
+#: people/views/views.py:151
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."
 
-#: people/views/views.py:330
+#: people/views/views.py:336
 msgid "Competition"
 msgstr ""
 
-#: people/views/views.py:332
+#: people/views/views.py:338
 msgid "Compete with groups and others to win amaing prizes."
 msgstr ""
 
-#: people/views/views.py:365
+#: people/views/views.py:371
 msgid "Support and documentation for competitions."
 msgstr ""
 
