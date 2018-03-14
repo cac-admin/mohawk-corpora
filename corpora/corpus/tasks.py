@@ -60,7 +60,7 @@ def transcode_audio(recording_pk):
     except ObjectDoesNotExist:
         logger.warning('Tried to get recording that doesn\'t exist')
 
-    key = u"transcoding-{0}-{1}".format(
+    key = u"xtrans-{0}-{1}".format(
         recording.pk, recording.audio_file.name)
 
     is_running = cache.get(key)
@@ -69,7 +69,7 @@ def transcode_audio(recording_pk):
         is_running = cache.set(key, True, 60*5)
         if not recording.audio_file_aac:
             result = encode_audio(recording)
-            cache.set(key, False, 60*5)
+            cache.set(key, False, 60)
             return result
 
     elif is_running:
