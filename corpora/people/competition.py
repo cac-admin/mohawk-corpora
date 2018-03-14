@@ -51,8 +51,11 @@ def get_invalid_group_members(group, queryset=None):
         # Must have a username of length > 0
         # Can only belong to one group
         verified_email = email_verified(p)
-        if verified_email and len(p.username)>1 and p.num_groups == 1:
-            valid_pks.append(p.pk)
+        if verified_email:
+            if p.num_groups == 1:
+                if p.username is not None:
+                    if len(p.username) > 1:
+                        valid_pks.append(p.pk)
 
     queryset = queryset.exclude(pk__in=valid_pks)
 
