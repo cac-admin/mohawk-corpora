@@ -112,21 +112,33 @@ player = new Player('.sentence-block');
 {% addtoblock "js-end" %}
 <script type="text/javascript" >
   var profile;
+  var profs = {
+    {% for level in proficiency_display %}
+    {{level.0}}: "{{level.1}}",
+  {% endfor %}
+  }
+
   $(document).ready(function(){
     document.addEventListener('listen.recording.loaded', function(){
       profile = new Profile(listen.recording.person, '.person-info');
       profile.load()
       
       document.addEventListener('profile.loaded', function(){
+        for (var i = 0; i < profile.data.known_languages.length; i++) {
+          kl = profile.data.known_languages[i]['level_of_proficiency']
+          profile.data.known_languages[i]['level_of_proficiency'] = profs[kl]
+        }
         profile.display();  
       })
 
       $('.recording-info').empty()
-      var agent = "<br><p><b>User Agent:&nbsp;</b>"+listen.recording.user_agent+"</p>"
+      var created = "<p><b>Created:&nbsp;</b>"+listen.recording.created+"</p>"
+      var agent = "<p><b>User Agent:&nbsp;</b>"+listen.recording.user_agent+"</p>"
       var url = "https://" + window.location.hostname + "/admin/corpus/recording/" + listen.recording.id
       var url_elem = "<p><i class='fa fa-link fa-fw'></i><a target='_blank' href='"+url+"'>Recording "+listen.recording.id+"</a></p>"
       $('.recording-info').append(agent)
       $('.recording-info').append(url_elem)
+      $('.recording-info').append(created)
     })
 
     $('#sort-by-recent, #sort-by-random').on('click', function(e){

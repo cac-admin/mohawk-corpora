@@ -77,6 +77,28 @@ def get_valid_group_members(group, queryset=None):
     return queryset
 
 
+def filter_recordings_for_competition(queryset):
+    '''Takes a recording queryset and returns only recordings to be used during the
+    competition. If the competition hasn't started or has ended, then this just
+    returns the given queryset'''
+    start = parse_datetime("2018-03-15 13:00:00")
+    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
+    end = parse_datetime("2018-03-25 18:00:00")
+    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+
+    if timezone.now() < start:
+        return queryset
+    elif timezone.now() > end:
+        return queryset
+    else:
+
+        queryset = queryset\
+            .filter(created__lte=end)\
+            .filter(created__gte=start)
+
+    return queryset
+
+
 def get_competition_group_score(group):
     start = parse_datetime("2018-03-15 13:00:00")
     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
