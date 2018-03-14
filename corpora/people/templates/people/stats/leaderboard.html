@@ -10,23 +10,18 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 
-div.content{
-  padding: 15px 0px 15px 0px;
-}
-div.col.table{
-  overflow-x: auto;
-}
+
 </style>
 {% endaddtoblock %}
 
 
 <div class="container">
   <div class="row">
-    <div class="col table">
+    <div class="col">
 <h1 style="text-align: center; font-weight: 900;">Leaderboard</h1>
 <p><small>This leaderboard shows the number of recordings others have done and individual user's scores. <em><b>These scores do not 
 reflect scores for the Group Compeition.</b></em></small></p>
-<table class="table" id='stats-table'>
+<div class="table"><table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
@@ -45,7 +40,7 @@ reflect scores for the Group Compeition.</b></em></small></p>
 </tr>
 {% endfor %}
 </tbody>
-</table>
+</table></div>
     </div>
   </div>
 

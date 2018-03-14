@@ -46,7 +46,7 @@ div.score{
 
 <div class="container">
   <div class="row">
-    <div class="col table">
+    <div class="col ">
 
 <div class="score">
   <span class="value">{{score|floatformat:0}}</span>
@@ -61,7 +61,7 @@ div.score{
 <h1>{{group.name}} Leaderboard</h1>
 <p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time.</small></p>
 {% if valid_members %}
-<table class="table" id='stats-table'>
+<div class="table"><table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
@@ -95,7 +95,7 @@ div.score{
 {% endfor %}
 
 </tbody>
-</table>
+</table></div>
 {% else %}
 <p>No valid members in this group.</p>
 {% endif %}
@@ -106,7 +106,7 @@ div.score{
 <h1 class="invalid">Invalid Members</h1>
 <p><small>The following members need to verify their email addresses or they belong to more than one group. 
 <b><em>These user's scores will not contribute to {{group}} scores.</em></b></small></p>
-<table class="table " id='stats-table' >
+<div class="table"><table class="table " id='stats-table' >
     <thead>
     <tr>
       <th scope="col">#</th>
@@ -167,7 +167,7 @@ form{
 </tr>
 {% endfor %}
 </tbody>
-</table>
+</table></div>
 {% endif %}
     </div>
   </div>

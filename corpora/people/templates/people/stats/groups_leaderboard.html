@@ -10,12 +10,6 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 
-div.content{
-  padding: 15px 0px 15px 0px;
-}
-div.col.table{
-  overflow-x: auto;
-}
 </style>
 {% endaddtoblock %}
 
@@ -23,7 +17,7 @@ div.col.table{
   <div class="row">
     <div class="col table">
 <h1 style="text-align: center; font-weight: 900;">Group Leaderboard</h1>
-<table class="table" id='stats-table'>
+<div class="table"><table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
@@ -44,7 +38,7 @@ div.col.table{
 </tr>
 {% endfor %}
 </tbody>
-</table>
+</table></div>
     </div>
   </div>
 
