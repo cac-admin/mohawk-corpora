@@ -15,7 +15,7 @@ class MyRecorder extends Player{
         this.sampleRate = null
         this.dummy = null
         this.fd = null
-        this.should_vis = false
+        this.should_vis = true
         this.skip_button = document.getElementById('skip-button')
         this.skipped = false
         this.redo = false
