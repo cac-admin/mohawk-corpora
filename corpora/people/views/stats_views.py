@@ -187,7 +187,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/stats/groups_leaderboard.html'
-    paginate_by = 50
+    paginate_by = 100
     context_object_name = 'groups'
     x_title = _('Group Leaderboard')
     x_description = _("Group leaderboard of all the groups contributing corpus\
@@ -228,6 +228,11 @@ to our project.")
             d = people.aggregate(num_recordings=Count('recording'))
             group.num_recordings = d['num_recordings']
 
+        # path = self.request.get_full_path()
+        # if '?' not in path:
+        #     path = path+'?'
+
+        # context['path'] = path
         return context
 
 
