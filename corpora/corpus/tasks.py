@@ -17,6 +17,8 @@ import commands
 import ast
 import sys
 
+from django.core.cache import cache
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -58,10 +60,22 @@ def transcode_audio(recording_pk):
     except ObjectDoesNotExist:
         logger.warning('Tried to get recording that doesn\'t exist')
 
-    if not recording.audio_file_aac:
-        return encode_audio(recording)
-    else:
-        return "Already encoded"
+    key = u"transcoding-{0}-{1}".format(
+        recording.pk, recording.audio_file.name)
+
+    is_running = cache.get(key)
+
+    if is_running is None:
+        is_running = cache.set(key, True, 60*5)
+        if not recording.audio_file_aac:
+            result = encode_audio(recording)
+            cache.set(key, False, 60*5)
+            return result
+
+    elif is_running:
+        return "Encoding in progress..."
+
+    return "Already encoded."
 
 
 @shared_task
