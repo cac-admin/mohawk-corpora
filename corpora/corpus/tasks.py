@@ -80,15 +80,20 @@ def transcode_audio(recording_pk):
 
 @shared_task
 def transcode_all_audio():
-    recordings = Recording.objects.filter(audio_file_aac__isnull=True)
+    recordings = Recording.objects.filter(audio_file_aac='')
     logger.debug('Found {0} recordings to encode.'.format(len(recordings)))
+    count = 0
+    message = []
     for recording in recordings:
         logger.debug('Encoding {0}.'.format(recording))
         try:
-            encode_audio(recording)
+            result = encode_audio(recording)
+            message.append(result)
+            count = count+1
         except:
             logger.error(sys.exc_info()[0])
             continue
+    return "Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
 
 
 def prepare_temporary_environment(recording, test=False):
