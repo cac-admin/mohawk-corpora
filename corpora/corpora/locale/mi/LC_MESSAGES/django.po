@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:17+1300\n"
+"POT-Creation-Date: 2018-03-14 16:47+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/mixins.py:7
+#: corpora/mixins.py:10
 msgid "Description for a particular view"
 msgstr ""
 
-#: corpora/mixins.py:8
+#: corpora/mixins.py:11
 msgid "Title for your view"
 msgstr ""
 
@@ -34,7 +34,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:37
-#: corpora/templates/corpora/logged_in_nav_buttons.html:120
+#: corpora/templates/corpora/logged_in_nav_buttons.html:160
 msgid "Log Out"
 msgstr "Puta Atu"
 
@@ -43,8 +43,7 @@ msgid "Record"
 msgstr "Hopu"
 
 #: corpora/templates/corpora/footer.html:42
-#: corpora/templates/corpora/logged_in_nav_buttons.html:45
-#: corpora/templates/corpora/logged_in_nav_buttons.html:136
+#: corpora/templates/corpora/logged_in_nav_buttons.html:48
 msgid "Listen"
 msgstr "Whakarongo"
 
@@ -83,7 +82,6 @@ msgstr ""
 
 #: corpora/templates/corpora/home.html:14
 #: corpora/templates/corpora/privacy.html:14
-#: corpora/templates/corpora/rules.html:14
 msgid "teaching computers indigenous languages"
 msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 
@@ -145,39 +143,36 @@ msgid ""
 "tree/translate\">translating</a> this app."
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:38
-#: corpora/templates/corpora/logged_in_nav_buttons.html:129
+#: corpora/templates/corpora/logged_in_nav_buttons.html:40
 msgid "Speak"
 msgstr "Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:54
+#: corpora/templates/corpora/logged_in_nav_buttons.html:56
+msgid "Competition"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:70
 msgid "Sentences"
 msgstr "Rerenga Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:61
-msgid "Admin"
-msgstr "Kaiwhakahaere"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:70
-#: corpora/templates/corpora/logged_in_nav_buttons.html:144
+#: corpora/templates/corpora/logged_in_nav_buttons.html:78
 msgid "Stats"
 msgstr "Tatauranga"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:77
+#: corpora/templates/corpora/logged_in_nav_buttons.html:86
+msgid "Admin"
+msgstr "Kaiwhakahaere"
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:99
+#: corpora/templates/corpora/logged_in_nav_buttons.html:128
+msgid "Language"
+msgstr "Reo"
+
 #: corpora/templates/corpora/logged_in_nav_buttons.html:151
 msgid "Profile"
 msgstr "Ngā Kōrero Mōu"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:85
-msgid "Edit Info"
-msgstr "Whakatikatika Kōrero"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:98
-#: corpora/templates/corpora/logged_in_nav_buttons.html:164
-msgid "Language"
-msgstr "Reo"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:184
+#: corpora/templates/corpora/logged_in_nav_buttons.html:169
 msgid "Log In"
 msgstr "Tomo Mai"
 
@@ -185,28 +180,48 @@ msgstr "Tomo Mai"
 msgid "^people/"
 msgstr "^tangata/"
 
-#: corpora/urls.py:53
+#: corpora/urls.py:58
+msgid "^competition/rules"
+msgstr ""
+
+#: corpora/urls.py:62
+msgid "^competition/help"
+msgstr ""
+
+#: corpora/urls.py:66
+msgid "^competition/user_leaderboard"
+msgstr ""
+
+#: corpora/urls.py:70
+#, fuzzy
+#| msgid "^stats/group/(?P<pk>\\d+)/$"
+msgid "^competition/group/(?P<pk>\\d+)"
+msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
+
+#: corpora/urls.py:74
+msgid "^competition"
+msgstr ""
+
+#: corpora/urls.py:78
 msgid "^stats/person"
 msgstr "^tatauranga/tangata"
 
-#: corpora/urls.py:57
+#: corpora/urls.py:82
 msgid "^stats/people$"
 msgstr "^tatauranga/ngatangata"
 
-#: corpora/urls.py:61
+#: corpora/urls.py:86
 msgid "^stats/groups$"
 msgstr "^tatauranga/ngaropu"
 
-#: corpora/urls.py:65
-msgid "^stats/group/(?P<pk>\\d+)/$"
-msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
-
-#: corpora/urls.py:69
+#: corpora/urls.py:90
 msgid "^stats/recordings"
 msgstr "^tatauranga/hopu"
 
-#: corpora/urls.py:73
-msgid "^stats/"
+#: corpora/urls.py:94
+#, fuzzy
+#| msgid "^stats/"
+msgid "^stats/$"
 msgstr "^tatauranga/"
 
 #: corpora/views/api.py:18
@@ -231,13 +246,16 @@ msgstr "hei whakaako i te rorohiko ki ngā reo taketake"
 msgid "Privacy policy for this website."
 msgstr ""
 
-#: corpora/views/views.py:58
+#: corpora/views/views.py:68
 msgid "Rules"
 msgstr ""
 
-#: corpora/views/views.py:59
+#: corpora/views/views.py:69
 msgid "Rules for our competitions."
 msgstr ""
+
+#~ msgid "Edit Info"
+#~ msgstr "Whakatikatika Kōrero"
 
 #~ msgid "Maori"
 #~ msgstr "Māori"
