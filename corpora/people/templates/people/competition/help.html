@@ -41,6 +41,7 @@ div.r16x9{
   h4{
     font-weight: 700;
     color: $brand_darkest;
+    padding: 10px 0px 5px 0px;
   }
 }
 
@@ -82,11 +83,10 @@ h3{
     </div>
   </div>
 
-  <div class="row video-row">
+  <div class="row video-row align-items-start">
 
 
-    <div class="col 6">
-      <h4>How to sign up and join a group.</h4>
+    <div class="col-sm-12 col-md-6">
       <div class="video">
         <div class="r16x9">
           <div>
@@ -94,11 +94,12 @@ h3{
           </div>
         </div>
       </div>
+            <h4>How to sign up and join a group.</h4>
+
       <p>You can sign up <a href="{% url 'account_signup' %}">here</a>.</p>
     </div>
 
-    <div class="col 6">
-      <h4>How to join a group.</h4>
+    <div class="col-sm-12 col-md-6">
       <div class="video">
         <div class="r16x9">
           <div>
@@ -106,6 +107,8 @@ h3{
           </div>
         </div>
       </div>
+            <h4>How to join a group.</h4>
+
       <p>You can edit your profile <a href="{% url 'people:profile' %}">here</a>.</p>
     </div>
 
