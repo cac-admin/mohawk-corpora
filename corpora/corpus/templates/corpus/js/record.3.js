@@ -23,7 +23,7 @@ class MyRecorder extends Player{
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
         
-        this.debug = true
+        this.debug = false
 
         var self = this
 
@@ -225,7 +225,7 @@ class MyRecorder extends Player{
 
             self.recorder = new Recorder({
                     encoderPath: '/static/bower_components/opus-recorder/dist/waveWorker.min.js',
-                    bufferLength: 1024,
+                    bufferLength: 1024*8, // Increasing this seems to improve performance on andoird chrome.
                     // encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
                 }); 
             

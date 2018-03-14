@@ -17,7 +17,7 @@ class Visualize{
     this.sourceNode.connect(this.analyser);
     
     this.bufferLength = this.analyser.frequencyBinCount;
-    this.dataArray = new Uint8Array(this.bufferLength);
+    this.dataArray = new Uint8Array(this.analyser.fftSize);
 
   }
 
@@ -40,14 +40,14 @@ class Visualize{
     var self = this
     if (self.loop){
       
-      if (navigator.userAgent.match(/(Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini)/) && Math.random()*100<0) {
+      // if (navigator.userAgent.match(/(Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini)/) && Math.random()*100<0) {
   
-        window.setTimeout(
-          function(){
-            window.requestAnimationFrame(function(){self.renderFrame()});
-          }, 500)
+      //   window.setTimeout(
+      //     function(){
+      //       window.requestAnimationFrame(function(){self.renderFrame()});
+      //     }, 500)
 
-      } else{
+      // } else{
 
         window.requestAnimationFrame(function(){self.renderFrame()});
         self.analyser.getByteFrequencyData(self.dataArray);
@@ -73,7 +73,7 @@ class Visualize{
 
           // console.log(parseInt(barHeight), self.HEIGHT)
 
-        }
+        // }
       }
       
     } else {
