@@ -7,6 +7,8 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 
+from django.core.cache import cache
+
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
 
@@ -108,13 +110,20 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                     instance.__class__.__name__))
 
         if not instance.audio_file_aac:
-            time = timezone.now()
-            transcode_audio.apply_async(
-                args=[instance.pk],
-                task_id='transcode_audio-{0}-{1}-{2}'.format(
-                    instance.person.pk,
-                    instance.pk,
-                    time.strftime('%d%m%y%H%M%S')))
+
+            key = u"xtrans-{0}-{1}".format(
+                instance.pk, instance.audio_file.name)
+
+            is_running = cache.get(key)
+
+            if is_running is None:
+                time = timezone.now()
+                transcode_audio.apply_async(
+                    args=[instance.pk],
+                    task_id='transcode_audio-{0}-{1}-{2}'.format(
+                        instance.person.pk,
+                        instance.pk,
+                        time.strftime('%d%m%y%H%M%S')))
 
 
 # This isn't correct - we want the person of the recording object of quality
