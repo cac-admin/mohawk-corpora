@@ -100,8 +100,8 @@ def calculate_group_scores():
         update_group_score.apply_async(
             args=[group.pk],
             task_id="update-group-score-{0}-{1}".format(
-                group.pk, timezone.now().strftime("%M")),
-            countdown=42)
+                group.pk, timezone.now().strftime("%H")),
+            countdown=60*10)
 
     return "Updated {0} scores".format(groups.count())
 
@@ -144,7 +144,7 @@ def update_person_score(person_pk):
     # onto another?
 
     recordings = Recording.objects.filter(person=person)
-    qcs = QualityControl.objects.filter(person=person)
+    # qcs = QualityControl.objects.filter(person=person)
 
     score = 0
 
@@ -162,8 +162,8 @@ def update_person_score(person_pk):
         update_group_score.apply_async(
             args=[g.pk],
             task_id="update-group-score-{0}-{1}".format(
-                g.pk, timezone.now().strftime("%M")),
-            countdown=42)
+                g.pk, timezone.now().strftime("%H")),
+            countdown=60*10)
 
     return "New score for {0}: {1}".format(person_pk, score)
 
