@@ -53,7 +53,8 @@ from corpora.mixins import SiteInfoMixin
 from people.competition import \
     get_competition_group_score,\
     get_valid_group_members,\
-    get_invalid_group_members
+    get_invalid_group_members,\
+    get_competition_person_score
 
 from people.forms import \
     ResendEmailVerificationForm
@@ -284,11 +285,15 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
             valid_members = valid_members\
                 .annotate(num_recordings=Count('recording'))
 
+            for member in valid_members:
+                member.score = get_competition_person_score(group, member)
+
         if invalid_members:
             invalid_members = invalid_members\
                 .annotate(num_groups=Count('groups', distinct=True))
             for p in invalid_members:
                 p.verified = email_verified(p)
+                p.score = get_competition_person_score(group, p)
 
         form = ResendEmailVerificationForm()
 

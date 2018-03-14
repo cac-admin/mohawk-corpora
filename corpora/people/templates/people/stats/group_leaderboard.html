@@ -26,7 +26,7 @@ div.col.table{
     <div class="col table">
 
 <h1>{{group.name}} Leaderboard</h1>
-
+<p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time.</small></p>
 {% if valid_members %}
 <table class="table" id='stats-table'>
     <thead>
@@ -34,7 +34,7 @@ div.col.table{
       <th scope="col">#</th>
       <th scope="col">{% trans 'Username' %}</th>
       <th scope="col">{% trans 'Recordings' %}</th>
-      <th scope="col">{% trans 'Score' %} <small>[beta]</small></th>
+      <th scope="col">{% trans 'Score' %}</th>
     </tr>
   </thead>
   <tbody>
@@ -57,7 +57,7 @@ div.col.table{
 
   </td>
   <td>{{p.num_recordings}}</td>
-  <td>{{p.score}}</td>
+  <td>{{p.score|floatformat:1}}</td>
 </tr>
 {% endfor %}
 
@@ -71,8 +71,8 @@ div.col.table{
 
 {% if invalid_members %}
 <h1>Invalid Members</h1>
-<p>The following members need to verify their email addresses or they belong to more than one group. 
-<b><em>These user's scores will not contribute to {{group}} scores.</em></b></p>
+<p><small>The following members need to verify their email addresses or they belong to more than one group. 
+<b><em>These user's scores will not contribute to {{group}} scores.</em></b></small></p>
 <table class="table" id='stats-table'>
     <thead>
     <tr>
@@ -80,6 +80,7 @@ div.col.table{
       <th scope="col">{% trans 'Username' %}</th>
       <th scope="col">{% trans '# Groups' %}</th>
       <th scope="col">{% trans 'Email Verified?' %}</th>
+      <th scope="col">{% trans 'Score' %}</th>
     </tr>
   </thead>
   <tbody>
@@ -128,6 +129,8 @@ form{
 
 
 </td>
+  <td>{{p.score|floatformat:1}}</td>
+
 </tr>
 {% endfor %}
 </tbody>

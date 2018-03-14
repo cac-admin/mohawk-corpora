@@ -87,9 +87,35 @@ def get_competition_group_score(group):
     score = 0
     for person in members:
         recordings = Recording.objects\
+            .filter(person=person)\
             .filter(created__lte=end)\
             .filter(created__gte=start)
         for r in recordings:
             score = score + r.calculate_score()
+
+    return score
+
+
+def get_competition_person_score(group, person):
+    start = parse_datetime("2018-03-15 13:00:00")
+    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
+    end = parse_datetime("2018-03-25 18:00:00")
+    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+
+    # ERROR! This doesn't consder language!
+    members = get_valid_group_members(group)
+    if members is None:
+        return 0
+
+    if not members.filter(pk=person.pk).exists():
+        return 0
+
+    score = 0
+    recordings = Recording.objects\
+        .filter(person=person)\
+        .filter(created__lte=end)\
+        .filter(created__gte=start)
+    for r in recordings:
+        score = score + r.calculate_score()
 
     return score
