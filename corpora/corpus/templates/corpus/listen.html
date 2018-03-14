@@ -126,7 +126,9 @@ player = new Player('.sentence-block');
       document.addEventListener('profile.loaded', function(){
         for (var i = 0; i < profile.data.known_languages.length; i++) {
           kl = profile.data.known_languages[i]['level_of_proficiency']
-          profile.data.known_languages[i]['level_of_proficiency'] = profs[kl]
+          if (typeof kl === 'number'){
+            profile.data.known_languages[i]['level_of_proficiency'] = " "+profs[kl]            
+          }
         }
         profile.display();  
       })
