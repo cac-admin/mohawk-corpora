@@ -16,6 +16,29 @@ div.content{
 div.col.table{
   overflow-x: auto;
 }
+
+div.label{
+    text-align: center;
+    margin-top: -15px;
+    color: $brand;
+    margin-bottom: 15px;
+  }
+
+div.score{
+  text-align: center;
+  color: $brand;
+
+  .value{
+    font-size: 3em;
+    font-weight: 400;
+    font-family: 'Roboto', 'Raleway', sans-serif;
+  }
+}
+
+.invalid{
+  color: #999;
+  border-color: #999;
+}
 </style>
 {% endaddtoblock %}
 
@@ -24,6 +47,16 @@ div.col.table{
 <div class="container">
   <div class="row">
     <div class="col table">
+
+<div class="score">
+  <span class="value">{{score|floatformat:0}}</span>
+</div>
+<div class="label">
+  <span class=" ">{% trans 'Score' %}</span>
+</div>
+
+
+
 
 <h1>{{group.name}} Leaderboard</h1>
 <p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time.</small></p>
@@ -70,10 +103,10 @@ div.col.table{
 
 
 {% if invalid_members %}
-<h1>Invalid Members</h1>
+<h1 class="invalid">Invalid Members</h1>
 <p><small>The following members need to verify their email addresses or they belong to more than one group. 
 <b><em>These user's scores will not contribute to {{group}} scores.</em></b></small></p>
-<table class="table" id='stats-table'>
+<table class="table " id='stats-table' >
     <thead>
     <tr>
       <th scope="col">#</th>

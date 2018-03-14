@@ -297,6 +297,7 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
 
         form = ResendEmailVerificationForm()
 
+        context['score'] = score
         context['form'] = form
         context['people'] = people.filter(groups=group)
         context['valid_members'] = valid_members
