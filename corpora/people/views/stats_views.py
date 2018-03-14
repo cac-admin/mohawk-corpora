@@ -198,8 +198,20 @@ to our project.")
 
     def get_queryset(self):
         # language = get_current_language(self.request)
-        return Group.objects.all().order_by('name').order_by('-score')\
+        groups = Group.objects.all().order_by('name').order_by('-score')\
             .annotate(size=Count('person'))
+
+        sort_by = self.request.GET.get('sort_by', '')
+        if '-score' in sort_by:
+            groups = groups.order_by('-score')
+        elif 'score' in sort_by:
+            groups = groups.order_by('score')
+        elif '-members' in sort_by:
+            groups = groups.order_by('-size')
+        elif 'members' in sort_by:
+            groups = groups.order_by('size')
+
+        return groups
 
     def get_context_data(self, **kwargs):
         context = \
