@@ -123,5 +123,5 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
         context['end_day'] = end_day
         context['start_date'] = start_date
         context['end_date'] = end_date
-        
+
         return context

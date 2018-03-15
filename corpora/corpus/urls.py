@@ -6,10 +6,10 @@ from corpus.views.views import SentenceListView, StatsView, ListenView
 from django.views.decorators.cache import cache_page
 
 urlpatterns = [
-    url(_(r'^record/'), views.record, name='record'),
+    url(_(r'^record/'), cache_page(60)(views.record), name='record'),
     url((r'^record/'), views.record_redirect, name='record-backwards-comp'),
 
-    url(_(r'^listen/'), ListenView.as_view(), name='listen'),
+    url(_(r'^listen/'), cache_page(60)(ListenView.as_view()), name='listen'),
     url((r'^listen/'), views.listen_redirect, name='listen-backwards-comp'),
 
     url(r'^submit_recording/',

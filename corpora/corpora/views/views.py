@@ -17,6 +17,8 @@ from corpus import views
 from people.helpers import get_or_create_person
 from django.contrib.sites.shortcuts import get_current_site
 
+from django.views.decorators.cache import cache_page
+
 
 def home(request):
     if request.user.is_authenticated():

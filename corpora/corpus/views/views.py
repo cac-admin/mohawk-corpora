@@ -297,7 +297,6 @@ the quality of recordings we use.')
         user = self.request.user
         person = get_or_create_person(self.request)
 
-
         # Don't fech recordings the person already listened to
         recordings = Recording.objects\
             .exclude(quality_control__person=person)\
