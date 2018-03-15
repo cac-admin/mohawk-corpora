@@ -22,8 +22,7 @@ from django.views.decorators.cache import cache_page
 urlpatterns = [
 
     url(r'^$',
-        cache_page(60 * 15)(
-            views.home),
+        views.home,
         name='home'),
 
     url(r'^privacy',
