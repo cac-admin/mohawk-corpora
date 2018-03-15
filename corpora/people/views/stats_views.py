@@ -188,7 +188,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/stats/groups_leaderboard.html'
-    paginate_by = 100
+    paginate_by = 25
     context_object_name = 'groups'
     x_title = _('Group Leaderboard')
     x_description = _("Group leaderboard of all the groups contributing corpus\
