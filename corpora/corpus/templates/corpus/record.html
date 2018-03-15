@@ -135,7 +135,7 @@ a.btn{
 
 {% include 'license/license_modal.html' %}
 
-
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorder/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
 
@@ -143,8 +143,6 @@ a.btn{
 {% addtoblock "js-include" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
 {% endcomment %}
 
-
-{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}

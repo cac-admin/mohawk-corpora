@@ -32,6 +32,8 @@ from corpus.aggregate import get_num_approved, get_net_votes
 
 from corpora.mixins import SiteInfoMixin
 
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -70,6 +72,7 @@ def record_redirect(request):
     return redirect(reverse('corpus:record'))
 
 
+@ensure_csrf_cookie
 def record(request):
     # Get the person object from the user
 
