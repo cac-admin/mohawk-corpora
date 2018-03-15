@@ -248,8 +248,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 queryset = queryset.order_by('-pk')
                 return queryset
 
-            if queryset.count() > 1:
-                i = random.randint(0, queryset.count()-1)
+            count = queryset.count()
+            if count > 1:
+                i = random.randint(0, count - 1)
                 return [queryset[i]]
             else:
                 return queryset
@@ -339,8 +340,9 @@ class ListenViewSet(viewsets.ModelViewSet):
         '''
 
         if 'random' in sort_by.lower():
-            if queryset.count() > 1:
-                i = random.randint(0, queryset.count()-1)
+            count = queryset.count()
+            if count > 1:
+                i = random.randint(0, count-1)
                 return [queryset[i]]
 
         return queryset
