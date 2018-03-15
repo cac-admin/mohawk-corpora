@@ -26,7 +26,7 @@
 </style>
 {% endaddtoblock %}
 
-{% cache 500 footer %}
+{% cache 500 footer request.user.is_authenticated %}
 
 <div class="container">
 

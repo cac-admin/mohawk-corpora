@@ -24,6 +24,7 @@ from django.db.models import Sum, Count, When, Value, Case, IntegerField
 from django.db.models import Q, F
 from django.db.models.functions import Length
 
+from django.core.cache import cache
 
 from django.utils.dateparse import parse_datetime
 import pytz
@@ -139,14 +140,18 @@ def get_competition_person_score(group, person):
     # if not members.filter(pk=person.pk).exists():
     #     return 0
 
-    score = 0
     recordings = Recording.objects\
         .filter(person=person)\
         .filter(created__lte=end)\
         .filter(created__gte=start)
+
+    # key = "COMPSCORE-PERSON-{0}".format(person.pk)
+    # score = cache.get(key)
+    # if score is None:
+    score = 0
     for r in recordings:
         score = score + calculate_recording_score(r)
-
+        # cache.set(key, score, 60*10)
     return score, recordings.count()
 
 
