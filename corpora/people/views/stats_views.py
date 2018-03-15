@@ -195,7 +195,7 @@ class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 to our project.")
 
     def test_func(self):
-        return self.request.user.is_staff
+        return self.request.user.is_staff and self.request.user.is_authenticated()
 
     def get_queryset(self):
         # language = get_current_language(self.request)
