@@ -19,6 +19,8 @@ from celery.task.control import revoke, inspect
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
+from people.competition import get_competition_group_score
+
 import datetime
 
 import logging
@@ -115,19 +117,12 @@ def update_group_score(g_pk):
     except ObjectDoesNotExist:
         return "Group with pk {0} does not exsit.".format(g_pk)
 
-    people = Person.objects\
-        .annotate(num_groups=Count('groups'))\
-        .filter(groups__pk=g_pk)\
-        .filter(num_groups=1)
+    score, count = get_competition_group_score(group)
 
-    d = people.aggregate(total_score=Sum('score'))
+    group.score = int(score)
+    group.save()
 
-    if d['total_score']:
-        group.score = int(d['total_score'])
-        group.save()
-        return "New score for {0}: {1}.".format(g_pk, group.score)
-    else:
-        return "No score for {0}.".format(g_pk)
+    return "New score for {0}: {1}.".format(g_pk, group.score)
 
 
 @shared_task
