@@ -2,6 +2,7 @@
 from django.utils.translation import ugettext as _
 
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView
 
 from corpus.models import Recording
 from people.helpers import get_current_language
@@ -12,18 +13,26 @@ from django.utils import timezone
 from django.db.models import Sum
 
 from corpora.mixins import SiteInfoMixin
+from people.views.stats_views import JSONResponseMixin
 
 import logging
 logger = logging.getLogger('corpora')
 
 
-class RecordingStatsView(SiteInfoMixin, ListView):
-    model = Recording
+class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
     template_name = 'corpus/recordings_stats_list.html'
     # paginate_by = 50
     context_object_name = 'recordings'
     x_title = _('Recording Growth Rate.')
     x_description = _('Graph of recording growth over the last month.')
+
+    def render_to_response(self, context):
+        context['view'] = None
+        context['person'] = None
+        if self.request.GET.get('format') == 'json':
+            return self.render_to_json_response(context)
+        else:
+            return super(RecordingStatsView, self).render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(RecordingStatsView, self).get_context_data(**kwargs)
@@ -31,7 +40,7 @@ class RecordingStatsView(SiteInfoMixin, ListView):
 
         language = get_current_language(self.request)
 
-        recordings = context['recordings'].order_by('-created')
+        recordings = Recording.objects.all().order_by('-created')
 
         start_date = recordings.last().created
         end_date = recordings.first().created

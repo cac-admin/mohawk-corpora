@@ -119,6 +119,45 @@ var border = ''
 </script>
 {% endaddtoblock %}
 
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$(document).ready(function(){
+  window.setInterval(function(){
+    $.ajax({url: "?format=json"}).done(function(data){
+
+      recordings = data.data.recordings
+      growth_rate = data.data.growth_rate
+
+      chart.data.labels = recordings.labels 
+
+      data = []
+      for (var i = 0; i<recordings.values.length; i++){
+        data[i]=parseFloat(Math.round(recordings.values[i] * 100) / 100)
+      }
+
+      chart.data.datasets[0].data=data
+      chart.update()
+
+
+      data = []
+      for (var i = 0; i<growth_rate.values.length; i++){
+        data[i]=parseFloat(Math.round(growth_rate.values[i] * 100) / 100)
+      }
+
+      chart2.data.labels = growth_rate.labels 
+      chart2.data.datasets[0].data=data
+      chart2.update()
+    })  
+  }, 10000);
+})
+
+
+
+</script>
+{% endaddtoblock %}
+
     </div>
   </div>
 </div>
