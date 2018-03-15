@@ -110,7 +110,7 @@
   <div class="row ">
     <div class="col">
         <h2 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Hopu Kōrero Māori Group Competition" %}</a></h2>
-        <h4 style="color: #444;">1pm 15 March - 6pm 25 March</h4>
+        <h4 style="color: #444;">Ends 6pm 25 March</h4>
         <p>Win cash 💰 your rōpū by reading sentences during the Hopu Kōrero Māori Group Competition. 
           Your group needs at least 7 members, and your members need to 
           <a href="{% url 'account_signup' %}">create an account</a> and
@@ -119,8 +119,6 @@
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a></p>
 
           <h4 style="color: #666;">🚧 Group Leader Board Comming Soon 🚧</h4>
-        <!-- <p>Join a group</p> -->
-        <p>{% for g in groups %}<span class="ropu">{{g}}</span>{% endfor %}</p>
         
     </div>
   </div>
