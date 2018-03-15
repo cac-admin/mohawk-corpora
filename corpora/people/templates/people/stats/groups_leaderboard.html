@@ -1,5 +1,5 @@
 {% extends 'people/stats/base.html' %}
-{% load static sekizai_tags compress i18n %}
+{% load static sekizai_tags compress i18n cache %}
 
 {% block title %}{{x_title}}{%endblock%}
 {% block content %}
@@ -13,11 +13,14 @@
 </style>
 {% endaddtoblock %}
 
+{% cache 600 groupsleaderboard request.user.is_staff request.user_isauthenticated request.path %}
+
 <div class="container">
   <div class="row">
     <div class="col table">
 <h1 style="text-align: center; font-weight: 900;">Group Leaderboard</h1>
-<p>Data updated approximately every 10 minutes.</p>
+<p><span  class="text-decoration: underline;">Data updated
+approximately every 10 minutes</span></p>
 <div class="table"><table class="table" id='stats-table'>
     <thead>
     <tr>
@@ -67,17 +70,5 @@
 
 
 </div>
-
-{% addtoblock "js-end" %}
-<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
--->
-{% endaddtoblock %} 
-{% addtoblock "js-end" %}
-<!-- <script type="text/javascript">
-$(document).ready(function() {
-  // $('#stats-table').DataTable();
-} );
-</script> -->
-{% endaddtoblock %}
-
+{% endcache %}
 {% endblock %}

@@ -1,4 +1,7 @@
 {% load sekizai_tags i18n %}
+{% load cache %}
+
+
 {% addtoblock 'css' %}
 <style type="text/x-scss">
 @import 'corpora/css/colors';
@@ -23,6 +26,7 @@
 </style>
 {% endaddtoblock %}
 
+{% cache 500 footer %}
 
 <div class="container">
 
@@ -70,3 +74,5 @@
   </div>
 
 </div>
+
+{% endcache %}

@@ -1,4 +1,6 @@
-  {% load static i18n url_filters %}
+  {% load static i18n url_filters cache %}
+  {% cache 500 socialmeta request.path %}
+
   <meta name="description" content="{{x_description}}" />
 
   <meta property="og:type"             content="website"/>
@@ -12,3 +14,5 @@
   <meta name="twitter:title" content="{{x_title}}" />
   <meta name="twitter:description" content="{{x_description}}" />
   <meta name="twitter:image" content="{{x_image}}" />
+
+  {% endcache %}

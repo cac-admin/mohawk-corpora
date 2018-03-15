@@ -1,4 +1,4 @@
-{% load account i18n socialaccount sekizai_tags static language %}
+{% load account i18n socialaccount sekizai_tags static language cache %}
 {% addtoblock "css" %}
 <link href="{% static 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
 {% endaddtoblock %}
@@ -25,6 +25,11 @@
 }
 </style>
 {% endaddtoblock %}
+
+
+{% cache 500 navbar request.user.is_staff request.user_isauthenticated request.path %}
+
+
 <nav class="navbar navbar-expand">
   <div class="container">
   <a class="navbar-brand" href="/">{{request.site.name}}</a>
@@ -192,3 +197,5 @@
 
 </div>
 </nav>
+
+{% endcache %}

@@ -21,6 +21,9 @@ class PersonMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         person = get_or_create_person(request)
+
+        request.person = person
+
         response = self.get_response(request)
         response.set_signed_cookie(
                 'uuid',
@@ -46,7 +49,7 @@ class LanguageMiddleware(object):
         set_cookie = False
         if request.COOKIES.has_key(settings.LANGUAGE_COOKIE_NAME):
             language = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
-        elif hasattr(request,'user'):
+        elif hasattr(request, 'user'):
             if request.user.is_authenticated():
                 current_language = get_current_language(request)
                 if current_language:
@@ -63,16 +66,15 @@ class LanguageMiddleware(object):
             response.set_cookie(
                 settings.LANGUAGE_COOKIE_NAME,
                 language,
-                max_age=2*365 * 24 * 60 * 60, 
-                domain=settings.SESSION_COOKIE_DOMAIN, 
+                max_age=2*365 * 24 * 60 * 60,
+                domain=settings.SESSION_COOKIE_DOMAIN,
                 secure=settings.SESSION_COOKIE_SECURE or None
             )
-
 
         # Code to be executed for each request/response after
         # the view is called.
 
-        translation.deactivate() # Deactivates our langauge after we've processed the request.
+        translation.deactivate()  # Deactivates our langauge after we've processed the request.
         return response
 
 

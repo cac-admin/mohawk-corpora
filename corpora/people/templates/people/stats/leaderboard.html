@@ -1,5 +1,5 @@
 {% extends 'people/competition/base.html' %}
-{% load static sekizai_tags compress i18n %}
+{% load static sekizai_tags compress i18n cache %}
 
 {% block title %}{{x_title}}{%endblock%}
 {% block content %}
@@ -14,6 +14,7 @@
 </style>
 {% endaddtoblock %}
 
+{% cache 600 userleaderboard request.path %}
 
 <div class="container">
   <div class="row">
@@ -69,16 +70,6 @@ reflect scores for the Group Competition.</b></em> Scores update approximately e
 
 </div>
 
-{% addtoblock "js-end" %}
-<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
--->
-{% endaddtoblock %} 
-{% addtoblock "js-end" %}
-<!-- <script type="text/javascript">
-$(document).ready(function() {
-  // $('#stats-table').DataTable();
-} );
-</script> -->
-{% endaddtoblock %}
+{% endcache %}
 
 {% endblock %}

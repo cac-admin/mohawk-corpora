@@ -1,5 +1,5 @@
 {% extends 'people/competition/base.html' %}
-{% load i18n static sekizai_tags compress  %}
+{% load i18n static sekizai_tags compress cache %}
 
 {% block content %}
 
@@ -39,10 +39,22 @@ div.score{
   color: #999;
   border-color: #999;
 }
+
+form{
+  display: inline-block;
+  input{
+    display: inline-block;
+    display: none;
+  }
+  button{
+    display: inline-block;
+  }
+}
 </style>
 {% endaddtoblock %}
 
 
+{% cache 600 groupleaderboard request.path request.person %}
 
 <div class="container">
   <div class="row">
@@ -59,8 +71,8 @@ div.score{
 
 
 <h1>{{group.name}} Leaderboard</h1>
-<p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time.</small> Data updated
-approximately every 10 minutes.</p>
+<p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time. <span  class="text-decoration: underline;">Data updated
+approximately every 10 minutes</span>.</small> </p>
 {% if valid_members %}
 <div class="table"><table class="table" id='stats-table'>
     <thead>
@@ -136,20 +148,6 @@ approximately every 10 minutes.</p>
   <td>{{p.num_groups}} </td>
   <td>{{p.verified}} 
   {% if not p.verified and p == person  %} 
-{% addtoblock "css" %}
-<style type="text/x-scss">
-form{
-  display: inline-block;
-  input{
-    display: inline-block;
-    display: none;
-  }
-  button{
-    display: inline-block;
-  }
-}
-</style>
-{% endaddtoblock %}
 
     <form method="POST" action="{{request.path}}" id="resend-form">
     {% csrf_token %}
@@ -174,4 +172,5 @@ form{
   </div>
 </div>
 
+{% endcache %}
 {% endblock %}

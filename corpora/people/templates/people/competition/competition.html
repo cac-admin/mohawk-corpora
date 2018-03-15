@@ -1,5 +1,5 @@
 {% extends 'people/competition/base.html' %}
-{% load static sekizai_tags compress i18n %}
+{% load static sekizai_tags compress i18n cache %}
 
 {% block title %}{{x_title}}{%endblock%}
 {% block content %}
@@ -44,6 +44,7 @@ h3{
 </style>
 {% endaddtoblock %}
 
+{% cache 300 competition %}
 
 <div class="container">
 
@@ -76,16 +77,6 @@ h3{
 
 </div>
 
-{% addtoblock "js-end" %}
-<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
--->
-{% endaddtoblock %} 
-{% addtoblock "js-end" %}
-<!-- <script type="text/javascript">
-$(document).ready(function() {
-  // $('#stats-table').DataTable();
-} );
-</script> -->
-{% endaddtoblock %}
+{% endcache %}
 
 {% endblock %}
