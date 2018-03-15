@@ -112,11 +112,14 @@ def get_competition_group_score(group):
     if members is None:
         return 0
 
-    key = "COMPSCORE-GROUP-{0}".format(group.pk)
-    score = cache.get(key)
+    SCORE_KEY = "COMP-GROUP-SCORE-{0}".format(group.pk)
+    COUNT_KEY = "COMP-GROUP-COUNT-{0}".format(group.pk)
+    score = cache.get(SCORE_KEY)
+    count = cache.get(COUNT_KEY)
     if score is None:
 
         score = 0
+        count = 0
         for person in members:
             recordings = Recording.objects\
                 .filter(person=person)\
@@ -124,8 +127,10 @@ def get_competition_group_score(group):
                 .filter(created__gte=start)
             for r in recordings:
                 score = score + r.calculate_score()
-        cache.set(key, score, 60*30)
-    return score
+            count = count + recordings.count()
+        cache.set(SCORE_KEY, score, 60*30)
+        cache.set(COUNT_KEY, score, 60*30)
+    return score, count
 
 
 def get_competition_person_score(group, person):

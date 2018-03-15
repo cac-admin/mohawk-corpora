@@ -222,15 +222,11 @@ to our project.")
 
         groups = context['groups']
         for group in groups:
-            score = get_competition_group_score(group)
+            score, num_recordings = get_competition_group_score(group)
             group.score = score
-            people = Person.objects\
-                .annotate(num_groups=Count('groups'))\
-                .filter(groups__pk=group.pk)\
-                .filter(num_groups=1)
-            d = people.aggregate(num_recordings=Count('recording'))
-            group.num_recordings = d['num_recordings']
+            group.num_recordings = num_recordings
 
+        # Tryin to do sort stuff :/
         # path = self.request.get_full_path()
         # if '?' not in path:
         #     path = path+'?'
@@ -282,7 +278,7 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         # people = people\
         #     .filter(recording__sentence__language=language)
 
-        score = get_competition_group_score(group)
+        score, count = get_competition_group_score(group)
 
         if valid_members:
 
