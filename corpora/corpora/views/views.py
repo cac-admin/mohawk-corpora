@@ -31,7 +31,9 @@ def home(request):
             'groups': groups,
             'languages': get_unknown_languages(None),
             'x_title': site.name,
-            'x_description': _("Teaching computers indigenous languages."),
+            'x_description': _("Kōrero Māori is teaching computers indigenous languages.\
+                We've created an open sourced web app to help indigenous\
+                communities strealine their work in language revitalisation."),
         }
 
         return render(request, 'corpora/home.html', context)

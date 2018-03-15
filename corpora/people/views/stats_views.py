@@ -285,18 +285,19 @@ class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
         score = get_competition_group_score(group)
 
         if valid_members:
-            valid_members = valid_members\
-                .annotate(num_recordings=Count('recording'))
 
             for member in valid_members:
-                member.score = get_competition_person_score(group, member)
+                member.score, member.num_recordings = \
+                    get_competition_person_score(group, member)
 
         if invalid_members:
             invalid_members = invalid_members\
                 .annotate(num_groups=Count('groups', distinct=True))
+
             for p in invalid_members:
                 p.verified = email_verified(p)
-                p.score = get_competition_person_score(group, p)
+                p.score, p.num_recordings = \
+                    get_competition_person_score(group, p)
 
         form = ResendEmailVerificationForm()
 

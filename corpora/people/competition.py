@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import math
+import decimal
 from celery import shared_task
 from django.utils.translation import ugettext as _
 
 from django.conf import settings
 from django.utils import translation, timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Sum
 
 from people.models import Person, KnownLanguage, Group
 from people.helpers import get_email, set_current_language_for_person, email_verified
@@ -20,7 +21,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
 from django.db.models import Sum, Count, When, Value, Case, IntegerField
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db.models.functions import Length
 
 
@@ -109,6 +110,7 @@ def get_competition_group_score(group):
     members = get_valid_group_members(group)
     if members is None:
         return 0
+
     score = 0
     for person in members:
         recordings = Recording.objects\
@@ -132,8 +134,10 @@ def get_competition_person_score(group, person):
     if members is None:
         return 0
 
-    if not members.filter(pk=person.pk).exists():
-        return 0
+    # IMPORTANT CHANGE - LET THEM NO THEIR SCORES WILL SHOW HERE SO THAT
+    # WHEN THEIR USER BECOMES VALID THEY'LL GET THEIR SCORES
+    # if not members.filter(pk=person.pk).exists():
+    #     return 0
 
     score = 0
     recordings = Recording.objects\
@@ -141,6 +145,25 @@ def get_competition_person_score(group, person):
         .filter(created__lte=end)\
         .filter(created__gte=start)
     for r in recordings:
-        score = score + r.calculate_score()
+        score = score + calculate_recording_score(r)
 
-    return score
+    return score, recordings.count()
+
+
+def calculate_recording_score(recording):
+    """Score awarded for uploading this recording. """
+
+    approved = recording.quality_control \
+        .filter(person__user__is_staff=True) \
+        .filter(approved=True)
+
+    if approved.count() >= 1:
+        return 1
+
+    net_votes = recording.quality_control \
+        .filter(person__user__is_staff=True) \
+        .aggregate(value=Sum(F('good') - F('bad')))
+
+    net_votes = decimal.Decimal(net_votes['value'] or 0)
+    damper = 4
+    return max(0, 1 - math.exp(-(net_votes + 1) / damper))
