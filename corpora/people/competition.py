@@ -128,8 +128,9 @@ def get_competition_group_score(group):
             for r in recordings:
                 score = score + r.calculate_score()
             count = count + recordings.count()
+        score = int(score)
         cache.set(SCORE_KEY, score, 60*30)
-        cache.set(COUNT_KEY, score, 60*30)
+        cache.set(COUNT_KEY, count, 60*30)
     return score, count
 
 
