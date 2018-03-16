@@ -211,7 +211,9 @@ def send_email_to_group(group_pk, message_pk, ma_pk):
                 p_display = person.pk
 
             # Do not send emails from dev/local environment.
-            if not person.user.is_staff and settings.DEBUG:
+            if person.user is None:
+                result = 3
+            elif not person.user.is_staff and settings.DEBUG:
                 result = 2
             else:
                 result = e.send(
@@ -219,14 +221,16 @@ def send_email_to_group(group_pk, message_pk, ma_pk):
                     fail_silently='False')
 
             if result == 1:
-                # note that we save the state for the entire action yet it's depended on
-                # many little actions. This needs to be rethough or improved.
+                # note that we save the state for the entire action yet it's
+                # depended on many little actions. This needs to be rethough or
+                # improved.
                 ma.completed = True
                 ma.save()
                 task_message.append("Sent email to {0}".format(p_display))
             elif result == 2:
-                task_message.append("Not sending email to {0} since not production".format(
-                    p_display))
+                task_message.append(
+                    "Not sending email to {0} since not production".format(
+                        p_display))
             else:
                 task_message.append(
                     "Error sending email to {0} - {1}.".format(

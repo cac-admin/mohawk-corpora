@@ -119,6 +119,10 @@
     </style>
     {% compress css inline %}
     <style type="text/x-scss">
+    @import 'bower_components/bootstrap/scss/functions';
+    @import 'bower_components/bootstrap/scss/variables';
+    @import 'bower_components/bootstrap/scss/mixins';
+    @import 'bower_components/bootstrap/scss/type';
     @import 'corpora/static/corpora/css/main.scss';
     @import 'corpora/static/corpora/css/_colors.scss';
 
@@ -130,18 +134,47 @@
     table{
         margin-left:auto; 
         margin-right:auto;
-        padding-left: 5px;
-        padding-right: 5px;
     }
     td{
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 2px;
+        padding-right: 2px;
     }
     h1{
         color: $brand_primary;
+        font-weight: 900;
+        font-size: 1.8em;
     }
+    h2{
+        font-weight: 800;
+    }
+    h3{
+        font-weight: 700;
+    }
+    h4{
+        font-weight: 600;
+    }
+    h5{
+        font-weight: 500;
+        text-decoration: underline;
+    }
+    h6{
+        font-weight: 400;
+    }
+
     p, ul, li, td{
         font-family: 'Raleway', sans-serif;
+    }
+
+    ul{
+        margin-left: 0em;
+        padding-left: 1.5em;
+        list-style-position: outside;
+    }
+
+    li{
+        margin-left: 0em;
+        padding-left: 0em;
+        list-style-position: outside;
     }
 
     h2{
