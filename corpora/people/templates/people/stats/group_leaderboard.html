@@ -54,7 +54,7 @@ form{
 {% endaddtoblock %}
 
 
-{% cache 600 groupleaderboard request.path request.person %}
+{% cache 600 groupleaderboard request.path request.GET.urlencode request.person %}
 
 <div class="container">
   <div class="row">
