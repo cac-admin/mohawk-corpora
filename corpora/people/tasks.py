@@ -152,13 +152,13 @@ def update_person_score(person_pk):
     person.score = score
     person.save()
 
-    groups = person.groups.all()
-    for g in groups:
-        update_group_score.apply_async(
-            args=[g.pk],
-            task_id="update-group-score-{0}-{1}".format(
-                g.pk, timezone.now().strftime("%H")),
-            countdown=60*10)
+    # groups = person.groups.all()
+    # for g in groups:
+    #     update_group_score.apply_async(
+    #         args=[g.pk],
+    #         task_id="update-group-score-{0}-{1}".format(
+    #             g.pk, timezone.now().strftime("%H")),
+    #         countdown=60*10)
 
     return "New score for {0}: {1}".format(person_pk, score)
 
