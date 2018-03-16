@@ -21,22 +21,22 @@ def user_signed_ip(request, user, **kwargs):
     person.save()
 
 
-@receiver(models.signals.pre_save, sender=Person)
-def update_group_score_when_person_changes_group(
-        sender, instance, **kwargs):
+# @receiver(models.signals.pre_save, sender=Person)
+# def update_group_score_when_person_changes_group(
+#         sender, instance, **kwargs):
 
-    try:
-        old_instance = Person.objects.get(pk=instance.pk)
+#     try:
+#         old_instance = Person.objects.get(pk=instance.pk)
 
-        old_groups = old_instance.groups.all()
+#         old_groups = old_instance.groups.all()
 
-        if len(old_groups) > 0:
-            for g in old_groups:
-                update_group_score.apply_async(
-                    args=[g.pk],
-                    task_id="update-group-score-{0}-{1}".format(
-                        g.pk, timezone.now().strftime("%H")),
-                    countdown=60*10)
+#         if len(old_groups) > 0:
+#             for g in old_groups:
+#                 update_group_score.apply_async(
+#                     args=[g.pk],
+#                     task_id="update-group-score-{0}-{1}".format(
+#                         g.pk, timezone.now().strftime("%H")),
+#                     countdown=60*10)
 
-    except ObjectDoesNotExist:
-        pass
+#     except ObjectDoesNotExist:
+#         pass
