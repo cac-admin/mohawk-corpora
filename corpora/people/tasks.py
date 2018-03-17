@@ -98,24 +98,13 @@ def calculate_group_scores():
     groups = Group.objects.all()
 
     for group in groups:
-
-        update_group_score.apply_async(
-            args=[group.pk],
-            task_id="update-group-score-{0}-{1}".format(
-                group.pk, timezone.now().strftime("%H")),
-            countdown=60*10)
+        update_group_score(group)
 
     return "Updated {0} scores".format(groups.count())
 
 
 @shared_task
-def update_group_score(g_pk):
-    from corpus.models import Recording, QualityControl
-
-    try:
-        group = Group.objects.get(pk=g_pk)
-    except ObjectDoesNotExist:
-        return "Group with pk {0} does not exsit.".format(g_pk)
+def update_group_score(group):
 
     score, count = get_competition_group_score(group)
 
@@ -181,7 +170,7 @@ def send_person_emails_staff(frequency='weekly'):
             p_display = person.pk
         result = send_status_email.apply_async(
             args=[person.pk, frequency],
-            countdown=count+2,
+            countdown=count*2,
             task_id='send_{1}_email-staff-{0}-{2}'.format(
                 p_display, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
             )
@@ -222,7 +211,7 @@ def send_person_emails(frequency='weekly'):
                 logger.debug("Sending email to {0}".format(person))
                 result = send_status_email.apply_async(
                     args=[person.pk, frequency],
-                    countdown=counter+2,
+                    countdown=counter*2,
                     task_id='send_{1}_email-{0}-{2}'.format(
                         person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
                     )
@@ -329,9 +318,13 @@ def send_status_email(person_pk, frequency='weekly'):
         else:
             p_display = person_pk
 
-        result = e.send(
-            from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
-            fail_silently='False')
+        try:
+            result = e.send(
+                from_addr='Kōrero Māori <koreromaori@tehiku.nz>',
+                fail_silently='False')
+        except Exception, e:
+            result = 10
+            pass
 
         if result == 1:
             return "Sent email to {0}".format(p_display)

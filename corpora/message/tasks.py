@@ -55,20 +55,23 @@ def send_message(pk):
         #     return 'Error parsing query filter.'
 
     if ma.action in 'E':
+        counter = 0
         if 'person' in ma.target_type.model:
             for p in targets:
                 send_email_to_person.apply_async(
                     args=[p.pk, m.pk, ma.pk],
                     task_id="ma-email-{0}-{1}".format(
                         p.pk, m.pk),
-                    countdown=2)
+                    countdown=2*counter)
+                counter = counter+1
         if 'group' in ma.target_type.model:
             for g in targets:
                 send_email_to_group.apply_async(
                     args=[g.pk, m.pk, ma.pk],
                     task_id="ma-email-group-{0}-{1}".format(
                         g.pk, m.pk),
-                    countdown=2)
+                    countdown=2*counter)
+                counter = counter+1
         else:
             return 'Sending email to {0} not yet implemented'.format(
                 ma.target_type)

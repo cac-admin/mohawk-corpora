@@ -205,22 +205,16 @@ def encode_audio(recording, test=False, codec='aac'):
     data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
     logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
 
-    set_s3_content_deposition.apply_async(
-        args=[recording.pk],
-        countdown=2,
-        task_id='set_recording_content_deposition-{0}'.format(
-            recording.pk)
-        )
+    set_s3_content_deposition(recording)
 
     return "Encoded {0}".format(recording)
 
 
 @shared_task
-def set_s3_content_deposition(recording_pk):
+def set_s3_content_deposition(recording):
     import mimetypes
 
     if 's3boto' in settings.DEFAULT_FILE_STORAGE.lower():
-        recording = Recording.objects.get(pk=recording_pk)
 
         from boto.s3.connection import S3Connection
         c = S3Connection(
