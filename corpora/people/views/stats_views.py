@@ -271,10 +271,6 @@ to our project.")
         language = get_current_language(self.request)
 
         groups = context['groups']
-        for group in groups:
-            score, num_recordings = get_competition_group_score(group)
-            group.score = score
-            group.num_recordings = num_recordings
 
         # Tryin to do sort stuff :/
         # path = self.request.get_full_path()

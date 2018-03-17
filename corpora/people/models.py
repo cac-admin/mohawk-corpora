@@ -117,6 +117,10 @@ class Person(models.Model):
         editable=False,
         default=0)
 
+    score_comp = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
     last_user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
 

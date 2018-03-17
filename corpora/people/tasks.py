@@ -19,7 +19,10 @@ from celery.task.control import revoke, inspect
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
-from people.competition import get_competition_group_score
+from people.competition import get_competition_group_score, get_competition_person_score
+
+from django.core.cache import cache
+from corpora.celery import app
 
 import datetime
 
@@ -106,9 +109,16 @@ def calculate_group_scores():
 @shared_task
 def update_group_score(group):
 
+    if type(group) is int:
+        try:
+            group = Group.objects.get(pk=group)
+        except ObjectDoesNotExist:
+            return "Group with pk {0} doesn't exist.".format(group)
+
     score, count = get_competition_group_score(group)
 
     group.score = int(score)
+    group.num_recordings = count
     group.save()
 
     return "New score for {0}: {1}.".format(group.pk, group.score)
@@ -139,15 +149,34 @@ def update_person_score(person_pk):
     #     score = score + float(q.calculate_score())
 
     person.score = score
+    group = person.groups.first()
+    score, num = get_competition_person_score(group, person)
+    person.score_comp = score
+
     person.save()
 
-    # groups = person.groups.all()
-    # for g in groups:
-    #     update_group_score.apply_async(
-    #         args=[g.pk],
-    #         task_id="update-group-score-{0}-{1}".format(
-    #             g.pk, timezone.now().strftime("%H")),
-    #         countdown=60*10)
+    groups = person.groups.all()
+    for group in groups:
+        key = 'update_group_score-{0}'.format(
+            group.pk)
+        task_id = 'update_group_score-{0}-{1}'.format(
+            group.pk, timezone.now().strftime('%H%M'))
+        old_task_id = cache.get(key)
+        if old_task_id is None:
+            update_group_score.apply_async(
+                args=[group.pk],
+                task_id=task_id,
+                countdown=60*5)
+            cache.set(key, task_id, 60*5)
+        else:
+            if old_task_id != task_id:
+                app.control.revoke(old_task_id)
+                update_group_score.apply_async(
+                    args=[group.pk],
+                    task_id=task_id,
+                    countdown=60*5)
+            else:
+                pass
 
     return "New score for {0}: {1}".format(person_pk, score)
 

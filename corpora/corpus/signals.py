@@ -7,6 +7,8 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 
+from corpora.celery import app
+
 from django.core.cache import cache
 
 # @receiver(models.signals.post_save, sender=Sentence)
@@ -129,15 +131,67 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 # This isn't correct - we want the person of the recording object of quality
 # control to get a new score not the person who done the QC.
 # Will need to update this later. for nwo it's ok
-# @receiver(models.signals.post_save, sender=QualityControl)
 
-# DISABLE
+@receiver(models.signals.post_save, sender=QualityControl)
+@receiver(models.signals.post_save, sender=Recording)
+def update_person_score_when_model_saved(sender, instance, **kwargs):
 
-# @receiver(models.signals.post_save, sender=Recording)
-# def update_person_score_when_model_saved(sender, instance, **kwargs):
-#     update_person_score.apply_async(
-#         args=[instance.person.pk],
-#         task_id='update_person_score-{0}-{1}'.format(
-#             instance.person.pk,
-#             instance.__class__.__name__),
-#         countdown=60)
+    # try:
+
+    key = 'update_person_score-{0}'.format(
+        instance.person.pk)
+
+    now = timezone.now()
+    # counter = int(int(now.strftime('%S'))/5.0)
+    cc = "{0}".format(now.strftime('%H%M%S'))
+
+    task_id = 'update_person_score-{0}-{1}'.format(
+        instance.person.pk, cc)
+
+    old_task_id = cache.get(key)
+    # First signal call
+    if old_task_id is None:
+
+        if isinstance(instance, Recording):
+
+            update_person_score.apply_async(
+                args=[instance.person.pk],
+                task_id=task_id,
+                countdown=120)
+
+        elif isinstance(instance, QualityControl):
+            if isinstance(instance.content_object, Recording):
+                recording = instance.content_object
+
+                update_person_score.apply_async(
+                    args=[instance.person.pk],
+                    task_id=task_id,
+                    countdown=120)
+
+        cache.set(key, task_id, 120)
+
+    #     else:
+
+    #         if old_task_id != task_id:
+    #             app.control.revoke(old_task_id)
+
+    #             if isinstance(instance, Recording):
+
+    #                 update_person_score.apply_async(
+    #                     args=[instance.person.pk],
+    #                     task_id=task_id,
+    #                     countdown=120)
+
+    #             elif isinstance(instance, QualityControl):
+    #                 if isinstance(instance.content_object, Recording):
+    #                     recording = instance.content_object
+
+    #                     update_person_score.apply_async(
+    #                         args=[instance.person.pk],
+    #                         task_id=task_id,
+    #                         countdown=120)
+    #         else:
+    #             pass
+
+    # except:
+    #     pass

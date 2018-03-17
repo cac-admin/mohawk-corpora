@@ -124,8 +124,8 @@ def get_competition_group_score(group):
             score = score + p_score
             count = count + p_count
         score = int(score)
-        cache.set(SCORE_KEY, score, 60*30)
-        cache.set(COUNT_KEY, count, 60*30)
+        cache.set(SCORE_KEY, score, 60)
+        cache.set(COUNT_KEY, count, 60)
     return score, count
 
 
@@ -156,7 +156,7 @@ def get_competition_person_score(group, person):
         score = 0
         for r in recordings:
             score = score + calculate_recording_score(r)
-        cache.set(SCORE_KEY, score, 60*1)
+        cache.set(SCORE_KEY, score, 60)
     return score, recordings.count()
 
 
