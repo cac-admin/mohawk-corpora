@@ -44,6 +44,10 @@ class Group(models.Model):
         editable=False,
         default=0)
 
+    num_recordings = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
     def __unicode__(self):
         return self.name
 
