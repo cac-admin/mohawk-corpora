@@ -14,7 +14,7 @@
 </style>
 {% endaddtoblock %}
 
-{% cache 600 userleaderboard request.path %}
+{% cache 600 userleaderboard request.path request.GET.urlencode %}
 
 <div class="container">
   <div class="row">
