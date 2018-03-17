@@ -48,7 +48,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.db import models
 
-from corpora.mixins import SiteInfoMixin
+from corpora.mixins import SiteInfoMixin, EnsureCsrfCookieMixin
 
 from people.competition import \
     get_competition_group_score,\
@@ -236,7 +236,8 @@ to our project.")
         return context
 
 
-class GroupStatsView(SiteInfoMixin, UserPassesTestMixin, DetailView):
+class GroupStatsView(
+        EnsureCsrfCookieMixin, SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group
     template_name = 'people/stats/group_leaderboard.html'
     context_object_name = 'group'

@@ -3,6 +3,9 @@ from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext as _
 from django.contrib.sites.shortcuts import get_current_site
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 from people.helpers import get_or_create_person
 
 
@@ -33,3 +36,15 @@ class SiteInfoMixin(object):
         context['person'] = person
 
         return context
+
+
+class EnsureCsrfCookieMixin(object):
+    """
+    Ensures that the CSRF cookie will be passed to the client.
+    NOTE:
+        This should be the left-most mixin of a view.
+    """
+
+    @method_decorator(ensure_csrf_cookie)
+    def get(self, request, *args, **kwargs):
+        return super(EnsureCsrfCookieMixin, self).dispatch(*args, **kwargs)

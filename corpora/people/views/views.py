@@ -32,7 +32,7 @@ from people.forms import \
     DemographicForm,\
     PersonForm, GroupsForm
 
-from corpora.mixins import SiteInfoMixin
+from corpora.mixins import SiteInfoMixin, EnsureCsrfCookieMixin
 
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
@@ -43,7 +43,8 @@ logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
 
 
-class ProfileDetail(SiteInfoMixin, APIView, TemplateView):
+class ProfileDetail(
+        EnsureCsrfCookieMixin, SiteInfoMixin, APIView, TemplateView):
     template_name = "people/profile_detail.html"
     renderer_classes = [TemplateHTMLRenderer]
     x_title = _('Profile')
