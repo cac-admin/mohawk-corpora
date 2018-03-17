@@ -211,6 +211,11 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
             queryset = filter_recordings_for_competition(queryset)
 
+            queryset = queryset\
+                .exclude(quality_control__approved=True)\
+                .exclude(quality_control__good__gte=1)\
+                .exclude(quality_control__bad__gte=1)
+
             # Exclude approved items
             # queryset = queryset\
             #     .annotate(num_approved=Sum(
@@ -229,25 +234,25 @@ class RecordingViewSet(viewsets.ModelViewSet):
             # queryset = queryset.exclude(num_approved__gte=1)
 
             # Exclude things with at least 1 vote
-            queryset = queryset\
-                .annotate(count_votes=Sum(
-                    Case(
-                        When(
-                            quality_control__isnull=True,
-                            then=Value(0)),
-                        When(
-                            quality_control__approved=True,
-                            then=Value(1)),
-                        When(
-                            quality_control__good__gte=1,
-                            then=Value(1)),
-                        When(
-                            quality_control__bad__gte=1,
-                            then=Value(1)),
-                        default=Value(0),
-                        output_field=IntegerField())))
-            queryset = queryset\
-                .exclude(count_votes__gte=1)
+            # queryset = queryset\
+            #     .annotate(count_votes=Sum(
+            #         Case(
+            #             When(
+            #                 quality_control__isnull=True,
+            #                 then=Value(0)),
+            #             When(
+            #                 quality_control__approved=True,
+            #                 then=Value(1)),
+            #             When(
+            #                 quality_control__good__gte=1,
+            #                 then=Value(1)),
+            #             When(
+            #                 quality_control__bad__gte=1,
+            #                 then=Value(1)),
+            #             default=Value(0),
+            #             output_field=IntegerField())))
+            # queryset = queryset\
+            #     .exclude(count_votes__gte=1)
 
             # Exclude things person listened to
 

@@ -47,4 +47,4 @@ class EnsureCsrfCookieMixin(object):
 
     @method_decorator(ensure_csrf_cookie)
     def get(self, request, *args, **kwargs):
-        return super(EnsureCsrfCookieMixin, self).dispatch(*args, **kwargs)
+        return super(EnsureCsrfCookieMixin, self).get(request, *args, **kwargs)
