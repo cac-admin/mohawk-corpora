@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-15 02:49+1300\n"
+"POT-Creation-Date: 2018-03-17 20:39+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,47 +129,47 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:22
-#: corpus/views/views.py:207
+#: corpus/templates/corpus/qualitycontrol_list.html:24
+#: corpus/views/views.py:210
 msgid "Stats"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:28
+#: corpus/templates/corpus/qualitycontrol_list.html:30
 #: corpus/templates/corpus/recordings_stats_list.html:29
 #: corpus/templates/corpus/recordings_stats_list.html:65
 msgid "Recordings"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:30
-#: corpus/templates/corpus/qualitycontrol_list.html:40
+#: corpus/templates/corpus/qualitycontrol_list.html:32
+#: corpus/templates/corpus/qualitycontrol_list.html:42
 msgid "Number"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:31
-msgid "Duration"
-msgstr ""
-
-#: corpus/templates/corpus/qualitycontrol_list.html:32
-#: corpus/templates/corpus/qualitycontrol_list.html:41
-msgid "Approved"
-msgstr ""
-
 #: corpus/templates/corpus/qualitycontrol_list.html:33
-#: corpus/templates/corpus/qualitycontrol_list.html:42
-msgid "Good"
+msgid "Duration"
 msgstr ""
 
 #: corpus/templates/corpus/qualitycontrol_list.html:34
 #: corpus/templates/corpus/qualitycontrol_list.html:43
+msgid "Approved"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:35
+#: corpus/templates/corpus/qualitycontrol_list.html:44
+msgid "Good"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:36
+#: corpus/templates/corpus/qualitycontrol_list.html:45
 msgid "Bad"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:38
-#: corpus/views/views.py:42
+#: corpus/templates/corpus/qualitycontrol_list.html:40
+#: corpus/views/views.py:44
 msgid "Sentences"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:51
+#: corpus/templates/corpus/qualitycontrol_list.html:53
 msgid "Recordings by Language Proficiency"
 msgstr ""
 
@@ -201,15 +201,15 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: corpus/urls.py:9
+#: corpus/urls.py:7
 msgid "^record/"
 msgstr ""
 
-#: corpus/urls.py:12
+#: corpus/urls.py:10
 msgid "^listen/"
 msgstr ""
 
-#: corpus/urls.py:19
+#: corpus/urls.py:17
 msgid "^sentences/"
 msgstr ""
 
@@ -247,40 +247,40 @@ msgstr ""
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:269 corpus/views/api.py:284
+#: corpus/views/api.py:289 corpus/views/api.py:304
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""
 
-#: corpus/views/stats_views.py:25
+#: corpus/views/stats_views.py:26
 msgid "Recording Growth Rate."
 msgstr ""
 
-#: corpus/views/stats_views.py:26
+#: corpus/views/stats_views.py:27
 msgid "Graph of recording growth over the last month."
 msgstr ""
 
-#: corpus/views/views.py:41
+#: corpus/views/views.py:43
 msgid "Approve sentences to use when gathering recordings."
 msgstr ""
 
-#: corpus/views/views.py:144
+#: corpus/views/views.py:147
 msgid "Record"
 msgstr ""
 
-#: corpus/views/views.py:145
+#: corpus/views/views.py:148
 msgid "Help us teach computers the sounds of a language by reading sentences."
 msgstr ""
 
-#: corpus/views/views.py:208
+#: corpus/views/views.py:211
 msgid "Statistics for all data."
 msgstr ""
 
-#: corpus/views/views.py:291
+#: corpus/views/views.py:294
 msgid "Listen"
 msgstr ""
 
-#: corpus/views/views.py:292
+#: corpus/views/views.py:295
 msgid ""
 "Listen to and vote on recordings. This helps us improvethe quality of "
 "recordings we use."

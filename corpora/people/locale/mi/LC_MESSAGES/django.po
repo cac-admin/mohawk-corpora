@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-15 02:49+1300\n"
+"POT-Creation-Date: 2018-03-17 20:39+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,21 +181,21 @@ msgstr ""
 msgid "known languages"
 msgstr ""
 
-#: people/tasks.py:270
+#: people/tasks.py:254
 #, fuzzy
 #| msgid "Today"
 msgid "today"
 msgstr "I tēnei rā"
 
-#: people/tasks.py:271
+#: people/tasks.py:255
 msgid "yesterday"
 msgstr ""
 
-#: people/tasks.py:283
+#: people/tasks.py:267
 msgid "this week"
 msgstr ""
 
-#: people/tasks.py:284
+#: people/tasks.py:268
 msgid "last week"
 msgstr ""
 
@@ -616,7 +616,7 @@ msgstr ""
 msgid "Save"
 msgstr "Tiakina"
 
-#: people/templates/people/competition/competition.html:64
+#: people/templates/people/competition/competition.html:66
 msgid "rules"
 msgstr ""
 
@@ -719,9 +719,9 @@ msgstr ""
 
 #: people/templates/people/email/weekly_stats_update.txt:9
 #: people/templates/people/profile.html:66
-#: people/templates/people/stats/group_leaderboard.html:69
-#: people/templates/people/stats/groups_leaderboard.html:26
-#: people/templates/people/stats/leaderboard.html:29
+#: people/templates/people/stats/group_leaderboard.html:82
+#: people/templates/people/stats/groups_leaderboard.html:30
+#: people/templates/people/stats/leaderboard.html:30
 msgid "Recordings"
 msgstr "Kapohanga Reo"
 
@@ -757,41 +757,41 @@ msgstr "Kapohia"
 msgid "All done! You've recorded a corpus for all sentnces."
 msgstr "Kua oti i a koe te kapo kōrero mō ngā rerenga katoa."
 
-#: people/templates/people/stats/group_leaderboard.html:55
-#: people/templates/people/stats/group_leaderboard.html:70
-#: people/templates/people/stats/group_leaderboard.html:116
-#: people/templates/people/stats/groups_leaderboard.html:27
-#: people/templates/people/stats/leaderboard.html:30
+#: people/templates/people/stats/group_leaderboard.html:67
+#: people/templates/people/stats/group_leaderboard.html:83
+#: people/templates/people/stats/group_leaderboard.html:129
+#: people/templates/people/stats/groups_leaderboard.html:31
+#: people/templates/people/stats/leaderboard.html:31
 msgid "Score"
 msgstr "Tatau"
 
-#: people/templates/people/stats/group_leaderboard.html:68
-#: people/templates/people/stats/group_leaderboard.html:113
-#: people/templates/people/stats/leaderboard.html:28
+#: people/templates/people/stats/group_leaderboard.html:81
+#: people/templates/people/stats/group_leaderboard.html:126
+#: people/templates/people/stats/leaderboard.html:29
 #, fuzzy
 #| msgid "name"
 msgid "Username"
 msgstr "Ingoa"
 
-#: people/templates/people/stats/group_leaderboard.html:114
+#: people/templates/people/stats/group_leaderboard.html:127
 #, fuzzy
 #| msgid "group"
 msgid "# Groups"
 msgstr "rōpū"
 
-#: people/templates/people/stats/group_leaderboard.html:115
+#: people/templates/people/stats/group_leaderboard.html:128
 #, fuzzy
 #| msgid "Verified"
 msgid "Email Verified?"
 msgstr "Kua whakaūngia"
 
-#: people/templates/people/stats/groups_leaderboard.html:24
+#: people/templates/people/stats/groups_leaderboard.html:28
 #, fuzzy
 #| msgid "group"
 msgid "Group"
 msgstr "rōpū"
 
-#: people/templates/people/stats/groups_leaderboard.html:25
+#: people/templates/people/stats/groups_leaderboard.html:29
 msgid "# Members"
 msgstr ""
 
@@ -894,29 +894,29 @@ msgstr ""
 msgid "Group leaderboard of all the groups contributing corpusto our project."
 msgstr ""
 
-#: people/views/stats_views.py:247
+#: people/views/stats_views.py:243
 msgid "Individual Group Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:248
+#: people/views/stats_views.py:244
 msgid "Leaderboard for people of a particular group."
 msgstr ""
 
-#: people/views/stats_views.py:268
+#: people/views/stats_views.py:264
 #, python-brace-format
 msgid "Group Leaderboard: {0}"
 msgstr ""
 
-#: people/views/stats_views.py:269
+#: people/views/stats_views.py:265
 #, python-brace-format
 msgid "Leaderboard for members of {0}."
 msgstr ""
 
-#: people/views/stats_views.py:389
+#: people/views/stats_views.py:386
 msgid "weekly"
 msgstr ""
 
-#: people/views/stats_views.py:391
+#: people/views/stats_views.py:388
 msgid "daily"
 msgstr ""
 
