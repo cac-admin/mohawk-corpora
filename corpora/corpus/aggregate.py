@@ -70,3 +70,22 @@ def build_recordings_stat_dict(recording_queryset):
         stats['num_approved'] = 0
 
     return stats
+
+
+# This assumes recording QCs
+def build_qualitycontrol_stat_dict(queryset):
+
+    approved = \
+        queryset.filter(approved=True)
+
+    goods = queryset.filter(good__gte=1).count()
+    bads = queryset.filter(bad__gte=1).count()
+
+    stats = {
+        'total': queryset.count(),
+        'num_approved': approved.count(),
+        'up_votes': goods,
+        'down_votes': bads,
+    }
+
+    return stats

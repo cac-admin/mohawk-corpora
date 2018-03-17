@@ -42,7 +42,8 @@ from boto.s3.connection import S3Connection
 from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q
 from django.core.cache import cache
 
-from corpus.aggregate import build_recordings_stat_dict
+from corpus.aggregate import \
+    build_recordings_stat_dict, build_qualitycontrol_stat_dict
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 
@@ -131,6 +132,55 @@ class PersonRecordingStatsView(JSONResponseMixin, TemplateView):
             return self.render_to_json_response(context)
         else:
             return super(PersonRecordingStatsView, self).render_to_response(context)
+
+    def get_data(self, context):
+        return context['stats']
+
+
+# This is currently only for recording QCs
+class PersonQCStatsView(JSONResponseMixin, TemplateView):
+    template_name = 'people/stats/person_qc_stats_view_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(PersonQCStatsView, self).get_context_data(**kwargs)
+
+        person = get_person(self.request)
+        language = get_current_language(self.request)
+
+        qcs = QualityControl.objects.filter(person=person)
+
+        pks = []
+        for qc in qcs:
+            if qc.content_type.name.lower() in 'recording' \
+                    and qc.content_object.sentence.language == language:
+                pks.append(qc.pk)
+
+        qcs = qcs.filter(pk__in=pks)
+
+        now = timezone.now()
+
+        today_begining = \
+            datetime.datetime.combine(now, datetime.time())
+
+        todays_qcs = qcs\
+            .filter(updated__gte=today_begining).order_by('updated')
+
+        stats = {
+            'qcs': build_qualitycontrol_stat_dict(qcs),
+            'qcs_today': build_qualitycontrol_stat_dict(todays_qcs)
+        }
+
+        context['person'] = person
+        context['stats'] = stats
+
+        return context
+
+    def render_to_response(self, context):
+        if self.request.GET.get('format') == 'json':
+            return self.render_to_json_response(context)
+        else:
+            return super(PersonQCStatsView, self).render_to_response(context)
 
     def get_data(self, context):
         return context['stats']

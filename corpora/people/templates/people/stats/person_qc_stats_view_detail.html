@@ -1,0 +1,130 @@
+{% load static sekizai_tags compress i18n %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+</style>
+{% endaddtoblock %}
+
+{% addtoblock "head" %}<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,900" rel="stylesheet">{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+
+.stat{
+  font-family: 'Roboto', sans-serif;
+  font-size: .85em;
+  line-height: .85em;
+  text-align: center;
+  color: $brand_primary;
+}
+
+.stat.stat-heading{ 
+  line-height: 1.5em;
+  font-size: 1em;
+  color: $brand_dark;
+}
+
+.stat.stat-value{
+  font-size: 2.25em;
+  font-weight: 100;
+  line-height: 1.0em;
+  display: inline-block;
+}
+.stat.stat-icon {
+  font-size: 1.5em;
+  /*line-height: 20px;*/
+  
+}
+
+.stat.stat-dimension{
+  font-size: .8em;
+  line-height: 0px;
+  color: $brand_dark;
+  display: none;
+}
+
+.stat-value-animate-up{
+  transform: scale(2);
+  transition: transform 100ms ease-in-out;
+}
+.stat-value-animate-down{
+  transform: scale(1);
+  transition: transform 100ms ease-in-out;
+}
+
+span[class*=approvals]{
+  color: green;
+}
+
+span[class*=upvotes]{
+  color: $brand_dark;
+}
+
+span[class*=downvotes]{
+  color: $brand_darker;
+}
+
+</style>
+{% endaddtoblock %}
+
+
+  <div class="row justify-content-end">
+    <div class="col-12">
+      <div class="row stat" {% if not stats %}style="display: none;"{% endif %}>
+        <div class="col-12" style="text-align: right;"><span class="stat stat-heading">{% trans 'Today' %}</span></div>
+        <div class="col-3">
+          <span class="stat stat-value stat-total-approvals" data-value="">{{stats.qcs_today.num_approved}}</span>
+          <span class="stat stat-icon stat-total-approvals"><i class="far fa-fw fa-check-circle"></i></span>
+
+          <span class="stat stat-dimension stat-total-approvals"><br>{% trans 'approvals' %}</span>
+        </div>
+        <div class="col-3">
+          <span class="stat stat-value stat-total-upvotes" data-value="">{{stats.qcs_today.up_votes}}</span>
+                    <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-thumbs-up"></i></span>
+
+          <span class="stat stat-dimension stat-total-upvotes"><br>{% trans 'up votes' %}</span>
+        </div>
+        <div class="col-3">
+          <span class="stat stat-value stat-total-downvotes" data-value="">{{stats.qcs_today.down_votes}}</span>
+                    <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-thumbs-down"></i></span>
+
+          <span class="stat stat-dimension stat-total-downvotes"><br>{% trans 'down votes' %}</span>
+        </div>        
+        <div class="col-3">
+          <span class="stat stat-value stat-total-total" data-value="">{{stats.qcs_today.total}}</span>
+          <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'total' %}</span>
+        </div>           
+      </div>
+    </div>
+  </div>
+
+
+{% addtoblock "js-end" %}<script type="text/javascript">{% include 'people/js/stats_qc.js' %}</script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  stats = new Stats('.stat', "{% url 'stats_person_qc' %}?format=json")
+
+  
+  document.addEventListener('listen.recording.loaded', function(){
+    window.setTimeout(function(){
+      stats.get_stats()
+    }, 1000);
+  })
+
+
+  window.setTimeout(function(){stats.get_stats()}, 10)
+
+})
+
+</script>
+{% endaddtoblock %}
+

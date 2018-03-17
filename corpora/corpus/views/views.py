@@ -317,5 +317,6 @@ the quality of recordings we use.')
         context['user'] = user
         context['person'] = person
         context['recordings'] = recordings
+        context['show_qc_stats'] = True
 
         return context
