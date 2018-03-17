@@ -151,12 +151,12 @@ def get_competition_person_score(group, person):
         .filter(created__gte=start)
 
     SCORE_KEY = "COMP-PERSON-SCORE-{0}".format(person.pk)
-    score = cache.get(key)
+    score = cache.get(SCORE_KEY)
     if score is None:
         score = 0
         for r in recordings:
             score = score + calculate_recording_score(r)
-        cache.set(key, score, 60*1)
+        cache.set(SCORE_KEY, score, 60*1)
     return score, recordings.count()
 
 
