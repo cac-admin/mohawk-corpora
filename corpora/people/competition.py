@@ -117,17 +117,12 @@ def get_competition_group_score(group):
     score = cache.get(SCORE_KEY)
     count = cache.get(COUNT_KEY)
     if score is None:
-
         score = 0
         count = 0
         for person in members:
-            recordings = Recording.objects\
-                .filter(person=person)\
-                .filter(created__lte=end)\
-                .filter(created__gte=start)
-            for r in recordings:
-                score = score + r.calculate_score()
-            count = count + recordings.count()
+            p_score, p_count = get_competition_person_score(group, person)
+            score = score + p_score
+            count = count + p_count
         score = int(score)
         cache.set(SCORE_KEY, score, 60*30)
         cache.set(COUNT_KEY, count, 60*30)
@@ -165,8 +160,17 @@ def get_competition_person_score(group, person):
     return score, recordings.count()
 
 
+# TODO TEST THIS!
 def calculate_recording_score(recording):
     """Score awarded for uploading this recording. """
+    start = parse_datetime("2018-03-18 13:00:00")
+    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
+    end = parse_datetime("2018-03-19 13:00:00")
+    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+
+    factor_1 = 1
+    if recording.created > start and recording.created < end:
+        factor_1 = 2
 
     approved = recording.quality_control \
         .filter(person__user__is_staff=True) \
@@ -180,5 +184,14 @@ def calculate_recording_score(recording):
         .aggregate(value=Sum(F('good') - F('bad')))
 
     net_votes = decimal.Decimal(net_votes['value'] or 0)
+
+    if net_votes != 0:
+        net_votes = net_votes/abs(net_votes)
+
     damper = 4
-    return max(0, 1 - math.exp(-(net_votes + 1) / damper))
+    score = max(0, 1 - math.exp(-(net_votes + 1) / damper))
+
+    if net_votes == 0:
+        return score * factor_1
+    else:
+        return score
