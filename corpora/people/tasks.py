@@ -111,7 +111,7 @@ def update_group_score(group):
     group.score = int(score)
     group.save()
 
-    return "New score for {0}: {1}.".format(g_pk, group.score)
+    return "New score for {0}: {1}.".format(group.pk, group.score)
 
 
 @shared_task
