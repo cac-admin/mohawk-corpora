@@ -131,11 +131,13 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 # Will need to update this later. for nwo it's ok
 # @receiver(models.signals.post_save, sender=QualityControl)
 
-@receiver(models.signals.post_save, sender=Recording)
-def update_person_score_when_model_saved(sender, instance, **kwargs):
-    update_person_score.apply_async(
-        args=[instance.person.pk],
-        task_id='update_person_score-{0}-{1}'.format(
-            instance.person.pk,
-            instance.__class__.__name__),
-        countdown=60)
+# DISABLE
+
+# @receiver(models.signals.post_save, sender=Recording)
+# def update_person_score_when_model_saved(sender, instance, **kwargs):
+#     update_person_score.apply_async(
+#         args=[instance.person.pk],
+#         task_id='update_person_score-{0}-{1}'.format(
+#             instance.person.pk,
+#             instance.__class__.__name__),
+#         countdown=60)

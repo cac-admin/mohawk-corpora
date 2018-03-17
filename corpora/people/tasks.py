@@ -297,6 +297,8 @@ def send_status_email(person_pk, frequency='weekly'):
         .filter(created__gt=last_period_dt)
     last_period_stats = build_recordings_stat_dict(period)
 
+    # approval_rate =
+
     email = get_email(person)
 
     if email:
