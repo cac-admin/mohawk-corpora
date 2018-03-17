@@ -202,7 +202,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     pagination_class = TenResultPagination
 
     def get_queryset(self):
-        queryset = Recording.objects.all().order_by('-updated')
+        queryset = Recording.objects.all()
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
