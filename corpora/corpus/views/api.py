@@ -212,8 +212,25 @@ class RecordingViewSet(viewsets.ModelViewSet):
             queryset = filter_recordings_for_competition(queryset)
 
             # Exclude approved items
+            # queryset = queryset\
+            #     .annotate(num_approved=Sum(
+            #         Case(
+            #             When(
+            #                 quality_control__isnull=True,
+            #                 then=Value(0)),
+            #             When(
+            #                 quality_control__approved=True,
+            #                 then=Value(1)),
+            #             When(
+            #                 quality_control__approved=False,
+            #                 then=Value(0)),
+            #             default=Value(0),
+            #             output_field=IntegerField())))
+            # queryset = queryset.exclude(num_approved__gte=1)
+
+            # Exclude things with at least 1 vote
             queryset = queryset\
-                .annotate(num_approved=Sum(
+                .annotate(count_votes=Sum(
                     Case(
                         When(
                             quality_control__isnull=True,
@@ -222,15 +239,17 @@ class RecordingViewSet(viewsets.ModelViewSet):
                             quality_control__approved=True,
                             then=Value(1)),
                         When(
-                            quality_control__approved=False,
-                            then=Value(0)),
+                            quality_control__good__gte=1,
+                            then=Value(1)),
+                        When(
+                            quality_control__bad__gte=1,
+                            then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))
-            queryset = queryset.exclude(num_approved__gte=1)
+            queryset = queryset\
+                .exclude(count_votes__gte=1)
 
             # Exclude things person listened to
-            queryset = queryset\
-                .exclude(quality_control__person=person)
 
             # If we want to handle simultaneous but recent
             # we could serve 5 sets of the most recent recordings
