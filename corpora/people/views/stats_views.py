@@ -55,7 +55,8 @@ from people.competition import \
     get_competition_group_score,\
     get_valid_group_members,\
     get_invalid_group_members,\
-    get_competition_person_score
+    get_competition_person_score, \
+    filter_recordings_for_competition
 
 from people.forms import \
     ResendEmailVerificationForm
@@ -238,7 +239,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/stats/groups_leaderboard.html'
-    paginate_by = 25
+    paginate_by = 1
     context_object_name = 'groups'
     x_title = _('Group Leaderboard')
     x_description = _("Group leaderboard of all the groups contributing corpus\
@@ -273,11 +274,12 @@ to our project.")
         groups = context['groups']
 
         # Tryin to do sort stuff :/
-        # path = self.request.get_full_path()
-        # if '?' not in path:
-        #     path = path+'?'
+        path = self.request.get_full_path()
+        if '?' not in path:
+            path = path+'?sort_by=-score&page=1'
 
-        # context['path'] = path
+        context['path'] = path
+
         # context['groups'] = groups
         return context
 
@@ -308,8 +310,8 @@ class GroupStatsView(
 
         group = context['group']
 
-        x_title = _('Group Leaderboard: {0}').format(group)
-        x_description = _("Leaderboard for members of {0}.").format(
+        context['x_title'] = _('Group Leaderboard: {0}').format(group)
+        context['x_description'] = _("Leaderboard for members of {0}.").format(
             group)
 
         language = get_current_language(self.request)
@@ -325,26 +327,26 @@ class GroupStatsView(
         # people = people\
         #     .filter(recording__sentence__language=language)
 
-        score, count = get_competition_group_score(group)
+        # score, count = get_competition_group_score(group)
 
         if valid_members:
-
             for member in valid_members:
-                member.score, member.num_recordings = \
-                    get_competition_person_score(group, member)
+                recordings = filter_recordings_for_competition(
+                    Recording.objects.filter(person=member))
+                member.num_recordings = recordings.count()
 
         if invalid_members:
             invalid_members = invalid_members\
                 .annotate(num_groups=Count('groups', distinct=True))
 
-            for p in invalid_members:
-                p.verified = email_verified(p)
-                p.score, p.num_recordings = \
-                    get_competition_person_score(group, p)
+            for member in invalid_members:
+                recordings = filter_recordings_for_competition(
+                    Recording.objects.filter(person=member))
+                member.num_recordings = recordings.count()
 
         form = ResendEmailVerificationForm()
 
-        context['score'] = score
+        context['score'] = group.score
         context['form'] = form
         context['people'] = people.filter(groups=group)
         context['valid_members'] = valid_members

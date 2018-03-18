@@ -78,7 +78,7 @@ def calculate_person_scores():
     # onto another?
     for person in people:
         recordings = Recording.objects.filter(person=person)
-        qcs = QualityControl.objects.filter(person=person)
+        # qcs = QualityControl.objects.filter(person=person)
 
         score = 0
 

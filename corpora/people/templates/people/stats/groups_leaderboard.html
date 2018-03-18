@@ -26,9 +26,9 @@ approximately every 10 minutes</span></p>
     <tr>
       <th scope="col">#</th>
       <th scope="col">{% trans 'Group' %}</th>
-      <th scope="col"><a href="?sort_by={% if '-members' in request.GET.urlencode %}members{% else %}-members{% endif %}">{% trans '# Members' %}</a></th>
+      <th scope="col"><a href="?sort_by={% if '-members' in path %}members{% else %}-members{% endif %}">{% trans '# Members' %}</a></th>
       <th scope="col">{% trans 'Recordings' %}</th>
-      <th scope="col"><a href="?sort_by={% if '-score' in request.GET.urlencode %}score{% else %}-score{% endif %}">{% trans 'Score' %}</a></th>
+      <th scope="col"><a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %}</a></th>
     </tr>
   </thead>
   <tbody>
@@ -68,6 +68,53 @@ approximately every 10 minutes</span></p>
   </div>
 </div>
 </div>
+
 {% endcache %}
+
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+var path = '{{path|safe}}'
+var query_dict = {}
+var base_url = "{{request.path}}"
+
+console.log(path)
+console.log(base_url)
+
+$(document).ready(function(){
+  
+  queries = path.split('?')[1].split('&')
+  
+  for (var i=0; i<queries.length; i++){
+    parts = queries[i].split('=')
+    query_dict[parts[0]] = parts[1]
+  }
+
+  console.log(query_dict)
+
+  $('div.pagination, div.table').find('a').each(function(a,b){
+    q_parts =  b.getAttribute('href').split('?')[1].split('=')
+    var key = q_parts[0]
+    var value = q_parts[1]
+    
+    q_parts = []
+    for (var dkey in query_dict){
+      if (dkey == key){
+        s = dkey + '=' + value 
+      } else{
+        s = dkey + '=' + query_dict[dkey]  
+      }
+      
+      q_parts.push(s)
+    }
+
+    b.setAttribute('href', base_url + "?" + q_parts.join('&'))
+
+  })
+})
+
+</script>
+{% endaddtoblock %}
+
 
 {% endblock %}
