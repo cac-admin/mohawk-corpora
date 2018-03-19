@@ -10,25 +10,66 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 
+
+div.hidden-columns{
+  display: inline-block;
+
+  div.show-me{
+    display: inline-block;
+  }
+
+  div.hide-me{
+    display: none;
+  }
+}
+
 </style>
 {% endaddtoblock %}
 
-{% cache 1800 groupsleaderboard request.path request.GET.urlencode %}
+{% cache 1 groupsleaderboard request.path request.GET.urlencode %}
 
 <div class="container">
   <div class="row">
     <div class="col table">
-<h1 style="text-align: center; font-weight: 900;">Group Leaderboard</h1>
-<p><span  class="text-decoration: underline;">Data updated
-approximately every 10 minutes</span></p>
+    <h1 style="text-align: center; font-weight: 900;">Group Leaderboard</h1>
+    <p><span  class="text-decoration: underline;">Data updated
+      approximately every 10 minutes</span></p>
+    <div class='hidden-columns'>
+      <div class="hide-me">{% trans '#' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>
+      <div class="hide-me">{% trans 'Group' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>
+      <div class="hide-me">{% trans 'Members' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>
+      <div class="hide-me">{% trans 'Recordings' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>
+      <div class="hide-me">{% trans 'Score' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>
+    </div>
 <div class="table"><table class="table" id='stats-table'>
     <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">{% trans 'Group' %}</th>
-      <th scope="col"><a href="?sort_by={% if '-members' in path %}members{% else %}-members{% endif %}">{% trans '# Members' %}</a></th>
-      <th scope="col">{% trans 'Recordings' %}</th>
-      <th scope="col"><a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %}</a></th>
+      <th scope="col"><a href="?sort_by={% if '-members' in path %}members{% else %}-members{% endif %}">{% trans '# Members' %}
+        {% if 'members' in path %}<i class="far fa-fw {% if '-members' in path %}fa-sort-numeric-up{% elif 'members' in path %}fa-sort-numeric-down{% endif %}"></i>{% endif %}</a>
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+
+      </th>
+      <th scope="col">{% trans 'Recordings' %}
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+      </th>
+      <th scope="col"><a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %} 
+        {% if 'score' in path %}<i class="far fa-fw {% if '-score' in path %}fa-sort-numeric-up{% elif 'score' in path %}fa-sort-numeric-down{% endif %}"></i>
+        {% endif %}</a>
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -78,9 +119,6 @@ var path = '{{path|safe}}'
 var query_dict = {}
 var base_url = "{{request.path}}"
 
-console.log(path)
-console.log(base_url)
-
 $(document).ready(function(){
   
   queries = path.split('?')[1].split('&')
@@ -89,8 +127,6 @@ $(document).ready(function(){
     parts = queries[i].split('=')
     query_dict[parts[0]] = parts[1]
   }
-
-  console.log(query_dict)
 
   $('div.pagination, div.table').find('a').each(function(a,b){
     q_parts =  b.getAttribute('href').split('?')[1].split('=')
@@ -116,5 +152,29 @@ $(document).ready(function(){
 </script>
 {% endaddtoblock %}
 
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+
+
+  function toggleColumn(target){
+    var td_column = parseInt($(target.parentNode).index()) 
+    var th_column = td_column + 1
+    console.log(td_column)
+    console.log(th_column)
+    $('td:nth-of-type('+ td_column +')').toggle();
+    $('div.hidden-columns > div:nth-of-type('+ th_column +')').toggleClass('show-me');
+    $('div.hidden-columns > div:nth-of-type('+ th_column +')').toggleClass('hide-me');
+    $('th:nth-of-type('+th_column+')').toggle();
+    // $(target).toggleClass('hidden-column')
+
+    // $(target).toggleClass('fa-minus-square')
+    // $(target).toggleClass('fa-plus-square')
+
+  }
+
+
+</script>
+{% endaddtoblock %}
 
 {% endblock %}
