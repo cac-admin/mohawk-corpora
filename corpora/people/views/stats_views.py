@@ -284,6 +284,18 @@ to our project.")
         return context
 
 
+class Top20(GroupsStatsView):
+    model = Group
+    template_name = 'people/stats/top_20.html'
+    paginate_by = 20
+    context_object_name = 'groups'
+    x_title = _('Top 20 Groups ')
+    x_description = _("Groups in the Top 20 of the competition.")
+
+    def test_func(self):
+        return self.request.user.is_staff and self.request.user.is_authenticated()
+
+
 class GroupStatsView(
         EnsureCsrfCookieMixin, SiteInfoMixin, UserPassesTestMixin, DetailView):
     model = Group

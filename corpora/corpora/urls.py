@@ -77,6 +77,10 @@ urlpatterns = [
         stats_views.GroupStatsView.as_view(),
         name='competition_group'),
 
+    url(_(r'^competition/top20$'),
+        stats_views.Top20.as_view(),
+        name='competition_top20'),
+
     url(_(r'^competition'),
         people_views.Competition.as_view(),
         name='competition'),
