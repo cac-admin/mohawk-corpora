@@ -1,0 +1,26 @@
+#!/bin/bash
+#convert an audio file into a 16kHz 16bit mono wav file.
+
+srcdir=$(readlink -f "$1")
+destdir=$2
+echo reading from $srcdir, saving in $destdir
+
+CAPS="audio/x-raw,channels=1,rate=16000,format=S16LE"
+
+for sf in $srcdir/*/*; do
+    URI="file://$sf"
+    d=$(basename $(dirname $sf))
+    f=$(basename $sf)
+
+    dest=$destdir/$d/$f.wav
+
+    if [ -f "$dest" ]; then
+        echo "skipping existing $dest"
+    else
+        mkdir -p $destdir/$d
+        gst-launch-1.0 uridecodebin uri="$URI" \
+                       ! audioconvert ! audioresample \
+		       ! $CAPS ! wavenc ! \
+                       filesink location="$dest"
+    fi
+done
