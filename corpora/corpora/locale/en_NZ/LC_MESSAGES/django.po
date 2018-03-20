@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-17 20:39+1300\n"
+"POT-Creation-Date: 2018-03-20 21:28+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/mixins.py:10
+#: corpora/mixins.py:13
 msgid "Description for a particular view"
 msgstr ""
 
-#: corpora/mixins.py:11
+#: corpora/mixins.py:14
 msgid "Title for your view"
 msgstr ""
 
@@ -183,28 +183,38 @@ msgid "^competition/group/(?P<pk>\\d+)"
 msgstr ""
 
 #: corpora/urls.py:80
-msgid "^competition"
+msgid "^competition/top20$"
 msgstr ""
 
 #: corpora/urls.py:84
-msgid "^stats/person"
+msgid "^competition"
 msgstr ""
 
 #: corpora/urls.py:88
+msgid "^stats/person"
+msgstr ""
+
+#: corpora/urls.py:92
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/person_qc"
+msgstr "tangata"
+
+#: corpora/urls.py:96
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/people$"
 msgstr "tangata"
 
-#: corpora/urls.py:92
+#: corpora/urls.py:100
 msgid "^stats/groups$"
 msgstr ""
 
-#: corpora/urls.py:96
+#: corpora/urls.py:104
 msgid "^stats/recordings"
 msgstr ""
 
-#: corpora/urls.py:100
+#: corpora/urls.py:108
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/$"

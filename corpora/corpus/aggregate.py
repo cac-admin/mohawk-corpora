@@ -39,6 +39,9 @@ def build_recordings_stat_dict(recording_queryset):
         recording_queryset.filter(quality_control__approved=True)
     recording_votes = get_net_votes(recording_queryset)
 
+    reviewed_recordings = recording_queryset\
+        .exclude(quality_control__isnull=True)
+
     if duration['duration__sum'] is None:
         total_seconds = 0
     else:
@@ -49,9 +52,10 @@ def build_recordings_stat_dict(recording_queryset):
 
     stats = {
         'total': recording_queryset.count(),
-        'num_approved': get_num_approved(recording_queryset),
+        'num_approved': approved_recordings.count(),
         'up_votes': recording_votes[0],
         'down_votes': recording_votes[1],
+        'num_reviewed': reviewed_recordings.count(),
         'duration_display': "{:02d}:{:02d}:{:02d} ".format(
             hours, minutes, seconds),
         'total_seconds': int(total_seconds),

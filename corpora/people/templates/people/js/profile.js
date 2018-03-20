@@ -157,7 +157,7 @@ class Profile{
     
     this.data.profile_email = $(this.target_element).find('#id_email').val()
 
-    var check_items = ['receive_weekly_updates', 'leaderboard', 'receive_daily_updates']
+    var check_items = ['receive_weekly_updates', 'leaderboard', 'receive_daily_updates', 'receive_feedback']
     for (var i=0; i<check_items.length; i++){
       this.logger(check_items[i])
       this.data[check_items[i]] = 

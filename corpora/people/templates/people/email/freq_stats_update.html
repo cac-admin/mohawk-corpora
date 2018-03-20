@@ -59,10 +59,18 @@ span{
 <ul>
   <li><span>{{stats.total}}</span> {% trans 'recordings' %}</li>
   <li><span>{{stats.duration_string}}</span> {{stats.dimension_string}}</li>
+</ul>
+
+{% if person.receive_feedback %}
+<p>So far we've been able to review {{stats.num_reviewed}} of your recordings. You got,
+<ul>
   <li><span>{{stats.num_approved}}</span> {% trans 'approved recordings' %}</li>
   <li><span>{{stats.up_votes}}</span> {% trans 'thumbs up' %}</li>
   <li><span>{{stats.down_votes}}</span> {% trans 'thumbs down' %}</li>
 </ul>
+<a href="{{url_append}}{% url 'competition_help' %}#reviews">Learn more</a> about what approved, thumbs up, and thumbs down mean. 
+{% endif %}
+
 </p>
 {% endblock %}
 

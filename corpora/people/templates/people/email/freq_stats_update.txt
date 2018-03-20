@@ -19,9 +19,19 @@
 {% trans "And here's your total progress to date:" %}
   - {{stats.total}} {% trans 'recordings' %}
   - {{stats.duration_string}} {{stats.dimension_string}}
+
+
+{% if person.receive_feedback %}
+So far we've been able to review {{stats.num_reviewed}} of your recordings. You got,
   - {{stats.num_approved}} {% trans 'approved recordings' %}
   - {{stats.up_votes}} {% trans 'thumbs up' %}
   - {{stats.down_votes}} {% trans 'thumbs down' %}
+Learn more about what approved, thumbs up, and thumbs down mean: {{url_append}}{% url 'competition_help' %}#reviews
+{% endif %}
+
+{% if person.receive_feedback %}
+
+{% endif %}
 {% endblock %}
 
 {% block footer  %}

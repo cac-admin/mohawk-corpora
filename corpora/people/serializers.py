@@ -66,7 +66,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('full_name', 'username', 'uuid', 'user',
                   'demographic', 'known_languages', 'id',
                   'profile_email', 'groups', 'receive_weekly_updates',
-                  'leaderboard', 'receive_daily_updates')
+                  'leaderboard', 'receive_daily_updates', 'receive_feedback')
         extra_kwargs = {"username": {"error_messages": {"required": "Give yourself a username"}}}
         validators = []
 
@@ -131,6 +131,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             validated_data['receive_weekly_updates']
         instance.receive_daily_updates = \
             validated_data['receive_daily_updates']
+        instance.receive_feedback = \
+            validated_data['receive_feedback']
         instance.leaderboard = \
             validated_data['leaderboard']
 

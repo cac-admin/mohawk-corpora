@@ -94,6 +94,10 @@ class Person(models.Model):
         default=True,
         help_text="Check to get daily updates on your progress.")
 
+    receive_feedback = models.BooleanField(
+        default=False,
+        help_text="Check to receive feedback on your recordings in your progress reports.")
+
     leaderboard = models.BooleanField(
         default=True,
         help_text="Check to show your progress on the leaderboard.",

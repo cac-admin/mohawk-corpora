@@ -71,6 +71,7 @@ class PersonForm(forms.ModelForm):
             'username',
             'receive_weekly_updates',
             'receive_daily_updates',
+            'receive_feedback',
             'leaderboard')
 
 

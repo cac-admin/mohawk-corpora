@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-17 20:39+1300\n"
+"POT-Creation-Date: 2018-03-20 21:28+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,173 +29,173 @@ msgstr "Ingoa o te iwi."
 msgid "Tribe"
 msgstr "Iwi"
 
-#: people/models.py:28 people/models.py:182
+#: people/models.py:28 people/models.py:190
 msgid "Tribes"
 msgstr "Ngā Iwi"
 
-#: people/models.py:51
+#: people/models.py:55
 msgid "group"
 msgstr "rōpū"
 
-#: people/models.py:52
+#: people/models.py:56
 msgid "groups"
 msgstr "rōpū"
 
-#: people/models.py:62
+#: people/models.py:66
 msgid "Full Name"
 msgstr "Ingoa"
 
-#: people/models.py:65
+#: people/models.py:69
 msgid "full name"
 msgstr "ingoa"
 
-#: people/models.py:81
+#: people/models.py:85
 msgid "Username - this will be publicly viewable"
 msgstr ""
 
-#: people/models.py:110
+#: people/models.py:114
 msgid "Choose a group, or enter a group name to create a new one."
 msgstr ""
 
-#: people/models.py:126
+#: people/models.py:134
 msgid "Person"
 msgstr "Tangata"
 
-#: people/models.py:127
+#: people/models.py:135
 msgid "People"
 msgstr "Tāngata"
 
-#: people/models.py:135
+#: people/models.py:143
 msgid "Male"
 msgstr "Tāne"
 
-#: people/models.py:136
+#: people/models.py:144
 msgid "Female"
 msgstr "Wahine"
 
-#: people/models.py:137
+#: people/models.py:145
 msgid "Other"
 msgstr "Āhua Kē"
 
-#: people/models.py:138
+#: people/models.py:146
 msgid "Transexual (Male to Female)"
 msgstr "Whakawahine"
 
-#: people/models.py:139
+#: people/models.py:147
 msgid "Transexual (Female to Male)"
 msgstr "Whakatāne"
 
-#: people/models.py:145
+#: people/models.py:153
 msgid "How old are you?"
 msgstr "E hia ō tau?"
 
-#: people/models.py:146
+#: people/models.py:154
 msgid "age"
 msgstr "ō tau"
 
-#: people/models.py:149
+#: people/models.py:157
 msgid "gender"
 msgstr "tāne/wahine"
 
-#: people/models.py:150
+#: people/models.py:158
 msgid "Gender"
 msgstr "Tāne/Wahine"
 
-#: people/models.py:163 people/models.py:213
+#: people/models.py:171 people/models.py:221
 msgid "person"
 msgstr "tangata"
 
-#: people/models.py:167
+#: people/models.py:175
 msgid "Which tribe(s) do you identify with?"
 msgstr "Nō (t)ēhea iwi koe?"
 
-#: people/models.py:170
+#: people/models.py:178
 msgid "tribe"
 msgstr "iwi"
 
-#: people/models.py:177
+#: people/models.py:185
 msgid "Demographic"
 msgstr ""
 
-#: people/models.py:178
+#: people/models.py:186
 msgid "Demographics"
 msgstr ""
 
-#: people/models.py:187
+#: people/models.py:195
 msgid "Native Speaker - Beginner"
 msgstr "He Reo Ūkaipō - Mātau iti nei"
 
-#: people/models.py:188
+#: people/models.py:196
 msgid "Native Speaker - Intermediate"
 msgstr "He Reo Ūkaipō - Āhua Mātau nei"
 
-#: people/models.py:189
+#: people/models.py:197
 msgid "Native Speaker - Advanced"
 msgstr "He Reo Ūkaipō - Tino Mātau nei"
 
-#: people/models.py:190
+#: people/models.py:198
 msgid "Near Native Speaker - Beginner"
 msgstr "He Reo Tuarua - Mātau iti nei"
 
-#: people/models.py:191
+#: people/models.py:199
 msgid "Near Native Speaker - Intermediate"
 msgstr "He Reo Tuarua - Āhua Mātau nei"
 
-#: people/models.py:192
+#: people/models.py:200
 msgid "Near Native Speaker - Advanced"
 msgstr "He Reo Tuarua - Tino Mātau nei"
 
-#: people/models.py:193
+#: people/models.py:201
 msgid "Second Language Learner - Beginner"
 msgstr "He Ākonga Reo - Mātau iti nei"
 
-#: people/models.py:194
+#: people/models.py:202
 msgid "Second Language Learner - Intermediate"
 msgstr "He Ākonga Reo - Āhua Mātau nei"
 
-#: people/models.py:195
+#: people/models.py:203
 msgid "Second Language Learner - Advanced"
 msgstr "He Ākonga Reo - Tino Mātau nei"
 
-#: people/models.py:201
+#: people/models.py:209
 msgid "language"
 msgstr "reo"
 
-#: people/models.py:207
+#: people/models.py:215
 msgid "level of proficiency"
 msgstr ""
 
-#: people/models.py:222
+#: people/models.py:230
 msgid "accent"
 msgstr ""
 
-#: people/models.py:229
+#: people/models.py:237
 msgid "dialect"
 msgstr ""
 
-#: people/models.py:234
+#: people/models.py:242
 msgid "known language"
 msgstr ""
 
-#: people/models.py:235
+#: people/models.py:243
 msgid "known languages"
 msgstr ""
 
-#: people/tasks.py:254
+#: people/tasks.py:283
 #, fuzzy
 #| msgid "Today"
 msgid "today"
 msgstr "I tēnei rā"
 
-#: people/tasks.py:255
+#: people/tasks.py:284
 msgid "yesterday"
 msgstr ""
 
-#: people/tasks.py:267
+#: people/tasks.py:296
 msgid "this week"
 msgstr ""
 
-#: people/tasks.py:268
+#: people/tasks.py:297
 msgid "last week"
 msgstr ""
 
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-#: people/templates/people/competition/nav.html:59 people/views/views.py:369
+#: people/templates/people/competition/nav.html:59 people/views/views.py:370
 msgid "Help"
 msgstr ""
 
@@ -677,30 +677,30 @@ msgstr ""
 msgid "And here's your total progress to date:"
 msgstr ""
 
-#: people/templates/people/email/freq_stats_update.html:62
-#: people/templates/people/email/freq_stats_update.txt:22
+#: people/templates/people/email/freq_stats_update.html:67
+#: people/templates/people/email/freq_stats_update.txt:23
 #: people/templates/people/email/weekly_stats_update.html:50
 #, fuzzy
 #| msgid "recordings"
 msgid "approved recordings"
 msgstr "kapohanga reo"
 
-#: people/templates/people/email/freq_stats_update.html:63
-#: people/templates/people/email/freq_stats_update.txt:23
+#: people/templates/people/email/freq_stats_update.html:68
+#: people/templates/people/email/freq_stats_update.txt:24
 #: people/templates/people/email/weekly_stats_update.html:51
 #: people/templates/people/email/weekly_stats_update.txt:12
 msgid "thumbs up"
 msgstr ""
 
-#: people/templates/people/email/freq_stats_update.html:64
-#: people/templates/people/email/freq_stats_update.txt:24
+#: people/templates/people/email/freq_stats_update.html:69
+#: people/templates/people/email/freq_stats_update.txt:25
 #: people/templates/people/email/weekly_stats_update.html:52
 #: people/templates/people/email/weekly_stats_update.txt:13
 msgid "thumbs down"
 msgstr ""
 
-#: people/templates/people/email/freq_stats_update.html:72
-#: people/templates/people/email/freq_stats_update.txt:30
+#: people/templates/people/email/freq_stats_update.html:80
+#: people/templates/people/email/freq_stats_update.txt:32
 #: people/templates/people/email/weekly_stats_update.html:61
 #: people/templates/people/email/weekly_stats_update.txt:19
 #, fuzzy
@@ -720,7 +720,8 @@ msgstr ""
 #: people/templates/people/email/weekly_stats_update.txt:9
 #: people/templates/people/profile.html:66
 #: people/templates/people/stats/group_leaderboard.html:82
-#: people/templates/people/stats/groups_leaderboard.html:30
+#: people/templates/people/stats/groups_leaderboard.html:47
+#: people/templates/people/stats/groups_leaderboard.html:64
 #: people/templates/people/stats/leaderboard.html:30
 msgid "Recordings"
 msgstr "Kapohanga Reo"
@@ -759,43 +760,53 @@ msgstr "Kua oti i a koe te kapo kōrero mō ngā rerenga katoa."
 
 #: people/templates/people/stats/group_leaderboard.html:67
 #: people/templates/people/stats/group_leaderboard.html:83
-#: people/templates/people/stats/group_leaderboard.html:129
-#: people/templates/people/stats/groups_leaderboard.html:31
+#: people/templates/people/stats/group_leaderboard.html:130
+#: people/templates/people/stats/groups_leaderboard.html:50
+#: people/templates/people/stats/groups_leaderboard.html:67
 #: people/templates/people/stats/leaderboard.html:31
 msgid "Score"
 msgstr "Tatau"
 
 #: people/templates/people/stats/group_leaderboard.html:81
-#: people/templates/people/stats/group_leaderboard.html:126
+#: people/templates/people/stats/group_leaderboard.html:127
 #: people/templates/people/stats/leaderboard.html:29
 #, fuzzy
 #| msgid "name"
 msgid "Username"
 msgstr "Ingoa"
 
-#: people/templates/people/stats/group_leaderboard.html:127
+#: people/templates/people/stats/group_leaderboard.html:128
 #, fuzzy
 #| msgid "group"
 msgid "# Groups"
 msgstr "rōpū"
 
-#: people/templates/people/stats/group_leaderboard.html:128
+#: people/templates/people/stats/group_leaderboard.html:129
 #, fuzzy
 #| msgid "Verified"
 msgid "Email Verified?"
 msgstr "Kua whakaūngia"
 
-#: people/templates/people/stats/groups_leaderboard.html:28
+#: people/templates/people/stats/groups_leaderboard.html:38
+msgid "#"
+msgstr ""
+
+#: people/templates/people/stats/groups_leaderboard.html:41
+#: people/templates/people/stats/groups_leaderboard.html:58
 #, fuzzy
 #| msgid "group"
 msgid "Group"
 msgstr "rōpū"
 
-#: people/templates/people/stats/groups_leaderboard.html:29
+#: people/templates/people/stats/groups_leaderboard.html:44
+msgid "Members"
+msgstr ""
+
+#: people/templates/people/stats/groups_leaderboard.html:59
 msgid "# Members"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:35 people/views/stats_views.py:193
+#: people/templates/people/stats/nav.html:35 people/views/stats_views.py:244
 msgid "Group Leaderboard"
 msgstr ""
 
@@ -807,9 +818,26 @@ msgstr ""
 msgid "Growth Rate"
 msgstr ""
 
+#: people/templates/people/stats/person_qc_stats_view_detail.html:79
 #: people/templates/people/stats/person_recording_stats_view_detail.html:66
 msgid "Today"
 msgstr "I tēnei rā"
+
+#: people/templates/people/stats/person_qc_stats_view_detail.html:84
+msgid "approvals"
+msgstr ""
+
+#: people/templates/people/stats/person_qc_stats_view_detail.html:90
+msgid "up votes"
+msgstr ""
+
+#: people/templates/people/stats/person_qc_stats_view_detail.html:96
+msgid "down votes"
+msgstr ""
+
+#: people/templates/people/stats/person_qc_stats_view_detail.html:100
+msgid "total"
+msgstr ""
 
 #: people/templates/people/stats/person_recording_stats_view_detail.html:71
 msgid "seconds"
@@ -882,66 +910,76 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero."
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka āhei ai te whakarerekē i ō kōrero."
 
-#: people/views/stats_views.py:144
+#: people/views/stats_views.py:195
 msgid "Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:146
+#: people/views/stats_views.py:197
 msgid "Leaderboard for people who've contributed to our corpus."
 msgstr ""
 
-#: people/views/stats_views.py:194
+#: people/views/stats_views.py:245
 msgid "Group leaderboard of all the groups contributing corpusto our project."
 msgstr ""
 
-#: people/views/stats_views.py:243
+#: people/views/stats_views.py:292
+#, fuzzy
+#| msgid "group"
+msgid "Top 20 Groups "
+msgstr "rōpū"
+
+#: people/views/stats_views.py:293
+msgid "Groups in the Top 20 of the competition."
+msgstr ""
+
+#: people/views/stats_views.py:304
 msgid "Individual Group Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:244
+#: people/views/stats_views.py:305
 msgid "Leaderboard for people of a particular group."
 msgstr ""
 
-#: people/views/stats_views.py:264
+#: people/views/stats_views.py:325
 #, python-brace-format
 msgid "Group Leaderboard: {0}"
 msgstr ""
 
-#: people/views/stats_views.py:265
+#: people/views/stats_views.py:326
 #, python-brace-format
 msgid "Leaderboard for members of {0}."
 msgstr ""
 
-#: people/views/stats_views.py:386
+#: people/views/stats_views.py:447
 msgid "weekly"
 msgstr ""
 
-#: people/views/stats_views.py:388
+#: people/views/stats_views.py:449
 msgid "daily"
 msgstr ""
 
-#: people/views/views.py:49
+#: people/views/views.py:50
 msgid "Profile"
 msgstr "Ngā Kōrero Mōu"
 
-#: people/views/views.py:50
+#: people/views/views.py:51
 msgid "Edit your profile to help us enhance our corpus."
 msgstr ""
 
-#: people/views/views.py:151
+#: people/views/views.py:152
 #, python-format
 msgid "Today is %(month)s %(day)s."
 msgstr "Ko te %(day)s o %(month)s tēnei rā."
 
-#: people/views/views.py:336
+#: people/views/views.py:337
 msgid "Competition"
 msgstr ""
 
-#: people/views/views.py:338
+#: people/views/views.py:339
 msgid "Compete with groups and others to win amaing prizes."
 msgstr ""
 
-#: people/views/views.py:371
+#: people/views/views.py:372
 msgid "Support and documentation for competitions."
 msgstr ""
 
