@@ -229,7 +229,7 @@ def send_person_emails(frequency='weekly'):
     if settings.DEBUG:
         send_person_emails_staff.apply_async(
             args=[frequency],
-            countdown=10)
+            countdown=2)
         return "This is a dev environment!"
     else:
 

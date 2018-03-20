@@ -62,15 +62,16 @@ span{
 </ul>
 
 {% if person.receive_feedback %}
-<p>So far we've been able to review {{stats.num_reviewed}} of your recordings. You got,
+{% if stats.reviews.num_reviewed > 0 %}
+<p>So far we've been able to review {{stats.reviews.num_reviewed}} of your recordings. You got,
 <ul>
-  <li><span>{{stats.num_approved}}</span> {% trans 'approved recordings' %}</li>
-  <li><span>{{stats.up_votes}}</span> {% trans 'thumbs up' %}</li>
-  <li><span>{{stats.down_votes}}</span> {% trans 'thumbs down' %}</li>
+  <li><span>{{stats.num_approved}}</span> {% trans 'approved recordings' %} ({{stats.reviews.approval_rate|floatformat:0}}%)</li>
+  <li><span>{{stats.up_votes}}</span> {% trans 'thumbs up' %} ({{stats.reviews.up_rate|floatformat:0}}%)</li>
+  <li><span>{{stats.down_votes}}</span> {% trans 'thumbs down' %} ({{stats.reviews.down_rate|floatformat:0}}%)</li>
 </ul>
-<a href="{{url_append}}{% url 'competition_help' %}#reviews">Learn more</a> about what approved, thumbs up, and thumbs down mean. 
+Learn more about what approved, thumbs up, and thumbs down mean by <a href="{{url_append}}{% url 'competition_help' %}#reviews">clicking here.</a>
 {% endif %}
-
+{% endif %}
 </p>
 {% endblock %}
 

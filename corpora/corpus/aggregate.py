@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from django.utils.translation import ugettext as _
 from corpus.models import Recording, Sentence, QualityControl
 from django.db.models import Sum, Count, When, Value, Case, IntegerField
+from django.db.models import Q, F
 
 
 def get_num_approved(query):
@@ -25,12 +26,23 @@ def get_num_approved(query):
 
 
 def get_net_votes(query):
-    d1 = query\
-        .aggregate(total_up_votes=Sum('quality_control__good'))
-    d2 = query\
-        .aggregate(total_down_votes=Sum('quality_control__bad'))
 
-    return (d1['total_up_votes'], d2['total_down_votes'])
+    net_votes = query \
+        .filter(quality_control__person__user__is_staff=True) \
+        .annotate(net_vote=Sum(
+            F('quality_control__good') - F('quality_control__bad')))
+
+    goods = net_votes.filter(net_vote__gte=1)
+    bads = net_votes.filter(net_vote__lte=-1)
+
+    return (goods.count(), bads.count())
+
+    # d1 = query\
+    #     .aggregate(total_up_votes=Sum('quality_control__good'))
+    # d2 = query\
+    #     .aggregate(total_down_votes=Sum('quality_control__bad'))
+
+    # return (d1['total_up_votes'], d2['total_down_votes'])
 
 
 def build_recordings_stat_dict(recording_queryset):
@@ -50,12 +62,16 @@ def build_recordings_stat_dict(recording_queryset):
     minutes = int((total_seconds - (60*60.0)*hours)/60.0)
     seconds = int(total_seconds - (60*60.0)*hours - 60.0*minutes)
 
+    num_reviewed = reviewed_recordings.count()
+    num_approved = approved_recordings.count()
     stats = {
         'total': recording_queryset.count(),
-        'num_approved': approved_recordings.count(),
+        'num_approved': num_approved,
         'up_votes': recording_votes[0],
         'down_votes': recording_votes[1],
-        'num_reviewed': reviewed_recordings.count(),
+        'reviews': {
+            'num_reviewed': num_reviewed,
+        },
         'duration_display': "{:02d}:{:02d}:{:02d} ".format(
             hours, minutes, seconds),
         'total_seconds': int(total_seconds),
@@ -63,6 +79,14 @@ def build_recordings_stat_dict(recording_queryset):
         'dimension_string': _('seconds') if total_seconds < 60 else _('minutes'),
         'duration_string': int(total_seconds) if total_seconds < 60 else int(total_seconds/60.0)
     }
+
+    if num_reviewed > 0:
+        stats['reviews'] = {
+            'num_reviewed': num_reviewed,
+            'approval_rate': 100.0*num_approved/num_reviewed,
+            'up_rate': 100.0*recording_votes[0]/num_reviewed,
+            'down_rate': 100.0*recording_votes[1]/num_reviewed
+            }
 
     if stats['up_votes'] is None:
         stats['up_votes'] = 0
