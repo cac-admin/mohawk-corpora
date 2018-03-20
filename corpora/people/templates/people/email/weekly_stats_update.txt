@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block footer  %}
-You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of 200 hours by reading only 10 sentences each day.
+You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of 400 hours by reading only 10 sentences each day.
 
 {% trans 'Record Sentences' %} => {{url_append}}{% url 'corpus:record' %}
 
