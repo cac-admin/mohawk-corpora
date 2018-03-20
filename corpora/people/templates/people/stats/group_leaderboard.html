@@ -135,7 +135,6 @@ approximately every 10 minutes</span>.</small> </p>
 <tr>
   <th scope="row">{{ forloop.counter }}</th>
   <td>
-
       {% if p.leaderboard %}
         {% if p.username in '' %}
           Anonymous Peruperu
@@ -144,24 +143,15 @@ approximately every 10 minutes</span>.</small> </p>
       {% else %}
         Anonymous Peruperu
       {% endif %}
-
   </td>
   <td>{{p.num_groups}} </td>
-  <td>{{p.verified}} 
-  {% if not p.verified and p == person  %} 
-
-    <form method="POST" action="{{request.path}}" id="resend-form">
+  <td>{{p.verified}}  
+    {% if not p.verified and p == person  %}<form method="POST" action="{{request.path}}" id="resend-form">
     {% csrf_token %}
     <input type="checkbox" name="resend" value="true" checked>
     <a href="#" onclick="document.getElementById('resend-form').submit();">Resend Verification Email</a>
-    </form>
-
-
-  {% endif %}
-
-
-
-</td>
+    </form>{% endif %}
+  </td>
   <td>{{p.score_comp|floatformat:1}}</td>
 
 </tr>

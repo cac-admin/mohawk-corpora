@@ -355,6 +355,7 @@ class GroupStatsView(
                 recordings = filter_recordings_for_competition(
                     Recording.objects.filter(person=member))
                 member.num_recordings = recordings.count()
+                member.verified = email_verified(member)
 
         form = ResendEmailVerificationForm()
 
