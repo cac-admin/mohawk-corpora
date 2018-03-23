@@ -419,9 +419,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 # two bottom properties are for logging,
 # http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html#using-celery-with-django
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_RESULT_BACKEND = 'cache+memcached://%s:%s/' % (
-    os.environ['DJANGO_MEMCACHED_IP'],
-    os.environ['DJANGO_MEMCACHED_PORT'])
+CELERY_RESULT_BACKEND = 'cache+memcached://{0}/'.format(
+    ';'.join(memcache_servers))
 
 CELERY_TASK_RESULT_EXPIRES = 21600  # 6 hours.
 
