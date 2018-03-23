@@ -282,10 +282,18 @@ STATICFILES_FINDERS = (
 
 )
 
+memcache_server = os.environ['DJANGO_MEMCACHED_IP']
+memcache_servers = []
+for srv in memcache_server.split(','):
+    if srv != '':
+        memcache_servers.append(
+            "{0}:{1}".format(
+                srv.strip(), os.environ['DJANGO_MEMCACHED_PORT']))
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': '%s:%s'%(os.environ['DJANGO_MEMCACHED_IP'], os.environ['DJANGO_MEMCACHED_PORT']),
+        'LOCATION': memcache_servers,
         'TIMEOUT': 300,
     }
 }
