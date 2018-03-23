@@ -190,3 +190,29 @@ def calculate_recording_score(recording):
         return score * factor_1
     else:
         return score
+
+
+def mahi_tahi(group):
+    '''Returns the growth rate for a group during a period of time'''
+    start = parse_datetime("2018-03-22 13:00:00")
+    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
+    end = parse_datetime("2018-03-23 13:00:00")
+    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+
+    members = get_valid_group_members(group)
+
+    num_recordings = 0.0
+    num_members = 0.0
+    for person in members:
+        recordings = Recording.objects\
+            .filter(person=person)\
+            .filter(created__lte=end)\
+            .filter(created__gte=start)
+        if recordings.count() != 0:
+            num_recordings = num_recordings + recordings.count()
+            num_members = num_members + 1.0
+
+    if num_members == 0:
+        return 0
+
+    return num_recordings/num_members

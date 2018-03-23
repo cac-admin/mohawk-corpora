@@ -56,7 +56,8 @@ from people.competition import \
     get_valid_group_members,\
     get_invalid_group_members,\
     get_competition_person_score, \
-    filter_recordings_for_competition
+    filter_recordings_for_competition, \
+    mahi_tahi
 
 from people.forms import \
     ResendEmailVerificationForm
@@ -303,7 +304,35 @@ class Top20(GroupsStatsView):
     x_description = _("Groups in the Top 20 of the competition.")
 
     def test_func(self):
-        return self.request.user.is_staff and self.request.user.is_authenticated()
+        return self.request.user.is_staff and \
+            self.request.user.is_authenticated()
+
+
+class MahiTahi(GroupsStatsView):
+    model = Group
+    template_name = 'people/stats/mahitahi.html'
+    paginate_by = 100
+    context_object_name = 'groups'
+    x_title = _('Mahi Tahi Growth Rate')
+    x_description = _("Mahi Tahi.")
+
+    def test_func(self):
+        return self.request.user.is_staff and \
+            self.request.user.is_authenticated()
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(MahiTahi, self).get_context_data(**kwargs)
+
+        language = get_current_language(self.request)
+
+        groups = context['groups']
+
+        for group in groups:
+            group.growth_rate = mahi_tahi(group)
+
+        context['groups'] = groups
+        return context
 
 
 class GroupStatsView(

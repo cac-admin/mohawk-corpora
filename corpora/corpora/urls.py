@@ -81,6 +81,10 @@ urlpatterns = [
         stats_views.Top20.as_view(),
         name='competition_top20'),
 
+    url(_(r'^competition/mahitahi$'),
+        stats_views.MahiTahi.as_view(),
+        name='competition_mahitahi'),
+
     url(_(r'^competition'),
         people_views.Competition.as_view(),
         name='competition'),
