@@ -285,6 +285,7 @@ STATICFILES_FINDERS = (
 memcache_server = os.environ['DJANGO_MEMCACHED_IP']
 memcache_servers = []
 for srv in memcache_server.split(','):
+    srv = srv.strip()
     if srv != '':
         memcache_servers.append(
             "{0}:{1}".format(
