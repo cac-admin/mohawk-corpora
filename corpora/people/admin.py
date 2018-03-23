@@ -77,4 +77,5 @@ class MembershipInline(admin.TabularInline):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'created', 'created_by', 'score' )
+    readonly_fields = ('score', 'num_recordings', 'created', 'created_by', 'duration')
     inlines = [MembershipInline]

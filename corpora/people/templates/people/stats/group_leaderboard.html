@@ -50,6 +50,16 @@ form{
     display: inline-block;
   }
 }
+.stats{
+  width: 100%;
+  text-align: center;
+  color: $brand;
+  .value{
+    font-weight: 700;  
+    font-size: 1.5em;
+  }
+  font-family: 'Roboto', 'Raleway', sans-serif;
+}
 </style>
 {% endaddtoblock %}
 
@@ -67,7 +77,11 @@ form{
   <span class=" ">{% trans 'Score' %}</span>
 </div>
 
-
+<div class="stats">
+  <span class="value">{{group.duration_hours|floatformat:2}}</span> {% trans 'hours' %} 
+  &nbsp;&nbsp;
+  <span class="value">{{group.num_recordings}}</span> {% trans 'recordings' %}
+</div>
 
 
 <h1>{{group.name}} Leaderboard</h1>

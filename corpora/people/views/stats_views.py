@@ -262,6 +262,10 @@ to our project.")
             groups = groups.order_by('-size')
         elif 'members' in sort_by:
             groups = groups.order_by('size')
+        elif '-num_recordings' in sort_by:
+            groups = groups.order_by('-num_recordings')
+        elif 'num_recordings' in sort_by:
+            groups = groups.order_by('num_recordings')
 
         return groups
 
@@ -272,6 +276,12 @@ to our project.")
         language = get_current_language(self.request)
 
         groups = context['groups']
+
+        for group in groups:
+            members = get_valid_group_members(group)
+            recordings = filter_recordings_for_competition(
+                Recording.objects.filter(person__in=members))
+            group.duration_hours = group.duration/60/60
 
         # Tryin to do sort stuff :/
         path = self.request.get_full_path()
@@ -340,7 +350,7 @@ class GroupStatsView(
         #     .filter(recording__sentence__language=language)
 
         # score, count = get_competition_group_score(group)
-
+        num_recordings = 0
         if valid_members:
             for member in valid_members:
                 recordings = filter_recordings_for_competition(
@@ -359,6 +369,9 @@ class GroupStatsView(
 
         form = ResendEmailVerificationForm()
 
+        group.duration_hours = group.duration/60/60
+
+        context['group'] = group
         context['score'] = group.score
         context['form'] = form
         context['people'] = people.filter(groups=group)

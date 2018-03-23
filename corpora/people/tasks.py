@@ -19,7 +19,11 @@ from celery.task.control import revoke, inspect
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
-from people.competition import get_competition_group_score, get_competition_person_score
+from people.competition import \
+    get_competition_group_score, \
+    get_competition_person_score, \
+    filter_recordings_for_competition, \
+    get_valid_group_members
 
 from django.core.cache import cache
 from corpora.celery import app
@@ -119,6 +123,18 @@ def update_group_score(group):
 
     group.score = int(score)
     group.num_recordings = count
+
+    duration_qs = filter_recordings_for_competition(
+        Recording.objects.filter(
+            person__in=get_valid_group_members(group)))
+    duration = duration_qs.aggregate(total_duration=Sum('duration'))
+
+    if duration['total_duration'] is None:
+        total_duration = 0
+    else:
+        total_duration = duration['total_duration']
+
+    group.duration = total_duration
     group.save()
 
     return "New score for {0}: {1}.".format(group.pk, group.score)
@@ -166,15 +182,15 @@ def update_person_score(person_pk):
             update_group_score.apply_async(
                 args=[group.pk],
                 task_id=task_id,
-                countdown=60*5)
-            cache.set(key, task_id, 60*5)
+                countdown=60*2)
+            cache.set(key, task_id, 60*2)
         else:
             if old_task_id != task_id:
                 app.control.revoke(old_task_id)
                 update_group_score.apply_async(
                     args=[group.pk],
                     task_id=task_id,
-                    countdown=60*5)
+                    countdown=60*2)
             else:
                 pass
 

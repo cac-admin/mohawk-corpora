@@ -136,14 +136,11 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 @receiver(models.signals.post_save, sender=Recording)
 def update_person_score_when_model_saved(sender, instance, **kwargs):
 
-    # try:
-
     key = 'update_person_score-{0}'.format(
         instance.person.pk)
 
     now = timezone.now()
-    # counter = int(int(now.strftime('%S'))/5.0)
-    cc = "{0}".format(now.strftime('%H%M%S'))
+    cc = "{0}".format(now.strftime('%H%M'))
 
     task_id = 'update_person_score-{0}-{1}'.format(
         instance.person.pk, cc)
@@ -170,28 +167,25 @@ def update_person_score_when_model_saved(sender, instance, **kwargs):
 
         cache.set(key, task_id, 120)
 
-    #     else:
+    else:
 
-    #         if old_task_id != task_id:
-    #             app.control.revoke(old_task_id)
+        if old_task_id != task_id:
+            app.control.revoke(old_task_id)
 
-    #             if isinstance(instance, Recording):
+            if isinstance(instance, Recording):
 
-    #                 update_person_score.apply_async(
-    #                     args=[instance.person.pk],
-    #                     task_id=task_id,
-    #                     countdown=120)
+                update_person_score.apply_async(
+                    args=[instance.person.pk],
+                    task_id=task_id,
+                    countdown=120)
 
-    #             elif isinstance(instance, QualityControl):
-    #                 if isinstance(instance.content_object, Recording):
-    #                     recording = instance.content_object
+            elif isinstance(instance, QualityControl):
+                if isinstance(instance.content_object, Recording):
+                    recording = instance.content_object
 
-    #                     update_person_score.apply_async(
-    #                         args=[instance.person.pk],
-    #                         task_id=task_id,
-    #                         countdown=120)
-    #         else:
-    #             pass
-
-    # except:
-    #     pass
+                    update_person_score.apply_async(
+                        args=[instance.person.pk],
+                        task_id=task_id,
+                        countdown=120)
+        else:
+            pass

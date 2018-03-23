@@ -48,6 +48,9 @@ class Group(models.Model):
         editable=False,
         default=0)
 
+    duration = models.FloatField(
+        default=0, blank=True, editable=False)
+
     def __unicode__(self):
         return self.name
 

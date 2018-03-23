@@ -102,11 +102,6 @@ def filter_recordings_for_competition(queryset):
 
 
 def get_competition_group_score(group):
-    start = parse_datetime("2018-03-15 13:00:00")
-    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
-    end = parse_datetime("2018-03-25 18:00:00")
-    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
-
     # ERROR! This doesn't consder language!
     members = get_valid_group_members(group)
     if members is None:

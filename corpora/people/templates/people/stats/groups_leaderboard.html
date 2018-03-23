@@ -50,6 +50,9 @@ div.hidden-columns{
       <div class="hide-me">{% trans 'Score' %}
         <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
       </div>
+      <div class="hide-me">{% trans 'Total Duration' %}
+        <i class="far fa-fw fa-plus-square" onclick="toggleColumn(this);"></i>
+      </div>      
     </div>
 <div class="table"><table class="table" id='stats-table'>
     <thead>
@@ -61,25 +64,29 @@ div.hidden-columns{
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
 
       </th>
-      <th scope="col">{% trans 'Recordings' %}
+      <th scope="col"><a href="?sort_by={% if '-num_recordings' in path %}num_recordings{% else %}-num_recordings{% endif %}">{% trans 'Recordings' %}
+        {% if 'num_recordings' in path %}<i class="far fa-fw {% if '-num_recordings' in path %}fa-sort-numeric-up{% elif 'num_recordings' in path %}fa-sort-numeric-down{% endif %}"></i>
+        {% endif %}</a>
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
       <th scope="col"><a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %} 
         {% if 'score' in path %}<i class="far fa-fw {% if '-score' in path %}fa-sort-numeric-up{% elif 'score' in path %}fa-sort-numeric-down{% endif %}"></i>
         {% endif %}</a>
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
-
       </th>
+      <th scope="col">{% trans 'Duration' %}</th>
+
     </tr>
   </thead>
   <tbody>
 {% for g in groups %}
 <tr>
   <th scope="row">{{ forloop.counter0|add:page_obj.start_index }}</th>
-  <td>{{g.name}}</td>
+  <td><a href="{% url 'competition_group' g.pk %}">{{g.name}}</a></td>
   <td>{{g.size}}</td>
   <td>{{g.num_recordings}}</td>
   <td>{{g.score}}</td>
+  <td>{{g.duration_hours|floatformat:2}}</td>
 </tr>
 {% endfor %}
 </tbody>
