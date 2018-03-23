@@ -22,7 +22,7 @@
       <h1>Mahi Tahi Growth Rate</h1>
       {% for g in groups %}
       <div class="row" >
-        <div class="col"><p><h3>{{g.growth_rate|floatformat:0}} | {{g.growth_rate_2|floatformat:0}}  : {{g.name}}</h3></p></div>
+        <div class="col"><p><h3>{{g.growth_rate|floatformat:0}} : {{g.name}}</h3></p></div>
       </div>
       {% endfor %}
     </div>

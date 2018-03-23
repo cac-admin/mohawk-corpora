@@ -330,7 +330,7 @@ class MahiTahi(GroupsStatsView):
 
         for group in groups:
             group.growth_rate = mahi_tahi(group)
-            group.growth_rate_2 = mahi_tahi_2(group)
+            # group.growth_rate_2 = mahi_tahi_2(group)
 
         context['groups'] = groups
         return context

@@ -208,9 +208,9 @@ def mahi_tahi(group):
             .filter(person=person)\
             .filter(created__lte=end)\
             .filter(created__gte=start)
-        if recordings.count() != 0:
-            num_recordings = num_recordings + recordings.count()
-            num_members = num_members + 1.0
+    # if recordings.count() != 0:
+        num_recordings = num_recordings + recordings.count()
+        num_members = num_members + 1.0
 
     if num_members == 0:
         return 0
