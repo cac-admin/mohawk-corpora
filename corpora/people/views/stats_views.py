@@ -57,7 +57,7 @@ from people.competition import \
     get_invalid_group_members,\
     get_competition_person_score, \
     filter_recordings_for_competition, \
-    mahi_tahi, mahi_tahi_2
+    mahi_tahi
 
 from people.forms import \
     ResendEmailVerificationForm
