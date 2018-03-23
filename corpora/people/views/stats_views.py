@@ -57,7 +57,7 @@ from people.competition import \
     get_invalid_group_members,\
     get_competition_person_score, \
     filter_recordings_for_competition, \
-    mahi_tahi
+    mahi_tahi, mahi_tahi_2
 
 from people.forms import \
     ResendEmailVerificationForm
@@ -330,6 +330,7 @@ class MahiTahi(GroupsStatsView):
 
         for group in groups:
             group.growth_rate = mahi_tahi(group)
+            group.growth_rate_2 = mahi_tahi_2(group)
 
         context['groups'] = groups
         return context
