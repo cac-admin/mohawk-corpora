@@ -11,7 +11,7 @@ from django.views.generic.list import ListView
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from people.helpers import get_current_language,\
     get_num_supported_languages,\
@@ -352,8 +352,9 @@ class Competition(SiteInfoMixin, ListView):
 
         groups = Group.objects.all().order_by('name').annotate(
             size=Count('person'))
-        qualified = groups.filter(size__gte=7)
-        not_qualified = groups.exclude(size__gte=7)
+        qualified = groups.filter(size__gte=7).filter(duration__gte=4*60*60)
+        not_qualified = groups.filter(
+            Q(size__lte=6) | Q(duration__lte=4*60*60-1))
 
         context['qualified'] = qualified
         context['not_qualified'] = not_qualified
