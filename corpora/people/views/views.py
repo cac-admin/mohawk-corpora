@@ -39,6 +39,8 @@ from rest_framework.views import APIView
 
 from people.competition import get_valid_group_members
 
+from django.core.cache import cache
+
 import logging
 logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
@@ -356,11 +358,16 @@ class Competition(SiteInfoMixin, ListView):
 
         larger_groups = groups.filter(size__gte=7)
 
-        qualified_pk = []
-        for group in larger_groups:
-            members = get_valid_group_members(group)
-            if members.count() >= 7:
-                qualified_pk.append(group.pk)
+        key = 'competition-home'
+        qualified_pk = cache.get(key)
+        if qualified_pk is None:
+            qualified_pk = []
+            for group in larger_groups:
+                members = get_valid_group_members(group)
+                if members.count() >= 7:
+                    qualified_pk.append(group.pk)
+
+            cache.set(key, qualified_pk, 60*10)
 
         qualified = larger_groups \
             .filter(pk__in=qualified_pk) \
