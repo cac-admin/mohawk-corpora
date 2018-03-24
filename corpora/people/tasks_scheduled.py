@@ -43,6 +43,6 @@ CELERYBEAT_SCHEDULE = {
 
     'calculate_group_scores': {
         'task': 'people.tasks.calculate_group_scores',
-        'schedule': crontab(minute='47', hour='*', day_of_week='*'),
+        'schedule': crontab(minute='47', hour='*/2', day_of_week='*'),
     },
 }
