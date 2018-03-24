@@ -39,7 +39,9 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q
+from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q, FloatField
+from django.db.models.functions import Cast
+
 from django.core.cache import cache
 
 from corpus.aggregate import \
@@ -252,7 +254,13 @@ to our project.")
     def get_queryset(self):
         # language = get_current_language(self.request)
         groups = Group.objects.all().order_by('name').order_by('-score')\
-            .annotate(size=Count('person'))
+            .annotate(size=Count('person'))\
+            .annotate(
+                review_rate=Cast(Count(
+                    'person__recording__quality_control'
+                ), FloatField())/Cast(
+                    1+Count('person__recording')*1.0, FloatField())
+                )
 
         sort_by = self.request.GET.get('sort_by', '')
         if '-score' in sort_by:
@@ -278,11 +286,11 @@ to our project.")
 
         groups = context['groups']
 
-        for group in groups:
-            members = get_valid_group_members(group)
-            recordings = filter_recordings_for_competition(
-                Recording.objects.filter(person__in=members))
-            group.duration_hours = group.duration/60/60
+        # for group in groups:
+        #     # members = get_valid_group_members(group)
+        #     # recordings = filter_recordings_for_competition(
+        #     #     Recording.objects.filter(person__in=members))
+        #     group.duration_hours = group.duration/60/60
 
         # Tryin to do sort stuff :/
         path = self.request.get_full_path()

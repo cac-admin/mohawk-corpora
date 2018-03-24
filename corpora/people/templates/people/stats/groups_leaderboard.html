@@ -1,5 +1,5 @@
 {% extends 'people/stats/base.html' %}
-{% load static sekizai_tags compress i18n cache %}
+{% load static sekizai_tags compress i18n cache math_filters %}
 
 {% block title %}{{x_title}}{%endblock%}
 {% block content %}
@@ -75,6 +75,7 @@ div.hidden-columns{
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
       <th scope="col">{% trans 'Duration' %}</th>
+      <th scope="col">{% trans 'Review rate' %}</th>
 
     </tr>
   </thead>
@@ -86,7 +87,8 @@ div.hidden-columns{
   <td>{{g.size}}</td>
   <td>{{g.num_recordings}}</td>
   <td>{{g.score}}</td>
-  <td>{{g.duration_hours|floatformat:2}}</td>
+  <td>{{g.duration|divide:3600|floatformat:2}}</td>
+  <td>{{g.review_rate|divide:0.01|floatformat:0}}%</td>
 </tr>
 {% endfor %}
 </tbody>
