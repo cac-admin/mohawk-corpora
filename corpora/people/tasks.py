@@ -182,15 +182,15 @@ def update_person_score(person_pk):
             update_group_score.apply_async(
                 args=[group.pk],
                 task_id=task_id,
-                countdown=60*4)
-            cache.set(key, task_id, 60*4)
+                countdown=60*5)
+            cache.set(key, task_id, 60*5)
         else:
             if old_task_id != task_id:
                 app.control.revoke(old_task_id)
                 update_group_score.apply_async(
                     args=[group.pk],
                     task_id=task_id,
-                    countdown=60*4)
+                    countdown=60*5)
             else:
                 pass
 

@@ -154,7 +154,7 @@ def update_person_score_when_model_saved(sender, instance, **kwargs):
             update_person_score.apply_async(
                 args=[instance.person.pk],
                 task_id=task_id,
-                countdown=120)
+                countdown=60*4)
 
         elif isinstance(instance, QualityControl):
             if isinstance(instance.content_object, Recording):
@@ -163,9 +163,9 @@ def update_person_score_when_model_saved(sender, instance, **kwargs):
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=120)
+                    countdown=60*4)
 
-        cache.set(key, task_id, 120)
+        cache.set(key, task_id, 60*4)
 
     else:
 
@@ -177,7 +177,7 @@ def update_person_score_when_model_saved(sender, instance, **kwargs):
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=120)
+                    countdown=60*4)
 
             elif isinstance(instance, QualityControl):
                 if isinstance(instance.content_object, Recording):
@@ -186,6 +186,6 @@ def update_person_score_when_model_saved(sender, instance, **kwargs):
                     update_person_score.apply_async(
                         args=[instance.person.pk],
                         task_id=task_id,
-                        countdown=120)
+                        countdown=60*4)
         else:
             pass
