@@ -221,7 +221,12 @@ def mahi_tahi(group):
 def filter_recordings_to_top_ten(queryset):
 
     # Only consider groups with large amount of recordings
-    queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+    new_queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+
+    if new_queryset.count() == 0:
+        return queryset
+    else:
+        queryset = new_queryset
 
     queryset = queryset \
         .annotate(
@@ -236,7 +241,10 @@ def filter_recordings_to_top_ten(queryset):
 
     # Filter out so that we review people who haven't had equal reviewing
     # opportunity.
-    queryset = queryset \
-        .filter(review_rate__lte=avg_rate['review_rate__avg'])
+
+    if avg_rate['review_rate__avg'] is not None:
+
+        queryset = queryset \
+            .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
     return queryset
