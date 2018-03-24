@@ -21,9 +21,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 
 from django.db.models import Sum, Count, When, Value, Case, IntegerField
-from django.db.models import Q, F
+from django.db.models import Q, F, ExpressionWrapper, FloatField, Avg
 from django.db.models.functions import Length
-
+from django.db.models.functions import Cast
 from django.core.cache import cache
 
 from django.utils.dateparse import parse_datetime
@@ -220,8 +220,23 @@ def mahi_tahi(group):
 
 def filter_recordings_to_top_ten(queryset):
 
-    # groups = Group.objects.filter(num_recordings__gte=5000)
-
+    # Only consider groups with large amount of recordings
     queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+
+    queryset = queryset \
+        .annotate(
+            review_rate=Cast(Count(
+                'person__recording__quality_control'
+            ), FloatField())/Cast(
+                Count('person__recording')*1.0, FloatField())
+            )\
+        .order_by('review_rate')
+
+    avg_rate = queryset.aggregate(Avg('review_rate'))
+
+    # Filter out so that we review people who haven't had equal reviewing
+    # opportunity.
+    queryset = queryset \
+        .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
     return queryset
