@@ -216,3 +216,12 @@ def mahi_tahi(group):
         return 0
 
     return num_recordings/num_members
+
+
+def filter_recordings_to_top_ten(queryset):
+
+    # groups = Group.objects.filter(num_recordings__gte=5000)
+
+    queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+
+    return queryset
