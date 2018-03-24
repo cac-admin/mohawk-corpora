@@ -37,6 +37,7 @@ from corpora.mixins import SiteInfoMixin, EnsureCsrfCookieMixin
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 
+from people.competition import get_valid_group_members
 
 import logging
 logger = logging.getLogger('corpora')
@@ -352,12 +353,29 @@ class Competition(SiteInfoMixin, ListView):
 
         groups = Group.objects.all().order_by('name').annotate(
             size=Count('person'))
-        qualified = groups.filter(size__gte=7).filter(duration__gte=4*60*60)
-        not_qualified = groups.filter(
-            Q(size__lte=6) | Q(duration__lte=4*60*60-1))
+
+        larger_groups = groups.filter(size__gte=7)
+
+        qualified_pk = []
+        for group in larger_groups:
+            members = get_valid_group_members(group)
+            if members.count() >= 7:
+                qualified_pk.append(group.pk)
+
+        qualified = larger_groups \
+            .filter(pk__in=qualified_pk) \
+            .filter(duration__gte=4*60*60)
+
+        need_more_hours = larger_groups \
+            .filter(pk__in=qualified_pk) \
+            .filter(duration__lte=4*60*60-1)
+
+        need_more_members = groups \
+            .exclude(pk__in=qualified_pk)
 
         context['qualified'] = qualified
-        context['not_qualified'] = not_qualified
+        context['need_more_members'] = need_more_members
+        context['need_more_hours'] = need_more_hours
         # for group in groups:
 
         return context

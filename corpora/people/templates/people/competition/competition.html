@@ -69,9 +69,17 @@ h3{
         <p>You need at least 7 people in your group and 4 hours of recordings to qualify for cash prizes.</p>
         <p>{% for g in qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
 
-        <h3 style="padding-top: 15px;">Groups</h3>
-        <p>These groups need 7 members and 4 hours to qualify.</p>
-        <p>{% for g in not_qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+        <h3 style="padding-top: 15px;">{{need_more_hours.count}} Groups Need More Hours</h3>
+        <p>These groups have 7 valid members but need more hours.</p>
+        <p>{% for g in need_more_hours %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
+        <h3 style="padding-top: 15px;">{{need_more_members.count}} Groups Need More Members</h3>
+        <p>These groups need more valid members.</p>
+        <p>{% for g in need_more_members %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
 
     </div>
   </div>
