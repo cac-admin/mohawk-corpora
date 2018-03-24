@@ -350,6 +350,8 @@ class GroupStatsView(
 
         if self.request.user.is_staff:
             return True
+        elif person is None:
+            return False
         elif person.groups.filter(pk__in=[pk]).exists():
             return True
         else:

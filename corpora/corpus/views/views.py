@@ -169,7 +169,7 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        p = get_person(request)
+        p = get_or_create_person(request)
 
         audio_file = m.audio_file
         if m.audio_file_aac:
