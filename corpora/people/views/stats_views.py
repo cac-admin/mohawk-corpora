@@ -320,6 +320,41 @@ class Top20(GroupsStatsView):
         return self.request.user.is_staff and \
             self.request.user.is_authenticated()
 
+    def get_context_data(self, **kwargs):
+        context = \
+            super(Top20, self).get_context_data(**kwargs)
+
+        recordings = Recording.objects.all()
+        recordings = filter_recordings_for_competition(recordings)
+        total_recordings = recordings.count()
+
+        total_duration = recordings.aggregate(total_duration=Sum('duration'))
+        total_duration = total_duration['total_duration']
+
+        if total_duration is not None:
+            total_duration = total_duration/3600
+        else:
+            total_duration = 0
+
+        groups = Group.objects.all()
+
+        num_people = groups \
+            .aggregate(num_people=Count('person', distinct=True))
+        num_people = num_people['num_people']
+        if num_people is None:
+            num_people = 0
+        num_groups = groups.count()
+
+        context['num_people'] = num_people
+        context['num_groups'] = num_groups
+        context['total_duration'] = total_duration
+        context['total_recordings'] = total_recordings
+
+        return context
+
+    # def get_queryset(self):
+    #     queryset = super(Top20, self).get_queryset()
+
 
 class MahiTahi(GroupsStatsView):
     model = Group

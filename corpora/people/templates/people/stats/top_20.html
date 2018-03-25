@@ -29,20 +29,30 @@
     <h1 style="text-align: center; ">Hopu Kōrero Māori<br><span class="font-weight: 900;">Top 20</span></h1>
     <p><span  class="text-decoration: underline;">Data updated
       approximately every 10 minutes</span></p>
-            
-      <div class="row" style="text-align: center; font-weight: 600;">
-        {% for g in groups %}
+    </div>
+  </div> 
 
-        {% if forloop.counter0 == 0 or forloop.counter0 == 10 %}<div class="col-6">{% endif %}
-
-        <h3>{{ forloop.counter0|add:page_obj.start_index }}. {{g.name|upper}}</h3>
-
-        {% if forloop.counter0 == 9 or forloop.counter0 == 19 %}</div>{% endif %}
-
-        {% endfor %}
-      </div>
+  <div class="row">
+    <div class="col">
+      Total Recordings: {{total_recordings}}<br>
+      Total People: {{num_people}}<br>
+      Total Groups: {{num_groups}}<br>
+      Total Hours: {{total_duration|floatformat:0}}
     </div>
   </div>
+
+  <div class="row" style="text-align: center; font-weight: 600;">
+    {% for g in groups %}
+
+    {% if forloop.counter0 == 0 or forloop.counter0 == 10 %}<div class="col-6">{% endif %}
+
+    <h3>{{ forloop.counter0|add:page_obj.start_index }}. {{g.name|upper}}</h3>
+
+    {% if forloop.counter0 == 9 or forloop.counter0 == 19 %}</div>{% endif %}
+
+    {% endfor %}
+  </div>
+</div>
 
 <div class="row">
   <div class="col">
