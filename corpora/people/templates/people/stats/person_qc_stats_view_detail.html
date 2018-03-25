@@ -17,7 +17,7 @@
 
 .stat{
   font-family: 'Roboto', sans-serif;
-  font-size: .85em;
+  font-size: .7em;
   line-height: .85em;
   text-align: center;
   color: $brand_primary;
@@ -35,10 +35,21 @@
   line-height: 1.0em;
   display: inline-block;
 }
+
+.stat-total-overalltotal{
+  font-size: 1.5em !important;
+}
+
 .stat.stat-icon {
   font-size: 1.5em;
   /*line-height: 20px;*/
+  white-space: pre;
   
+}
+
+span.stat.stat-icon::before {
+  content: "\A";
+  white-space: pre;
 }
 
 .stat.stat-dimension{
@@ -69,36 +80,42 @@ span[class*=downvotes]{
   color: $brand_darker;
 }
 
+div.row.stat{
+  div[class*='col']{
+    padding: 0px 2px !important;
+  }
+}
 </style>
 {% endaddtoblock %}
 
 
   <div class="row justify-content-end">
     <div class="col-12">
-      <div class="row stat" {% if not stats %}style="display: none;"{% endif %}>
-        <div class="col-12" style="text-align: right;"><span class="stat stat-heading">{% trans 'Today' %}</span></div>
+      <div class="row stat">
+        <div class="col-12" style="text-align: right; padding: 0px 15px !important;">
+          <span class="stat stat-heading">
+          <span class="stat stat-value stat-total-overalltotal" data-value="">{{stats.qcs.total}}</span>
+          {% trans 'total' %}</span>
+        </div>        
         <div class="col-3">
           <span class="stat stat-value stat-total-approvals" data-value="">{{stats.qcs_today.num_approved}}</span>
           <span class="stat stat-icon stat-total-approvals"><i class="far fa-fw fa-check-circle"></i></span>
-
           <span class="stat stat-dimension stat-total-approvals"><br>{% trans 'approvals' %}</span>
         </div>
         <div class="col-3">
           <span class="stat stat-value stat-total-upvotes" data-value="">{{stats.qcs_today.up_votes}}</span>
-                    <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-thumbs-up"></i></span>
-
+          <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-thumbs-up"></i></span>
           <span class="stat stat-dimension stat-total-upvotes"><br>{% trans 'up votes' %}</span>
         </div>
         <div class="col-3">
           <span class="stat stat-value stat-total-downvotes" data-value="">{{stats.qcs_today.down_votes}}</span>
-                    <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-thumbs-down"></i></span>
-
+          <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-thumbs-down"></i></span> 
           <span class="stat stat-dimension stat-total-downvotes"><br>{% trans 'down votes' %}</span>
         </div>        
         <div class="col-3">
           <span class="stat stat-value stat-total-total" data-value="">{{stats.qcs_today.total}}</span>
-          <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'total' %}</span>
-        </div>           
+          <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'today' %}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -111,7 +128,7 @@ span[class*=downvotes]{
 
 $(document).ready(function(){
 
-  stats = new Stats('.stat', "{% url 'stats_person_qc' %}?format=json")
+  stats = new Stats('div.stat', "{% url 'stats_person_qc' %}?format=json")
 
   
   document.addEventListener('listen.recording.loaded', function(){

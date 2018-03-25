@@ -156,9 +156,10 @@ class PersonQCStatsView(JSONResponseMixin, TemplateView):
 
         pks = []
         for qc in qcs:
-            if qc.content_type.name.lower() in 'recording' \
-                    and qc.content_object.sentence.language == language:
-                pks.append(qc.pk)
+            if qc.content_object is not None:
+                if qc.content_type.name.lower() in 'recording' \
+                        and qc.content_object.sentence.language == language:
+                    pks.append(qc.pk)
 
         qcs = qcs.filter(pk__in=pks)
 

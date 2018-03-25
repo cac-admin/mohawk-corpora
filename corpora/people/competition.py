@@ -235,7 +235,7 @@ def filter_recordings_to_top_ten(queryset):
             review_rate=Cast(Count(
                 'person__recording__quality_control'
             ), FloatField())/Cast(
-                Count('person__recording')*1.0, FloatField())
+                Count('person__recording'), FloatField())
             )\
         .order_by('review_rate')
 

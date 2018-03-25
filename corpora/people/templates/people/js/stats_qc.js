@@ -2,7 +2,7 @@
 
 class Stats{
 
-  constructor(stat_block_selector='.stat', url=''){
+  constructor(stat_block_selector='div.stat', url=''){
     this.stat_block = $(stat_block_selector).get(0);
     this.base_url = url
     this.debug = true
@@ -82,7 +82,9 @@ class Stats{
     self.update_view('.stat-value.stat-total-total', 
       self.stats[self.data_key]['total'])
   
-  
+    self.update_view('.stat-value.stat-total-overalltotal', 
+      self.stats['qcs']['total'])
+
   }
 
   logger(s){
