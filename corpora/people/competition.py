@@ -236,7 +236,7 @@ def filter_recordings_to_top_ten(queryset):
                 ), FloatField())/Cast(
                 1+F('num_recordings'), FloatField())
         ) \
-        .filter(num_recordings__gte=5000)
+        .filter(num_recordings__gte=7000)
 
     avg_rate = groups.aggregate(Avg('review_rate'))
     if avg_rate['review_rate__avg'] is not None:
