@@ -69,14 +69,26 @@ div.hidden-columns{
         {% endif %}</a>
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
-      <th scope="col"><a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %} 
+      <th scope="col">
+        <a href="?sort_by={% if '-score' in path %}score{% else %}-score{% endif %}">{% trans 'Score' %} 
         {% if 'score' in path %}<i class="far fa-fw {% if '-score' in path %}fa-sort-numeric-up{% elif 'score' in path %}fa-sort-numeric-down{% endif %}"></i>
         {% endif %}</a>
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
       <th scope="col">{% trans 'Duration' %}</th>
-      <th scope="col">{% trans '% Reviewed' %}</th>
-      <th scope="col">{% trans '% Approved' %}</th>
+      <th scope="col">
+        <a href="?sort_by={% if '-review_rate' in path %}review_rate{% else %}-review_rate{% endif %}">{% trans '% Reviewed' %} 
+        {% if 'review_rate' in path %}<i class="far fa-fw {% if '-review_rate' in path %}fa-sort-numeric-up{% elif 'review_rate' in path %}fa-sort-numeric-down{% endif %}"></i>
+        {% endif %}</a>
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+      </th>
+      <th scope="col">
+        <a href="?sort_by={% if '-approval_rate' in path %}approval_rate{% else %}-approval_rate{% endif %}">{% trans '% Approved' %} 
+        {% if 'approval_rate' in path %}<i class="far fa-fw {% if '-approval_rate' in path %}fa-sort-numeric-up{% elif 'approval_rate' in path %}fa-sort-numeric-down{% endif %}"></i>
+        {% endif %}</a>
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+
+      </th>
 
     </tr>
   </thead>

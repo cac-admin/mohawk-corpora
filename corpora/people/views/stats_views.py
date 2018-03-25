@@ -297,6 +297,14 @@ to our project.")
             groups = groups.order_by('-num_recordings')
         elif 'num_recordings' in sort_by:
             groups = groups.order_by('num_recordings')
+        elif '-review_rate' in sort_by:
+            groups = groups.order_by('-review_rate')
+        elif 'review_rate' in sort_by:
+            groups = groups.order_by('review_rate')
+        elif '-approval_rate' in sort_by:
+            groups = groups.order_by('-approval_rate')
+        elif 'approval_rate' in sort_by:
+            groups = groups.order_by('approval_rate')
         else:
             groups = groups.order_by('-score')
 

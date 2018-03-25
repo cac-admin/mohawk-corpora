@@ -28,6 +28,7 @@ from django.core.cache import cache
 
 from django.utils.dateparse import parse_datetime
 import pytz
+import random
 
 import logging
 logger = logging.getLogger('corpora')
@@ -233,11 +234,8 @@ def filter_recordings_to_top_ten(queryset):
             review_rate=Cast(Count(
                 'person__recording__quality_control', distinct=True
                 ), FloatField())/Cast(
-                1+Count(
-                    'person__recording', distinct=True
-                )*1.0, FloatField())
-            ) \
-        .annotate(num_recordings=Count('person__recording', distinct=True)) \
+                1+F('num_recordings'), FloatField())
+        ) \
         .filter(num_recordings__gte=5000)
 
     avg_rate = groups.aggregate(Avg('review_rate'))
@@ -245,11 +243,14 @@ def filter_recordings_to_top_ten(queryset):
         groups = groups \
             .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
-    i = random.randint(0, groups.count() - 1)
-    group = groups[i]
+    count = groups.count()
+    if count > 1:
+        i = random.randint(0, groups.count() - 1)
+        group = groups[i]
+    else:
+        return queryset
 
     valid_members = get_valid_group_members(group)
-
     queryset = queryset.filter(person__in=valid_members)
 
 
