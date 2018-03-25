@@ -152,23 +152,28 @@ $(document).ready(function(){
   }
 
   $('div.pagination, div.table').find('a').each(function(a,b){
-    q_parts =  b.getAttribute('href').split('?')[1].split('=')
-    var key = q_parts[0]
-    var value = q_parts[1]
-    
-    q_parts = []
-    for (var dkey in query_dict){
-      if (dkey == key){
-        s = dkey + '=' + value 
-      } else{
-        s = dkey + '=' + query_dict[dkey]  
-      }
+    try {
+      q_parts =  b.getAttribute('href').split('?')[1].split('=')
+      var key = q_parts[0]
+      var value = q_parts[1]
       
-      q_parts.push(s)
+      q_parts = []
+      for (var dkey in query_dict){
+        if (dkey == key){
+          s = dkey + '=' + value 
+        } else{
+          s = dkey + '=' + query_dict[dkey]  
+        }
+        
+        q_parts.push(s)
+      }
+
+      b.setAttribute('href', base_url + "?" + q_parts.join('&'))
+    } catch (e){
+      // console.log(e)
+      // console.log(b.getAttribute('href'))
+      // console.log(b)
     }
-
-    b.setAttribute('href', base_url + "?" + q_parts.join('&'))
-
   })
 })
 
