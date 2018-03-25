@@ -211,7 +211,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
         if sort_by in ['listen', 'random', 'recent']:
 
-            queryset = filter_recordings_for_competition(queryset)
+            if sort_by not in 'recent':
+                queryset = filter_recordings_for_competition(queryset)
 
             queryset = queryset\
                 .exclude(quality_control__approved=True)\

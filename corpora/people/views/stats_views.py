@@ -263,6 +263,25 @@ to our project.")
                         'person__recording', distinct=True
                     )*1.0, FloatField())
                 ) \
+            .annotate(
+                approval_rate=Sum(
+                    Case(
+                        When(
+                            person__recording__quality_control__isnull=True,
+                            then=Value(0)),
+                        When(
+                            person__recording__quality_control__approved=True,
+                            then=Value(1)),
+                        When(
+                            person__recording__quality_control__approved=False,
+                            then=Value(0)),
+                        default=Value(0),
+                        output_field=FloatField())) /
+                Cast(1+Count(
+                    'person__recording__quality_control', distinct=True
+                    ), FloatField()
+                )
+            ) \
             .annotate(size=Count('person', distinct=True))
 
         sort_by = self.request.GET.get('sort_by', '')

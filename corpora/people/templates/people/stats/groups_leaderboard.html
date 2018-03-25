@@ -75,7 +75,9 @@ div.hidden-columns{
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
       <th scope="col">{% trans 'Duration' %}</th>
-      <th scope="col">{% trans 'Review rate' %}</th>
+      <th scope="col">{% trans '% Reviewed' %}</th>
+      <th scope="col">{% trans '% Approved' %}</th>
+
     </tr>
   </thead>
   <tbody>
@@ -88,6 +90,7 @@ div.hidden-columns{
   <td>{{g.score}}</td>
   <td>{{g.duration|divide:3600|floatformat:2}}</td>
   <td>{{g.review_rate|divide:0.01|floatformat:0}}%</td>
+  <td>{{g.approval_rate|divide:0.01|floatformat:0}}%</td>
 </tr>
 {% endfor %}
 </tbody>
