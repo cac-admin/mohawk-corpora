@@ -220,29 +220,56 @@ def mahi_tahi(group):
 def filter_recordings_to_top_ten(queryset):
 
     # Only consider groups with large amount of recordings
-    new_queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+    # new_queryset = queryset.filter(person__groups__num_recordings__gte=5000)
 
-    if new_queryset.count() == 0:
-        return queryset
-    else:
-        queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+    # if new_queryset.count() == 0:
+    #     return queryset
+    # else:
+    #     queryset = queryset.filter(person__groups__num_recordings__gte=5000)
 
-    queryset = queryset \
+    # Find groups with low review rate AND more than 5000 recordings
+    groups = Group.objects.all() \
         .annotate(
             review_rate=Cast(Count(
-                'person__recording__quality_control'
-            ), FloatField())/Cast(
-                Count('person__recording'), FloatField())
-            )
+                'person__recording__quality_control', distinct=True
+                ), FloatField())/Cast(
+                1+Count(
+                    'person__recording', distinct=True
+                )*1.0, FloatField())
+            ) \
+        .annotate(num_recordings=Count('person__recording', distinct=True)) \
+        .filter(num_recordings__gte=5000)
 
-    avg_rate = queryset.aggregate(Avg('review_rate'))
-
-    # Filter out so that we review people who haven't had equal reviewing
-    # opportunity.
-
+    avg_rate = groups.aggregate(Avg('review_rate'))
     if avg_rate['review_rate__avg'] is not None:
-
-        queryset = queryset \
+        groups = groups \
             .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
-    return queryset
+    i = random.randint(0, groups.count() - 1)
+    group = groups[i]
+
+    valid_members = get_valid_group_members(group)
+
+    queryset = queryset.filter(person__in=valid_members)
+
+
+    # queryset = queryset \
+    #     .annotate(
+    #         review_rate=Cast(Count(
+    #             'person__recording__quality_control'
+    #         ), FloatField())/Cast(
+    #             Count('person__recording'), FloatField())
+    #         )\
+
+
+    # avg_rate = queryset.aggregate(Avg('review_rate'))
+
+    # # Filter out so that we review people who haven't had equal reviewing
+    # # opportunity.
+
+    # if avg_rate['review_rate__avg'] is not None:
+
+    #     queryset = queryset \
+    #         .filter(review_rate__lte=avg_rate['review_rate__avg'])
+
+    # return queryset
