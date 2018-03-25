@@ -253,6 +253,7 @@ def filter_recordings_to_top_ten(queryset):
     valid_members = get_valid_group_members(group)
     queryset = queryset.filter(person__in=valid_members)
 
+    return queryset
 
     # queryset = queryset \
     #     .annotate(
