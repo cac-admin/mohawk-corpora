@@ -222,11 +222,13 @@ def filter_recordings_to_top_ten(queryset):
 
     # Only consider groups with large amount of recordings
     new_queryset = queryset.filter(person__groups__num_recordings__gte=5000)
+
     return queryset
+
     if new_queryset.count() == 0:
         return queryset
     else:
-        queryset = new_queryset
+        queryset = queryset.filter(person__groups__num_recordings__gte=5000)
 
     queryset = queryset \
         .annotate(
