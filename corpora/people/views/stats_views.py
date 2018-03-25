@@ -253,14 +253,16 @@ to our project.")
 
     def get_queryset(self):
         # language = get_current_language(self.request)
-        groups = Group.objects.all().order_by('name').order_by('-score')\
-            .annotate(size=Count('person'))\
+        groups = Group.objects.all().order_by('-score')\
             .annotate(
                 review_rate=Cast(Count(
-                    'person__recording__quality_control'
-                ), FloatField())/Cast(
-                    1+Count('person__recording')*1.0, FloatField())
-                )
+                    'person__recording__quality_control', distinct=True
+                    ), FloatField())/Cast(
+                    1+Count(
+                        'person__recording', distinct=True
+                    )*1.0, FloatField())
+                ) \
+            .annotate(size=Count('person', distinct=True))
 
         sort_by = self.request.GET.get('sort_by', '')
         if '-score' in sort_by:
@@ -275,6 +277,8 @@ to our project.")
             groups = groups.order_by('-num_recordings')
         elif 'num_recordings' in sort_by:
             groups = groups.order_by('num_recordings')
+        else:
+            groups = groups.order_by('-score')
 
         return groups
 

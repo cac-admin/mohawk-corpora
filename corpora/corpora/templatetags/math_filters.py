@@ -8,4 +8,7 @@ register = template.Library()
 
 @register.filter()
 def divide(value, arg):
-    return value/arg
+    try:
+        return value/arg
+    except:
+        return 0
