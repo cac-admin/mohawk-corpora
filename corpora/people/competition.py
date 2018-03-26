@@ -243,6 +243,12 @@ def filter_recordings_to_top_ten(queryset):
         groups = groups \
             .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
+    logger.debug('Average Review Rate: {0}'.format(
+        avg_rate['review_rate__avg']))
+    logger.debug('These groups are being reviewed:{0}'.format(
+        ['\n{0}:{1}:{2:0.1d}'.format(
+            g.pk, g.name, g.review_rate*100) for f in groups]))
+
     count = groups.count()
     if count > 1:
         i = random.randint(0, groups.count() - 1)

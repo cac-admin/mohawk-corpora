@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-20 21:28+1300\n"
+"POT-Creation-Date: 2018-03-26 13:00+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,7 +97,7 @@ msgstr ""
 msgid "rules"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:129
+#: corpora/templates/corpora/home.html:127
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -125,19 +125,19 @@ msgstr ""
 "Māori, me ērā atu reo taketake,\n"
 "      e ngā mīhini reo kōrero pērā i a Siri."
 
-#: corpora/templates/corpora/home.html:142
+#: corpora/templates/corpora/home.html:140
 msgid "Available Languages"
 msgstr "Ngā reo e taea ana"
 
-#: corpora/templates/corpora/home.html:143
+#: corpora/templates/corpora/home.html:141
 msgid "Translations for "
 msgstr "Ngā whakamāoritanga mō te "
 
-#: corpora/templates/corpora/home.html:143
+#: corpora/templates/corpora/home.html:141
 msgid " are provided in the following langauges:"
 msgstr " koia ēnei ko ngā reo e taea ana:"
 
-#: corpora/templates/corpora/home.html:151
+#: corpora/templates/corpora/home.html:149
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."
@@ -205,32 +205,38 @@ msgid "^competition/top20$"
 msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
 
 #: corpora/urls.py:84
+#, fuzzy
+#| msgid "^stats/group/(?P<pk>\\d+)/$"
+msgid "^competition/mahitahi$"
+msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
+
+#: corpora/urls.py:88
 msgid "^competition"
 msgstr ""
 
-#: corpora/urls.py:88
+#: corpora/urls.py:92
 msgid "^stats/person"
 msgstr "^tatauranga/tangata"
 
-#: corpora/urls.py:92
+#: corpora/urls.py:96
 #, fuzzy
 #| msgid "^stats/person"
 msgid "^stats/person_qc"
 msgstr "^tatauranga/tangata"
 
-#: corpora/urls.py:96
+#: corpora/urls.py:100
 msgid "^stats/people$"
 msgstr "^tatauranga/ngatangata"
 
-#: corpora/urls.py:100
+#: corpora/urls.py:104
 msgid "^stats/groups$"
 msgstr "^tatauranga/ngaropu"
 
-#: corpora/urls.py:104
+#: corpora/urls.py:108
 msgid "^stats/recordings"
 msgstr "^tatauranga/hopu"
 
-#: corpora/urls.py:108
+#: corpora/urls.py:112
 #, fuzzy
 #| msgid "^stats/"
 msgid "^stats/$"
