@@ -247,7 +247,7 @@ def filter_recordings_to_top_ten(queryset):
         avg_rate['review_rate__avg']))
     logger.debug('These groups are being reviewed:{0}'.format(
         ['\n{0}:{1}:{2:0.1d}'.format(
-            g.pk, g.name, g.review_rate*100) for f in groups]))
+            g.pk, g.name, g.review_rate*100) for g in groups]))
 
     count = groups.count()
     if count > 1:
