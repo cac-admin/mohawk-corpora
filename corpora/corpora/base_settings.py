@@ -353,14 +353,14 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '../../logs/django.log',
             'formatter': 'verbose',
-            'maxBytes': 1024 * 1024 * 10,  # 10 mb                        
-        },      
+            'maxBytes': 1024 * 1024 * 3,  # 3 mb
+        },
         'celery': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '../../logs/celery.log',
             'formatter': 'simple',
-            'maxBytes': 1024 * 1024 * 10,  # 10 mb            
+            'maxBytes': 1024 * 1024 * 3,  # 3 mb
         }
     },
     'loggers': {
