@@ -81,6 +81,8 @@
 
 </style>
 {% endaddtoblock %}
+
+{% comment %}
 <div class="video">
   <div class="container">
     <div class="row justify-content-center">
@@ -94,7 +96,7 @@
     </div> 
   </div>
 </div>
-
+{% endcomment %}
 <div class="container">
 
 
@@ -110,13 +112,17 @@
   <div class="row ">
     <div class="col">
         <h2 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Hopu Kōrero Māori Group Competition" %}</a></h2>
-        <h4 style="color: #444;">Ends 6pm 25 March</h4>
+        <h4 style="color: #444;">Finished on 25 March</h4>
+        <p>The Hopu Kōrero Māori competition is finished. The judges are finalising the scores, and winners will be
+        announced by 12pm 28 March 2018.</p>
+        {% comment %}
         <p>Win cash 💰 your rōpū by reading sentences during the Hopu Kōrero Māori Group Competition. 
           Your group needs at least 7 members, and your members need to 
           <a href="{% url 'account_signup' %}">create an account</a> and
           verify their email address. Join a group by adding your group to your 
           <a href="{% url 'people:profile' %}">profile</a>. Don't forget to check out the 
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a></p>
+        {% endcomment %}
         
     </div>
   </div>
