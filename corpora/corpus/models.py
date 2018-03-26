@@ -189,7 +189,9 @@ class Recording(models.Model):
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
     audio_file_aac = models.FileField(
-                        upload_to=upload_directory, null=True, blank=True)
+        upload_to=upload_directory, null=True, blank=True)
+    audio_file_wav = models.FileField(
+        upload_to=upload_directory, null=True, blank=True)
     user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
 

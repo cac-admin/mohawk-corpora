@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from django.conf import settings
-
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from corpus.models import Recording
 from corpus.views.views import RecordingFileView
@@ -65,12 +65,17 @@ def transcode_audio(recording_pk):
 
     is_running = cache.get(key)
 
+    result = ''
     if is_running is None:
         if not recording.audio_file_aac:
             is_running = cache.set(key, True, 60*5)
             result = encode_audio(recording)
             cache.set(key, False, 60)
-            return result
+        if not recording.audio_file_wav:
+            is_running = cache.set(key, True, 60*5)
+            result = result + encode_audio(recording, codec='wav')
+            cache.set(key, False, 60)
+        return result
 
     elif is_running:
         return "Encoding in progress..."
@@ -80,10 +85,12 @@ def transcode_audio(recording_pk):
 
 @shared_task
 def transcode_all_audio():
-    recordings = Recording.objects.filter(audio_file_aac='')
+    recordings = Recording.objects.filter(
+        Q(audio_file_aac='') | Q(audio_file_aac=None))
     logger.debug('Found {0} recordings to encode.'.format(len(recordings)))
     count = 0
     message = []
+
     for recording in recordings:
         logger.debug('Encoding {0}.'.format(recording))
         try:
@@ -93,6 +100,22 @@ def transcode_all_audio():
         except:
             logger.error(sys.exc_info()[0])
             continue
+
+    recordings = Recording.objects.filter(
+        Q(audio_file_wav='') | Q(audio_file_wav=None))
+    logger.debug(
+        'Found {0} recordings to encode into wav.'.format(len(recordings)))
+    count = 0
+    for recording in recordings:
+        logger.debug('Encoding {0}.'.format(recording))
+        try:
+            result = encode_audio(recording, codec='wav')
+            message.append(result)
+            count = count+1
+        except:
+            logger.error(sys.exc_info()[0])
+            continue
+
     return "Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
 
 
@@ -155,7 +178,8 @@ def encode_audio(recording, test=False, codec='aac'):
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
-        'aac': ['libfdk_aac', 'm4a']
+        'aac': ['libfdk_aac', 'm4a'],
+        'wav': ['pcm_s16le', 'wav', 16000, 1]
     }
 
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
@@ -173,11 +197,17 @@ def encode_audio(recording, test=False, codec='aac'):
             audio = True
 
     if audio:
-        file_name = recording.get_recordign_file_name()
+        file_name = recording.get_recordign_file_name() + '_16kHz'
         extension = codecs[codec][1]
 
-        code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
-            tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+        if codec in 'wav':
+            code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
+                tmp_file,
+                codecs[codec][0], codecs[codec][2], codecs[codec][3],
+                tmp_stor_dir, file_name, extension)
+        else:
+            code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
+                tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
 
         logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)
@@ -186,9 +216,17 @@ def encode_audio(recording, test=False, codec='aac'):
         logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
         if file_name is None:
             file_name = 'audio'
-        recording.audio_file_aac.save(
-            file_name+'.'+extension,
-            File(open(tmp_stor_dir+'/{0}.{1}'.format(file_name, extension))))
+
+        if 'aac' in codec:
+            recording.audio_file_aac.save(
+                file_name+'.'+extension,
+                File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                    file_name, extension))))
+        elif 'wav' in codec:
+            recording.audio_file_wav.save(
+                file_name+'.'+extension,
+                File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                    file_name, extension))))
 
         code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
         logger.debug('Running: '+code)
