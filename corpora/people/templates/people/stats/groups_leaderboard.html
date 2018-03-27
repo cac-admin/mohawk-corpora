@@ -75,7 +75,12 @@ div.hidden-columns{
         {% endif %}</a>
         <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
       </th>
-      <th scope="col">{% trans 'Duration' %}</th>
+      <th scope="col">
+        <a href="?sort_by={% if '-duration' in path %}duration{% else %}-duration{% endif %}">{% trans '% Duration' %} 
+        {% if 'duration' in path %}<i class="far fa-fw {% if '-duration' in path %}fa-sort-numeric-up{% elif 'duration' in path %}fa-sort-numeric-down{% endif %}"></i>
+        {% endif %}</a>
+        <i class="far fa-fw fa-times-square" onclick="toggleColumn(this);"></i>
+      </th>
       <th scope="col">
         <a href="?sort_by={% if '-review_rate' in path %}review_rate{% else %}-review_rate{% endif %}">{% trans '% Reviewed' %} 
         {% if 'review_rate' in path %}<i class="far fa-fw {% if '-review_rate' in path %}fa-sort-numeric-up{% elif 'review_rate' in path %}fa-sort-numeric-down{% endif %}"></i>

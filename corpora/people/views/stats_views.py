@@ -305,8 +305,14 @@ to our project.")
             groups = groups.order_by('-approval_rate')
         elif 'approval_rate' in sort_by:
             groups = groups.order_by('approval_rate')
+        elif '-duration' in sort_by:
+            groups = groups.order_by('-duration')
+        elif 'duration' in sort_by:
+            groups = groups.order_by('duration')
         else:
             groups = groups.order_by('-score')
+
+
 
         return groups
 
