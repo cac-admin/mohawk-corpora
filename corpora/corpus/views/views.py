@@ -172,8 +172,14 @@ class RecordingFileView(RedirectView):
         p = get_or_create_person(request)
 
         audio_file = m.audio_file
-        if m.audio_file_aac:
-            audio_file = m.audio_file_aac
+
+        f = request.GET.get('format', 'aac')
+        if f in 'wav':
+            if m.audio_file_wav:
+                audio_file = m.audio_file_wav
+        else:
+            if m.audio_file_aac:
+                audio_file = m.audio_file_aac
 
         key = '{0}:{0}:listen'.format(p.uuid, m.id)
         access = cache.get(key)
