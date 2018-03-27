@@ -155,10 +155,11 @@ def prepare_temporary_environment(recording, test=False):
     logger.debug(result[0])
     try:
         logger.debug(result[1])
+        result = ' '.join([str(i) for i in result])
     except:
         logger.debug(result)
 
-    if not os.path.exists(tmp_file):
+    if not os.path.exists(tmp_file) or if 'ERROR 404' in result:
         logger.debug('ERROR GETTING: ' + tmp_file)
         raise ValueError
     else:
