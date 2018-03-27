@@ -159,7 +159,7 @@ def prepare_temporary_environment(recording, test=False):
     except:
         logger.debug(result)
 
-    if not os.path.exists(tmp_file) or if 'ERROR 404' in result:
+    if not os.path.exists(tmp_file) or 'ERROR 404' in result:
         logger.debug('ERROR GETTING: ' + tmp_file)
         raise ValueError
     else:
