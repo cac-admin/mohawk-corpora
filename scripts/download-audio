@@ -90,8 +90,14 @@ def main():
     file_exists = 0
     while api_url:
         print("fetching a JSON page: %s" % api_url)
-        r = session.get(api_url)
-        j = r.json()
+        try:
+            r = session.get(api_url)
+            j = r.json()
+        except json.decoder.JSONDecodeError as e:
+            print("bad JSON! %s" % e)
+            print(r.content)
+        except requests.exceptions.ConnectionError as e:
+            print("bad request! %s" % e)
 
         for s in j['results']:
             recording_id = '%s' % s['id']
