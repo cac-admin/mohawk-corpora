@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 13:00+1300\n"
+"POT-Creation-Date: 2018-03-27 21:11+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,19 +83,15 @@ msgstr ""
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:105
+#: corpora/templates/corpora/home.html:107
 msgid "Start"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:112
+#: corpora/templates/corpora/home.html:114
 msgid "Hopu Kōrero Māori Group Competition"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:119
-msgid "rules"
-msgstr ""
-
-#: corpora/templates/corpora/home.html:127
+#: corpora/templates/corpora/home.html:134
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -111,19 +107,19 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:140
+#: corpora/templates/corpora/home.html:147
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:141
+#: corpora/templates/corpora/home.html:148
 msgid "Translations for "
 msgstr ""
 
-#: corpora/templates/corpora/home.html:141
+#: corpora/templates/corpora/home.html:148
 msgid " are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:149
+#: corpora/templates/corpora/home.html:156
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 13:00+1300\n"
+"POT-Creation-Date: 2018-03-27 21:11+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:73 corpus/admin.py:146 corpus/models.py:238
-#: corpus/models.py:244
+#: corpus/admin.py:73 corpus/admin.py:146 corpus/models.py:240
+#: corpus/models.py:246
 msgid "None"
 msgstr "Hore kau"
 
@@ -86,31 +86,31 @@ msgstr "Aotearoa"
 msgid "American"
 msgstr "Marikena"
 
-#: corpus/models.py:265
+#: corpus/models.py:267
 msgid "language"
 msgstr "reo"
 
-#: corpus/models.py:275
+#: corpus/models.py:277
 msgid "updated"
 msgstr ""
 
-#: corpus/models.py:276
+#: corpus/models.py:278
 msgid "source"
 msgstr ""
 
-#: corpus/models.py:277
+#: corpus/models.py:279
 msgid "uploaded file"
 msgstr ""
 
-#: corpus/models.py:279
+#: corpus/models.py:281
 msgid ".txt format"
 msgstr ""
 
-#: corpus/models.py:282
+#: corpus/models.py:284
 msgid "text"
 msgstr ""
 
-#: corpus/models.py:283
+#: corpus/models.py:285
 msgid "texts"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgid "Skip"
 msgstr "Haere tonu"
 
 #: corpus/templates/corpus/qualitycontrol_list.html:24
-#: corpus/views/views.py:210
+#: corpus/views/views.py:216
 msgid "Stats"
 msgstr "Tatauranga"
 
@@ -249,7 +249,7 @@ msgstr "E kore koe e āhei ki te whakarerekē i tēnei kapohanga reo."
 msgid "Reading recording is not allowed."
 msgstr "E kore koe e āhei ki te pānui i tēnei kapohanga reo."
 
-#: corpus/views/api.py:299 corpus/views/api.py:314
+#: corpus/views/api.py:304 corpus/views/api.py:319
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr "{0} e kore e āhei koia tēnei te API whakamutunga."
@@ -276,17 +276,17 @@ msgstr "Kapohanga Reo"
 msgid "Help us teach computers the sounds of a language by reading sentences."
 msgstr ""
 
-#: corpus/views/views.py:211
+#: corpus/views/views.py:217
 msgid "Statistics for all data."
 msgstr ""
 
-#: corpus/views/views.py:294
+#: corpus/views/views.py:300
 #, fuzzy
 #| msgid "^listen/"
 msgid "Listen"
 msgstr "^whakarongo/"
 
-#: corpus/views/views.py:295
+#: corpus/views/views.py:301
 msgid ""
 "Listen to and vote on recordings. This helps us improvethe quality of "
 "recordings we use."

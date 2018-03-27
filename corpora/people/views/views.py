@@ -371,11 +371,11 @@ class Competition(SiteInfoMixin, ListView):
 
         qualified = larger_groups \
             .filter(pk__in=qualified_pk) \
-            .filter(duration__gte=4*60*60)
+            .filter(duration__gte=3.95*60*60)
 
         need_more_hours = larger_groups \
             .filter(pk__in=qualified_pk) \
-            .filter(duration__lte=4*60*60-1)
+            .filter(duration__lt=3.95*60*60)
 
         need_more_members = groups \
             .exclude(pk__in=qualified_pk)
