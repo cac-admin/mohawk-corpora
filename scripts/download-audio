@@ -30,8 +30,10 @@ def main():
                         help="API url (if not $base/%s)" % DEFAULT_API_PATH)
     parser.add_argument('--login-url', default=DEFAULT_LOGIN_PATH,
                         help="login url (if not $base/%s)" % DEFAULT_LOGIN_PATH)
-    parser.add_argument('-t', '--text-file',
+    parser.add_argument('-t', '--sentence-file', default=os.devnull,
                         help="append sentence text to this file")
+    parser.add_argument('-i', '--fileid-file', default=os.devnull,
+                        help="append fileids to this file")
     parser.add_argument('-d', '--audio-directory',
                         help="save audio files here")
     parser.add_argument('-l', '--limit', type=int,
@@ -81,7 +83,8 @@ def main():
                            'csrfmiddlewaretoken': csrftoken
                      })
 
-    text_file = open(args.text_file, "a")
+    text_file = open(args.sentence_file, "a")
+    id_file = open(args.fileid_file, "a")
 
     downloaded = 0
     file_exists = 0
@@ -123,6 +126,7 @@ def main():
                 continue
 
             print("<s> %s </s> (%s)" % (t, recording_id), file=text_file)
+            print("%s/%s" % (person_id, recording_id), file=id_file)
 
             d = os.path.join(args.audio_directory, person_id)
             fn = os.path.join(d, recording_id)
