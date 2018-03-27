@@ -197,6 +197,11 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
     If a sort_by query is provided, we exclude approved recordings in the
     returend queryset.
+
+    This api provides acces to a audio_file_url field. This allows the retrival
+    of an audio file in the m4a container with the aac audio codec. To retried
+    an audio file in the wave format at 16kHz and 16bits, append the query
+    ?format=wav to the url given by the audio_file_url field.
     """
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
