@@ -134,7 +134,14 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 
 @receiver(models.signals.post_save, sender=QualityControl)
 @receiver(models.signals.post_save, sender=Recording)
-def update_person_score_when_model_saved(sender, instance, **kwargs):
+def update_person_score_when_model_saved(sender, instance, created, **kwargs):
+
+    if isinstance(instance, Recording):
+        # Check if we actually need to update the score!
+        # Really we should only update the score if the
+        # recording is CREATED!
+        if not created:
+            return
 
     key = 'update_person_score-{0}'.format(
         instance.person.pk)
