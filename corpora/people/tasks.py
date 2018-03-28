@@ -112,7 +112,7 @@ def calculate_group_scores():
 
 @shared_task
 def update_group_score(group):
-
+    return "this is off"
     if type(group) is int:
         try:
             group = Group.objects.get(pk=group)
@@ -142,6 +142,7 @@ def update_group_score(group):
 
 @shared_task
 def update_person_score(person_pk):
+    return "this is off"
     from corpus.models import Recording, QualityControl
 
     try:
