@@ -11,6 +11,6 @@ CELERYBEAT_SCHEDULE = {
     },
     'transcode_all_audio': {
         'task': 'corpus.tasks.transcode_all_audio',
-        'schedule': crontab(minute=30, hour='*', day_of_week='*'),
+        'schedule': crontab(minute=30, hour='*/12', day_of_week='*'),
     },
 }
