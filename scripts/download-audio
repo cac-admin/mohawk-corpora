@@ -85,8 +85,8 @@ def main():
                            'csrfmiddlewaretoken': csrftoken
                      })
 
-    text_file = open(args.sentence_file, "a")
-    id_file = open(args.fileid_file, "a")
+    text_file = open(args.sentence_file, "w")
+    id_file = open(args.fileid_file, "w")
 
     downloaded = 0
     file_exists = 0
