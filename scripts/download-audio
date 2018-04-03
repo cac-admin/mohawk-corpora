@@ -89,12 +89,13 @@ def main():
     id_file = open(args.fileid_file, "w")
 
     downloaded = 0
-    file_exists = 0
+    total_file_exists = 0
     format = 'aac' if args.m4a_format else 'wav'
     audio_download_params = {'format': format}
 
     while api_url:
         print("fetching a JSON page: %s" % api_url)
+        file_exists = 0
         try:
             r = session.get(api_url)
             j = r.json()
@@ -113,6 +114,7 @@ def main():
                 qc = s.get('quality_control')
                 if not qc and (args.required_net_votes or
                                args.approval_required):
+                    print("skipping %s/%s: no QC" % (person_id, recording_id))
                     continue
                 #print(qc)
                 good = sum(x.get('good', 0) for x in qc)
@@ -158,8 +160,9 @@ def main():
             downloaded += 1
             if downloaded == args.limit:
                 return
-        print("downloaded %d files, skipped %d that already exist" %
-              (downloaded, file_exists))
+        total_file_exists += file_exists
+        print("downloaded %d files, skipped %d that already exist (%d in total)" %
+              (downloaded, file_exists, total_file_exists))
         api_url = j.get('next')
 
 main()
