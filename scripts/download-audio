@@ -50,6 +50,8 @@ def main():
                         help="require this many votes to include file")
     parser.add_argument('-X', '--exclude-downvoted', action='store_true',
                         default=False, help="negative votes veto files")
+    parser.add_argument('-M', '--m4a-format', action='store_true',
+                        default=False, help="download as m4a instead of wav")
     args = parser.parse_args()
 
     if args.password is None:
@@ -88,6 +90,9 @@ def main():
 
     downloaded = 0
     file_exists = 0
+    format = 'aac' if args.m4a_format else 'wav'
+    audio_download_params = {'format': format}
+
     while api_url:
         print("fetching a JSON page: %s" % api_url)
         try:
@@ -135,8 +140,9 @@ def main():
             print("%s/%s" % (person_id, recording_id), file=id_file)
 
             d = os.path.join(args.audio_directory, person_id)
-            fn = os.path.join(d, recording_id)
+            fn = os.path.join(d, '%s.%s' %(recording_id, format))
             audio_url = s['audio_file_url']
+
             if os.path.exists(fn) and not args.overwrite:
                 file_exists += 1
                 continue
@@ -146,7 +152,7 @@ def main():
             if not os.path.isdir(d):
                 os.makedirs(d)
 
-            audio_req = session.get(audio_url)
+            audio_req = session.get(audio_url, params=audio_download_params)
             f = open(fn, 'wb')
             f.write(audio_req.content)
             downloaded += 1
