@@ -83,6 +83,7 @@ class MyTranscriber extends Player{
         // event recording started
         // event recording ended
         this.actions_element.addEventListener('myrecorder.record', function(){
+            $('.sentence-block .sentence').text('')
             self.hide_all_buttons();
             $('.sentence-block .sentence').css('opacity', 0)
             $(self.loading_button).show()
