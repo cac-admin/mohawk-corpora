@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import url, include
 from corpus.views import views
 from corpus.views.views import SentenceListView, StatsView, ListenView
+from corpus.views.transcribe_views import TranscribeView
 
 urlpatterns = [
     url(_(r'^record/'), views.record, name='record'),
@@ -21,5 +22,7 @@ urlpatterns = [
         name='recording_file'),
 
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
+    url(_(r'^transcribe/'), TranscribeView.as_view(), name='record'),
 
 ]

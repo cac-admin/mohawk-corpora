@@ -237,7 +237,7 @@ class Recording(models.Model):
         elif self.sentence:
             return self.sentence.text
         else:
-            return _(u'None')
+            return 'None'  # Some reasone making this _() causes error in admin.
 
     def get_person_name(self):
         if self.person:

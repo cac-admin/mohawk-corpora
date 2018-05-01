@@ -10,6 +10,7 @@ from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
                          RecordingSerializer, \
+                         RecordingSerializerPost, \
                          ListenSerializer, \
                          SourceSerializer
 from rest_framework import generics
@@ -208,6 +209,14 @@ class RecordingViewSet(viewsets.ModelViewSet):
     permission_classes = (RecordingPermissions,)
     pagination_class = TenResultPagination
 
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.request.method == 'POST':
+            serializer_class = RecordingSerializerPost
+
+        return serializer_class
+
     def get_queryset(self):
         queryset = Recording.objects.all()
         sort_by = self.request.query_params.get('sort_by', '')
@@ -216,8 +225,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
         if sort_by in ['listen', 'random', 'recent']:
 
-            if sort_by not in 'recent':
-                queryset = filter_recordings_for_competition(queryset)
+            # Disable this for now
+            # if sort_by not in 'recent':
+            #    queryset = filter_recordings_for_competition(queryset)
 
             queryset = queryset\
                 .exclude(quality_control__approved=True)\

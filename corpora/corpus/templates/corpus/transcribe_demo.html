@@ -109,17 +109,19 @@ a.btn{
             <i class="fas fa-undo-alt fa-fw"></i> {% trans "Redo" %}
           </a>
 
-          <a tabindex="0" href="javascript:void(0)" id="save" class=" disabled save"
+          <a tabindex="0" href="javascript:void(0)" id="transcribe" class="disabled transcribe"
              data-toggle="popover" 
              data-content="You must listen to your recording before you can save it."
              data-trigger="focus"
              data-placement="auto"
              title="Save">
+            <i class="fas fa-pen-square fa-fw"></i> {% trans "Transcribe" %}
+          </a>
+
+          <a href="javascript:void(0)" id="save" class=" disabled save">
             <i class="fas fa-save fa-fw"></i> {% trans "Save" %}
           </a>
-          <a href="javascript:void(0)" id="skip-button" class="next">
-            <i class="fas fa-step-forward fa-fw"></i> {% trans "Skip" %}
-          </a>
+
         </div>
 
       </div>
@@ -151,7 +153,7 @@ a.btn{
 {% include 'corpus/js/sentence.js' %}
 {% include 'corpus/js/player.js' %}
 {% include 'corpus/js/visualize.js' %}
-{% include 'corpus/js/record.3.js' %}
+{% include 'corpus/js/transcribe.js' %}
 
 var visRecorder;
 
@@ -164,12 +166,15 @@ var visRecorder;
     '{{person.id}}',
     '{{content_type}}',
     '?recording=True')
-  sentences.next()
+  // sentences.next()
 
 
-  var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
+  var my_recorder = new MyTranscriber('.actions', 'play-audio', '{{person.pk}}');
 
-  
+  $(document.getElementById('play-button')).hide()
+  $(document.getElementById('record-button')).show()
+  $(document.getElementById('recorder-container')).show()
+
   sentences.sentence_block.addEventListener('sentence.ready', function(){
     $(document.getElementById('play-button')).hide()
     $(document.getElementById('record-button')).show()

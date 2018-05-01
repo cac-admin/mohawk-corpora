@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-27 21:11+1300\n"
+"POT-Creation-Date: 2018-05-01 12:45+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,6 +126,7 @@ msgstr "Kapohia te reo?"
 
 #: corpus/templates/corpus/listen.html:65
 #: corpus/templates/corpus/record.html:121
+#: corpus/templates/corpus/transcribe_demo.html:121
 msgid "Skip"
 msgstr "Haere tonu"
 
@@ -174,10 +175,12 @@ msgid "Recordings by Language Proficiency"
 msgstr "Ngā Kapohanga Reo i te Pakari o te Reo"
 
 #: corpus/templates/corpus/record.html:109
+#: corpus/templates/corpus/transcribe_demo.html:109
 msgid "Redo"
 msgstr "Mahia anō"
 
 #: corpus/templates/corpus/record.html:118
+#: corpus/templates/corpus/transcribe_demo.html:118
 msgid "Save"
 msgstr "Tiakina"
 
