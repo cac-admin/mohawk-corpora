@@ -1,0 +1,222 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags  compress  i18n %}
+
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'corpora/css/text';
+@import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+div.content{
+  /*padding: 60px 0px 60px 0px;*/
+}
+.container.record{
+  min-height: 450px;  
+}
+
+.vis-container{
+  @include media-breakpoint-up(md){
+    position: absolute;
+    bottom: 0px;
+    height: 40%;
+  }
+}
+.visualizer{
+  width: 100%;
+  @include media-breakpoint-up(md){
+    height: 100%;
+  }
+  height: 80px;
+  border-radius: 4px;
+  background-color: #333;
+  border:0px solid $brand_primary;
+}
+.sentence{
+  font-size: 2em ;
+}
+a.btn{
+  display: inline-block;
+}
+
+.sentence-block{
+  .sentence{
+    min-width: 0px !important;
+    @include media-breakpoint-up(md){
+      padding-bottom: 15px;
+      height: 60%;
+    }
+  }
+}
+
+
+.circle-button-container{
+    /*padding-bottom: 30px;*/
+
+  @include media-breakpoint-down(lg){
+/*    padding-top: 15px;
+*/  }
+
+}
+
+.popover-header{
+  background-color: $blue;
+  color: white;
+}
+
+</style>
+{% endaddtoblock %}
+
+{% include 'people/profile_header.html' %}
+
+<div class="container record">
+
+  <div class="row align-items-top sentence-block" id="recorder-container">
+
+    <div class="col-12" style="display: none;">
+      <div id="status-message" class="error-message" style="display: none;"><h2></h2></div>
+    </div>
+
+    <div class="col-12 col-md-7 col-lg-8" >
+      <div class="row align-items-bottom" style="height:100%;">
+        <div class="col-12 sentence align-items-bottom">
+         
+        </div>
+        <div class="col-12 vis-container">
+          <canvas class="visualizer " style="" id="vis-area"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-5 col-lg-4 "> 
+
+      <div class="row ">
+
+        <div class="col-12">
+
+          {% include 'corpus/_player.button.html' %}
+
+        </div>
+
+        <div class="col-12 actions" style="text-align: center;" >
+          <a href="javascript:void(0)" id="redo" class=" disabled redo">
+            <i class="fas fa-undo-alt fa-fw"></i> {% trans "Redo" %}
+          </a>
+
+          <a tabindex="0" href="javascript:void(0)" id="save" class=" disabled save"
+             data-toggle="popover" 
+             data-content="You must listen to your recording before you can save it."
+             data-trigger="focus"
+             data-placement="auto"
+             title="Save">
+            <i class="fas fa-save fa-fw"></i> {% trans "Save" %}
+          </a>
+          <a href="javascript:void(0)" id="skip-button" class="next">
+            <i class="fas fa-step-forward fa-fw"></i> {% trans "Skip" %}
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+    
+    
+<audio id="play-audio" style="display: none; width: 0px; height: 0px" preload="auto"> </audio>
+
+{% include 'license/license_modal.html' %}
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorder/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
+
+{% comment %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
+{% endcomment %}
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+{% include 'corpus/js/sentence.js' %}
+{% include 'corpus/js/player.js' %}
+{% include 'corpus/js/visualize.js' %}
+{% include 'corpus/js/record.3.js' %}
+
+var visRecorder;
+
+
+  var player = new Player('#play-audio');
+  var person_pk = "{{person.pk}}";
+  var sentence_pk = "{{sentence.pk}}";
+
+  var sentences = new Sentences(
+    '{{person.id}}',
+    '{{content_type}}',
+    '?recording=True')
+  sentences.next()
+
+
+  var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
+
+  
+  sentences.sentence_block.addEventListener('sentence.ready', function(){
+    $(document.getElementById('play-button')).hide()
+    $(document.getElementById('record-button')).show()
+    my_recorder.skipped = false
+    // $('#save').popover('enable')
+  })
+
+
+  $(document).ready(function(){
+    $(document.getElementById('stop-button')).hide()
+    $(document.getElementById('play-button')).hide()
+    $(document.getElementById('record-button')).show()
+    $(document.getElementById('loading-button')).hide()    
+    $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
+  })
+
+  // ios Safari permission shit see: https://gist.github.com/laziel/7aefabe99ee57b16081c
+  if (typeof webkitAudioContext !== 'undefined'){
+    var resume = function () {
+      my_recorder['audioContext'].resume();
+      setTimeout(function () {
+        if (my_recorder['audioContext'].state === 'running') {
+          document.body.removeEventListener('touchend', resume, false);
+        }
+      }, 0);
+    };
+  }
+
+
+  document.body.addEventListener('touchend', resume, false);
+  var vis;
+
+  $(player.audio).on('play',function(){
+      vis = new Visualize('vis-area', my_recorder.sourceNode, my_recorder.audioContext);
+      vis.start()
+  })
+    
+  $(player.audio).on('ended paused',function(){
+    vis.stop()
+    delete vis;
+  })
+
+
+
+</script>
+{% endaddtoblock %}
+
+
+{% endblock %}
+
