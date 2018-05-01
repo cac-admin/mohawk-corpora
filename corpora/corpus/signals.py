@@ -7,6 +7,8 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 
+from corpus.transcribe import transcribe_audio_task
+
 from corpora.celery import app
 
 from django.core.cache import cache
@@ -89,8 +91,9 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
 def set_sentence_text_when_recording_created(
         sender, instance, created, **kwargs):
     if created:
-        instance.sentence_text = instance.sentence.text
-        instance.save()
+        if instance.sentence:
+            instance.sentence_text = instance.sentence.text
+            instance.save()
 
 
 # @receiver(models.signals.post_save, sender=Recording)
@@ -102,12 +105,17 @@ def set_sentence_text_when_recording_created(
 
 @receiver(models.signals.post_save, sender=Recording)
 def set_recording_length_on_save(sender, instance, created, **kwargs):
+    if not instance.person:
+        p_pk = 0
+    else:
+        p_pk = instance.person.pk
+
     if instance.audio_file:
         if instance.duration <= 0:
             set_recording_length.apply_async(
                 args=[instance.pk],
                 task_id='set_recording_length-{0}-{1}-{2}'.format(
-                    instance.person.pk,
+                    p_pk,
                     instance.pk,
                     instance.__class__.__name__))
 
@@ -123,7 +131,7 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                 transcode_audio.apply_async(
                     args=[instance.pk],
                     task_id='transcode_audio-{0}-{1}-{2}'.format(
-                        instance.person.pk,
+                        p_pk,
                         instance.pk,
                         time.strftime('%d%m%y%H%M%S')))
 
@@ -135,6 +143,9 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 @receiver(models.signals.post_save, sender=QualityControl)
 @receiver(models.signals.post_save, sender=Recording)
 def update_person_score_when_model_saved(sender, instance, created, **kwargs):
+
+    if not instance.person:
+        return False
 
     if isinstance(instance, Recording):
         # Check if we actually need to update the score!
@@ -196,3 +207,11 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                         countdown=60*4)
         else:
             pass
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def transcode_audio_when_wav_version_created(
+        sender, instance, created, **kwargs):
+    if instance.audio_file_wav:
+        if not instance.sentence_text:
+            transcribe_audio_task.apply_async(args=[instance.id])
