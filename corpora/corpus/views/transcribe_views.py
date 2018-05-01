@@ -33,6 +33,8 @@ from corpus.aggregate import get_num_approved, get_net_votes
 from corpora.mixins import SiteInfoMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -50,14 +52,10 @@ def record_redirect(request):
     return redirect(reverse('corpus:record'))
 
 
-class TranscribeView(SiteInfoMixin, TemplateView):
+class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Tryout our new transcription demo!')
     x_title = _('Transcribe Demo')
     template_name = "corpus/transcribe_demo.html"
 
-
-
-
-
-
-    
+    def test_func(self):
+        return self.request.user.is_staff
