@@ -7,6 +7,8 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 
+from corpus.transcribe import transcribe_audio_task
+
 from corpora.celery import app
 
 from django.core.cache import cache
@@ -205,3 +207,11 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                         countdown=60*4)
         else:
             pass
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def transcode_audio_when_wav_version_created(
+        sender, instance, created, **kwargs):
+    if instance.audio_file_wav:
+        if not instance.sentence_text:
+            transcribe_audio_task.apply_async(args=[instance.id])

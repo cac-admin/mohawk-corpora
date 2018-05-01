@@ -78,9 +78,9 @@ def transcode_audio(recording_pk):
         return result
 
     elif is_running:
-        return "Encoding in progress..."
+        return u"Encoding in progress..."
 
-    return "Already encoded."
+    return u"Already encoded."
 
 
 @shared_task
@@ -116,7 +116,7 @@ def transcode_all_audio():
             logger.error(sys.exc_info()[0])
             continue
 
-    return "Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
+    return u"Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
 
 
 def prepare_temporary_environment(recording, test=False):

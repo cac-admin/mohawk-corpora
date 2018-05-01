@@ -12,7 +12,7 @@ class MyTranscriber extends Player{
         this.fileName = '' 
         this.visualize = null
         this.person_pk = person_pk
-        this.sampleRate = null
+        this.sampleRate = 16000
         this.dummy = null
         this.fd = null
         this.should_vis = true
@@ -232,7 +232,12 @@ class MyTranscriber extends Player{
             self.recorder = new Recorder({
                     encoderPath: '/static/bower_components/opus-recorder/dist/waveWorker.min.js',
                     bufferLength: 1024*8, // Increasing this seems to improve performance on andoird chrome.
-                    // encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
+                    // encoderSampleRate: self.sampleRate, // THIS IS THE SAMPLE RATE REQUIRED BY CMUSPHINX
+                    // wavSampleRate: self.sampleRate, // THIS IS THE SAMPLE RATE REQUIRED BY CMUSPHINX                    
+                    wavBitDepth: 16, // DEFAULTS TO 16
+                    encoderApplication: 2048, // Voice
+                    // encoderBitRate: 256000, // Target bit rate in bits/s
+                    numberOfChannels: 1, // Use Mono
                 }); 
             
             // Have recorder listen for when the data is available
@@ -383,6 +388,7 @@ class MyTranscriber extends Player{
                 // Save teh transcribed sentence.
 
                 // sentences.next()
+                self.get_recording(data['id']);
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -392,7 +398,36 @@ class MyTranscriber extends Player{
                 hide_loading()
             }
         });
-    }    
+    } 
+
+    get_recording(id){
+        var self = this
+        self.logger('Gettting '+id)
+
+        $.ajax({
+        url: "/api/recordings/"+id,
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+          self.logger('ERROR fetching recording')
+        }
+        }).done(function(d){
+          if (d.sentence_text == null){
+            self.get_recording(id)  
+          }
+          else{
+            $('.sentence-block .sentence').text(d.sentence_text)
+          }
+
+        }).fail(function(){
+          self.logger('Failed to fetch recordings, will try again...')
+          window.setTimeout( function(){
+            self.next_url=null
+            self.get_recordings()
+            self.hide_loading()
+          }, 500 )
+        });
+
+    }
+
 
 }
 
