@@ -23,6 +23,6 @@ urlpatterns = [
 
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 
-    url(_(r'^transcribe/'), TranscribeView.as_view(), name='record'),
+    url(_(r'^transcribe/'), TranscribeView.as_view(), name='transcribe'),
 
 ]
