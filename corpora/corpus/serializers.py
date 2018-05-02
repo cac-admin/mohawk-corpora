@@ -1,7 +1,7 @@
 from .models import QualityControl, Sentence, Recording, Source
 from rest_framework import serializers
 from people.helpers import get_person
-from transcribe import transcribe_audio
+from transcribe import transcribe_audio, transcribe_audio_task
 from rest_framework.response import Response
 
 
@@ -104,16 +104,16 @@ class RecordingSerializerPost(serializers.ModelSerializer):
         model = Recording
         fields = ('sentence_text', 'user_agent', 'audio_file', 'person', 'id')
 
-    # def create(self, validated_data):
-    #     recording = \
-    #         super(RecordingSerializerPost, self).create(validated_data)
-    #     # recording.save()
-    #     # result = transcribe_audio(recording, validated_data['audio_file'])
+    def create(self, validated_data):
+        recording = \
+            super(RecordingSerializerPost, self).create(validated_data)
 
-    #     return recording
-    #     # serializer = self.get_serializer(recording)
-    #     # data = serializer.data
-    #     # return Response(data)
+        result = transcribe_audio(recording, validated_data['audio_file'])
+
+        return recording
+        # serializer = self.get_serializer(recording)
+        # data = serializer.data
+        # return Response(data)
 
 
 class RecordingSerializer(serializers.ModelSerializer):

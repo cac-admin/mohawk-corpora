@@ -173,17 +173,21 @@ class RecordingPermissions(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
+        person = get_person(request)
+
         if request.method in permissions.SAFE_METHODS:
             self.message = _("Only staff can read recordings.")
             if request.user.is_staff:
                 person = get_person(request)
                 cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
                 return True
+            elif person is not None:
+                # Allow people to get their own recordings.
+                return person == obj.person
         else:
             if request.method in ['PUT']:
                 if request.user.is_staff:
                     return True
-                person = get_person(request)
                 if person is not None:
                     self.message = _("You're not allowed to edit this recording.")
                     return obj.person == person

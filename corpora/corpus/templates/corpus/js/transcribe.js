@@ -388,8 +388,13 @@ class MyTranscriber extends Player{
 
                 // Save teh transcribed sentence.
 
-                // sentences.next()
-                self.get_recording(data['id']);
+                if (data.sentence_text == null){
+                  self.get_recording(data['id']);
+                }
+                else{
+                  $('.sentence-block .sentence').text(data.sentence_text)
+                }
+                
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -424,7 +429,7 @@ class MyTranscriber extends Player{
             self.next_url=null
             self.get_recordings()
             self.hide_loading()
-          }, 500 )
+          }, 1 )
         });
 
     }

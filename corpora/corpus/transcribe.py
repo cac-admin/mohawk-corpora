@@ -30,31 +30,24 @@ logger = logging.getLogger('corpora')
 
 def transcribe_audio(recording, file_object):
     api_url = "http://waha-tuhi.dragonfly.nz/transcribe"
-    command = "curl --request POST --data-binary \"@5{0}\" {1}"
-    file_name = recording.audio_file.name.split('/')[-1]
 
     # the file_object could be in memory for small files and a temp file for
     # large files. we need to handle this. currently assuming small files
     # in memory
     # https://docs.djangoproject.com/en/2.0/ref/files/uploads/
 
-    # p = Popen(
-    #     ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1', '-f', 's16le', '-'],
-    #     stdin=PIPE, stdout=PIPE)
+    p = Popen(
+        ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1', '-f', 's16le', '-'],
+        stdin=PIPE, stdout=PIPE)
 
-    # # p.communicate(input=file_object)
-    # for chunk in file_object.chunks():
-    #     p.stdin.write(chunk)
-    # p.stdin.close()
-    # p.stdin.write(file_object)
+    file_object.open()
+    output, errors = p.communicate(file_object.read())
+    file_object.close()
 
     response = requests.post(
         api_url,
-        data=file_object,
+        data=output,
         timeout=10)
-
-    # response = urllib2.urlopen(urllib2.Request(
-    #     api_url, file_object, {'Content-Type': 'audio/wav'}))
 
     logger.debug(response.text)
 
@@ -70,11 +63,5 @@ def transcribe_audio(recording, file_object):
 @shared_task
 def transcribe_audio_task(recording_id):
     recording = Recording.objects.get(id=recording_id)
-
-    recording.audio_file_wav.open()
-    file_object = recording.audio_file_wav.read()
-    recording.audio_file_wav.close()
-
-    response = transcribe_audio(recording, file_object)
-
+    response = transcribe_audio(recording, recording.audio_file)
     return response
