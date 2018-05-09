@@ -216,8 +216,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         serializer_class = self.serializer_class
 
-        if self.request.method == 'POST':
-            serializer_class = RecordingSerializerPost
+        if self.request:
+            if self.request.method == 'POST':
+                serializer_class = RecordingSerializerPost
 
         return serializer_class
 
