@@ -52,6 +52,14 @@
       </a>
     </li>
 
+    {% url 'stats_reviewers' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
+      <a class="nav-link" href="{{path}}" >
+        <i class="far fa-lg fa-fw fa-chart-bar"></i>
+        <div >{% trans 'Reviewer Stats' %}</div>
+      </a>
+    </li>    
+
     {% endif %}
 
   </ul>
