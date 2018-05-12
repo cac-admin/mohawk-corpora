@@ -230,12 +230,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
             #     score = score + recording.calculate_score()
             # person.score = int(score)
             person.num_recordings = person.recording_set.count()
-            if person.user is None:
-                person.name = 'Anonymous Kumara'
-            elif person.user.username == '':
-                person.name = 'Anonymous Kumara'
-            else:
-                person.name = person.user.username
+            person.name = person.get_username()
 
         return context
 
@@ -253,15 +248,12 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
     def test_func(self):
         return self.request.user.is_staff
 
-    def get_context_data(self, **kwargs):
-        context = \
-            super(PeopleQCStatsView, self).get_context_data(**kwargs)
+    def get_queryset(self):
 
         person = get_person(self.request)
         language = get_current_language(self.request)
 
-        people = Person.objects.filter(user__isnull=False)
-        people = people.filter(user__is_staff=True)
+        people = Person.objects.filter(user__is_staff=True)
 
         people = people\
             .annotate(
@@ -322,10 +314,7 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                         output_field=IntegerField())))\
             .order_by('-num_reviewed')
 
-        context['people'] = people
-        context['language'] = language
-        context['person'] = person
-        return context
+        return people
 
 
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):

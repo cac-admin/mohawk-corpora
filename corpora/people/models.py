@@ -137,6 +137,20 @@ class Person(models.Model):
         else:
             return self.profile_email
 
+    def get_username(self):
+        if self.username is None:
+            if self.user:
+                return self.user.username
+            else:
+                return 'Anonymous Kumara'
+        return self.username
+
+    def get_name(self):
+        if self.full_name is None:
+            return self.get_username()
+        else:
+            return self.full_name
+
     class Meta:
         verbose_name = _('Person')
         verbose_name_plural = _('People')
