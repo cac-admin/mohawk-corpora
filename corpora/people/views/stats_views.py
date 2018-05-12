@@ -260,8 +260,8 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
         person = get_person(self.request)
         language = get_current_language(self.request)
 
-        people = Person.objects.filter(user__is_null=False)
-        people = Person.objects.filter(user__is_staff=True)
+        people = Person.objects.filter(user__isnull=False)
+        people = people.filter(user__is_staff=True)
 
         people = people\
             .annotate(
