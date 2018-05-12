@@ -240,6 +240,92 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
         return context
 
 
+# This is currently only for recording QCs
+class PeopleQCStatsView(UserPassesTestMixin, ListView):
+    model = Person
+    template_name = 'people/stats/person_qc_stats_view_list.html'
+    paginate_by = 50
+    context_object_name = 'people'
+    x_title = _('Reviewer Stats')
+    x_description = \
+        _("Leaderboard for reviewers.")
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(PeopleQCStatsView, self).get_context_data(**kwargs)
+
+        person = get_person(self.request)
+        language = get_current_language(self.request)
+        people = Person.objects.filter(user__is_staff=True)
+
+        people = people\
+            .annotate(
+                num_reviewed=models.Sum(
+                    Case(
+                        When(
+                            qualitycontrol__isnull=True,
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__content_type__model__icontains='recording',
+                            then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
+            .annotate(
+                num_approved=models.Sum(
+                    Case(
+                        When(
+                            qualitycontrol__isnull=True,
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__content_type__model__icontains='sentence',
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__approved=True,
+                            then=Value(1)),
+                        When(
+                            qualitycontrol__approved=False,
+                            then=Value(0)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
+            .annotate(
+                num_good=models.Sum(
+                    Case(
+                        When(
+                            qualitycontrol__isnull=True,
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__content_type__model__icontains='sentence',
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__good__gte=1,
+                            then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
+            .annotate(
+                num_bad=models.Sum(
+                    Case(
+                        When(
+                            qualitycontrol__isnull=True,
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__content_type__model__icontains='sentence',
+                            then=Value(0)),
+                        When(
+                            qualitycontrol__bad__gte=1,
+                            then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
+            .order_by('-num_reviewed')
+
+        context['people'] = people
+        context['language'] = language
+        context['person'] = person
+        return context
+
+
 class GroupsStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     model = Group
     template_name = 'people/stats/groups_leaderboard.html'

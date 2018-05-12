@@ -101,6 +101,10 @@ urlpatterns = [
         stats_views.PeopleRecordingStatsView.as_view(),
         name='stats_people'),
 
+    url(_(r'^stats/reviewers'),
+        stats_views.PeopleQCStatsView.as_view(),
+        name='stats_reviewers'),
+
     url(_(r'^stats/groups$'),
         stats_views.GroupsStatsView.as_view(),
         name='stats_groups'),

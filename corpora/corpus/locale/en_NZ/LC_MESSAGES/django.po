@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-01 20:10+1200\n"
+"POT-Creation-Date: 2018-05-12 11:16+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -244,19 +244,19 @@ msgstr ""
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:177
+#: corpus/views/api.py:179
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:188
+#: corpus/views/api.py:192
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:190
+#: corpus/views/api.py:194
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:314 corpus/views/api.py:329
+#: corpus/views/api.py:321 corpus/views/api.py:336
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr ""

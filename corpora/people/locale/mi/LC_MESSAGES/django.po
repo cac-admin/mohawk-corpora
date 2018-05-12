@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-01 20:10+1200\n"
+"POT-Creation-Date: 2018-05-12 11:16+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,22 +181,22 @@ msgstr ""
 msgid "known languages"
 msgstr ""
 
-#: people/tasks.py:299
+#: people/tasks.py:300
 #: people/templates/people/stats/person_qc_stats_view_detail.html:117
 #, fuzzy
 #| msgid "Today"
 msgid "today"
 msgstr "I tēnei rā"
 
-#: people/tasks.py:300
+#: people/tasks.py:301
 msgid "yesterday"
 msgstr ""
 
-#: people/tasks.py:312
+#: people/tasks.py:313
 msgid "this week"
 msgstr ""
 
-#: people/tasks.py:313
+#: people/tasks.py:314
 msgid "last week"
 msgstr ""
 
