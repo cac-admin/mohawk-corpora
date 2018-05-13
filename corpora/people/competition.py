@@ -281,3 +281,39 @@ def filter_recordings_to_top_ten(queryset):
     #         .filter(review_rate__lte=avg_rate['review_rate__avg'])
 
     # return queryset
+
+
+def filter_recordings_distribute_reviews(queryset):
+
+    # Find people with low review rates
+    people = Person.objects.all() \
+        .annotate(
+            num_recordings=Count('recording'))\
+        .filter(
+            num_recordings__gte=1)\
+        .annotate(
+            review_rate=Cast(Count(
+                'recording__quality_control', distinct=True
+                ), FloatField())/Cast(
+                1+F('num_recordings'), FloatField())
+        )
+
+    avg_rate = people.aggregate(Avg('review_rate'))
+    if avg_rate['review_rate__avg'] is not None:
+        people = people \
+            .filter(review_rate__lte=avg_rate['review_rate__avg'])
+
+    logger.debug(u'Average People Review Rate: {0}'.format(
+        avg_rate['review_rate__avg']))
+
+    logger.debug(u'Average People Review Rate: {0}'.format(
+        avg_rate['review_rate__avg']))
+
+    count = people.count()
+    if count > 1:
+
+        i = random.randint(0, people.count() - 1)
+        person = people[i]
+        queryset = queryset.filter(person=person)
+
+    return queryset

@@ -4,7 +4,8 @@ from django.db.models import Count, Q, Sum, Case, When, Value, IntegerField
 from people.helpers import get_person
 from people.competition import \
     filter_recordings_for_competition, \
-    filter_recordings_to_top_ten
+    filter_recordings_to_top_ten, \
+    filter_recordings_distribute_reviews
 from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
 from corpus.serializers import QualityControlSerializer,\
@@ -297,7 +298,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 queryset = queryset.order_by('-pk')
                 return queryset
 
-            queryset = filter_recordings_to_top_ten(queryset)
+            # queryset = filter_recordings_to_top_ten(queryset)
+            queryset = filter_recordings_distribute_reviews(queryset)
 
             count = queryset.count()
             if count > 1:
