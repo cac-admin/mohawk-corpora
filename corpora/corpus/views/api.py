@@ -240,7 +240,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
             queryset = queryset\
                 .exclude(quality_control__approved=True)\
                 .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__bad__gte=1)
+                .exclude(quality_control__bad__gte=1)\
+                .exclude(quality_control__delete=True)
 
             # Exclude approved items
             # queryset = queryset\
