@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'people',
     'license',
     'message',
+    'transcription',
 
     'storages',
     'djangobower',

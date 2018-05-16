@@ -49,6 +49,24 @@ class Listen{
       }
     })
 
+    $(self.sentence_block).find('.bad').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        $(self.sentence_block).find('.actions a').addClass('disabled')
+        self.down_vote();
+      }
+    })
+
+    $(self.sentence_block).find('.follow-up, .noise, .delete, .star').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        if (!$(e.currentTarget).hasClass('checked')){
+          $(e.currentTarget).addClass('checked')
+        } else{
+          $(e.currentTarget).removeClass('checked')
+        }
+        self.toggle_boolean(e.currentTarget);
+      }
+    })
+
     $(self.sentence_block).find('.next').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
@@ -146,6 +164,8 @@ class Listen{
         this.sentence = {}
         this.sentence.text=this.recording.sentence_text
       }
+
+      $('.toggle-after-playback').removeClass('checked')
 
       this.show_next_recording()
     }
@@ -386,6 +406,27 @@ class Listen{
     this.quality_control.approved = false;
     this.logger(this.quality_control);
     this.post_put();
+  }
+
+  toggle_boolean(button_object){
+    this.quality_control[$(button_object).attr('data-key')] = $(button_object).hasClass('checked')
+    if ($(button_object).hasClass('star')){
+      if ($(button_object).hasClass('checked')){
+        this.quality_control[$(button_object).attr('data-key')] = 1
+      } else {
+        this.quality_control[$(button_object).attr('data-key')] = 0
+      }
+    }
+
+    if ($(button_object).hasClass('delete')){
+      if ($(button_object).hasClass('checked')){
+        $(this.sentence_block).find('.actions a').addClass('disabled')
+        this.quality_control.bad = 1
+        this.post_put()
+      }
+    }    
+
+    this.logger(this.quality_control);
   }
 
   logger(s){

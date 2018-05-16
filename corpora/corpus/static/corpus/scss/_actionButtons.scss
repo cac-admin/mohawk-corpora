@@ -4,6 +4,24 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 
+@mixin style-action-button($color, $class_name){
+
+    a.#{$class_name}{
+      border-color: $color;
+      color: $color;
+      -webkit-tap-highlight-color: rgba($color, .5);
+    }
+    a.#{$class_name}.checked{
+      background-color: $color;
+      color: lighten($color,100%);
+    }     
+    a.#{$class_name}:active{
+      background-color: darken($color, 6%);      
+      color: white;
+    }
+
+}
+
 .actions, .buttons{
     text-align: center;
     margin-top: 15px;
@@ -47,47 +65,6 @@
       font-weight:100;      
     }
 
-    a.good{
-      color: $brand_dark;
-      border-color: $brand_dark;
-      color: $brand_dark;
-      -webkit-tap-highlight-color: rgba($brand_dark, .5);
-    }
-
-    a.good:active{
-      background-color: rgba($brand_dark, 1);
-      color: lighten($brand_lightest,10%);
-      
-    }
-    a.bad{
-      border-color: $brand_darker;
-      color: $brand_darker;
-      -webkit-tap-highlight-color: rgba($brand_darker, .5);
-    }
-    a.bad:active{
-      background-color: rgba($brand_darker, 1);
-      color: lighten($brand_lightest,10%);
-    }    
-    
-    a.approve{
-      border-color: $green;
-      color: $green;
-      -webkit-tap-highlight-color: rgba($green, .5);      
-    }
-    a.approve:active{
-      background-color: rgba($green, 1);
-      color: lighten($brand_lightest,10%);
-      
-    }    
-    a.save{
-      border-color: $blue;
-      color: $blue;
-      -webkit-tap-highlight-color: rgba($blue, .5);
-    }
-    a.save:active{
-      background-color: rgba($blue, 1);      
-      color: lighten($brand_lightest,10%);
-    }     
 
     a.auto-play.auto-play-on, a.on{
       background-color: $brand_primary;
@@ -106,6 +83,23 @@
       display: none;
     }
 
+    a.toggle-after-playback.checked{
+      text-shadow: 0px 0px 1px rgba($brand_dark,0);
+      background-color: rgba($brand_dark, 1);
+      color: lighten($brand_lightest,10%);
+    }
 
+    @include style-action-button($green, "approve")
+    @include style-action-button($blue, "save")
+    @include style-action-button($yellow, "star")
+    @include style-action-button($brand_darker, "bad")
+    @include style-action-button($brand_dark, "good")
+    @include style-action-button($brand_darkest, "delete")
+    @include style-action-button($brand_primary, "noise")
+    @include style-action-button($brand_primary, "follow-up")
+
+    @include style-action-button($brand_primary, "auto-play")
+
+  
 
   }

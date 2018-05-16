@@ -112,7 +112,7 @@ class Player {
       self.hide_all_buttons();
       $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
       $(self.play_button).show()
-      $(self.actions_element).find('.approve, .good, .bad').removeClass('disabled')
+      $(self.actions_element).find('.toggle-after-playback').removeClass('disabled')
     });
 
 

@@ -34,6 +34,19 @@ class QualityControl(models.Model):
     bad = models.PositiveIntegerField(default=0)
     approved = models.BooleanField(default=False)
     approved_by = models.ForeignKey(User, null=True, blank=True)
+    delete = models.BooleanField(
+        default=False,
+        help_text='Flag for deletion.')
+    star = models.PositiveIntegerField(
+        default=0,
+        help_text='Stars are to indicate an object is amazing. This is a positive\
+        interger field so we can, for example, do a 5 star rating system.')
+    follow_up = models.BooleanField(
+        default=False,
+        help_text='Flag an item for follow up later.')
+    noise = models.BooleanField(
+        default=False,
+        help_text='Check if an item has noise but is still intelligible.')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -67,6 +80,11 @@ class QualityControl(models.Model):
         vote = max(-1, min(1, self.good - self.bad))
 
         return 1 - decimal.Decimal(abs(vote - avg)) / 2
+
+    def __unicode__(self):
+        return u'{0}: {1}'.format(
+            str(self.content_type).title(),
+            self.content_object.__unicode__())
 
 
 class Source(models.Model):
@@ -182,6 +200,21 @@ class Recording(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL)
+
+    language = models.CharField(
+        verbose_name=_('language'),
+        choices=LANGUAGES,
+        max_length=16,
+        default=LANGUAGE_CODE,
+        help_text='Language for a particular recording')
+
+    # Dialect? Add field so we can flag a dialect for a recording.
+    dialect = models.CharField(
+        choices=DIALECTS,
+        max_length=8,
+        null=True,
+        blank=True,
+        verbose_name=_('dialect'))
 
     audio_file = models.FileField(upload_to=upload_directory)
     created = models.DateTimeField(auto_now_add=True)

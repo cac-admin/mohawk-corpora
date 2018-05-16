@@ -43,25 +43,45 @@ div.content{
     </div>
     <!-- <div class="col-lg-7"></div> -->
     <div class="col-lg-12 actions">
-      <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fas fa-play-circle fa-fw"></i></a>            
-      {% if user.can_approve %}
-     <a href="#" class="save disabled"
-            data-toggle="popover" 
-            data-trigger="hover" 
-            title="Save" 
-            data-content="{% trans 'Save changes.' %}"
-            ><i class="fas fa-save fa-fw"></i></a>
+ 
+      <a href="#" class="star disabled toggle-after-playback" data-key="star"><i class="fas fa-star fa-fw"></i></a>
+      <a href="#" class="follow-up disabled toggle-after-playback" data-key="follow_up">
+        <i class="fas fa-reply fa-fw"></i><span>Follow Up</span></a>
+      <a href="#" class="noise disabled toggle-after-playback" data-key="noise">
+        <i class="fas fa-bullhorn fa-fw"></i><span>Noise</span></a>      
 
-      <a href="#" class="approve disabled"
+      <br>
+
+      {% if user.can_approve %}
+      <a href="#" class="approve disabled toggle-after-playback"
         data-toggle="popover" 
         data-trigger="hover" 
         title="Approve" 
         data-content="{% trans 'Approve for recording?' %}"
         ><i class="fas fa-check-circle fa-fw"></i><span>Approve</span></a>
-      {% else %}
       {% endif %}
-      <a href="#" class="good disabled"><i class="fas fa-thumbs-up fa-fw"></i></a>
-      <a href="#" class="bad disabled"><i class="fas fa-thumbs-down fa-fw"></i></a>
+
+      <a href="#" class="good disabled toggle-after-playback"><i class="fas fa-thumbs-up fa-fw"></i></a>
+      <a href="#" class="bad disabled toggle-after-playback"><i class="fas fa-thumbs-down fa-fw"></i></a>
+
+      {% if user.can_approve %}
+      <a href="#" class="delete disabled toggle-after-playback" data-key="delete"><i class="fas fa-trash fa-fw"></i></a> 
+      {% endif %}
+
+      <br>
+      <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fas fa-play-circle fa-fw"></i></a>            
+
+      {% if user.can_approve %}
+
+       <a href="#" class="save disabled"
+        data-toggle="popover" 
+        data-trigger="hover" 
+        title="Save" 
+        data-content="{% trans 'Save changes.' %}"
+        ><i class="fas fa-save fa-fw"></i></a>
+      {% endif %}
+
+
       <a href="javascript:void(0)" id="next disabled" class="next"><i class="fas fa-step-forward fw"></i> {% trans "Skip" %}</a>    
     </div>
 
