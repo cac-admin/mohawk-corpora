@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
-
+from people.models import KnownLanguage
 from corpus.transcribe import transcribe_audio_task
 
 from corpora.celery import app
@@ -104,7 +104,7 @@ def set_language_when_recording_created(
             # Get current language for person
             try:
                 known_language = KnownLanguage.objects.get(
-                    person=instance, active=True)
+                    person=instance.person, active=True)
                 instance.language = known_language.language
                 instance.dialect = known_language.dialect
                 instance.save()
