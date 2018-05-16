@@ -96,6 +96,21 @@ def set_sentence_text_when_recording_created(
             instance.save()
 
 
+@receiver(models.signals.post_save, sender=Recording)
+def set_language_when_recording_created(
+        sender, instance, created, **kwargs):
+    if created:
+        if instance.person:
+            # Get current language for person
+            try:
+                known_language = KnownLanguage.objects.get(
+                    person=instance, active=True)
+                instance.language = known_language.language
+                instance.dialect = known_language.dialect
+                instance.save()
+            except ObjectDoesNotExist:
+                pass
+
 # @receiver(models.signals.post_save, sender=Recording)
 # def set_upadted_when_recording_saved(
 #         sender, instance, created, **kwargs):
