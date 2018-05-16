@@ -206,6 +206,7 @@ class Recording(models.Model):
         choices=LANGUAGES,
         max_length=16,
         default=LANGUAGE_CODE,
+        blank=True,
         help_text='Language for a particular recording')
 
     # Dialect? Add field so we can flag a dialect for a recording.
