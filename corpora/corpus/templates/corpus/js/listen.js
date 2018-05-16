@@ -142,6 +142,7 @@ class Listen{
   }
 
   next(){
+    var self = this
     this.logger('Next')
     if (this.objects == null || this.objects.length==0){
       this.get_recordings()
@@ -157,7 +158,6 @@ class Listen{
           // this.show_next_recording()
           this.next()
         } else { this.recording.sentence_text = this.sentence.text }
-        
       }
 
       if (this.sentence==null && this.recording.sentence_text.length>0){
@@ -165,7 +165,18 @@ class Listen{
         this.sentence.text=this.recording.sentence_text
       }
 
+      // Untoggle checks, and also reset their values to default which should be false
       $('.toggle-after-playback').removeClass('checked')
+      $('.toggle-after-playback').each(function(i,o){
+        if (self.quality_control[$(o).attr('data-key')] != undefined){
+          if ($(o).hasClass('star')){
+            self.quality_control[$(o).attr('data-key')] = 0
+          } else{
+            self.quality_control[$(o).attr('data-key')] = false
+          }
+        
+        }
+      })
 
       this.show_next_recording()
     }
@@ -395,7 +406,7 @@ class Listen{
   up_vote(){
     this.quality_control.good = 1
     this.quality_control.bad = 0
-    this.quality_control.approved = false;
+    // this.quality_control.approved = false;
     this.logger(this.quality_control);
     this.post_put();
   }
@@ -403,13 +414,14 @@ class Listen{
   down_vote(){
     this.quality_control.bad = 1
     this.quality_control.good = 0
-    this.quality_control.approved = false;
+    // this.quality_control.approved = false;
     this.logger(this.quality_control);
     this.post_put();
   }
 
   toggle_boolean(button_object){
     this.quality_control[$(button_object).attr('data-key')] = $(button_object).hasClass('checked')
+    
     if ($(button_object).hasClass('star')){
       if ($(button_object).hasClass('checked')){
         this.quality_control[$(button_object).attr('data-key')] = 1
