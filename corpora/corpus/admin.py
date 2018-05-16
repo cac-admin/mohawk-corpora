@@ -25,8 +25,9 @@ class RecordingsInline(admin.TabularInline):
 
 @admin.register(QualityControl)
 class QualityControlAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'content_type', 'object_id', 'approved',
-                    'good', 'bad', 'calculate_score', 'delete', 'follow_up')
+    list_display = ('text', 'updated', 'content_type', 'object_id',
+                    'good', 'bad', 'calculate_score',
+                    'approved', 'delete', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
 
     def text(self, obj):
