@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-02 14:39+1200\n"
+"POT-Creation-Date: 2018-06-02 22:23+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,26 @@ msgstr ""
 
 #: transcription/urls.py:8
 msgid "^transcribe/"
+msgstr ""
+
+#: transcription/views/api.py:24
+msgid "Only staff can read transcription lists."
+msgstr ""
+
+#: transcription/views/api.py:30
+msgid "Reading transcription lists not allowed."
+msgstr ""
+
+#: transcription/views/api.py:37
+msgid "Only staff can read transcriptions."
+msgstr ""
+
+#: transcription/views/api.py:52
+msgid "You're not allowed to edit this transcription."
+msgstr ""
+
+#: transcription/views/api.py:54
+msgid "Reading recording is not allowed."
 msgstr ""
 
 #: transcription/views/views.py:55

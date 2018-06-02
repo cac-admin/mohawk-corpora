@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-02 14:39+1200\n"
+"POT-Creation-Date: 2018-06-02 22:23+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -769,7 +769,7 @@ msgstr ""
 msgid "%% Approved"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:35 people/views/stats_views.py:325
+#: people/templates/people/stats/nav.html:35 people/views/stats_views.py:329
 msgid "Group Leaderboard"
 msgstr ""
 
@@ -781,7 +781,7 @@ msgstr ""
 msgid "Growth Rate"
 msgstr ""
 
-#: people/templates/people/stats/nav.html:59 people/views/stats_views.py:244
+#: people/templates/people/stats/nav.html:59 people/views/stats_views.py:248
 msgid "Reviewer Stats"
 msgstr ""
 
@@ -887,61 +887,61 @@ msgstr ""
 msgid "You must sign in to edit your info."
 msgstr ""
 
-#: people/views/stats_views.py:199
+#: people/views/stats_views.py:203
 msgid "Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:201
+#: people/views/stats_views.py:205
 msgid "Leaderboard for people who've contributed to our corpus."
 msgstr ""
 
-#: people/views/stats_views.py:246
+#: people/views/stats_views.py:250
 msgid "Leaderboard for reviewers."
 msgstr ""
 
-#: people/views/stats_views.py:326
+#: people/views/stats_views.py:330
 msgid "Group leaderboard of all the groups contributing corpusto our project."
 msgstr ""
 
-#: people/views/stats_views.py:426
+#: people/views/stats_views.py:430
 msgid "Top 20 Groups "
 msgstr ""
 
-#: people/views/stats_views.py:427
+#: people/views/stats_views.py:431
 msgid "Groups in the Top 20 of the competition."
 msgstr ""
 
-#: people/views/stats_views.py:474
+#: people/views/stats_views.py:478
 msgid "Mahi Tahi Growth Rate"
 msgstr ""
 
-#: people/views/stats_views.py:475
+#: people/views/stats_views.py:479
 msgid "Mahi Tahi."
 msgstr ""
 
-#: people/views/stats_views.py:501
+#: people/views/stats_views.py:505
 msgid "Individual Group Leaderboard"
 msgstr ""
 
-#: people/views/stats_views.py:502
+#: people/views/stats_views.py:506
 msgid "Leaderboard for people of a particular group."
 msgstr ""
 
-#: people/views/stats_views.py:524
+#: people/views/stats_views.py:528
 #, python-brace-format
 msgid "Group Leaderboard: {0}"
 msgstr ""
 
-#: people/views/stats_views.py:525
+#: people/views/stats_views.py:529
 #, python-brace-format
 msgid "Leaderboard for members of {0}."
 msgstr ""
 
-#: people/views/stats_views.py:650
+#: people/views/stats_views.py:654
 msgid "weekly"
 msgstr ""
 
-#: people/views/stats_views.py:652
+#: people/views/stats_views.py:656
 msgid "daily"
 msgstr ""
 

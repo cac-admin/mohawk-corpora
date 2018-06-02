@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-02 14:39+1200\n"
+"POT-Creation-Date: 2018-06-02 22:23+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:77 corpus/admin.py:150 corpus/models.py:280
+#: corpus/admin.py:77 corpus/admin.py:150 corpus/models.py:281
 msgid "None"
 msgstr ""
 
@@ -85,35 +85,35 @@ msgstr ""
 msgid "American"
 msgstr ""
 
-#: corpus/models.py:205 corpus/models.py:301
+#: corpus/models.py:206 corpus/models.py:302
 msgid "language"
 msgstr ""
 
-#: corpus/models.py:218
+#: corpus/models.py:219
 msgid "dialect"
 msgstr ""
 
-#: corpus/models.py:311
+#: corpus/models.py:312
 msgid "updated"
 msgstr ""
 
-#: corpus/models.py:312
+#: corpus/models.py:313
 msgid "source"
 msgstr ""
 
-#: corpus/models.py:313
+#: corpus/models.py:314
 msgid "uploaded file"
 msgstr ""
 
-#: corpus/models.py:315
+#: corpus/models.py:316
 msgid ".txt format"
 msgstr ""
 
-#: corpus/models.py:318
+#: corpus/models.py:319
 msgid "text"
 msgstr ""
 
-#: corpus/models.py:319
+#: corpus/models.py:320
 msgid "texts"
 msgstr ""
 
