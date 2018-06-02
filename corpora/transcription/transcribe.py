@@ -58,7 +58,7 @@ def transcribe_audio(recording, file_object):
         response = requests.post(
             api_url,
             data=output,
-            timeout=3,
+            timeout=10,
             headers=headers)
         logger.debug(response.text)
 
