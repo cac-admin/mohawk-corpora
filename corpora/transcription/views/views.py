@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext as _
 
@@ -40,22 +39,22 @@ import logging
 logger = logging.getLogger('corpora')
 
 
-def submit_recording(request):
-    return render(request, 'corpus/submit_recording.html')
+# def submit_recording(request):
+#     return render(request, 'corpus/submit_recording.html')
 
 
-def failed_submit(request):
-    return render(request, 'corpus/failed_submit.html')
+# def failed_submit(request):
+#     return render(request, 'corpus/failed_submit.html')
 
 
-def record_redirect(request):
-    return redirect(reverse('corpus:record'))
+# def record_redirect(request):
+#     return redirect(reverse('corpus:record'))
 
 
 class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Tryout our new transcription demo!')
     x_title = _('Transcribe Demo')
-    template_name = "corpus/transcribe_demo.html"
+    template_name = "transcription/transcribe_demo.html"
 
     def test_func(self):
 

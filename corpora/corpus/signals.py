@@ -7,7 +7,7 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 from people.models import KnownLanguage
-from corpus.transcribe import transcribe_audio_task
+from transcription.transcribe import transcribe_audio_task
 
 from corpora.celery import app
 

@@ -121,6 +121,8 @@ class Profile{
           self.logger(e)
           self.logger('FAILED')
           // do something usefule!
+          // document.dispatchEvent(this.profile_loaded_event);
+
         });
   }
 

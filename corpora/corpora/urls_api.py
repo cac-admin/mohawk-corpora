@@ -4,6 +4,7 @@ from corpora.views import api as corpora_api
 from corpus.views import api as corpus_api
 from people.views import api as people_api
 from license.views import api as license_api
+from transcription.views import api as transcription_api
 from rest_framework import routers
 from rest_framework.authtoken import views
 
@@ -22,6 +23,8 @@ router.register(r'demographics', people_api.DemographicViewSet)
 router.register(r'persons', people_api.PersonViewSet)
 router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 router.register(r'accept_license', license_api.AcceptLicenseViewSet)
+
+router.register(r'transcriptions', transcription_api.TranscriptionViewSet)
 
 
 urlpatterns = [

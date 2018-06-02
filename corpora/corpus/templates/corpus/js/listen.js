@@ -137,7 +137,8 @@ class Listen{
           self.recording.quality_control = d.quality_control
           self.recording = d
           self.sentence = d.sentence
-          self.show_next_recording()
+          self.objects.push(d)
+          self.next()
     })    
   }
 

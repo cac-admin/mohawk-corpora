@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from corpus.models import QualityControl
+from django.contrib.contenttypes.fields import GenericRelation
+
 
 class Transcription(models.Model):
     recording = models.ForeignKey(
@@ -24,7 +27,13 @@ class Transcription(models.Model):
         'corpus.Source',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL)
+        on_delete=models.SET_NULL,
+        help_text='The source should be the transcription API.')
+
+    quality_control = GenericRelation(
+        QualityControl,
+        related_query_name='transcription'
+        )
 
     # Need a model to store the extra metadata from the transcription
     # But we also need the nice times info
@@ -46,3 +55,6 @@ class Transcription(models.Model):
         return self.text
 
     # Language and dialect should come from the recording object.
+
+
+# To Do: class LongTranscription - for transcription of a very long audio.

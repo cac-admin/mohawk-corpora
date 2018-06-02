@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-12 11:16+1200\n"
+"POT-Creation-Date: 2018-06-02 14:39+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:73 corpus/admin.py:146 corpus/models.py:246
+#: corpus/admin.py:77 corpus/admin.py:150 corpus/models.py:280
 msgid "None"
 msgstr "Hore kau"
 
@@ -85,45 +85,49 @@ msgstr "Aotearoa"
 msgid "American"
 msgstr "Marikena"
 
-#: corpus/models.py:267
+#: corpus/models.py:205 corpus/models.py:301
 msgid "language"
 msgstr "reo"
 
-#: corpus/models.py:277
+#: corpus/models.py:218
+msgid "dialect"
+msgstr ""
+
+#: corpus/models.py:311
 msgid "updated"
 msgstr ""
 
-#: corpus/models.py:278
+#: corpus/models.py:312
 msgid "source"
 msgstr ""
 
-#: corpus/models.py:279
+#: corpus/models.py:313
 msgid "uploaded file"
 msgstr ""
 
-#: corpus/models.py:281
+#: corpus/models.py:315
 msgid ".txt format"
 msgstr ""
 
-#: corpus/models.py:284
+#: corpus/models.py:318
 msgid "text"
 msgstr ""
 
-#: corpus/models.py:285
+#: corpus/models.py:319
 msgid "texts"
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:52
-#: corpus/templates/corpus/sentence_list.html:38
-msgid "Save changes."
-msgstr "Tiakina ngā whakarerekētanga"
-
-#: corpus/templates/corpus/listen.html:59
+#: corpus/templates/corpus/listen.html:60
 #: corpus/templates/corpus/sentence_list.html:44
 msgid "Approve for recording?"
 msgstr "Kapohia te reo?"
 
-#: corpus/templates/corpus/listen.html:65
+#: corpus/templates/corpus/listen.html:80
+#: corpus/templates/corpus/sentence_list.html:38
+msgid "Save changes."
+msgstr "Tiakina ngā whakarerekētanga"
+
+#: corpus/templates/corpus/listen.html:85
 #: corpus/templates/corpus/record.html:121
 msgid "Skip"
 msgstr "Haere tonu"
@@ -173,12 +177,10 @@ msgid "Recordings by Language Proficiency"
 msgstr "Ngā Kapohanga Reo i te Pakari o te Reo"
 
 #: corpus/templates/corpus/record.html:109
-#: corpus/templates/corpus/transcribe_demo.html:109
 msgid "Redo"
 msgstr "Mahia anō"
 
 #: corpus/templates/corpus/record.html:118
-#: corpus/templates/corpus/transcribe_demo.html:122
 msgid "Save"
 msgstr "Tiakina"
 
@@ -202,63 +204,55 @@ msgstr "Hoki Whakamuri"
 msgid "Delete"
 msgstr "Whakakāhore"
 
-#: corpus/templates/corpus/transcribe_demo.html:118
-msgid "Transcribe"
-msgstr ""
-
-#: corpus/urls.py:8
+#: corpus/urls.py:7
 msgid "^record/"
 msgstr "^hopu/"
 
-#: corpus/urls.py:11
+#: corpus/urls.py:10
 msgid "^listen/"
 msgstr "^whakarongo/"
 
-#: corpus/urls.py:18
+#: corpus/urls.py:17
 #, fuzzy
 #| msgid "Sentences"
 msgid "^sentences/"
 msgstr "rerenga_korero/"
 
-#: corpus/urls.py:26
-msgid "^transcribe/"
-msgstr ""
-
-#: corpus/views/api.py:43
+#: corpus/views/api.py:44
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr "Mā ngā kaimahi anake te {0}."
 
-#: corpus/views/api.py:51
+#: corpus/views/api.py:52
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
 msgstr "E kore e āhei te tikanga PONIES {0}."
 
-#: corpus/views/api.py:99
+#: corpus/views/api.py:100
 msgid "Only staff can post/put sentences."
 msgstr "Mā ngā kaimahi anake te whakairi i ngā rerenga kōrero."
 
-#: corpus/views/api.py:166
+#: corpus/views/api.py:167
 msgid "Only staff can read recording lists."
 msgstr "Mā ngā kaimahi anake e titiro ngā rārangi kapohanga reo."
 
-#: corpus/views/api.py:172
+#: corpus/views/api.py:173
 msgid "Reading recording lists not allowed."
 msgstr "E kore koe e āhei ki te titiro ki ngā rārangi kapohanga reo."
 
-#: corpus/views/api.py:179
+#: corpus/views/api.py:180
 msgid "Only staff can read recordings."
 msgstr "Mā ngā kaimahi anake e titiro ēnei kapohanga reo."
 
-#: corpus/views/api.py:192
+#: corpus/views/api.py:193
 msgid "You're not allowed to edit this recording."
 msgstr "E kore koe e āhei ki te whakarerekē i tēnei kapohanga reo."
 
-#: corpus/views/api.py:194
+#: corpus/views/api.py:195
 msgid "Reading recording is not allowed."
 msgstr "E kore koe e āhei ki te pānui i tēnei kapohanga reo."
 
-#: corpus/views/api.py:321 corpus/views/api.py:336
+#: corpus/views/api.py:324 corpus/views/api.py:339
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
 msgstr "{0} e kore e āhei koia tēnei te API whakamutunga."
@@ -269,14 +263,6 @@ msgstr ""
 
 #: corpus/views/stats_views.py:27
 msgid "Graph of recording growth over the last month."
-msgstr ""
-
-#: corpus/views/transcribe_views.py:56
-msgid "Tryout our new transcription demo!"
-msgstr ""
-
-#: corpus/views/transcribe_views.py:57
-msgid "Transcribe Demo"
 msgstr ""
 
 #: corpus/views/views.py:43

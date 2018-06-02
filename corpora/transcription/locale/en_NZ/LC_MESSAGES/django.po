@@ -17,10 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: message/models.py:17
-msgid "Email"
+#: transcription/templates/transcription/transcribe_demo.html:109
+msgid "Redo"
 msgstr ""
 
-#: message/models.py:18
-msgid "Popup"
+#: transcription/templates/transcription/transcribe_demo.html:118
+msgid "Transcribe"
+msgstr ""
+
+#: transcription/templates/transcription/transcribe_demo.html:122
+msgid "Save"
+msgstr ""
+
+#: transcription/urls.py:8
+msgid "^transcribe/"
+msgstr ""
+
+#: transcription/views/views.py:55
+msgid "Tryout our new transcription demo!"
+msgstr ""
+
+#: transcription/views/views.py:56
+msgid "Transcribe Demo"
 msgstr ""

@@ -31,6 +31,8 @@ urlpatterns = [
         name='privacy'),
 
     url(r'^', include('corpus.urls', namespace='corpus')),
+    url(r'^', include('transcription.urls', namespace='transcription')),
+
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-12 11:16+1200\n"
+"POT-Creation-Date: 2018-06-02 14:39+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,67 +172,73 @@ msgstr "Ngā Kōrero Mōu"
 msgid "Log In"
 msgstr "Tomo Mai"
 
-#: corpora/urls.py:55
+#: corpora/urls.py:57
 msgid "^people/"
 msgstr "^tangata/"
 
-#: corpora/urls.py:64
+#: corpora/urls.py:66
 msgid "^competition/rules"
 msgstr ""
 
-#: corpora/urls.py:68
+#: corpora/urls.py:70
 msgid "^competition/help"
 msgstr ""
 
-#: corpora/urls.py:72
+#: corpora/urls.py:74
 msgid "^competition/user_leaderboard"
 msgstr ""
 
-#: corpora/urls.py:76
+#: corpora/urls.py:78
 #, fuzzy
 #| msgid "^stats/group/(?P<pk>\\d+)/$"
 msgid "^competition/group/(?P<pk>\\d+)"
 msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
 
-#: corpora/urls.py:80
+#: corpora/urls.py:82
 #, fuzzy
 #| msgid "^stats/group/(?P<pk>\\d+)/$"
 msgid "^competition/top20$"
 msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
 
-#: corpora/urls.py:84
+#: corpora/urls.py:86
 #, fuzzy
 #| msgid "^stats/group/(?P<pk>\\d+)/$"
 msgid "^competition/mahitahi$"
 msgstr "^tatauranga/ropu/(?P<pk>\\d+)/$"
 
-#: corpora/urls.py:88
+#: corpora/urls.py:90
 msgid "^competition"
 msgstr ""
 
-#: corpora/urls.py:92
+#: corpora/urls.py:94
 msgid "^stats/person"
 msgstr "^tatauranga/tangata"
 
-#: corpora/urls.py:96
+#: corpora/urls.py:98
 #, fuzzy
 #| msgid "^stats/person"
 msgid "^stats/person_qc"
 msgstr "^tatauranga/tangata"
 
-#: corpora/urls.py:100
+#: corpora/urls.py:102
 msgid "^stats/people$"
 msgstr "^tatauranga/ngatangata"
 
-#: corpora/urls.py:104
+#: corpora/urls.py:106
+#, fuzzy
+#| msgid "^stats/person"
+msgid "^stats/reviewers"
+msgstr "^tatauranga/tangata"
+
+#: corpora/urls.py:110
 msgid "^stats/groups$"
 msgstr "^tatauranga/ngaropu"
 
-#: corpora/urls.py:108
+#: corpora/urls.py:114
 msgid "^stats/recordings"
 msgstr "^tatauranga/hopu"
 
-#: corpora/urls.py:112
+#: corpora/urls.py:118
 #, fuzzy
 #| msgid "^stats/"
 msgid "^stats/$"

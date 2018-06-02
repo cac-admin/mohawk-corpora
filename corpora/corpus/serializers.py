@@ -1,7 +1,7 @@
 from .models import QualityControl, Sentence, Recording, Source
 from rest_framework import serializers
 from people.helpers import get_person
-from transcribe import transcribe_audio, transcribe_audio_task
+from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
 
 

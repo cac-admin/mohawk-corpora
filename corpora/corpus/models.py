@@ -95,6 +95,7 @@ class Source(models.Model):
         ('I', 'Interview'),
         ('S', 'Self'),
         ('D', 'Document'),
+        ('M', 'Machine'),
     )
 
     description = models.TextField(

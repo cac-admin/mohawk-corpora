@@ -139,6 +139,16 @@ def get_current_language(request):
         return language
 
 
+def get_current_known_language_for_person(person):
+    try:
+        active_language = \
+            KnownLanguage.objects.get(person=person, active=True)
+        return active_language
+
+    except ObjectDoesNotExist:
+        return None
+
+
 def get_num_supported_languages():
     return len(LANGUAGES)
 
