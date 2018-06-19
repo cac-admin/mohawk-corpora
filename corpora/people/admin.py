@@ -4,9 +4,10 @@ from .models import \
     Person, Demographic, KnownLanguage,\
     Tribe, Group
 
+from django.db.models import Count
+
 from people.forms import DemographicFormAdmin
 from corpus.models import Recording
-admin.site.register(Tribe)
 
 
 class PersonRecordingsInline(admin.StackedInline):
@@ -76,6 +77,21 @@ class MembershipInline(admin.TabularInline):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created', 'created_by', 'score' )
-    readonly_fields = ('score', 'num_recordings', 'created', 'created_by', 'duration')
+    list_display = ('name', 'created', 'created_by', 'score')
+    readonly_fields = \
+        ('score', 'num_recordings', 'created', 'created_by', 'duration')
     inlines = [MembershipInline]
+
+
+@admin.register(Tribe)
+class TribeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'number_members')
+
+    def get_queryset(self, request):
+        qs = super(TribeAdmin, self).get_queryset(request)
+        return qs.annotate(num_members=Count('demographic'))
+
+    def number_members(self, obj):
+        return obj.num_members
+    number_members.short_description = 'Number of Members'
+    number_members.admin_order_field = 'num_members'
