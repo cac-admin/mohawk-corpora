@@ -78,6 +78,4 @@ ENV/
 bower_components/
 
 
-corpora/corpora/static/third_party/fontawesome-pro-5.1.0-web/
-
-corpora/corpora/static/third_party/fontawesome-pro-5.0.6
+fontawesome-pro*

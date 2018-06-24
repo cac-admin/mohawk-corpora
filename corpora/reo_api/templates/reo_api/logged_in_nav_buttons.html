@@ -48,7 +48,7 @@ flex-wrap: wrap;
     {% url 'transcription:transcription_list' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-fw fa-signature"></i>
+        <i class="fas fa-lg fa-signature"></i>
         <div >{% trans 'Transcriptions' %}</div>
       </a>
     </li>
@@ -76,7 +76,7 @@ flex-wrap: wrap;
     {% url 'people:profile' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a class="nav-link" href="{{path}}" >
-        <i class="fa fa-lg fa-fw fa-user-circle"></i>
+        <i class="fas fa-lg fa-fw fa-user-circle"></i>
         <div >{% trans 'Profile' %}</div>
       </a>
     </li>
