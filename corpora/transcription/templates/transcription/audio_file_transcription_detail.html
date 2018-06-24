@@ -1,0 +1,286 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/transcription_editor.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+</style>
+{% endaddtoblock %}
+  
+
+
+<div class="container-fluid">
+  <div class="topbar">
+    <div class="name" contenteditable="true" 
+         x-data-field="name"
+         x-data-model="audio_file_transcription"
+         x-data-id="{{aft.pk}}"><h2>{{aft.name}}</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col segments">
+
+      {% for segment in segments %}
+      <div class="row segment">
+        <div class="col col-2 col-xs-1 time"
+             x-data-start="{{segment.start}}"
+             x-data-end="{{segment.end}}"
+             x-data-model="transcribe_segment"
+             x-data-field="start"
+             x-data-id="{{segment.pk}}">
+          <a href="#{{segment.start}}" onclick="javascript:void(0);" name="{{segment.start}}">{{segment.start|duration}}</a></div>
+        <div class="col col-10 col-xs-11 col-lg-9 text" contenteditable="true"
+             x-data-model="transcribe_segment"
+             x-data-field="corrected_text"
+             x-data="{{segment.corrected_text}}"
+             x-data-id="{{segment.pk}}">{% if segment.corrected_text is not None %}{{segment.corrected_text}}{% endif %}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class=" audio" >
+    <audio controls="">
+      <source src="{{aft.audio_file_aac.url}}" type="audio/m4a" />
+      <source src="{{aft.audio_file.url}}" />
+    </audio>
+  </div>
+
+
+</div>
+
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+
+class TranscriptionSegmentEditor{
+  constructor(){
+    var self=this
+    $('[x-data-model="transcribe_segment"]').each(function(index,element){
+      $(element).on('blur', function(event){
+        self.save(event.target)
+      })
+    })
+
+    $('.segment .text[x-data="None"]').each(function(index, element){
+      window.setTimeout(function(){
+        self.fetch(element);
+      }, (index+1)*1500)
+    });
+
+  }
+
+  save(element){
+    var formData = new FormData();
+    var id = element.attributes['x-data-id'].value
+    var url = '/api/transcription-segment/'+id+'/'
+    formData.append('corrected_text', $.trim($(element).text()))
+    formData.enctype = "multipart/form-data"
+    $.ajax({
+      url: url,
+      data: formData,
+      type: "PUT",
+      cache: false,
+      contentType: false,
+      processData: false,      
+    }).done(function(){
+      console.log('Saved')
+    })
+  }
+
+  fetch(element){
+    var self=this;
+    var id = element.attributes['x-data-id'].value
+    var url = '/api/transcription-segment/'+id+'/'
+    var this_element = element
+    $.ajax({
+      url: url,
+      type: "GET",      
+    }).done(function(data){
+      if (data.corrected_text==null){
+        window.setTimeout(function(){self.fetch(this_element)}, 3000)
+      } else{
+        element.innerHTML = data.corrected_text;
+        element.attributes['x-data'].value = data.corrected_text
+      }
+    });
+  }
+
+}
+
+
+var editor = new TranscriptionSegmentEditor();
+
+
+class TranscriptionPlayer{
+  constructor(){
+    this.segments = $('.segments .segment')
+    this.currentIndex = 0
+    this.audioElm = $('.audio audio')[0];  
+    this.offset 
+    this.fixed_offset = -300;
+    this.link_play = false;
+    var self = this
+
+    document.addEventListener('keydown', function(event) {
+      if (event.keyCode == 27){
+        console.log('escpe')
+        document.activeElement.blur();
+      }
+      if (event.target == document.body || 
+          event.target.parentElement.className.search('time')>=0){
+        if (event.keyCode == 32) {
+          event.preventDefault();
+          if (self.audioElm.paused){
+            self.audioElm.play()
+          } else{
+            self.audioElm.pause()
+          }
+        } else if (event.keyCode == 37){
+          self.currentIndex -= 1;
+          if (self.currentIndex<0){self.currentIndex=0}
+          self.seek(self.segments[self.currentIndex]);
+        } else if (event.keyCode == 39){
+          self.currentIndex += 1;
+          if (self.currentIndex>=self.segments.length){self.currentIndex=self.segments.length-1}
+          self.seek(self.segments[self.currentIndex]);
+        }
+      }
+    });
+
+    $.each(self.segments,function(index,value){
+      $(value).find('.time a').on('click', function(event){
+
+        var clickedSeg = event.currentTarget.parentElement.parentElement;
+        self.seek(clickedSeg)
+
+
+
+      })
+    });
+
+    $(self.audioElm).bind('timeupdate', function(e){
+      if (self.currentIndex == -1){ self.currentIndex = 0;}
+      else if (self.currentIndex >= self.segments.length){ self.currentIndex = self.segments.length-1}
+      var time = self.audioElm.currentTime*100 // Convert to ms
+      if (time > parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'))){
+        if (self.link_play){
+          self.currentIndex = self.currentIndex + 1;
+          self.scroll()
+        } else {
+          self.audioElm.pause()
+        }
+      }
+    })
+
+
+    $(self.audioElm).bind('timeupdate', function(e){
+      $(self.segments[self.currentIndex]).addClass('active')
+      try{
+        $(self.segments[self.currentIndex-1]).removeClass('active')
+      } catch(error) {}
+      try{
+        $(self.segments[self.currentIndex+1]).removeClass('active')
+      } catch(error) {}
+    })
+
+
+    $(self.audioElm).bind('seeked', function(e){
+
+
+      var time = self.audioElm.currentTime*100 // Convert to ms
+      var start = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-start'));
+      var end = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'));
+      
+      if (time > end){
+        while (time > start){
+          self.currentIndex = self.currentIndex + 1;
+          start = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-start'));
+        }
+        self.currentIndex = self.currentIndex - 1;
+      } else if (time < start){
+        while (time < end){
+          self.currentIndex = self.currentIndex - 1;
+          end = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'));
+        }
+        self.currentIndex += 1;
+      }
+      start = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-start'));
+      end = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'));
+
+      self.scroll()
+      $.each(self.segments,function(index,value){
+        $(value).removeClass('active')});
+
+      console.log(start)
+      console.log(time)
+      console.log(end)
+
+      $(self.segments[self.currentIndex]).addClass('active')      
+
+    })
+
+
+  } // contructor
+
+  scroll(options={'animate': true, 'offset': null}){
+    var self=this;
+    if (self.currentIndex == -1){ self.currentIndex = 0;}
+    else if (self.currentIndex >= self.segments.length){ self.currentIndex = self.segments.length-1}    
+
+    var offset;
+    if (options['offset']){
+      offset = options['offset']
+    } else{
+      offset = $(this.segments[this.currentIndex]).offset();  
+    }
+    
+    var pos = $('.segments').scrollTop();
+    var target = pos + offset.top + this.fixed_offset    
+    if (options['animate']){
+      $('.segments').stop().animate({scrollTop: target, easing: 'easein'}, 500);  
+    } else{
+      $('.segments').scrollTop(target);
+    }
+    
+  }
+
+
+  seek(segmentElm){
+    var self=this;
+
+    self.currentIndex = self.segments.index(segmentElm)
+    self.scroll()
+    var start = parseFloat(segmentElm.children[0].attributes['x-data-start'].value)/100;
+    console.log(start)
+    self.audioElm.currentTime = start
+    self.audioElm.play()
+  }
+
+
+}
+
+
+
+var transcription_player = new TranscriptionPlayer();
+
+
+
+
+
+
+</script>
+
+{% endaddtoblock %}
+{% endblock %}

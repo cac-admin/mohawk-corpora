@@ -121,7 +121,7 @@ urlpatterns = [
 
 
     url(r'^', include('corpora.urls_api', namespace='api')),
-    url(r'^docs/', include_docs_urls(title='Corpora API')),
+    url(r'^docs/', include_docs_urls(title='Corpora API', public=False)),
 
     # url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
     #     name='django.contrib.sitemaps.views.sitemap')

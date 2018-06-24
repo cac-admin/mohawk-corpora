@@ -25,6 +25,10 @@ router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 router.register(r'accept_license', license_api.AcceptLicenseViewSet)
 
 router.register(r'transcriptions', transcription_api.TranscriptionViewSet)
+router.register(
+    r'transcription-segment', transcription_api.TranscriptionSegmentViewSet)
+router.register(
+    r'transcription', transcription_api.AudioFileTranscriptionViewSet)
 
 
 urlpatterns = [

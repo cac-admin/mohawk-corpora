@@ -1,10 +1,19 @@
-from transcription.models import Transcription
+from django.core.exceptions import ValidationError
+
+from transcription.models import \
+    Transcription, TranscriptionSegment, AudioFileTranscription
+
+from people.helpers import get_person
+
 from rest_framework import serializers
 # from people.helpers import get_person
 # from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
 
 from corpus.serializers import RecordingSerializer, QualityControRelatedField
+
+import logging
+logger = logging.getLogger('corpora')
 
 
 class TranscriptionSerializerPost(serializers.ModelSerializer):
@@ -39,3 +48,27 @@ class TranscriptionSerializer(serializers.ModelSerializer):
         model = Transcription
         fields = ('recording', 'text', 'corrected_text', 'quality_control',
                   'id', 'source', 'updated')
+
+
+class TranscriptionSegmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TranscriptionSegment
+        fields = ('corrected_text', 'start', 'end', 'parent', 'edited_by', 'pk')
+
+
+class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AudioFileTranscription
+        fields = ('uploaded_by', 'audio_file', 'pk', 'name')
+
+    def validate_uploaded_by(self, validated_data):
+        # if validated_data is None:
+        return get_person(self.context['request'])
+        # return validated_data
+
+    def validate_audio_file(self, validated_data):
+        if validated_data is None:
+            raise ValidationError('A file is required')
+        return validated_data

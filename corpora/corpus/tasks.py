@@ -119,24 +119,27 @@ def transcode_all_audio():
     return u"Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
 
 
-def prepare_temporary_environment(recording, test=False):
+def prepare_temporary_environment(model, test=False):
     # This method gets strings for necessary media urls/directories and create
     # tmp folders/files
     # NOTE: we use "media" that should be changed.
 
-    file = recording.audio_file
+    file = model.audio_file
 
     if 'http' in file.url:
         file_path = file.url
     else:
         file_path = settings.MEDIA_ROOT + file.name
 
-    tmp_stor_dir = settings.MEDIA_ROOT+'tmp/'+str(recording.pk)
+    tmp_stor_dir = \
+        settings.MEDIA_ROOT + 'tmp/' + str(model.__class__.__name__) + \
+        str(model.pk)
 
     if not os.path.exists(tmp_stor_dir):
         os.makedirs(tmp_stor_dir)
         os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH)
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH |
+                 stat.S_IXOTH)
         logger.debug('Created: ' + os.path.abspath(tmp_stor_dir))
     else:
         logger.debug('Exists: ' + os.path.abspath(tmp_stor_dir))
@@ -153,6 +156,7 @@ def prepare_temporary_environment(recording, test=False):
     logger.debug(code)
     result = commands.getstatusoutput(code)
     logger.debug(result[0])
+
     try:
         logger.debug(result[1])
         result = ' '.join([str(i) for i in result])

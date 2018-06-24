@@ -1,10 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.exceptions import ValidationError
 from django.db import models
-
+from django.utils import timezone
 from corpus.models import QualityControl
 from django.contrib.contenttypes.fields import GenericRelation
+
+from django.contrib.postgres.fields import JSONField
+
+from uuid import uuid4
+
+
+def upload_directory(instance, filename):
+    d = timezone.now()
+    i = str(uuid4())
+    p = instance.uploaded_by.uuid
+    return 'audio/{3}/{0}/{1}.{2}'.format(
+        d.strftime('%Y/%m/%d'),
+        i,
+        filename.split('.')[-1],
+        p)
 
 
 class Transcription(models.Model):
@@ -56,5 +72,124 @@ class Transcription(models.Model):
 
     # Language and dialect should come from the recording object.
 
+
+class TranscriptionSegment(models.Model):
+    '''
+    This model manages shorter segments of the AudioFileTranscription
+    Model.
+    '''
+
+    parent = models.ForeignKey(
+        'AudioFileTranscription',
+        null=True,
+        on_delete=models.CASCADE)
+
+    child = models.ForeignKey(
+        'Transcription',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='We can create a transcription with a recording from a segment.')
+
+    start = models.PositiveIntegerField(
+        help_text='Start time in ms for audio segment',
+        editable=False)
+
+    end = models.PositiveIntegerField(
+        help_text='End time in ms for audio segment',
+        editable=False)
+
+    text = models.CharField(
+        help_text='The initial transcribed text',
+        max_length=1024,
+        null=True,
+        blank=True)
+
+    corrected_text = models.CharField(
+        help_text='The corrected text',
+        max_length=1024,
+        null=True,
+        blank=True)
+
+    source = models.ForeignKey(
+        'corpus.Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='The source should be the transcription API.')
+
+    edited_by = models.ForeignKey(
+        'people.Person',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL)
+
+    transcriber_log = JSONField(
+        null=True,
+        blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.corrected_text is None:
+            if self.text:
+                self.corrected_text = self.text
+        super(TranscriptionSegment, self).save(*args, **kwargs)
+
+
+class AudioFileTranscription(models.Model):
+    '''
+    Model for transcriptions of audio files that are (and arbitrary duraion)
+    seconds or longer. For shorter transcriptions, use the Transcription
+    Model.
+    '''
+    name = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True)
+
+    audio_file = models.FileField(
+        upload_to=upload_directory,
+        null=True,
+        blank=False)
+
+    # audio_file_aac = models.FileField(
+    #     upload_to=upload_directory,
+    #     null=True,
+    #     blank=True)
+
+    transcription = models.TextField(
+        blank=True)
+
+    original_transcription = models.FileField(
+        upload_to=upload_directory,
+        blank=True)
+
+    uploaded_by = models.ForeignKey(
+        'people.Person',
+        null=True,
+        blank=True)
+
+    updated = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        if self.audio_file:
+            parts = self.audio_file.name.split('.')
+            ext = parts[-1]
+            if ext not in 'aac mp3 wav aiff m4a':
+                raise ValidationError(
+                    'The file you uploaded is not an audio file.')
+            if self.name is None:
+                self.name = u"{0}".format('.'.join(parts[:-1]))
+        else:
+            raise ValidationError(
+                'A file is required')
+
+    class Meta:
+        verbose_name = 'Audio File Transcription'
+        verbose_name_plural = 'Audio File Transcriptions'
+
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        return 'None'
 
 # To Do: class LongTranscription - for transcription of a very long audio.

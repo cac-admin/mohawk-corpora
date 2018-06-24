@@ -1,0 +1,77 @@
+{% load static sekizai_tags compress analytical i18n %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% analytical_head_top %}
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  {% block meta %}{% include 'corpora/meta.html' %}{% endblock %}
+
+  <title>{% block title %}{{request.site.name}}{% endblock %}</title>
+
+  {# Uses sekizai to load all css at start of page and compressor to minify it #}
+  {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
+
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,400i,500,600,700,700i,800,900" rel="stylesheet">
+  {# CSS files to load and combine #}
+  {% addtoblock "css" %} {% endaddtoblock %}
+  {% addtoblock "css" %}<link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+  
+{% comment %}
+  {% addtoblock "css" %}<link rel="stylesheet" href="{% static 'bower_components/components-font-awesome/css/font-awesome.min.css' %}">{% endaddtoblock %}
+{% endcomment %}
+
+  {% addtoblock "css" %}
+    <style type="text/x-scss">      
+    @import 'corpora/css/main.scss';
+    @import 'corpora/css/nav.scss';
+    @import 'reo_api/scss/dashboard.scss';
+    </style>
+  {% endaddtoblock %}  
+
+  {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpora/js/transitions.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/popper.js/dist/umd/popper.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>{% endaddtoblock %}
+  {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/fontawesome-pro-5.1.0-web/js/all.js' %}"></script>{% endaddtoblock %}
+  {% render_block "js-include" %}
+  {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
+
+  {% analytical_head_bottom %}
+</head>
+
+<body>
+  {% analytical_body_top %}
+
+
+<!--   <div class="header">{% block header %}{% endblock %}</div>
+  
+  <div class="footer">{% block footer %}{% endblock %}</div>
+ -->
+  <div class="container-fluid dashboard">
+    <div class="row">
+      <div class="col panel">
+        <div class="panel">
+          {% block navbuttons %}{% endblock %}
+        </div>      
+      </div>
+      <div class="col viewport">
+        <div class="viewport">
+          <div class="content">{% block content %}{% endblock %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  {# Uses sekizai to load all js at end of page #}
+  
+
+
+
+  {% render_block "js-end" %}
+  {% analytical_body_bottom %}
+</body>
+
+</html>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 15:15+1200\n"
+"POT-Creation-Date: 2018-06-24 15:49+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,34 +29,38 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: transcription/urls.py:8
+#: transcription/urls.py:9
 msgid "^transcribe/"
 msgstr ""
 
-#: transcription/views/api.py:24
+#: transcription/urls.py:12
+msgid "^transcribe_file/(?P<pk>[0-9]+)"
+msgstr ""
+
+#: transcription/views/api.py:27 transcription/views/api.py:89
 msgid "Only staff can read transcription lists."
 msgstr ""
 
-#: transcription/views/api.py:30
+#: transcription/views/api.py:33 transcription/views/api.py:95
 msgid "Reading transcription lists not allowed."
 msgstr ""
 
-#: transcription/views/api.py:37
+#: transcription/views/api.py:40
 msgid "Only staff can read transcriptions."
 msgstr ""
 
-#: transcription/views/api.py:52
+#: transcription/views/api.py:55
 msgid "You're not allowed to edit this transcription."
 msgstr ""
 
-#: transcription/views/api.py:54
-msgid "Reading recording is not allowed."
+#: transcription/views/api.py:57
+msgid "Reading transcriptions is not allowed."
 msgstr ""
 
-#: transcription/views/views.py:55
+#: transcription/views/views.py:57
 msgid "Tryout our new transcription demo!"
 msgstr ""
 
-#: transcription/views/views.py:56
+#: transcription/views/views.py:58
 msgid "Transcribe Demo"
 msgstr ""

@@ -1,0 +1,140 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/transcriptions.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+
+</style>
+{% endaddtoblock %}
+  
+
+<div class="container-fluid">
+
+
+
+
+  <div class="topbar">
+    <div class="name" ><h2>Transcriptions</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+
+
+
+<div class="table-responsive ">
+<table class="table table-striped  table-hover">
+  <thead class="thead">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Transcription</th>
+      <th scope="col">Uploaded By</th>
+      <th scope="col">File</th>
+      <th scope="col">Download</th>      
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in transcriptions %}
+    <tr onclick="window.location='{% url 'transcription:file_transcribe' object.pk %}';">
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{object.name}}</td>
+      <td>{{object.transcription|truncatechars:12}}</td>
+      <td>{{object.uploaded_by}}</td>
+      <td>{% if object.audio_file %}<a href="{{object.audio_file.url}}"><i class="fas fa-file-audio fa-fw"></i></a>{% endif %}</td>
+      <td>Captions Text</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>      
+    </div>
+  </div>
+
+</div>
+
+
+
+  <div class="add_file" data-toggle="modal" data-target="#exampleModalCenter" data-backdrop="static">
+    <i class="fal fa-plus fa-fw" ></i>
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Upload Audio</h5>
+      </div>
+      <div class="modal-body">
+      
+        <form id='file-upload' action="/api/transcription/"
+          method="post"
+        enctype="multipart/form-data">
+         {% csrf_token %}
+          <input type="file" id="audio_file" name="audio_file" />
+          <input type="hidden" name="uploaded_by" value="{{person.pk}}">
+        </form>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="submit_form();">Upload</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+  
+function submit_form(){
+  var form = $('#file-upload')[0];
+  var f = document.getElementById('audio_file').files[0]
+
+  var fd = new FormData($("#file-upload")[0]);
+
+  fd.append('name', f.name);
+
+
+  $.ajax({
+    url: '/api/transcription/',
+    type: 'POST',
+    data: fd,
+    cache: false,
+    contentType: false,
+    processData: false,
+    
+  }).done(function(){
+    window.location = window.location;
+  });
+
+
+  // var request = new XMLHttpRequest();
+  // request.open("POST", "/api/transcription/");
+  // request.send(fd)
+
+
+}
+
+
+</script>
+{% endaddtoblock %}
+
+
+{% endblock %}

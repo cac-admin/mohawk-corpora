@@ -9,6 +9,7 @@ from django.urls import reverse, resolve
 from django.core.exceptions import ValidationError
 import json
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
@@ -34,6 +35,7 @@ from corpora.mixins import SiteInfoMixin
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.mixins import UserPassesTestMixin
 
+from transcription.models import AudioFileTranscription, TranscriptionSegment
 
 import logging
 logger = logging.getLogger('corpora')
@@ -64,3 +66,48 @@ class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
             return True
 
         return self.request.user.is_staff
+
+
+class AudioFileTranscriptionView(
+        SiteInfoMixin, UserPassesTestMixin, DetailView):
+    model = AudioFileTranscription
+    context_object_name = 'aft'
+    template_name = 'transcription/audio_file_transcription_detail.html'
+
+    def test_func(self):
+
+        key = self.request.GET.get('key', '')
+
+        if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+            return True
+
+        return self.request.user.is_staff
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            AudioFileTranscriptionView, self).get_context_data(**kwargs)
+
+        segments = TranscriptionSegment.objects\
+            .filter(parent=context['aft'])\
+            .order_by('start')
+
+        context['segments'] = segments
+
+        return context
+
+
+class AudioFileTranscriptionListView(
+        SiteInfoMixin, UserPassesTestMixin, ListView):
+    model = AudioFileTranscription
+    context_object_name = 'transcriptions'
+    template_name = 'transcription/audio_file_transcription_list.html'
+
+    def test_func(self):
+
+        key = self.request.GET.get('key', '')
+
+        if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+            return True
+
+        return self.request.user.is_staff
+

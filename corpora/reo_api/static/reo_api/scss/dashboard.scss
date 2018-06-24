@@ -1,0 +1,40 @@
+@import 'bower_components/bootstrap/scss/mixins';
+
+div.dashboard > div.row > div.col{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+div.col.panel{
+	z-index: 1000;
+    -ms-flex: 0 0 250px;
+    flex: 0 0 250px;
+    @include media-breakpoint-down(md) {
+	    -ms-flex: 0 0 200px;
+	    flex: 0 0 200px;
+    }
+    @include media-breakpoint-down(sm) {
+	    -ms-flex: 0 0 150px;
+	    flex: 0 0 150px;
+    }
+    @include media-breakpoint-down(xs) {
+	    -ms-flex: 0 0 50px;
+	    flex: 0 0 50px;
+    }
+    div.panel{
+		height: 100vh;
+		background-color: $brand_darker;
+	}
+}
+
+
+div.col.viewport{
+	width: 100px;
+	div.viewport{
+		height: 100vh;
+		background-color: white;
+		overflow-y: hidden;
+		overflow-x: scroll;
+	}
+
+}

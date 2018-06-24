@@ -1,0 +1,11 @@
+{% extends "reo_api/base_dashboard.html" %}
+{% load account %}
+{% load i18n %}
+{% load socialaccount %}
+{% load sekizai_tags %}
+{% load static %}
+{% load language %}
+{% block title %}{{x_title}}{%endblock%}
+{% block navbuttons %}
+{% include 'reo_api/logged_in_nav_buttons.html' %}
+{% endblock %}

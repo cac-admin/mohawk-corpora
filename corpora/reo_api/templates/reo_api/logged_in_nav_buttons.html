@@ -1,0 +1,132 @@
+{% load account i18n socialaccount sekizai_tags static language cache %}
+{% addtoblock "css" %}
+<link href="{% static 'reo_api/scss/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+  a{
+    color: white;
+  }
+
+/*
+.navbar{
+flex-wrap: wrap;
+  ul{
+   
+    flex-wrap: wrap;
+    li{
+      width: 100%;
+      text-align: left;
+    }
+    li.active{
+      border-bottom: 2px solid white;
+    }
+  }
+    a{
+        color: white;
+    }
+}
+.dropdown-toggle::after{
+  display: none !important;
+}
+*/
+</style>
+{% endaddtoblock %}
+
+
+{% comment %}
+{% cache 500 navbar request.user.is_staff request.user_isauthenticated request.path %}{% endcache %}
+{% endcomment %}
+
+<nav class="nav">
+  <a class="nav-brand" href="/">{{request.site.name}}</a>
+  
+  {% get_available_languages as available_languages %}
+
+  <ul class="nav flex-column">
+
+    {% url 'transcription:transcription_list' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-signature"></i>
+        <div >{% trans 'Transcriptions' %}</div>
+      </a>
+    </li>
+  
+<!--     {% url 'reo_tools:api' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-file-code"></i>
+        <div >{% trans 'API' %}</div>
+      </a>
+    </li> -->
+
+
+
+
+  </ul>
+
+
+  
+  <ul class="nav flex-column bottom">
+  {% if request.user.is_authenticated %}
+
+
+    
+    {% url 'people:profile' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
+        <i class="fa fa-lg fa-fw fa-user-circle"></i>
+        <div >{% trans 'Profile' %}</div>
+      </a>
+    </li>
+
+
+    {% if request.user.is_staff %}
+    <li class="nav-item">
+      <a class="nav-link" href="/admin" >
+        <i class="fas fa-lg fa-fw fa-cog"></i>
+        <div>{% trans 'Admin' %}</div>
+      </a>
+    </li>
+    {% endif %}
+
+
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
+          <i class="fas fa-fw fa-lg fa-sign-out"></i>
+          <div>{% trans 'Log Out' %}</div>
+        </a>        
+      </li>
+
+  {% else %}
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >
+          <i class="fas fa-fw fa-lg fa-sign-in"></i>
+          <div>{% trans 'Log In' %}</div>
+        </a>        
+      </li>
+  {% endif %}
+  </ul>
+  <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
+      
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+      
+  </form>
+  <form class="hidden" action="{% url 'people:set_language' %}" method="post" id="language_selector_form" >
+      
+          {% csrf_token %}
+          <input name="language" type="hidden" value="{{current_language}}" />
+      
+  </form>
+
+
+
+</nav>
+
