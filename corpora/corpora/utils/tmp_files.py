@@ -4,8 +4,20 @@ import os
 import commands
 import stat
 
+from boto.s3.connection import S3Connection
+
 import logging
 logger = logging.getLogger('corpora')
+
+
+def get_file_url(f):
+    s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
+                      settings.AWS_SECRET_ACCESS_KEY_S3,
+                      is_secure=True)
+    # Create a URL valid for 60 seconds.
+    return s3.generate_url(60, 'GET',
+                           bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                           key=kwargs['filepath'])
 
 
 def prepare_temporary_environment(model, test=False):
@@ -45,8 +57,7 @@ def prepare_temporary_environment(model, test=False):
 
     # Will just replace file since we only doing one encode.
     if 'http' in file_path:
-        r = RecordingFileView()
-        url = r.get_redirect_url(filepath=file.name)
+        url = get_file_url(file)
         code = 'wget "'+url+'" -O ' + tmp_file
     else:
         code = "cp '%s' '%s'" % (file_path, tmp_file)
