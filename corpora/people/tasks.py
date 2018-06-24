@@ -332,6 +332,16 @@ def send_status_email(person_pk, frequency='weekly'):
         .filter(created__gt=last_period_dt)
     last_period_stats = build_recordings_stat_dict(period)
 
+    lastest_recording = recordings\
+        .order_by('-created')\
+        .first()
+
+    if lastest_recording.created < last_period_dt:
+        # The user hasn't recorded anythign in ages.
+        # Let's turn this off!
+        return "Not sending status email since {0} hasn't \
+                recorded anything in a while.".format(person)
+
     # approval_rate =
 
     email = get_email(person)
