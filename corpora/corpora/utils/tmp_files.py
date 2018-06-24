@@ -22,8 +22,8 @@ def prepare_temporary_environment(model, test=False):
         file_path = settings.MEDIA_ROOT + file.name
 
     tmp_stor_dir = \
-        settings.MEDIA_ROOT + 'tmp/' + str(model.__class__.__name__) + \
-        str(model.pk)
+        '/tmp/' + settings.PROJECT_NAME + '/files/' + \
+        str(model.__class__.__name__) + str(model.pk)
 
     if not os.path.exists(tmp_stor_dir):
         os.makedirs(tmp_stor_dir)

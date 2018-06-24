@@ -56,13 +56,16 @@ def create_transcription_segments_admin(aft):
     except Exception as e:
         return "{0}".format(e)
 
-    return "Created {0} segments from {1}".format(len(segments), aft.name)
+    return "Created {0} segments from {1}".format(len(ts), aft.name)
 
 
 def create_and_return_transcription_segments(aft):
     '''
     Creates the transcription segments from an AudioFileTranscription model.
     '''
+
+    # We should delete all segments if we're going to create more!
+    deleted = TranscriptionSegment.objects.filter(parent=aft).delete()
 
     try:
         file_path, tmp_stor_dir, tmp_file, absolute_directory = \
@@ -79,7 +82,7 @@ def create_and_return_transcription_segments(aft):
         start = segment[0]
         end = segment[1]
 
-        ts = TranscriptionSegment.objects.create(
+        ts, created = TranscriptionSegment.objects.get_or_create(
             start=start,
             end=end,
             parent=aft)
