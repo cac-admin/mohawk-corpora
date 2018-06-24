@@ -8,6 +8,9 @@ from corpus.models import Recording
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
+from django.utils import timezone
+import datetime
+
 from django.core.files import File
 import wave
 import contextlib
@@ -90,6 +93,11 @@ def transcode_all_audio():
     logger.debug('Found {0} recordings to encode.'.format(len(recordings)))
     count = 0
     message = []
+
+    if settings.DEBUG:
+        # We're in a dev env so no point transcoding old stuff
+        t = timezone.now() - datetime.timedelta(days=1)
+        recordings = recordings.filter(created__gte=t)
 
     for recording in recordings:
         logger.debug('Encoding {0}.'.format(recording))
