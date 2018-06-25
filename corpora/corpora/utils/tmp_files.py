@@ -10,12 +10,12 @@ import logging
 logger = logging.getLogger('corpora')
 
 
-def get_file_url(f):
+def get_file_url(f, expires=60):
     s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
                       settings.AWS_SECRET_ACCESS_KEY_S3,
                       is_secure=True)
     # Create a URL valid for 60 seconds.
-    return s3.generate_url(60, 'GET',
+    return s3.generate_url(expires, 'GET',
                            bucket=settings.AWS_STORAGE_BUCKET_NAME,
                            key=f.name)
 

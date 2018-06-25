@@ -1,5 +1,5 @@
 {% extends 'transcription/base.html' %}
-{% load static sekizai_tags compress i18n time_filters %}
+{% load static sekizai_tags compress i18n time_filters file_access %}
 
 
 {% block content %}
@@ -49,8 +49,8 @@
 
   <div class=" audio" >
     <audio controls="">
-      <source src="{{aft.audio_file_aac.url}}" type="audio/m4a" />
-      <source src="{{aft.audio_file.url}}" />
+      <source src="{{aft.audio_file_aac|access_url}}" type="audio/m4a" />
+      <source src="{{aft.audio_file|access_url}}" />
     </audio>
   </div>
 
