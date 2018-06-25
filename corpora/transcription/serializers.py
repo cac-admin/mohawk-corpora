@@ -68,7 +68,7 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         return get_person(self.context['request'])
         # return validated_data
 
-    def validate_audio_file(self, validated_data):
-        if validated_data is None:
-            raise ValidationError('A file is required')
-        return validated_data
+    # def validate_audio_file(self, validated_data):
+    #     if validated_data is None:
+    #         raise ValidationError('A file is required')
+    #     return validated_data

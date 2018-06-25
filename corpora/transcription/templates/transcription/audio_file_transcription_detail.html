@@ -18,12 +18,19 @@
 
 <div class="container-fluid">
   <div class="topbar">
-    <div class="name" contenteditable="true" 
-         x-data-field="name"
-         x-data-model="audio_file_transcription"
-         x-data-id="{{aft.pk}}"><h2>{{aft.name}}</h2>
+    <div>
+      <div class="row align-items-center">
+        <div class="col">
+          <h4 class="name" contenteditable="true" 
+                   x-data-field="name"
+                   x-data-model="audio_file_transcription"
+                   x-data-id="{{aft.pk}}">{{aft.name}}
+          </h4>
+        </div>  
+      </div>
     </div>
   </div>
+
 
   <div class="row">
     <div class="col segments">
@@ -63,6 +70,37 @@
 {% addtoblock "js-end" %}
 <script type="text/javascript">
 
+class AudioFileTranscriptionEditor{
+  constructor(){
+    var self=this
+    $('[x-data-model="audio_file_transcription"]').each(function(index,element){
+      $(element).on('blur', function(event){
+        self.save(event.target)
+      })
+    })
+  }
+
+  save(element){
+    var formData = new FormData();
+    var id = element.attributes['x-data-id'].value
+    var field = element.attributes['x-data-field'].value
+    var url = '/api/transcription/'+id+'/'
+    formData.append(field, $.trim($(element).text()))
+    formData.enctype = "multipart/form-data"
+    $.ajax({
+      url: url,
+      data: formData,
+      type: "PUT",
+      cache: false,
+      contentType: false,
+      processData: false,      
+    }).done(function(){
+      console.log('Saved')
+    })
+  }
+}
+
+var aftEditor = new AudioFileTranscriptionEditor()
 
 class TranscriptionSegmentEditor{
   constructor(){

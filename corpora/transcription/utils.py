@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import, unicode_literals
+from celery import shared_task
 
 from corpora.utils.tmp_files import prepare_temporary_environment
 from transcription.models import \
-    TranscriptionSegment
+    TranscriptionSegment, AudioFileTranscription
 
 from subprocess import Popen, PIPE
 
@@ -89,3 +90,20 @@ def create_and_return_transcription_segments(aft):
 
         ts_segments.append(ts)
     return ts_segments
+
+
+@shared_task
+def compile_aft(aft_pk):
+    aft = AudioFileTranscription.objects.get(pk=aft_pk)
+    ts = TranscriptionSegment.objects\
+        .filter(parent=aft)\
+        .order_by('start')
+
+    transcriptions = []
+    for t in ts:
+        if t.corrected_text:
+            transcriptions.append(t.corrected_text.strip())
+
+    aft.transcription = " ".join(transcriptions)
+
+    aft.save()

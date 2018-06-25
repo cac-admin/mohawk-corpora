@@ -8,6 +8,13 @@ from transcription.models import \
 from transcription.transcribe import \
     transcribe_segment_async, transcribe_aft_async
 
+from transcription.utils import \
+    compile_aft
+
+from corpora.celery import app
+
+from django.core.cache import cache
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -56,6 +63,30 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     if hasattr(instance, 'audio_file_wav'):
         if instance.audio_file_wav:
             instance.audio_file_wav.delete(False)
+
+
+@receiver(signals.post_save, sender=TranscriptionSegment)
+def compile_parent_transcription(
+        sender, instance, created, **kwargs):
+
+    key = 'aft_compile-{0}'.format(instance.parent.pk)
+    task_id = key
+    delay = 5
+    run = False
+    old_task_id = cache.get(key)
+
+    if old_task_id is None:
+        run = True
+        cache.set(key, task_id, delay)
+    else:
+        if old_task_id != task_id:
+            app.control.revoke(old_task_id)
+            run = True
+    if run:
+        compile_aft.apply_async(
+            args=[instance.parent.pk],
+            task_id=key,
+            countdown=5)
 
 
 # ### SERIOUS ISSUE ###

@@ -143,7 +143,7 @@ class AudioFileTranscriptionPermissions(permissions.BasePermission):
             # return request.user.is_staff
         else:
             # Anyone can post a transcription
-            if request.method in ['POST']:
+            if request.method in ['POST', 'PUT']:
                 return request.user.is_authenticated
 
         return False
