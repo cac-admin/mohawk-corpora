@@ -17,7 +17,7 @@ def get_file_url(f):
     # Create a URL valid for 60 seconds.
     return s3.generate_url(60, 'GET',
                            bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                           key=kwargs['filepath'])
+                           key=f.name)
 
 
 def prepare_temporary_environment(model, test=False):
