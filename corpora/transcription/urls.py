@@ -2,10 +2,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import url, include
 
 from transcription.views.views import \
-    TranscribeView, AudioFileTranscriptionView, AudioFileTranscriptionListView
+    TranscribeView, AudioFileTranscriptionView, \
+    AudioFileTranscriptionListView, DashboardView
 
 urlpatterns = [
 
+    url(
+        _(r'^dashboard/'),
+        DashboardView.as_view(),
+        name='dashboard'),
 
     url(
         _(r'^transcriptions/(?P<pk>[0-9]+)'),

@@ -60,34 +60,3 @@ div.topbar{
 
   box-shadow: 0px -2px 4px 1px black;
 }
-
-div.add_file{
-  position: absolute;
-  bottom: 0px;
-  right: 0;
-  margin-bottom: 30px;
-  margin-right: 30px;
-  display: block;
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  font-size: 36px;
-  text-align: center;
-  color: white;
-  background-color: rgba($brand_dark,1);
-  vertical-align: middle;
-  box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .5);
-  i{
-    vertical-align: middle;
-  }
-  svg{
-    vertical-align: middle;
-  }
-}
-
-
-div.add_file:hover{
-  cursor: pointer;
-  background-color: $brand_primary;
-}
-

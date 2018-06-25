@@ -4,11 +4,8 @@ try:
 except ImportError:
     pass
 
+from corpora.base_settings import *
 from corpus.base_settings import *
 from people.base_settings import *
-from corpora.base_settings import *
-
-from transcriptions.base_settings import *
-
-# Site ID for Reo API
-SITE_ID = 2
+from transcription.base_settings import *
+from reo_api.base_settings import *

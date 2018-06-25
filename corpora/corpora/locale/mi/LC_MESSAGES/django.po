@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-24 15:49+1200\n"
+"POT-Creation-Date: 2018-06-26 09:42+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgid ""
 "<br>All content collected at %(site)s falls under the %(license)s License."
 msgstr ""
 
-#: corpora/templates/corpora/footer.html:72 corpora/views/views.py:49
+#: corpora/templates/corpora/footer.html:72 corpora/views/views.py:55
 msgid "Privacy Policy"
 msgstr ""
 
@@ -256,22 +256,22 @@ msgstr "E kore koe e āhei ki te titiro ki ēnei kōrero"
 msgid "You must sign in to edit your info."
 msgstr "Me matua tomo mai koe ka taea ai te whakarerekē i ō kōrero."
 
-#: corpora/views/views.py:34
+#: corpora/views/views.py:40
 msgid ""
 "Kōrero Māori is teaching computers indigenous languages.                "
 "We've created an open sourced web app to help indigenous                "
 "communities strealine their work in language revitalisation."
 msgstr ""
 
-#: corpora/views/views.py:50
+#: corpora/views/views.py:56
 msgid "Privacy policy for this website."
 msgstr ""
 
-#: corpora/views/views.py:72
+#: corpora/views/views.py:78
 msgid "Rules"
 msgstr ""
 
-#: corpora/views/views.py:73
+#: corpora/views/views.py:79
 msgid "Rules for our competitions."
 msgstr ""
 

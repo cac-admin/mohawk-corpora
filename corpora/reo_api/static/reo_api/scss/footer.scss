@@ -1,0 +1,41 @@
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+@import '_colors';
+
+
+
+.footer .container{
+
+	// background-color: #eee;
+	padding: 30px;
+	
+	margin-top: 15px;
+	border-radius: 5px;
+	color: $brand_darker;
+	h4{
+		color: $brand_darkest;
+		font-size: 1.2em;
+	}
+
+
+	p{
+		margin-bottom: 8px;
+	}
+
+	a{
+		color: $brand_darker;
+	}
+	a:hover{
+		color: $brand_primary;
+	}
+
+
+	.copyright{
+		text-align: right;
+		// font-size: .8em;
+		flex-grow: 2;
+		// align-self: flex-end;
+	}
+
+}

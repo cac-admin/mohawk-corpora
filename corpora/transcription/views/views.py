@@ -52,6 +52,14 @@ logger = logging.getLogger('corpora')
 # def record_redirect(request):
 #     return redirect(reverse('corpus:record'))
 
+class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
+    x_description = _('Reo API Dashboard')
+    x_title = _('Dashboard')
+    template_name = "transcription/dashboard.html"
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
 
 class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Tryout our new transcription demo!')

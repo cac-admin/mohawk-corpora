@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -144,12 +145,18 @@ class AudioFileTranscription(models.Model):
     name = models.CharField(
         max_length=512,
         blank=True,
-        null=True)
+        null=True,
+        help_text=_(
+            'Name for your audio file. If this is not provided, \
+            your file name will be used.'))
 
     audio_file = models.FileField(
         upload_to=upload_directory,
         null=True,
-        blank=False)
+        blank=False,
+        help_text=_('\
+            Supported file extensions include\
+            .aac, .mp3, .wav, .aiff, and .m4a. '))
 
     # audio_file_aac = models.FileField(
     #     upload_to=upload_directory,
@@ -166,7 +173,10 @@ class AudioFileTranscription(models.Model):
     uploaded_by = models.ForeignKey(
         'people.Person',
         null=True,
-        blank=True)
+        blank=True,
+        help_text=_('\
+            A Person ID. This field is populated automatically if\
+            not provided.'))
 
     updated = models.DateTimeField(auto_now=True)
 

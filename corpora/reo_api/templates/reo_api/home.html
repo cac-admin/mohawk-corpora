@@ -1,0 +1,125 @@
+{% extends 'reo_api/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load i18n %}
+
+
+{% block header %}
+<div class="container">
+
+<div class="xnav">
+  <div class="xnav-item brand"><a class="xnavbar-brand" href="/">{{site.name}}</a></div>
+
+    <div class="xnav-item">
+      <a href="#api" class="xnav-link" >
+        {% trans 'API' %}<small> [beta]</small>
+      </a>
+    </div>
+
+    <div class="xnav-item">
+      <a href="#transcribe" class="xnav-link" >
+        {% trans 'Transcriptions' %}
+      </a>
+    </div>
+
+    <div class="xnav-item">
+      <a href="/docs" class="xnav-link" >
+        {% trans 'Docs' %}
+      </a>
+    </div>    
+
+  {% if request.user.is_authenticated %}
+    <div class="xnav-item">
+      <a class="xnav-link" href="/dashboard" >
+        {% trans 'Dashboard' %}
+      </a>        
+    </div>
+  {% else %}
+    <div class="xnav-item">
+      <a class="xnav-link" href="{% url 'account_login' %}" >
+        Sign In
+      </a>        
+    </div>  
+  {% endif %}
+
+
+
+  </div>
+</div>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'reo_api/scss/home.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+
+  <div class="jumbotron">
+    <div class="container"><div class="row">
+      <div class="col">
+        <h1 >{% blocktrans %}Indigenous language tools powered by machine learning.{% endblocktrans %}</h1>
+      </div>
+    </div></div>
+  </div>
+
+
+  <div class="announcement ">
+    <h1><a href="/signup">Sign Up</a></h1>
+    <p>Play around with the API and start building your next te reo Māori application. Usage is free while 
+    we're still working on improving machine accuracy.</p>
+  </div>
+
+
+  <div class="announcement ">
+    <h1 id="api">API <small>[beta]</small></h1>
+    <p>Leverage the power of speech recognition and build the next generation of te reo Māori applications.
+      Our API provides basic speech recognition at a 20% word error rate. 
+    </p>
+    <p><a href="{% url 'account_signup' %}">Sign up</a> today and start using the api.</p>
+    <img src="{% static 'reo_api/img/api.jpg' %}" />
+
+  </div>
+
+
+
+  <div class="announcement ">
+    <h1 id="transcribe">Transcribe. Fast!</h1>
+    <p>Use our Transcription Tool to speed up the time it takes to transcribe audio. Our tools automagically cut long form audio for captioning,
+    and you can download captions for use in your audio and video production.</p>
+    <img src="{% static 'reo_api/img/transcribe_tool.jpg' %}" />
+  </div>
+
+  <div class="announcement ">
+    <h1>Calling all Developers</h1>
+    <p><a href="mailto:support@tehiku.nz">Get in touch</a> if you're looking to build embedded applications with our language tools.</p>
+  </div>
+
+
+
+
+</div>
+
+{% addtoblock "js" %}
+{% endaddtoblock %}
+{% endblock %}
+
+{% block footer %}
+{% include 'reo_api/footer.html' %}
+{% endblock %}

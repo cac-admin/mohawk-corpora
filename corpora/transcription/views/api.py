@@ -168,7 +168,18 @@ class AudioFileTranscriptionPermissions(permissions.BasePermission):
 
 class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Audio File Transcriptions to be viewed or edited.
+    API endpoint that allows Audio File Transcriptions (AFT) to be viewed or edited.
+
+    retrieve:
+    Return an AFT object.
+
+    list:
+    Return a list of all AFT objects.
+
+    create:
+    Create an AFT.
+
+
     """
 
     queryset = AudioFileTranscription.objects.all()

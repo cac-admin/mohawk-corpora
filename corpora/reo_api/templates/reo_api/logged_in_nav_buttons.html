@@ -52,6 +52,24 @@ flex-wrap: wrap;
         <div >{% trans 'Transcriptions' %}</div>
       </a>
     </li>
+
+    {% with '/api' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-signature"></i>
+        <div >{% trans 'API' %}</div>
+      </a>
+    </li>
+    {% endwith %}
+
+    {% with '/docs' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-signature"></i>
+        <div >{% trans 'Documentation' %}</div>
+      </a>
+    </li>
+    {% endwith %}
   
 <!--     {% url 'reo_tools:api' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
@@ -77,7 +95,7 @@ flex-wrap: wrap;
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a class="nav-link" href="{{path}}" >
         <i class="fas fa-lg fa-fw fa-user-circle"></i>
-        <div >{% trans 'Profile' %}</div>
+        <div >{% trans 'Account' %}</div>
       </a>
     </li>
 
@@ -86,7 +104,7 @@ flex-wrap: wrap;
     <li class="nav-item">
       <a class="nav-link" href="/admin" >
         <i class="fas fa-lg fa-fw fa-cog"></i>
-        <div>{% trans 'Admin' %}</div>
+        <div>{% trans 'Settings' %}</div>
       </a>
     </li>
     {% endif %}
