@@ -11,7 +11,7 @@ register = template.Library()
 def access_url(file):
     '''Takes a file object and returns the s3 signed url'''
     if file:
-        if 'http' in file.path:
+        if 'http' in file.url:
             return get_file_url(file, expires=60*60)
         else:
             return file.url
