@@ -36,6 +36,9 @@
 		// font-size: .8em;
 		flex-grow: 2;
 		// align-self: flex-end;
+		@include media-breakpoint-down(sm) {
+			font-size: .9em;
+		}		
 	}
 
 }

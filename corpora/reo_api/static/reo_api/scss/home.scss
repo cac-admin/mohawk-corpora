@@ -15,6 +15,15 @@
 		font-size: 7em;
 		font-weight: 900;
 		// text-shadow: 2px 2px 0px white;
+		@include media-breakpoint-down(md) {
+			font-size: 5em;
+		}
+		@include media-breakpoint-down(sm) {
+			font-size: 3.5em;
+		}      
+		@include media-breakpoint-down(xs) {
+			font-size: 2.5em;
+		}  
 	}
 
 }
@@ -23,6 +32,11 @@
 .announcement{
 	color: $brand_darkest;
 	padding: 47px 15px;
+
+	@include media-breakpoint-down(sm) {
+		padding: 20px 5px;
+	}
+
 	h1{
 		font-weight: 700;
 		a{
@@ -31,6 +45,9 @@
 		a:hover{
 			color: $brand;
 		}
+		@include media-breakpoint-down(sm) {
+			font-size: 1.4em;
+		}		
 	}
 	p{
 		font-size: 1.3em;
@@ -39,5 +56,9 @@
 		width: 100%;
 		border-radius: 8px;
 		border: 1px solid #ddd;
+		@include media-breakpoint-down(sm) {
+			border-radius: 4px;
+		} 		
 	}
+
 }

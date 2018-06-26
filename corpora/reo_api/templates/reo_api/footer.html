@@ -34,11 +34,13 @@
       <p><a href="https://www.djangoproject.com/">Django</a></p>
     </div>
   
-    <div class="col-auto copyright" >
-      {% now "Y" as current_year %}
-      {% blocktrans %}Copyright &copy; 2017 - {{current_year}}<br><b>Te Reo Irirangi o Te Hiku o Te Ika</b>.<br><small>All content collected at {{site}} falls under the {{license}} License.{% endblocktrans %}</small>
-      <br>
-      <a href=" ">{% trans 'Privacy Policy'%}</a>
+    <div class="col " >
+      <div class="copyright">
+        {% now "Y" as current_year %}
+        {% blocktrans %}Copyright &copy; 2017 - {{current_year}}<br><b>Te Reo Irirangi o Te Hiku o Te Ika</b>.<br><small>All content collected at {{site}} falls under the {{license}} License.{% endblocktrans %}</small>
+        <br>
+        <a href=" ">{% trans 'Privacy Policy'%}</a>
+      </div>
     </div>
 
 
