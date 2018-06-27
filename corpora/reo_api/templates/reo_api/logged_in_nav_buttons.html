@@ -48,7 +48,7 @@ flex-wrap: wrap;
     {% url 'transcription:transcription_list' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-signature"></i>
+        <i class="fas fa-lg fa-pen-alt"></i>
         <div >{% trans 'Transcriptions' %}</div>
       </a>
     </li>
@@ -56,7 +56,7 @@ flex-wrap: wrap;
     {% with '/api' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-signature"></i>
+        <i class="fas fa-lg fa-code"></i>
         <div >{% trans 'API' %}</div>
       </a>
     </li>
@@ -65,7 +65,7 @@ flex-wrap: wrap;
     {% with '/docs' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-signature"></i>
+        <i class="fas fa-lg fa-book"></i>
         <div >{% trans 'Documentation' %}</div>
       </a>
     </li>
