@@ -67,13 +67,14 @@ class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
     template_name = "transcription/transcribe_demo.html"
 
     def test_func(self):
+        return self.request.user.is_authenticated
 
-        key = self.request.GET.get('key', '')
+        # key = self.request.GET.get('key', '')
 
-        if key == '720031ba-4db3-11e8-88f9-8c8590055544':
-            return True
+        # if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+        #     return True
 
-        return self.request.user.is_staff
+        # return self.request.user.is_staff
 
 
 class AudioFileTranscriptionView(
@@ -83,6 +84,7 @@ class AudioFileTranscriptionView(
     template_name = 'transcription/audio_file_transcription_detail.html'
 
     def test_func(self):
+        return self.request.user.is_authenticated
 
         key = self.request.GET.get('key', '')
 
@@ -111,6 +113,7 @@ class AudioFileTranscriptionListView(
     template_name = 'transcription/audio_file_transcription_list.html'
 
     def test_func(self):
+        return self.request.user.is_authenticated
 
         key = self.request.GET.get('key', '')
 
@@ -118,4 +121,3 @@ class AudioFileTranscriptionListView(
             return True
 
         return self.request.user.is_staff
-
