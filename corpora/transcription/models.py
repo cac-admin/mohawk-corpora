@@ -179,6 +179,7 @@ class AudioFileTranscription(models.Model):
             not provided.'))
 
     updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
 
     def clean(self):
         if self.audio_file:

@@ -8,6 +8,10 @@ from transcription.models import \
 
 from subprocess import Popen, PIPE
 
+
+# from wahi_korero import DefaultSegmenter
+
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -33,20 +37,31 @@ def dummy_segmenter(audio_file_path):
     time = 0
     while (time + MAX_DURATION) < duration:
         dt = MAX_DURATION + time
-        segments.append((time, dt))
+        segments.append({
+            'start': time,
+            'end': dt,
+            'duration': MAX_DURATION})
         logger.debug("{0:04.2f}, {1:04.2f}".format(time, dt))
         time = time + MAX_DURATION
 
-    segments.append((time, duration))
+    segments.append({
+            'start': time,
+            'end': duration,
+            'duration': MAX_DURATION})
 
     if len(segments) > 1:
         last_chunk = segments[-1]
-        if last_chunk[1] - last_chunk[0] < MIN_DURATION:
+        if last_chunk['end'] - last_chunk['start'] < MIN_DURATION:
             segments.pop()
             segments.pop()
-            segments.append((time-MAX_DURATION, duration))
-        time, dt = segments[-1]
-        logger.debug("{0:04.2f}, {1:04.2f}".format(time, dt))
+            segments.append({
+                'start': time-MAX_DURATION,
+                'end': duration,
+                'duration': MAX_DURATION
+            })
+
+        tt = segments[-1]
+        logger.debug("{0:04.2f}, {1:04.2f}".format(tt['start'], tt['end']))
 
     return segments
 
@@ -75,13 +90,24 @@ def create_and_return_transcription_segments(aft):
         logger.debug('ERROR: {0}'.format(e))
         raise ValueError("{0}".format(e))
 
+
+    # segmenter = DefaultSegmenter()
+    # # segmenter.enableCaptioning(3, 8)
+    # # segmenter.segmentAudio(file_path, tmp_stor_dir)  # save output to "path/to/output"
+    # seg_data, audio_files = segmenter.segmentAudio(file_path)  # return output to user
+
+    # logger.debug(seg_data)
+    # logger.debug(audio_files)
+
+    # segments = seg_data['segments']
+
     segments = dummy_segmenter(tmp_file)
 
     ts_segments = []
     for segment in segments:
 
-        start = segment[0]
-        end = segment[1]
+        start = segment['start']
+        end = segment['end']
 
         ts, created = TranscriptionSegment.objects.get_or_create(
             start=start,

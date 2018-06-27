@@ -143,7 +143,7 @@ class AudioFileTranscriptionPermissions(permissions.BasePermission):
             # return request.user.is_staff
         else:
             # Anyone can post a transcription
-            if request.method in ['POST', 'PUT']:
+            if request.method in ['POST', 'PUT', 'DELETE']:
                 return request.user.is_authenticated
 
         return False
@@ -158,7 +158,7 @@ class AudioFileTranscriptionPermissions(permissions.BasePermission):
                 # Allow people to get their own TS objects.
                 return person == obj.uploaded_by
         else:
-            if request.method in ['PUT']:
+            if request.method in ['PUT', 'DELETE']:
                 if request.user.is_staff:
                     return True
                 if person is not None:

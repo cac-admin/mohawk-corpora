@@ -79,19 +79,25 @@ class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
 
 class AudioFileTranscriptionView(
         SiteInfoMixin, UserPassesTestMixin, DetailView):
+    x_description = _('Edit your transcription.')
+    x_title = _('Edit Transcription')
     model = AudioFileTranscription
     context_object_name = 'aft'
     template_name = 'transcription/audio_file_transcription_detail.html'
 
     def test_func(self):
-        return self.request.user.is_authenticated
+        person = get_person(self.request)
+        aft = self.get_object()
 
-        key = self.request.GET.get('key', '')
-
-        if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+        if self.request.user.is_staff:
             return True
+        else:
+            return person == aft.uploaded_by
 
-        return self.request.user.is_staff
+    def get_object(self, queryset=None):
+        aft = super(AudioFileTranscriptionView, self).get_object(queryset)
+        self.x_title = 'Edit: {0}'.format(aft.name)
+        return aft
 
     def get_context_data(self, **kwargs):
         context = super(
@@ -108,9 +114,18 @@ class AudioFileTranscriptionView(
 
 class AudioFileTranscriptionListView(
         SiteInfoMixin, UserPassesTestMixin, ListView):
+    x_description = _('List of your transcriptions.')
+    x_title = _('Transcriptions')
     model = AudioFileTranscription
     context_object_name = 'transcriptions'
     template_name = 'transcription/audio_file_transcription_list.html'
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        qs = AudioFileTranscription.objects\
+            .filter(uploaded_by=person)\
+            .order_by('-created')
+        return qs
 
     def test_func(self):
         return self.request.user.is_authenticated

@@ -13,10 +13,6 @@ div.content{
   padding-top: 8vh;
 }
 
-.table tbody tr:hover{
-  cursor: pointer;
-}
-
 div.col.viewport div.viewport{
   overflow-y: scroll;
 }
@@ -74,11 +70,14 @@ div.add_file{
   font-size: 36px;
   text-align: center;
   color: white;
-  background-color: rgba($brand_dark,1);
+  background-color: $brand_primary;
   vertical-align: middle;
-  box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .5);
-  i{
+  box-shadow: 2px 2px 8px 0px rgba($brand_darkest, .5);
+  a{
+    color: white;
+    i{
     vertical-align: middle;
+    }
   }
   svg{
     vertical-align: middle;
@@ -88,6 +87,11 @@ div.add_file{
 
 div.add_file:hover{
   cursor: pointer;
-  background-color: $brand_primary;
+}
+
+div.add_file:active{
+  margin-bottom: 29px;
+  margin-right: 29px;
+  box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .5);  
 }
 
