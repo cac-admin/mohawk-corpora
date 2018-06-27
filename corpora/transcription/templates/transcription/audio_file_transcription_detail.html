@@ -8,11 +8,7 @@
 <link href="{% static 'transcription/scss/transcription_editor.scss' %}" rel="stylesheet" type="text/x-scss" />
 {% endaddtoblock %}
 
-{% addtoblock "css" %}
-<style type="text/x-scss">
 
-</style>
-{% endaddtoblock %}
   
 
 
@@ -30,6 +26,17 @@
       </div>
     </div>
   </div>
+
+
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+
+
+</style>
+{% endaddtoblock %}
+
 
 
   <div class="row">
@@ -54,11 +61,33 @@
     </div>
   </div>
 
+
+
+
+
   <div class=" audio" >
+    <div class="player">
+      <div class="previous"><i class="far fa-step-backward fa-fw"></i></div>
+      <div class="play"><i class="fas fa-play fa-fw"></i></div>
+      <div class="next"><i class="far fa-step-forward fa-fw"></i></div>
+      <div class="time"><span>00:00</span></div>
+      <div class="progress">
+        <div class="position"></div>
+      </div>
+      <div class="duration"><span>00:00</span></div>
+      <div class="link"><i class="far fa-link fa-fw" data-fa-transform="rotate-45"></i></div>
+        <!-- <div class="next">0.5x</div> -->
+    </div>
+
+
     <audio controls="">
       <source src="{{aft.audio_file_aac|access_url}}" type="audio/m4a" />
       <source src="{{aft.audio_file|access_url}}" />
     </audio>
+
+
+
+
   </div>
 
 

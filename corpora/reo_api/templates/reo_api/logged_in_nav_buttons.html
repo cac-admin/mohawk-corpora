@@ -39,8 +39,15 @@ flex-wrap: wrap;
 {% endcomment %}
 
 <nav class="nav">
-  <a class="nav-brand" href="/">{{request.site.name}}</a>
+  <!-- <a class="nav-brand" href="/">{{request.site.name}}</a> -->
   
+  {% with '/dashboard' as path %}
+    <a href="{{path}}" class="nav-brand" >
+      <i class="fas fa-lg fa-home fa-fw"></i><br>
+      <div >{% trans 'Dashboard' %}</div>
+    </a>
+  {% endwith %}
+
   {% get_available_languages as available_languages %}
 
   <ul class="nav flex-column">
@@ -48,7 +55,7 @@ flex-wrap: wrap;
     {% url 'transcription:transcription_list' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-pen-alt"></i>
+        <i class="fas fa-lg fa-pen-alt fa-fw"></i>
         <div >{% trans 'Transcriptions' %}</div>
       </a>
     </li>
@@ -56,7 +63,7 @@ flex-wrap: wrap;
     {% with '/api' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-code"></i>
+        <i class="fas fa-lg fa-code fa-fw"></i>
         <div >{% trans 'API' %}</div>
       </a>
     </li>
@@ -65,8 +72,8 @@ flex-wrap: wrap;
     {% with '/docs' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-book"></i>
-        <div >{% trans 'Documentation' %}</div>
+        <i class="fas fa-lg fa-book fa-fw"></i>
+        <div >{% trans 'Docs' %}</div>
       </a>
     </li>
     {% endwith %}
@@ -91,13 +98,13 @@ flex-wrap: wrap;
 
 
     
-    {% url 'people:profile' as path %}
+<!--     {% url 'people:profile' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a class="nav-link" href="{{path}}" >
         <i class="fas fa-lg fa-fw fa-user-circle"></i>
         <div >{% trans 'Account' %}</div>
       </a>
-    </li>
+    </li> -->
 
 
     {% if request.user.is_staff %}

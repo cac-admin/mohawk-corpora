@@ -27,6 +27,7 @@ class AudioFileTranscriptionEditor{
           'Delete',
           function(){
             self.delete(event.delegateTarget)
+            return true;
           })
       })
     })

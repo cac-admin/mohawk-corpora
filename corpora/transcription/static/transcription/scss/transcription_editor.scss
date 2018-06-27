@@ -8,10 +8,42 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 
-div.content{
-  /*padding: 60px 0px 60px 0px;*/
-  padding-top: 88px;
+
+
+div.player{
+  background-color: rgba(black, .7);
+  color: white;
+  padding: 15px;
+  // font-size: 2em;
+  display: flex;
+  flex-direction: row;
+  height: 64px;
+  div{
+    height: 100%;
+    flex-grow: 0;
+    padding: 0px 15px;
+    svg{
+      height: 100%;
+    }
+  }
+  div.progress{
+    flex-grow: 1;
+    padding: 0px;
+    border: 1px solid #ddd;
+    .position{
+      background-color: rgba(black, .9);
+      height: 100%;
+      width: 33%;
+    }
+  }
+  span{
+    font-size: 12px;
+    font-family: sans-serif;
+    line-height: 34px;
+  }
+  
 }
+
 
 div.topbar{
   position: absolute;

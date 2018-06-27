@@ -9,7 +9,7 @@ from transcription.models import \
 from subprocess import Popen, PIPE
 
 
-# from wahi_korero import DefaultSegmenter
+from wahi_korero import default_segmenter
 
 
 import logging
@@ -66,6 +66,14 @@ def dummy_segmenter(audio_file_path):
     return segments
 
 
+def wahi_korero_segmenter(file_path):
+    segmenter = default_segmenter()
+    segmenter.enable_captioning(300)
+    seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
+
+    return seg_data
+
+
 def create_transcription_segments_admin(aft):
     try:
         ts = create_and_return_transcription_segments(aft)
@@ -100,6 +108,8 @@ def create_and_return_transcription_segments(aft):
     # logger.debug(audio_files)
 
     # segments = seg_data['segments']
+
+    # segments = wahi_korero_segmenter(tmp_file)
 
     segments = dummy_segmenter(tmp_file)
 
