@@ -59,11 +59,12 @@ def parse_sphinx_transcription(lines):
     return text
 
 
-
 def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
     # api_url = "https://waha-tuhi.dragonfly.nz/transcribe"
-    API_URL = "http://waha-tuhi-api-15.dragonfly.nz/transcribe"
+    # DeepSpeech: http://waha-tuhi-api-17.dragonfly.nz
+    API_URL = "http://waha-tuhi-api-17.dragonfly.nz/transcribe"
     if continuous:
+        pass  # not available with deepspeech
         API_URL = "http://waha-tuhi-api-15.dragonfly.nz/transcribe_continuous"
 
     # the file_object could be in memory for small files and a temp file for
