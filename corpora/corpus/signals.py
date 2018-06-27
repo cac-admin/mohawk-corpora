@@ -224,9 +224,9 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
             pass
 
 
-@receiver(models.signals.post_save, sender=Recording)
-def transcode_audio_when_wav_version_created(
-        sender, instance, created, **kwargs):
-    if instance.audio_file_wav:
-        if not instance.sentence_text:
-            transcribe_audio_task.apply_async(args=[instance.id])
+# @receiver(models.signals.post_save, sender=Recording)
+# def transcribe_audio_when_wav_version_created(
+#         sender, instance, created, **kwargs):
+#     if instance.audio_file_wav:
+#         if not instance.sentence_text:
+#             transcribe_audio_task.apply_async(args=[instance.id])

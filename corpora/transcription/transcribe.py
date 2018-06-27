@@ -65,7 +65,7 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
     API_URL = "http://waha-tuhi-api-17.dragonfly.nz/transcribe"
     if continuous:
         pass  # not available with deepspeech
-        API_URL = "http://waha-tuhi-api-15.dragonfly.nz/transcribe_continuous"
+        # API_URL = "http://waha-tuhi-api-15.dragonfly.nz/transcribe_continuous"
 
     # the file_object could be in memory for small files and a temp file for
     # large files. we need to handle this. currently assuming small files
@@ -79,7 +79,8 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
 
     headers = {
         'x-api-token': settings.TRANSCODE_API_TOKEN,
-        'content-type': 'audio/x-wav'
+        'content-type': 'audio/x-wav',
+        'Accept': 'application/json',
     }
 
     logger.debug(u'Sending request to {0}'.format(API_URL))
@@ -110,13 +111,13 @@ def transcribe_audio(recording, file_object):
 
     file_object.open()
     p = Popen(
-        ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1', '-f', 's16le', '-'],
+        ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1',  '-'],  # '-f', 's16le',
         stdin=PIPE, stdout=PIPE)
 
     output, errors = p.communicate(file_object.read())
     file_object.close()
 
-    result2 = transcribe_audio_sphinx(output, continuous=True)
+    # result2 = transcribe_audio_sphinx(output, continuous=True)
     result = transcribe_audio_sphinx(output)
 
     recording.sentence_text = result['transcription'].strip()
