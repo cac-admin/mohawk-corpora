@@ -13,17 +13,14 @@
 
 
 <div class="container-fluid">
+
   <div class="topbar">
     <div>
-      <div class="row align-items-center">
-        <div class="col">
-          <h4 class="name" contenteditable="true" 
-                   x-data-field="name"
-                   x-data-model="audio_file_transcription"
-                   x-data-id="{{aft.pk}}">{{aft.name}}
-          </h4>
-        </div>  
-      </div>
+      <h4 class="name" contenteditable="true" 
+               x-data-field="name"
+               x-data-model="audio_file_transcription"
+               x-data-id="{{aft.pk}}">{{aft.name}}
+      </h4>
     </div>
   </div>
 
@@ -67,9 +64,10 @@
 
   <div class=" audio" >
     <div class="player">
-      <div class="previous"><i class="far fa-step-backward fa-fw"></i></div>
-      <div class="play"><i class="fas fa-play fa-fw"></i></div>
-      <div class="next"><i class="far fa-step-forward fa-fw"></i></div>
+      <!-- <div class="previous"><i class="far fa-step-backward fa-fw"></i></div> -->
+      <div class="play"><i class="far fa-play fa-fw play"></i></div>
+      <div class="pause"><i class="far fa-pause fa-fw pause"></i></div>
+      <!-- <div class="next"><i class="far fa-step-forward fa-fw"></i></div> -->
       <div class="time"><span>00:00</span></div>
       <div class="progress">
         <div class="position"></div>
@@ -99,6 +97,98 @@
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+
+
+
+class CaptionPlayer{
+  constructor(){
+    var self=this;
+    this.audioElm = $('.audio audio')[0];  
+    this.player = $('div.player');
+
+
+    $(self.player).find('.play, .pause').on('click', function(event){
+      self.toggle_play()
+    })
+
+    $(self.player).find('.progress').on('click', function(event){
+      console.log('hello')
+      var durPercent = (event.pageX - $(event.delegateTarget).offset().left)/$(event.delegateTarget).outerWidth();
+      console.log(durPercent)
+      var time = durPercent * self.audioElm.duration
+      self.audioElm.currentTime = time;
+    })
+
+
+    $(self.audioElm).on('canplay', function(){
+      $(self.player).find('.duration span').text(self.get_time_display(self.audioElm.duration))
+    });
+
+    $(self.audioElm).on('play', function(){
+      self.toggle_play_button();
+    });
+
+    $(self.audioElm).on('pause',function(){
+      self.toggle_play_button();
+    });
+
+    $(self.audioElm).on('timeupdate', function(){
+      self.update_progress();
+      $(self.player).find('.time span').text(self.get_time_display(self.audioElm.currentTime))
+    });
+
+  }
+
+  get_time_display(d){
+    var h = parseInt(d/60/60)
+    var m = parseInt((d - h*60*60 )/60)
+    var s = parseInt(d - h*60*60 - m*60)
+    if (h>0){
+      var time = `${('000'+h).slice(-2)}:${('000'+m).slice(-2)}:${('000'+s).slice(-2)}`;
+    } else{
+      var time = `${('000'+m).slice(-2)}:${('000'+s).slice(-2)}`;
+    }
+    return time
+  }
+
+  toggle_play_button(){
+    var self=this;
+    if (self.audioElm.paused){
+      console.log('pause')
+      $(self.player).find('.play').show()
+      $(self.player).find('.pause').hide()
+    } else{
+            console.log('play')
+
+      $(self.player).find('.play').hide()
+      $(self.player).find('.pause').show()
+    }
+
+  }
+
+  toggle_play(){
+    var self=this;
+    if (self.audioElm.paused){
+      self.audioElm.play()
+    } else{
+      self.audioElm.pause()
+    }
+
+  }
+
+  update_progress(){
+    var self=this;
+    var prog = self.audioElm.currentTime / self.audioElm.duration * 100
+    $(self.player).find('.progress .position').css('width', `${prog}%`)
+  }
+
+
+}
+
+var capPlayer = new CaptionPlayer();
+
+
+
 
 {% include 'transcription/js/audioFileTranscriptionEditor.js' %}
 
@@ -171,7 +261,7 @@ class TranscriptionPlayer{
     this.audioElm = $('.audio audio')[0];  
     this.offset 
     this.fixed_offset = -300;
-    this.link_play = false;
+    this.link_play = true;
     var self = this
 
     document.addEventListener('keydown', function(event) {
