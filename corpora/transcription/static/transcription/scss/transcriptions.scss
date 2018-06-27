@@ -14,12 +14,19 @@ div.content{
 
 div.col.viewport div.viewport{
   overflow-y: scroll;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;   
 }
 
 .viewport div.container-fluid > div.row > div.col{
   padding: 0px;
+  
 }
 
+.table-responsive{
+  overflow-x: visible;
+}
 
 tr{
 

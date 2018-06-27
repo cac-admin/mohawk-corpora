@@ -14,7 +14,7 @@ div.col.viewport div.viewport{
 }
 
 div.player{
-  background-color: rgba(black, .6);
+  background-color: rgba($brand_darkest, .7);
   color: white;
   padding: 15px;
   // font-size: 2em;
@@ -41,7 +41,7 @@ div.player{
     z-index: 2;
     // background: none;
     .position{
-      background-color: rgba(black, .8);
+      background-color: rgba($brand_darkest, .9);
       height: 100%;
       width: 0%;
       padding: 0px;
@@ -64,14 +64,17 @@ div.topbar{
   position: absolute;
   top: 0;
   left: 0;
+  text-align: center;
 
+  .name{
+    padding: 10px;
+    margin: 5px 30px;
+    display: inline-block;
+    @include media-breakpoint-down(xs) {
+      margin-left: 45px;
+    }
+  }    
 
-        .name{
-          padding: 10px;
-          margin: 5px 0px;
-          display: inline-block;
-        }    
-      
     
   box-shadow: 0px -2px 4px 1px black;
 }
@@ -81,7 +84,7 @@ div.audio{
   bottom: 0px;
   left: 0;
   width: 100%;
-
+  background-color: white;
   audio{
     display: none;
   }

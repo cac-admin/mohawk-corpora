@@ -11,7 +11,7 @@ div.dashboard > div.row > div.col{
 }
 
 div.col.panel{
-	z-index: 1000;
+  	z-index: 1000;
     -ms-flex: 0 0 200px;
     flex: 0 0 200px;
     @include media-breakpoint-down(md) {
@@ -26,14 +26,71 @@ div.col.panel{
 	    -ms-flex: 0 0 50px;
 	    flex: 0 0 50px;
 	    width: 0%;
+
     }
     div.panel{
 		height: 100vh;
-		background-color: #fff;
+		background-color: $brand_darker;
 		border-right: 1px solid $brand_darkest;
 		box-shadow: 0px 0px 1px 0px rgba(black, .5);
 	}
 }
+
+
+div.col.panel{
+  > div.collapse-button{
+    display: none;
+  }
+  @include media-breakpoint-down(xs) {
+    margin-left: -50px;
+    position: relative;
+    transition: margin ease-out 0.15s;
+    > div.collapse-button{
+      display: block;
+      height: 51px;
+      padding: 14px 2px 6px 0px;
+      border-radius: 4px;
+      background-color: white;
+      color: $brand_darkest;      
+
+      border: 1px solid $brand_darkest;
+      box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .2);
+      position: absolute;
+      top: 0px;
+      left: 32px;
+      padding-left: 10px;
+      margin: 0px 0px 10px 7px;
+      z-index: -1;      
+      // display: flex;
+
+      display: flex;
+      .fa-chevron-right{
+        display: none;
+      }
+      .fa-chevron-left{
+        display: inherit;
+      }
+
+    }
+    >div.collapse-button.active{
+      display: flex;
+      background-color: $brand_darker;
+      color: white;
+      .fa-chevron-right{
+        display: inherit;
+      }
+      .fa-chevron-left{
+        display: none;
+      }
+    }
+  }
+}
+div.col.panel.active{
+      @include media-breakpoint-down(xs) {
+      margin-left: 0px;
+    }
+}
+
 
 
 div.col.viewport{
@@ -49,10 +106,10 @@ div.col.viewport{
 
 .nav{
     a{
-    	color: $brand_darkest;
+    	color: $brand_lightest;
     }
     a:hover{
-    	color: $brand_darkest;
+    	color: $brand_lightest;
     }	
 
     ul{
@@ -64,16 +121,16 @@ div.col.viewport{
     }
 
     .nav-brand{
-      font-size: 1.1em;
+      font-size: 1.0em;
       width: 100%;
       padding: 15px 10px;
       border-bottom: 1px solid $brand_darkest;
       text-align: center;
-      background-color: $brand_darkest;
+      background-color: $brand_darker;
       box-shadow: -3px -2px 4px 1px black;
       color: white;
       @include media-breakpoint-down(sm) {
-        font-size: .9em;
+        font-size: .85em;
       }
       @include media-breakpoint-down(xs) {
         div{
@@ -83,15 +140,15 @@ div.col.viewport{
       
     }
 	a.nav-brand:hover{
-    	color: $brand_primary;
+    	// color: $brand_primary;
 	  }
 
     // background-color: $brand_primary;
-	.nav-item:hover{
-		background-color: #eee;
+	.nav-item:hover, .nav-brand:hover{
+		background-color: darken($brand_darker, 10%);
 	}
-	.nav-item.active{
-		background-color: $brand_primary;
+	.nav-item.active, .nav-brand.active{
+		background-color: $brand_dark;
 		// border-right: 3px solid white;
 		a{
 			color: white !important;

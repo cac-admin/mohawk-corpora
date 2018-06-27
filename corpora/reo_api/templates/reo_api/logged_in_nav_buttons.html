@@ -4,32 +4,8 @@
 {% endaddtoblock %}
 {% addtoblock "css" %}
 <style type="text/x-scss">
-  a{
-    color: white;
-  }
 
-/*
-.navbar{
-flex-wrap: wrap;
-  ul{
-   
-    flex-wrap: wrap;
-    li{
-      width: 100%;
-      text-align: left;
-    }
-    li.active{
-      border-bottom: 2px solid white;
-    }
-  }
-    a{
-        color: white;
-    }
-}
-.dropdown-toggle::after{
-  display: none !important;
-}
-*/
+
 </style>
 {% endaddtoblock %}
 
@@ -42,7 +18,7 @@ flex-wrap: wrap;
   <!-- <a class="nav-brand" href="/">{{request.site.name}}</a> -->
   
   {% with '/dashboard' as path %}
-    <a href="{{path}}" class="nav-brand" >
+    <a href="{{path}}" class="nav-brand {% if path in request.get_full_path %}active{% endif %}" >
       <i class="fas fa-lg fa-home fa-fw"></i><br>
       <div >{% trans 'Dashboard' %}</div>
     </a>

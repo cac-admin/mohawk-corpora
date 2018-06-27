@@ -54,7 +54,11 @@
       <div class="col panel">
         <div class="panel">
           {% block navbuttons %}{% endblock %}
-        </div>      
+        </div> 
+        <div class="collapse-button active">
+          <i class="fa fa-fw fa-chevron-right fa-lg"></i>
+          <i class="fa fa-fw fa-chevron-left fa-lg"></i>
+        </div>     
       </div>
       <div class="col viewport">
         <div class="viewport">
@@ -64,7 +68,25 @@
     </div>
   </div>
   
-  
+  {% addtoblock 'js-end' %}
+
+  <script type="text/javascript">
+    
+    $('.collapse-button').on('click', function(event){
+      var elm = event.delegateTarget;
+      if ($(elm).hasClass('active')){
+        $(elm).removeClass('active')
+        $(elm.parentNode).addClass('active')
+      } else{
+        $(elm).addClass('active')
+        $(elm.parentNode).removeClass('active')
+      }
+    })
+
+
+  </script>
+
+  {% endaddtoblock %}
 
   {# Uses sekizai to load all js at end of page #}
   
