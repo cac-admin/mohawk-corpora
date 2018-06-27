@@ -201,7 +201,8 @@ def transcribe_segment(ts):
 
     if result['success']:
 
-        ts.text = parse_sphinx_transcription(result['transcription'])
+        # ts.text = parse_sphinx_transcription(result['transcription'])
+        ts.text = result['transcription'].strip()
         ts.transcriber_log = result
         # Get or create a source for the API
         source, created = Source.objects.get_or_create(
