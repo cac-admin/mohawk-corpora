@@ -43,12 +43,12 @@
 <script type="text/javascript">
 
 
-$('button#record, pulse').on('mousedown touchdown', function(event){
+$('button#record, pulse').on('mousedown touchstart', function(event){
 	$(event.delegateTarget).addClass('active')
 	$('.pulse').addClass('active')
 })
 
-$('button#record, pulse').on('mouseup touchup blur mouseexit', function(event){
+$('button#record, pulse').on('mouseup touchend touchcancel blur mouseexit', function(event){
 	$(event.delegateTarget).removeClass('active')
 	$('.pulse').removeClass('active')
 })
@@ -91,7 +91,7 @@ if (Recorder.isRecordingSupported()){
 
 
 	
-	$("button#record").on( 'mousedown touchdown', function(){
+	$("button#record").on( 'mousedown touchstart', function(){
 		console.log('start')
 		rec = new Recorder({
 			encoderPath: encoderPath,
@@ -156,7 +156,7 @@ if (Recorder.isRecordingSupported()){
 
 		}
 
-		$("button#record").on('mouseup touchup mouseexit blur', function(){
+		$("button#record").on('mouseup touchend touchcancel mouseexit blur', function(){
 			console.log('Stopped')
 			rec.pause();
 			rec.stop();
