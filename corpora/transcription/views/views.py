@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext as _
 
@@ -62,11 +63,12 @@ class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
 
 
 class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
-    x_description = _('Tryout our new transcription demo!')
-    x_title = _('Transcribe Demo')
-    template_name = "transcription/transcribe_demo.html"
+    x_description = _('Try the speech recognizer!')
+    x_title = _('Kōrero Demo')
+    template_name = "transcription/speak.html"
 
     def test_func(self):
+
         return self.request.user.is_authenticated
 
         # key = self.request.GET.get('key', '')

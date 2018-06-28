@@ -11,6 +11,8 @@ from rest_framework import viewsets, permissions, pagination
 from people.helpers import get_person
 from django.core.cache import cache
 
+from corpus.views.api import TenResultPagination
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -75,7 +77,14 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
     queryset = Transcription.objects.all()
     serializer_class = TranscriptionSerializer
     permission_classes = (TranscriptionPermissions,)
-    # pagination_class = TenResultPagination
+    pagination_class = TenResultPagination
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        queryset = AudioFileTranscription.objects\
+            .filter(uploaded_by=person)
+
+        return queryset
 
 
 class TranscriptionSegmentPermissions(permissions.BasePermission):
@@ -86,32 +95,31 @@ class TranscriptionSegmentPermissions(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            # TODO: Allow people to get a list of THEIR transcriptions.
-            self.message = _("Only staff can read transcription lists.")
-            return request.user.is_staff
-        else:
-            # Anyone can post a transcription
-            if request.method in ['PUT']:
-                return True
-        self.message = _("Reading transcription lists not allowed.")
-        return False
-
-    def has_object_permission(self, request, view, obj):
         person = get_person(request)
-
         if request.method in permissions.SAFE_METHODS:
             if request.user.is_staff:
                 return True
             elif person is not None:
-                # Allow people to get their own TS objects.
-                return person == obj.recording.person
+                return request.user.is_authenticated
+            return False
+        else:
+            if request.method in ['PUT']:
+                return request.user.is_authenticated
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        person = get_person(request)
+        if request.method in permissions.SAFE_METHODS:
+            if request.user.is_staff:
+                return True
+            elif person is not None:
+                return person == obj.parent.uploaded_by
         else:
             if request.method in ['PUT']:
                 if request.user.is_staff:
                     return True
                 if person is not None:
-                    return person == obj.recording.person
+                    return person == obj.parent.uploaded_by
         return False
 
 
@@ -123,7 +131,16 @@ class TranscriptionSegmentViewSet(viewsets.ModelViewSet):
     queryset = TranscriptionSegment.objects.all()
     serializer_class = TranscriptionSegmentSerializer
     permission_classes = (TranscriptionSegmentPermissions,)
-    # pagination_class = TenResultPagination
+    pagination_class = TenResultPagination
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        queryset = TranscriptionSegment.objects\
+            .filter(parent__uploaded_by=person)\
+            .order_by('start')\
+            .order_by('-parent__created')
+
+        return queryset
 
 
 class AudioFileTranscriptionPermissions(permissions.BasePermission):
@@ -185,6 +202,7 @@ class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
     queryset = AudioFileTranscription.objects.all()
     serializer_class = AudioFileTranscriptionSerializer
     permission_classes = (AudioFileTranscriptionPermissions,)
+    pagination_class = TenResultPagination
 
     def get_queryset(self):
         person = get_person(self.request)

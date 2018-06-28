@@ -61,12 +61,17 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AudioFileTranscription
-        fields = ('uploaded_by', 'audio_file', 'pk', 'name')
+        fields = ('uploaded_by', 'audio_file', 'pk', 'name', 'transcription')
+        read_only_fields = ('uploaded_by',)
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
         return get_person(self.context['request'])
         # return validated_data
+
+    def create(self, validated_data):
+        validated_data['uploaded_by'] = get_person(self.context['request'])
+        return super(AudioFileTranscriptionSerializer, self).create(validated_data)
 
     # def validate_audio_file(self, validated_data):
     #     if validated_data is None:

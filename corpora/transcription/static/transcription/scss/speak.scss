@@ -1,0 +1,99 @@
+@import 'corpora/css/colors';
+@import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
+@import 'people/scss/profile';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+
+.recorder{
+  text-align: center;
+
+  .size{
+    opacity: 0;
+    margin-top: 50px;
+    height: 100px;
+    width: 100px;
+    margin-bottom: 50px;
+  }
+  button#record{
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;     
+    z-index: 2;
+    display: inline-block;
+    background: rgba($brand_primary, 1);
+    color: white;
+    border: 1px solid $brand_dark;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    box-shadow: 0px 2px 8px 0px rgba($brand_darkest,.5);
+    margin-top: 50px;
+  }
+
+  svg.fa-circle{
+    color: $brand_primary;
+  }
+
+  svg{
+    height: 100%;
+  }
+
+  button#record:focus{
+    outline: none;
+  }
+
+  button#record.active{
+    box-shadow: 0px 1px 2px 0px rgba($brand_darkest,.5);
+    border: 2px solid $brand_dark;
+  }
+
+
+  .pulse {
+    display: none;
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;    
+    border-radius: 50px;
+    box-shadow: 0px 0px 5px 10px rgba($brand,1);
+    // transition: opacity 0.3s ease-in-out;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+
+    @keyframes lds-ripple {
+      0% {
+        top: 60px;
+        width: 80px;
+        height: 80px;
+        opacity: 1;
+        border-radius: 40px;
+      }
+      100% {
+        top: 40px;
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        border-radius: 60px;
+      }
+    }
+  }
+  .pulse.active{
+    display: initial;
+  }
+
+
+}

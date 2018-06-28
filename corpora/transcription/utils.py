@@ -10,7 +10,8 @@ from subprocess import Popen, PIPE
 
 
 from wahi_korero import default_segmenter
-
+import ast
+from django.core.files import File
 
 import logging
 logger = logging.getLogger('corpora')
@@ -68,6 +69,19 @@ def dummy_segmenter(audio_file_path):
 
 def wahi_korero_segmenter(file_path):
     MIN_DURATION = 3*100
+
+    p = Popen(
+        ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of',
+         'default=noprint_wrappers=1:nokey=1', file_path],
+        stdin=PIPE, stdout=PIPE)
+
+    output, errors = p.communicate()
+    duration = float(output)*100  # Milliseconds
+
+    # Don't need to do this for short recordings!
+    if duration < 10*100:
+        return dummy_segmenter(file_path)
+
     segmenter = default_segmenter()
     segmenter.enable_captioning(50)
     seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
@@ -117,31 +131,49 @@ def create_transcription_segments_admin(aft):
     return "Created {0} segments from {1}".format(len(ts), aft.name)
 
 
+def convert_audio_file_if_necessary(aft):
+    file_path, tmp_stor_dir, tmp_file, absolute_directory = \
+        prepare_temporary_environment(aft)
+
+    #  Check that audio is in the right format
+    command = [
+        'ffprobe', '-v', 'quiet', '-print_format', 'json',
+        '-show_format', '-show_streams', tmp_file]
+    p = Popen(command, stdin=PIPE, stdout=PIPE)
+    output, errors = p.communicate()
+    results = ast.literal_eval(output)
+    convert = False
+    for stream in results['streams']:
+        if stream["codec_type"] in 'audio':
+            if stream["codec_name"] not in "aac mp3 wav":
+                convert = True
+
+    if convert:
+        new_file = '.'.join(tmp_file.split('.')[:-1]) + '.m4a'
+        logger.debug(new_file)
+        command = [
+            'ffmpeg', '-i', tmp_file, '-ar', '44100', '-ac', '1',
+            '-c:a', 'aac', new_file]
+
+        logger.debug(command)
+        p = Popen(command, stdin=PIPE, stdout=PIPE)
+        output, errors = p.communicate()
+        if not errors:
+            aft.audio_file.save(new_file.split('/').pop(), File(open(new_file)))
+            aft.save()
+            # f.close()
+
+
 def create_and_return_transcription_segments(aft):
     '''
     Creates the transcription segments from an AudioFileTranscription model.
     '''
-
+    convert_audio_file_if_necessary(aft)
     # We should delete all segments if we're going to create more!
     deleted = TranscriptionSegment.objects.filter(parent=aft).delete()
 
-    try:
-        file_path, tmp_stor_dir, tmp_file, absolute_directory = \
-            prepare_temporary_environment(aft)
-    except Exception as e:
-        logger.debug('ERROR: {0}'.format(e))
-        raise ValueError("{0}".format(e))
-
-
-    # segmenter = DefaultSegmenter()
-    # # segmenter.enableCaptioning(3, 8)
-    # # segmenter.segmentAudio(file_path, tmp_stor_dir)  # save output to "path/to/output"
-    # seg_data, audio_files = segmenter.segmentAudio(file_path)  # return output to user
-
-    # logger.debug(seg_data)
-    # logger.debug(audio_files)
-
-    # segments = seg_data['segments']
+    file_path, tmp_stor_dir, tmp_file, absolute_directory = \
+        prepare_temporary_environment(aft)
 
     segments = wahi_korero_segmenter(tmp_file)
 

@@ -36,30 +36,27 @@
       </a>
     </li>
 
-    {% url 'dashboard-api' as path %}
+    {% url 'transcription:speak' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-code fa-fw"></i>
-        <div >{% trans 'API' %}</div>
+        <i class="fas fa-lg fa-microphone-alt fa-fw"></i>
+        <div >{% trans 'Speak Demo' %}</div>
       </a>
     </li>
 
-    {% url 'dashboard-docs' as path %}
-    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
-      <a href="{{path}}" class="nav-link" >
+    <li class="nav-item ">
+      <a href="/api" class="nav-link" >
+        <i class="fas fa-lg fa-code fa-fw"></i>
+        <div >{% trans 'Browse the API' %}</div>
+      </a>
+    </li>
+
+    <li class="nav-item ">
+      <a href="/docs" class="nav-link" >
         <i class="fas fa-lg fa-book fa-fw"></i>
         <div >{% trans 'Docs' %}</div>
       </a>
     </li>
-  
-<!--     {% url 'reo_tools:api' as path %}
-    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
-      <a href="{{path}}" class="nav-link" >
-        <i class="fas fa-lg fa-fw fa-file-code"></i>
-        <div >{% trans 'API' %}</div>
-      </a>
-    </li> -->
-
 
 
 

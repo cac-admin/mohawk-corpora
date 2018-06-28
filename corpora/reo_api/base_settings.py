@@ -10,3 +10,5 @@ LANGUAGE_CODE = 'en'
 
 
 LOGIN_REDIRECT_URL = "/dashboard"
+
+X_FRAME_OPTIONS = 'ALLOW-FROM koreromaori.com koreromaori.io dev.koreromaori.com dev.koreromaori.io corporalocal.io'

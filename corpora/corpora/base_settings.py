@@ -202,7 +202,7 @@ SOCIALACCOUNT_PROVIDERS = \
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 
@@ -265,7 +265,7 @@ BOWER_INSTALLED_APPS = {
     'jquery',
     'jquery-ui',
     'bootstrap',
-    'opus-recorderjs#v4.1.0',
+    'opus-recorderjs#v4.1.4',
     'components-font-awesome#^4.7.0',
     'js-cookie',
     'popper.js',

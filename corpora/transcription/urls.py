@@ -23,6 +23,9 @@ urlpatterns = [
         name='transcription_list'),
 
 
-    url(_(r'^transcribe/'), TranscribeView.as_view(), name='transcribe'),
+    url(
+        _(r'^speak/'),
+        TranscribeView.as_view(),
+        name='speak'),
 
 ]

@@ -33,29 +33,36 @@ def prepare_temporary_environment(model, test=False):
     else:
         file_path = settings.MEDIA_ROOT + file.name
 
-    tmp_stor_dir = \
-        '/tmp/' + settings.PROJECT_NAME + '/files/' + \
-        str(model.__class__.__name__) + str(model.pk)
+    tmp_stor_dir = os.path.join(
+        '/tmp',
+        "{0}_files".format(settings.PROJECT_NAME),
+        str(model.__class__.__name__)+str(model.pk))
 
-    if not os.path.exists(tmp_stor_dir):
-        os.makedirs(tmp_stor_dir)
-        os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+    paths = [
+        '/tmp/{0}_files'.format(settings.PROJECT_NAME),
+        tmp_stor_dir]
+
+    for path in paths:
+        try:
+            os.makedirs(path)
+        except OSError as e:
+            es = "{0}".format(str(e))
+            if 'file exists' in es.lower():
+                continue
+            else:
+                raise e
+        os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
                  stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
                  stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
-        logger.debug('Created: ' + os.path.abspath(tmp_stor_dir))
-    else:
-        logger.debug('Exists: ' + os.path.abspath(tmp_stor_dir))
 
-    tmp_file = tmp_stor_dir+'/'+file.name.split('/')[-1].replace(' ', '')
+    tmp_file = os.path.join(
+        tmp_stor_dir,
+        file.name.split('/')[-1].replace(' ', ''))
 
     if os.path.exists(tmp_file):
         # Ensure permissions are correct.
-        os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
-                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
-        os.chmod(tmp_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
-                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
+        os.chmod(tmp_file, stat.S_IRUSR | stat.S_IWUSR |
+                 stat.S_IRGRP | stat.S_IROTH)
         return file_path, tmp_stor_dir, tmp_file, absolute_directory
 
     # Will just replace file since we only doing one encode.
@@ -64,9 +71,7 @@ def prepare_temporary_environment(model, test=False):
         code = 'wget "'+url+'" -O ' + tmp_file
     else:
         code = "cp '%s' '%s'" % (file_path, tmp_file)
-    logger.debug(code)
     result = commands.getstatusoutput(code)
-    logger.debug(result[0])
 
     try:
         logger.debug(result[1])

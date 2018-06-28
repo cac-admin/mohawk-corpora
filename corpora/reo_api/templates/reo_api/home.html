@@ -10,17 +10,17 @@
 <div class="container">
 
 <div class="xnav">
-  <div class="xnav-item brand"><a class="xnavbar-brand" href="/">{{site.name}}</a></div>
+  <div class="xnav-item brand"><a class="xnavbar-brand" href="/">{{site.name}} <small>[beta]</small></a></div>
 
     <div class="xnav-item">
-      <a href="#api" class="xnav-link" >
-        {% trans 'API' %}<small> [beta]</small>
+      <a href="#transcribe" class="xnav-link" >
+        {% trans 'Transcribe' %}
       </a>
     </div>
 
     <div class="xnav-item">
-      <a href="#transcribe" class="xnav-link" >
-        {% trans 'Transcriptions' %}
+      <a href="#api" class="xnav-link" >
+        {% trans 'API' %}
       </a>
     </div>
 
@@ -88,28 +88,39 @@
 
 
   <div class="announcement ">
+    <h1 id="transcribe">Transcribe. Fast!</h1>
+    <p>Use our Transcription Tool <small>[beta]</small> to speed up the time it takes to transcribe te reo Māori recordings. Our tools automagically cut long form audio for captioning, and you can download captions for use in your production workflow.</p>
+    <img src="{% static 'reo_api/img/transcribe_tool.jpg' %}" />
+  </div>
+
+  <div class="announcement ">
     <h1 id="api">API <small>[beta]</small></h1>
     <p>Leverage the power of speech recognition and build the next generation of te reo Māori applications.
-      Our API provides basic speech recognition at a 10% word error rate. 
+      Our API provides basic speech recognition at a ~15% word error rate. 
     </p>
     <p><a href="{% url 'account_signup' %}">Sign up</a> today and start using the api.</p>
     <img src="{% static 'reo_api/img/api.jpg' %}" />
 
   </div>
 
-
-
-  <div class="announcement ">
-    <h1 id="transcribe">Transcribe. Fast!</h1>
-    <p>Use our Transcription Tool to speed up the time it takes to transcribe audio. Our tools automagically cut long form audio for captioning,
-    and you can download captions for use in your audio and video production.</p>
-    <img src="{% static 'reo_api/img/transcribe_tool.jpg' %}" />
-  </div>
-
   <div class="announcement ">
     <h1>Calling all Developers</h1>
-    <p><a href="mailto:support@tehiku.nz">Get in touch</a> if you're looking to build embedded applications with our language tools.</p>
+    <p><a href="mailto:support@tehiku.nz">Get in touch</a> if you're looking to build embedded applications with our language tools.
+    </p>
   </div>
+
+  <div class="announcement ">
+    <h1>Guardianship. Not ownership.</h1>
+    <p>All of the data collected at <a href="https://{{site.domain}}">{{site.domain}}</a> and our sister site
+     <a href="https://koreromaori.com">koreromaori.com</a> is collected under our <a href="https://github.com/TeHikuMedia/corpora#license-kaitiakitanga">Kaitiakitanga License</a>. 
+      Indigenous people do not have a concept of private ownership of land and resources, that's a Western
+      Contrust by which many of us are required to abide. We see ourselves as the caretakers of
+      our environment and society. Likewise, when we gather data to improve our services, we're taking care of the data given 
+      to us, and we follow tikanga (cultural protocols) when we need to make decisions around using data or providing access
+      to data.
+    </p>
+  </div>
+
 
 
 
