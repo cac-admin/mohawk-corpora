@@ -41,7 +41,7 @@ def dummy_segmenter(audio_file_path):
             'start': time,
             'end': dt,
             'duration': MAX_DURATION})
-        logger.debug("{0:04.2f}, {1:04.2f}".format(time, dt))
+        logger.debug("{0:04.2f}, {1:04.2f}".format(time/100, dt/100))
         time = time + MAX_DURATION
 
     segments.append({
@@ -61,7 +61,7 @@ def dummy_segmenter(audio_file_path):
             })
 
         tt = segments[-1]
-        logger.debug("{0:04.2f}, {1:04.2f}".format(tt['start'], tt['end']))
+        logger.debug("{0:04.2f}, {1:04.2f}".format(tt['start']/100, tt['end']/100))
 
     return segments
 
@@ -69,25 +69,37 @@ def dummy_segmenter(audio_file_path):
 def wahi_korero_segmenter(file_path):
     MIN_DURATION = 3*100
     segmenter = default_segmenter()
-    segmenter.enable_captioning(100)
+    segmenter.enable_captioning(50)
     seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
     segs = seg_data['segments']
     logger.debug(segs)
 
     captioned_for_real = []
-    end=None
-    while len(segs)>0:
+    end = None
+    while segs:
         seg = segs.pop(0)
         if end:
             start = end
         else:
             start = float(seg['start'])*100
         d = float(seg['duration'])*100
-        while d < MIN_DURATION:
-            seg = segs.pop(0)
-            d = d + float(seg['duration'])*100
+
+        while abs(int(d/100)) < int(MIN_DURATION/100):
+            if segs:
+                seg = segs.pop(0)
+                d = d + float(seg['duration'])*100
+            else:
+                logger.debug('MOVING BACKWARDS')
+                new_seg = captioned_for_real.pop()
+                end = float(seg['end'])*100
+                start = new_seg['start']
+                d = end - start
+                logger.debug("SEG:\t{0: 5.1f} {1: 5.1f}".format(start, end))
+                logger.debug("DUR:\t{0: 3.1f}".format(d))
+
         end = start + d
-        captioned_for_real.append({'start': start, 'end': end})
+        captioned_for_real.append({'start': start, 'end': end, 'duration': d})
+        logger.debug(("SEG:\t{0: 6.1f} {1: 4.1f}").format(start/100, d/100))
 
     # for seg in segs:
     #     seg['start'] = float(seg['start'])*100
