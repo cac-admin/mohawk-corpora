@@ -53,6 +53,10 @@ $('button#record, pulse').on('mouseup touchend touchcancel blur mouseexit', func
 	$('.pulse').removeClass('active')
 })
 
+$('button#record .fa-microphone-alt').on('mousedown touchstart click', function(event){
+	event.preventDefault();
+})
+
 
 window.setInterval(function(){
 	$('#audioArea .row').each(function(index, element){
@@ -91,7 +95,8 @@ if (Recorder.isRecordingSupported()){
 
 
 	
-	$("button#record").on( 'mousedown touchstart', function(){
+	$("button#record").on( 'mousedown touchstart', function(event){
+		event.preventDefault();
 		console.log('start')
 		rec = new Recorder({
 			encoderPath: encoderPath,
