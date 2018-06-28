@@ -24,7 +24,7 @@ div.col.panel{
     }
     @include media-breakpoint-down(xs) {
 	    -ms-flex: 0 0 50px;
-	    flex: 0 0 50px;
+	    flex: 0 0 60px;
 	    width: 0%;
 
     }
@@ -41,14 +41,13 @@ div.col.panel{
   > div.collapse-button{
     display: none;
   }
-  @include media-breakpoint-down(xs) {
-    margin-left: -50px;
+  @include media-breakpoint-down(sm) {
     position: relative;
     transition: margin ease-out 0.15s;
     > div.collapse-button{
       display: block;
-      height: 51px;
-      padding: 14px 2px 6px 0px;
+      // height: 51px;
+      padding: 5px 5px 5px 5px;
       border-radius: 4px;
       background-color: white;
       color: $brand_darkest;      
@@ -58,13 +57,12 @@ div.col.panel{
       position: absolute;
       top: 0px;
       left: 32px;
-      padding-left: 10px;
-      margin: 0px 0px 10px 7px;
+      margin: 10px 0px 10px 7px;
       z-index: -1;      
       // display: flex;
 
       display: flex;
-      .fa-chevron-right{
+      .fa-bars{
         display: none;
       }
       .fa-chevron-left{
@@ -73,10 +71,11 @@ div.col.panel{
 
     }
     >div.collapse-button.active{
+      // left: 32px;
       display: flex;
       background-color: $brand_darker;
       color: white;
-      .fa-chevron-right{
+      .fa-bars{
         display: inherit;
       }
       .fa-chevron-left{
@@ -84,9 +83,32 @@ div.col.panel{
       }
     }
   }
+
+  @include media-breakpoint-down(sm) {
+    margin-left: -150px;
+    > div.collapse-button{
+      left: 135px;
+    }
+    >div.collapse-button.active{
+      left: 155px;
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    margin-left: -60px;
+    > div.collapse-button{
+      left: 45px;
+    }
+    >div.collapse-button.active{
+      left: 65px;
+    }
+  }
+
 }
+
+
 div.col.panel.active{
-      @include media-breakpoint-down(xs) {
+      @include media-breakpoint-down(sm) {
       margin-left: 0px;
     }
 }

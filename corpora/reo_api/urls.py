@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 
-from reo_api.views import HomeView
+from reo_api.views import HomeView, DocsDashboardView, BrowseAPIDashboardView, CustomDocsView
 from django.views.generic import RedirectView
 
 
@@ -25,6 +25,14 @@ urlpatterns = [
     url(r'^$',
         HomeView.as_view(),
         name='home'),
+
+    url(r'^dash/docs$',
+        CustomDocsView.as_view(),
+        name='dashboard-docs'),
+
+    url(r'^dash/api$',
+        BrowseAPIDashboardView.as_view(),
+        name='dashboard-api'),
 
     # url(r'^privacy',
     #     cache_page(60 * 15)(

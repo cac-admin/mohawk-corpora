@@ -40,8 +40,8 @@ def prepare_temporary_environment(model, test=False):
     if not os.path.exists(tmp_stor_dir):
         os.makedirs(tmp_stor_dir)
         os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH |
-                 stat.S_IXOTH)
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
+                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
         logger.debug('Created: ' + os.path.abspath(tmp_stor_dir))
     else:
         logger.debug('Exists: ' + os.path.abspath(tmp_stor_dir))
@@ -50,9 +50,12 @@ def prepare_temporary_environment(model, test=False):
 
     if os.path.exists(tmp_file):
         # Ensure permissions are correct.
+        os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
+                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
         os.chmod(tmp_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH |
-                 stat.S_IXOTH)
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
+                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
         return file_path, tmp_stor_dir, tmp_file, absolute_directory
 
     # Will just replace file since we only doing one encode.

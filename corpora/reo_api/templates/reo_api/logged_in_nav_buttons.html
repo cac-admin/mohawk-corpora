@@ -36,23 +36,21 @@
       </a>
     </li>
 
-    {% with '/api' as path %}
+    {% url 'dashboard-api' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
         <i class="fas fa-lg fa-code fa-fw"></i>
         <div >{% trans 'API' %}</div>
       </a>
     </li>
-    {% endwith %}
 
-    {% with '/docs' as path %}
+    {% url 'dashboard-docs' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
         <i class="fas fa-lg fa-book fa-fw"></i>
         <div >{% trans 'Docs' %}</div>
       </a>
     </li>
-    {% endwith %}
   
 <!--     {% url 'reo_tools:api' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">

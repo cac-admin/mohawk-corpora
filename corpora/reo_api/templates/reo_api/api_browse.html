@@ -1,0 +1,39 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters file_access %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/dashboard.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+</style>
+{% endaddtoblock %}
+  
+
+
+<div class="container-fluid">
+  <div class="topbar">
+    <div>
+      <div class="row align-items-center">
+        <div class="col">
+          <h4 class="name" contenteditable="true" 
+                   x-data-field="name"
+                   x-data-model="audio_file_transcription"
+                   x-data-id="{{aft.pk}}">{{aft.name}}
+          </h4>
+        </div>  
+      </div>
+    </div>
+  </div>
+
+
+ 
+
+</div>
+
+{% endblock %}

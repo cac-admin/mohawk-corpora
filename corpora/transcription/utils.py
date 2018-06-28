@@ -67,11 +67,33 @@ def dummy_segmenter(audio_file_path):
 
 
 def wahi_korero_segmenter(file_path):
+    MIN_DURATION = 3*100
     segmenter = default_segmenter()
-    segmenter.enable_captioning(300)
+    segmenter.enable_captioning(100)
     seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
+    segs = seg_data['segments']
+    logger.debug(segs)
 
-    return seg_data
+    captioned_for_real = []
+    end=None
+    while len(segs)>0:
+        seg = segs.pop(0)
+        if end:
+            start = end
+        else:
+            start = float(seg['start'])*100
+        d = float(seg['duration'])*100
+        while d < MIN_DURATION:
+            seg = segs.pop(0)
+            d = d + float(seg['duration'])*100
+        end = start + d
+        captioned_for_real.append({'start': start, 'end': end})
+
+    # for seg in segs:
+    #     seg['start'] = float(seg['start'])*100
+    #     seg['end'] = float(seg['end'])*100
+    #     seg['duration'] = float(seg['duration'])*100
+    return captioned_for_real
 
 
 def create_transcription_segments_admin(aft):
@@ -109,9 +131,11 @@ def create_and_return_transcription_segments(aft):
 
     # segments = seg_data['segments']
 
-    # segments = wahi_korero_segmenter(tmp_file)
+    segments = wahi_korero_segmenter(tmp_file)
 
-    segments = dummy_segmenter(tmp_file)
+    # segments = dummy_segme   nter(tmp_file)
+
+    logger.debug(segments)
 
     ts_segments = []
     for segment in segments:
