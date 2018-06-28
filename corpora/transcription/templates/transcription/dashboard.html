@@ -5,7 +5,7 @@
 {% block content %}
 
 {% addtoblock "css" %}
-<link href="{% static 'transcription/scss/dashboard.scss' %}" rel="stylesheet" type="text/x-scss" />
+<link href="{% static 'transcription/scss/dashboard_home.scss' %}" rel="stylesheet" type="text/x-scss" />
 {% endaddtoblock %}
 
 {% addtoblock "css" %}
@@ -16,23 +16,75 @@
   
 
 
-<div class="container-fluid">
-  <div class="topbar">
-    <div>
-      <div class="row align-items-center">
-        <div class="col">
-          <h4 class="name" contenteditable="true" 
-                   x-data-field="name"
-                   x-data-model="audio_file_transcription"
-                   x-data-id="{{aft.pk}}">{{aft.name}}
-          </h4>
-        </div>  
+<div class="container-fluid main">
+
+
+<div class="row">
+  <div class="col">
+    <h1>Kia ora!</h1>
+  </div>
+</div>
+ 
+<div class="row">
+
+  <div class="col-12">
+    <div class="card" >
+      <div class="card-body">
+        <h4 class="card-title">Dashboard</h4>
+        <p class="card-text">
+        Here you'll find links to a <a href="/api">browseable, interactive API</a> that let's you test
+        the API using HTML form inputs. The <a href="/docs">Docs</a> provide examples on how to use the API
+        in python or on the command line. We have a <a href="{% url 'transcription:speak' %}">Speak Demo</a> that let's you test the
+        te reo Māori speech
+        recognition on your voice. And finally, we've built a <a href="{% url 'transcription:transcription_list'%}">Transcription Tool</a> using the
+        API to help shorten the time it takes to transcribe te reo Māori audio recordings.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card" >
+      <div class="card-body">
+        <h4 class="card-title"><i class="fal fa-pen-alt"></i> Transcriptions</h4>
+        <p  class="card-text">
+          You can manage of all the audio you upload to {{site.domain}} in the <a href="{% url 'transcription:transcription_list' %}">Transcriptions</a> panel.
+          You can also edit transcriptions, which are broken into caption-friendly segments for audio that's longer than 10 seconds. We'll add some download
+          features soon so you can download your transcriptions into useable formats such as webvtt.
+        </p>
+      </div>
+    </div>
+  </div>  
+
+
+  <div class="col">
+    <div class="card" >
+      <div class="card-body">
+        <h4 class="card-title"><i class="fal fa-microphone-alt"></i> Speak Demo</h4>
+        <p  class="card-text">Because hey, we all want to have a tutu. This is just a rough demo to let you talk and see what the computer
+        thinks you said. The demo doesn't work on all browsers or devices. We'll leave it to you amazing developers to go build some
+        native apps. </p>
+      </div>
+    </div>
+  </div>    
+
+  <div class="col">
+    <div class="card" >
+      <div class="card-body">
+        <h4 class="card-title"><i class="fal fa-code"></i> API</h4>
+        <p  class="card-text">We're releasing a very basic API so that developers can get started with te reo Māori speech recognition. If you have any feature requests
+          or come accross bugs, please file them on our <a href="https://github.com/TeHikuMedia/corpora">GitHub</a> page. {{site.domain}} is a 
+          part of our Kōrero Māori project, and we've "open sourced" this project under our Kaitiakitanga License. You can read a very early draft of that license <a href="https://github.com/TeHikuMedia/corpora#license-kaitiakitanga">here</a>. </p>
       </div>
     </div>
   </div>
 
 
- 
+
+
+
+    
+</div> 
 
 </div>
 

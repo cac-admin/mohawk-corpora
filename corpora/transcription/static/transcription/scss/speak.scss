@@ -9,6 +9,38 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 
+body{
+  color: $brand_darkest;
+}
+
+
+#audioArea{
+  padding:30px;
+
+  .row{
+    border: 1px solid rgba($brand_darkest, 0.5);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  p, audio{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);   
+  }
+
+  audio{
+    width: 100%;
+  }
+
+  p{
+    font-size: 1.2em;
+    margin-bottom: 0px;
+    margin-left: 30px;
+  }
+
+}
 
 .recorder{
   text-align: center;
@@ -94,6 +126,9 @@
   .pulse.active{
     display: initial;
   }
+
+
+
 
 
 }

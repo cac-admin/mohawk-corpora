@@ -1,0 +1,29 @@
+@import 'corpora/css/colors';
+@import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
+@import 'people/scss/profile';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+.main{
+  color: $brand_darkest;
+h1{
+  font-weight: 700;
+}
+h4{
+  font-weight: 600;
+}
+
+
+
+div[class*='col']{
+  margin-top: 30px;
+}
+
+
+}
+
