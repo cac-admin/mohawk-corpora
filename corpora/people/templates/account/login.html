@@ -8,6 +8,9 @@
 
 {% addtoblock 'css' %}
 <style type="text/x-scss">
+  body{
+  color: black;
+}
 .btn{
   /*margin-top: 0px;*/
 }
@@ -36,7 +39,8 @@ label[for=id_remember]{
 
 <div class="row"><div class="col">
   <h1>{% trans 'Sign In' %}</h1>
-  <br>
+  <p>
+  <small>You can use your same credentials for koreromaori.com and koreromaori.io.</small></p>
 </div></div>
 
   {% get_providers as socialaccount_providers %}
@@ -96,11 +100,9 @@ label[for=id_remember]{
   <h4 class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</h4>
 
   <div class="socialaccount_ballot">
-
     <ul class="socialaccount_providers">
       {% include "socialaccount/snippets/provider_list.html" with process="login" %}
     </ul>
-
   </div>
 
   <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
