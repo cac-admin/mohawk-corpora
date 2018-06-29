@@ -8,4 +8,24 @@
 {% block title %}{{x_title}}{%endblock%}
 {% block navbuttons %}
 {% include 'reo_api/logged_in_nav_buttons.html' %}
+
+
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+function calcVH() {
+    $('.panel, .viewport').innerHeight( $(this).innerHeight() );
+}
+(function($) { 
+  calcVH();
+  $(window).on('orientationchange', function() {
+    calcVH();
+  });
+})(jQuery);
+</script>
+{% endaddtoblock %}
+
+
+
 {% endblock %}
