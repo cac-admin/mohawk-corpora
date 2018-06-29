@@ -13,13 +13,36 @@
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
-
+var DEV_WIDTH = null;
+var DEV_HEIGHT = null;
 function calcVH() {
-    $('.panel, .viewport').innerHeight( $(this).innerHeight() );
+	if (DEV_HEIGHT==null){
+		DEV_HEIGHT = $(this).innerHeight();
+	}
+
+	if (DEV_WIDTH==null){
+		DEV_WIDTH = $(this).innerWidth();
+	}
+
+  	console.log( "HEIGHT: "+ DEV_WIDTH)
+  	console.log( "WIDTH:  "+ DEV_HEIGHT)
+
+  	// window.setTimeout(function(){
+    if (this.orientation==90 || this.orientation==-90){
+	    $('div.panel div.panel').innerHeight( DEV_WIDTH );
+	    $('div.viewport div.viewport').innerHeight( DEV_WIDTH );
+    } else{
+	    $('div.panel div.panel').innerHeight(DEV_HEIGHT);
+	    $('div.viewport div.viewport').innerHeight( DEV_HEIGHT );
+    }
+
+    // }, 1000)
 }
+
 (function($) { 
   calcVH();
-  $(window).on('orientationchange', function() {
+  $(window).on('orientationchange', function(event) {
+  	console.log( "ORIENT: "+ window.orientation )
     calcVH();
   });
 })(jQuery);
