@@ -79,14 +79,14 @@ var rec;
 if (Recorder.isRecordingSupported()){
 	var file_type = 'audio/ogg'
 	var encoderPath = "{% static 'bower_components/opus-recorder/dist/encoderWorker.min.js' %}"
-	if (navigator.userAgent.search('Macintosh')>0){
-		if (navigator.userAgent.search('Safari')>0){
-			if (navigator.userAgent.search('Chrome')<0){
-				encoderPath = "{% static 'bower_components/opus-recorder/dist/waveWorker.min.js' %}"
-				file_type = 'audio/wav'
-			}
+	
+	if (navigator.userAgent.search('Safari')>0){
+		if (navigator.userAgent.search('Chrome')<0){
+			encoderPath = "{% static 'bower_components/opus-recorder/dist/waveWorker.min.js' %}"
+			file_type = 'audio/wav'
 		}
 	}
+	
 
 
 
