@@ -121,10 +121,12 @@ if (Recorder.isRecordingSupported()){
 		    audioElm.src = url
 		    audioElm.controls = true
 		    audioElm.style.display='none'
+		    audioElm.preload = 'auto'
 		    $('#audioArea').append(audioDiv)
 		    $(audioDiv).find('.audio').append(audioElm)
 		    audioElm.oncanplay=function(){
 				if (audioElm.duration>1.5){
+					console.log('Posting recordings')
 					audioElm.style.display = 'initial'
 		            var fd = new FormData(document.getElementById('fileUpload'));
 		            fd.append('audio_file', dataBlob, fileName)
