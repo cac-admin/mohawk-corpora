@@ -13,6 +13,11 @@
   color: $brand_darkest;
 h1{
   font-weight: 700;
+  @include media-breakpoint-down(sm) {
+  	
+  		margin-left: 50px;
+  	
+  }
 }
 h4{
   font-weight: 600;
