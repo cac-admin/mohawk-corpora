@@ -13,6 +13,8 @@
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+
+
 var DEV_WIDTH = null;
 var DEV_HEIGHT = null;
 function calcVH() {
@@ -23,9 +25,6 @@ function calcVH() {
 	if (DEV_WIDTH==null){
 		DEV_WIDTH = $(this).innerWidth();
 	}
-
-  	console.log( "HEIGHT: "+ DEV_WIDTH)
-  	console.log( "WIDTH:  "+ DEV_HEIGHT)
 
   	// window.setTimeout(function(){
     if (this.orientation==90 || this.orientation==-90){
@@ -39,13 +38,19 @@ function calcVH() {
     // }, 1000)
 }
 
-(function($) { 
-  calcVH();
-  $(window).on('orientationchange', function(event) {
-  	console.log( "ORIENT: "+ window.orientation )
+$(window).ready(function(){
+  window.setTimeout(function(){console.log(window.orientation!==undefined)}, 1000)
+  if (window.orientation!==undefined){
+      calcVH();
+  }
+  $(window).on('orientationchange ', function(event) {
     calcVH();
   });
-})(jQuery);
+
+
+});
+
+
 </script>
 {% endaddtoblock %}
 
