@@ -9,6 +9,13 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 
+div.col.viewport div.viewport{
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	-ms-overflow-style: -ms-autohiding-scrollbar; 	
+}
+
+
 .main{
   color: $brand_darkest;
 h1{

@@ -83,13 +83,7 @@
 
 
 
-  <div class="add_file">
-    <a href="#"
-       x-data-model="audio_file_transcription"
-       x-data-action="create">
-      <i class="fal fa-plus fa-fw" ></i>
-    </a>
-  </div>
+  
 
 <!--   <div class="add_file" 
        data-toggle="modal"
@@ -134,6 +128,20 @@
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+
+var addButton = `
+<div class="add_file">
+    <a href="#"
+       x-data-model="audio_file_transcription"
+       x-data-action="create">
+      <i class="fal fa-plus fa-fw" ></i>
+    </a>
+  </div>
+`
+
+$('.dashboard').append(addButton)
+
+
 
 {% include 'transcription/js/audioFileTranscriptionEditor.js' %}
 var aftEditor = new AudioFileTranscriptionEditor()

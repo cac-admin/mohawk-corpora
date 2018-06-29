@@ -150,18 +150,18 @@ div.add_file:active{
 @include media-breakpoint-down(xs) {
 
 div.add_file{
-  margin-bottom: 20px;
-  margin-right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  font-size: 24px;
+  margin-bottom: 27px;
+  margin-right: 27px;
+  width: 54px;
+  height: 54px;
+  border-radius: 27px;
+  font-size: 33px;
   box-shadow: 2px 2px 16px 0px rgba($brand_darkest, .5);
 }
 
 div.add_file:active{
-  margin-bottom: 19px;
-  margin-right: 19px;
+  margin-bottom: 26px;
+  margin-right: 26px;
   box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .5);  
 }
 
