@@ -83,7 +83,8 @@ def wahi_korero_segmenter(file_path):
         return dummy_segmenter(file_path)
 
     segmenter = default_segmenter()
-    segmenter.enable_captioning(50)
+    segmenter.enable_captioning(
+        caption_threshold_ms=50, min_caption_len_ms=None)
     seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
     segs = seg_data['segments']
     logger.debug(segs)
