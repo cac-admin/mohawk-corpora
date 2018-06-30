@@ -135,13 +135,13 @@ if (Recorder.isRecordingSupported()){
 		    var audioElm = document.createElement('audio');
 		    audioElm.src = url
 		    audioElm.controls = true
-		    // audioElm.style.display='none'
-		    audioElm.preload = 'auto'
+		    audioElm.style.display='none'
+		    audioElm.load()
 		    $('#audioArea').prepend(audioDiv)
 		    $(audioDiv).find('.audio').append(audioElm)
 		    $(audioDiv).find('.text').append("<p class='wait'><i class='fas fa-spinner fa-spin'></i> transcribing...</p>")
 		    audioElm.oncanplay=function(){
-				if (audioElm.duration>1.5){
+				if (audioElm.duration>1){
 					console.log('Posting recordings')
 					audioElm.style.display = 'initial'
 		            var fd = new FormData(document.getElementById('fileUpload'));
