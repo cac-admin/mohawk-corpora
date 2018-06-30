@@ -253,18 +253,21 @@ def send_person_emails(frequency='weekly'):
         people = Person.objects.filter(
             **{'receive_{0}_updates'.format(frequency): True})
         for person in people:
-            try:
-                logger.debug("Sending email to {0}".format(person))
-                result = send_status_email.apply_async(
-                    args=[person.pk, frequency],
-                    countdown=counter*2,
-                    task_id='send_{1}_email-{0}-{2}'.format(
-                        person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
-                    )
-                logger.debug(result)
-                counter = counter + 1
-            except:
-                logger.debug("Email did not send for {0}".format(person))
+            email = get_email(person)
+            if email:
+                try:
+                    logger.debug("Sending email to {0}".format(person))
+                    result = send_status_email.apply_async(
+                        args=[person.pk, frequency],
+                        countdown=counter*2,
+                        task_id='send_{1}_email-{0}-{2}'.format(
+                            person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
+                        )
+                    logger.debug(result)
+                    counter = counter + 1
+                except:
+                    logger.debug("Email did not send for {0}".format(person))
+
     return "Sent {0} {1} emails.".format(counter, frequency)
 
 
@@ -336,11 +339,17 @@ def send_status_email(person_pk, frequency='weekly'):
         .order_by('-created')\
         .first()
 
+    if lastest_recording is None:
+        # User hans't even recorded anything,
+        # so no point sending emails.
+        return "Not sending status email since {0} hasn't \
+                recorded anything in a while.".format(person.pk)
+
     if lastest_recording.created < last_period_dt:
         # The user hasn't recorded anythign in ages.
         # Let's turn this off!
         return "Not sending status email since {0} hasn't \
-                recorded anything in a while.".format(person)
+                recorded anything in a while.".format(person.pk)
 
     # approval_rate =
 
