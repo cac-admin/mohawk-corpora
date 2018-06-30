@@ -115,11 +115,13 @@ if (Recorder.isRecordingSupported()){
 			console.log('data ready')
 			var dataBlob = new Blob( [data], { type: file_type } );
 			var fileName = new Date().toISOString() + ".opus";
+			var name = new Date().toISOString() 
+			name = "speak_demo_"+name
 			var url = URL.createObjectURL( dataBlob );
 			
 			var form =`
 		        <form id='fileUpload' action="/api/transcription/" method="post" enctype="multipart/form-data" style="display: none;">
-		          <input type="text" id="name" name="name" value="${fileName}" />
+		          <input type="text" id="name" name="name" value="${name}" />
 		        </form>`
 
 		    $(document.body).append($(form))
