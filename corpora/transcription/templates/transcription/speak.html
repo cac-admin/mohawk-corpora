@@ -81,7 +81,7 @@ window.setInterval(function(){
 				    }).done(function(d){
 				    	if (d['transcription']){
 					      $(textElm).find('.wait').each(function(i,e){$(e).remove()});
-					      $(textElm).append(`<p>${d['transcription']}</p>`)
+					      $(textElm).prepend(`<p>${d['transcription']}</p>`)
 					  }
 				    }).fail(function(){
 				    	console.log('auē')
@@ -135,7 +135,7 @@ if (Recorder.isRecordingSupported()){
 		    audioElm.controls = true
 		    // audioElm.style.display='none'
 		    audioElm.preload = 'auto'
-		    $('#audioArea').append(audioDiv)
+		    $('#audioArea').prepend(audioDiv)
 		    $(audioDiv).find('.audio').append(audioElm)
 		    $(audioDiv).find('.text').append("<p class='wait'><i class='fas fa-spinner fa-spin'></i> transcribing...</p>")
 		    audioElm.oncanplay=function(){
@@ -156,7 +156,7 @@ if (Recorder.isRecordingSupported()){
 				      $(audioDiv).data(data);
 				      if (data['transcription']){
 				      	$(audioDiv).find('.text .wait').each(function(i,e){$(e).remove()})
-				      	$(audioDiv).find('.text').append(`<p>${data['transcription']}</p>`)
+				      	$(audioDiv).find('.text').prepend(`<p>${data['transcription']}</p>`)
 				      }
 				      $('#fileUpload').remove()
 
