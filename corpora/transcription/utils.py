@@ -148,6 +148,8 @@ def convert_audio_file_if_necessary(aft):
         if stream["codec_type"] in 'audio':
             if stream["codec_name"] not in "aac mp3 wav":
                 convert = True
+            if stream["channels"] > 2:
+                convert = True
 
     if convert:
         new_file = '.'.join(tmp_file.split('.')[:-1]) + '.m4a'

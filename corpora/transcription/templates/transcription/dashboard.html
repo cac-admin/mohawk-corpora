@@ -19,26 +19,77 @@
 <div class="container-fluid main">
 
 
-<div class="row">
-  <div class="col">
-    <h1>Kia ora!</h1>
+  <div class="row">
+    <div class="col ">
+      <div class="title">
+      <h1>Kia ora!</h1>
+      </div>
+    </div>
   </div>
-</div>
+
  
 <div class="row">
+
+
 
   <div class="col-12">
     <div class="card" >
       <div class="card-body">
         <h4 class="card-title">Dashboard</h4>
         <p class="card-text">
-        Here you'll find links to a <a href="/api">browseable, interactive API</a> that let's you test
-        the API using HTML form inputs. The <a href="/docs">Docs</a> provide examples on how to use the API
-        in python or on the command line. We have a <a href="{% url 'transcription:speak' %}">Speak Demo</a> that let's you test the
-        te reo Māori speech
+        Here you'll find links to a <a href="/api">browseable, interactive API</a> that lets you test
+        the API. The <a href="/docs">Docs</a> provide examples on how to use the API
+        in python or on the command line using the <a href="http://www.coreapi.org/">Core API</a> tool. We have a <a href="{% url 'transcription:speak' %}">Speak Demo</a> that let's you test the te reo Māori speech
         recognition on your voice. And finally, we've built a <a href="{% url 'transcription:transcription_list'%}">Transcription Tool</a> using the
         API to help shorten the time it takes to transcribe te reo Māori audio recordings.
         </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-12 col-lg-6">
+    <div class="card" >
+      <div class="card-body">
+        <h4 class="card-title"><i class="fal fa-code"></i> API</h4>
+        <p  class="card-text">We're releasing a very basic API so that developers can get started with te reo Māori speech recognition. If you have any feature requests
+          or come accross bugs, please file them on our <a href="https://github.com/TeHikuMedia/corpora">GitHub</a> page. {{site.domain}} is a 
+          part of our Kōrero Māori project, and we've "open sourced" this project under our Kaitiakitanga License. You can read a very early draft of that license <a href="https://github.com/TeHikuMedia/corpora#license-kaitiakitanga">here</a>. </p>
+
+        <h5><b>Basic Usage</b></h5>
+        <p>Below is a simple example of posting audio to the API transcription endpoint.</p>
+        <p>
+          <code>curl -X POST -k  https://{{site.domain}}/api/transcription/ -H "Authorization: Token YOUR-UNIQUE-TOKEN" -F audio_file=@audio.mp3</code>
+          <p>
+          </p>
+          <p><code>
+{<br>
+&nbsp;&nbsp;"uploaded_by": 1,<br>
+&nbsp;&nbsp;"audio_file": "https://...3e06.mp3",<br>
+&nbsp;&nbsp;"pk": 279,<br>
+&nbsp;&nbsp;"name": null,<br>
+&nbsp;&nbsp;"transcription": ""<br>
+}</code></p>
+<p>
+The response will include a link to the file you posted as well as a private key (<code>pk</code>). Use the 
+          <code>pk</code> when making a GET request to the end point so you can get the transcription. Depending how long your audio is, it might take
+          some time to transcribe. If you want to get the transcription back in the same POST request, use the <code>?method=stream</code> key word argument.
+
+          Currently we only support audio of 10 seconds or less with <code>?method=stream</code>. 
+        </p>
+
+          
+        <h5><b>Token</b></h5>
+          <div class='token'>
+          {% if token %}
+          <p>Use your token to make calls to the API. Your requests should include the following header,
+            <code>"Authorization: Token {{token}}"</code>
+          </p>
+          {% else %}
+          <p> You'll need a token to make calls to the API. 
+            <button id="getToken">Generate Token</button>
+          </p>
+          {% endif %}
+          </div>
       </div>
     </div>
   </div>
@@ -68,24 +119,40 @@
     </div>
   </div>    
 
-  <div class="col-sm-12 col-md-12 col-lg-6">
-    <div class="card" >
-      <div class="card-body">
-        <h4 class="card-title"><i class="fal fa-code"></i> API</h4>
-        <p  class="card-text">We're releasing a very basic API so that developers can get started with te reo Māori speech recognition. If you have any feature requests
-          or come accross bugs, please file them on our <a href="https://github.com/TeHikuMedia/corpora">GitHub</a> page. {{site.domain}} is a 
-          part of our Kōrero Māori project, and we've "open sourced" this project under our Kaitiakitanga License. You can read a very early draft of that license <a href="https://github.com/TeHikuMedia/corpora#license-kaitiakitanga">here</a>. </p>
-      </div>
-    </div>
-  </div>
 
 
-
-
-
-    
 </div> 
 
 </div>
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock 'js-end' %}
+
+<script type="text/javascript">
+  
+getToken.onclick = function(){
+
+  $.ajax({
+    url: '/api/token',
+    type: 'POST'
+  }).done(function(data){
+    var elm = $('.token').get(0)
+    $(elm).find('p').remove()
+    $(elm).append(`<p>Use your token to make calls to the API. Your requests should include the following header,
+            <code>"Authorization: Token ${data['token']}"</code>
+          </p>`)
+  })
+
+
+}
+
+
+
+</script>
+
+{% endaddtoblock %}
+
+
 
 {% endblock %}

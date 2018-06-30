@@ -25,7 +25,7 @@
 			font-size: 2.8em;
 		}      
 		@include media-breakpoint-down(xs) {
-			font-size: 2.5em;
+			font-size: 2.2em;
 		}  
 	}
 	@include media-breakpoint-down(lg) {
@@ -35,10 +35,14 @@
 		padding: 42px 42px;
 	}
 	@include media-breakpoint-down(sm) {
-		padding: 32px 32px;
+		padding: 15px 15px;
+		margin-top: 15px;
+		margin-bottom: 15px;		
 	}      
 	@include media-breakpoint-down(xs) {
-		padding: 18px 18px;
+		padding: 10px 0px;
+		margin-top: 15px;
+		margin-bottom: 15px;
 	} 	
 
 }

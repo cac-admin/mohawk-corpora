@@ -12,6 +12,8 @@ from rest_framework.response import Response
 
 from corpus.serializers import RecordingSerializer, QualityControRelatedField
 
+from transcription.transcribe import transcribe_audio_quick
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -70,7 +72,20 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         # return validated_data
 
     def create(self, validated_data):
-        validated_data['uploaded_by'] = get_person(self.context['request'])
+        request = self.context['request']
+        validated_data['uploaded_by'] = get_person(request)
+
+        method = request.GET.get('method', '')
+        if 'stream' in method:
+            logger.debug(type(validated_data['audio_file']))
+            result = transcribe_audio_quick(validated_data['audio_file'])
+            text = result['transcription'].strip()
+            validated_data['transcription'] = text
+
+        if 'name' not in validated_data.keys():
+            fname = validated_data['audio_file'].name
+            validated_data['name'] = ''.join(fname.split('.')[:-1])
+
         return super(AudioFileTranscriptionSerializer, self).create(validated_data)
 
     # def validate_audio_file(self, validated_data):

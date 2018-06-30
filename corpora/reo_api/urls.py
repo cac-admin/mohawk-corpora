@@ -7,7 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 
-from reo_api.views import HomeView, DocsDashboardView, BrowseAPIDashboardView
+from reo_api.views import (
+    HomeView, DocsDashboardView, BrowseAPIDashboardView, TokenView)
+
 from django.views.generic import RedirectView
 
 
@@ -88,6 +90,8 @@ docs_patterns = router.urls
 urlpatterns += [
 
     # url(r'^api/sentences/$', corpus_api.SentencesView.as_view()),
+    url(r'^api/token', TokenView.as_view()),
+
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include(
         'rest_framework.urls',

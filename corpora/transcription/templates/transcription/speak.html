@@ -11,6 +11,19 @@
 
 <div class="container-fluid">
 
+  <div class="row">
+  	<div class="col ">
+  		<div class="title">
+  		<h1>Speak Demo</h1>
+	  	</div>
+  	</div>
+  </div>
+
+  <div class="row">
+  	<div class="col ">
+  		<p style="margin: 15px 0px;">Press and hold the big red button to talk.</p>
+  	</div>
+  </div>
 
   <div class="row">
   	<div class="col " id="audioArea">
@@ -59,13 +72,17 @@ window.setInterval(function(){
 		var id = $(element).data('pk');
 		var textElm = $(element).find('.text').get(0)
 		if (id){
-			if ( $(textElm).text() == "" ){
+			if ( $(textElm).find('.wait').length > 0 ){
+					console.log('check')
+
 					$.ajax({
 				        url: '/api/transcription/'+id+'/',
 				        type: 'GET',
 				    }).done(function(d){
-				      $(textElm).text(d['transcription'])
-				      // $(element).data('transcription', d['transcription'])
+				    	if (d['transcription']){
+					      $(textElm).find('.wait').each(function(i,e){$(e).remove()});
+					      $(textElm).append(`<p>${d['transcription']}</p>`)
+					  }
 				    }).fail(function(){
 				    	console.log('auē')
 				    });
@@ -86,10 +103,6 @@ if (Recorder.isRecordingSupported()){
 			file_type = 'audio/wav'
 		}
 	}
-	
-
-
-
 	
 	$("button#record").on( 'mousedown touchstart', function(event){
 		event.preventDefault();
@@ -114,7 +127,7 @@ if (Recorder.isRecordingSupported()){
 		    var audioDiv=$(`
 		    	<div class="row">
 		    	  <div class="col-12 col-sm-6 col-md-5 audio"></div>
-		    	  <div class="col-12 col-sm-6 col-md-7"><p class="text"></p></div>
+		    	  <div class="col-12 col-sm-6 col-md-7 text"></div>
 		    	</div>`)
 
 		    var audioElm = document.createElement('audio');
@@ -124,6 +137,7 @@ if (Recorder.isRecordingSupported()){
 		    audioElm.preload = 'auto'
 		    $('#audioArea').append(audioDiv)
 		    $(audioDiv).find('.audio').append(audioElm)
+		    $(audioDiv).find('.text').append("<p class='wait'><i class='fas fa-spinner fa-spin'></i> transcribing...</p>")
 		    audioElm.oncanplay=function(){
 				if (audioElm.duration>1.5){
 					console.log('Posting recordings')
@@ -131,7 +145,7 @@ if (Recorder.isRecordingSupported()){
 		            var fd = new FormData(document.getElementById('fileUpload'));
 		            fd.append('audio_file', dataBlob, fileName)
 				    $.ajax({
-				        url: '/api/transcription/',
+				        url: '/api/transcription/?method=stream',
 				        type: 'POST',
 				        data: fd,
 				        cache: false,
@@ -140,6 +154,10 @@ if (Recorder.isRecordingSupported()){
 				    }).done(function(data){
 				      // console.log(data)
 				      $(audioDiv).data(data);
+				      if (data['transcription']){
+				      	$(audioDiv).find('.text .wait').each(function(i,e){$(e).remove()})
+				      	$(audioDiv).find('.text').append(`<p>${data['transcription']}</p>`)
+				      }
 				      $('#fileUpload').remove()
 
 				    }).fail(function(){

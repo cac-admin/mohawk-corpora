@@ -7,8 +7,9 @@ from django.template.context import RequestContext
 from django.forms import modelform_factory
 from django.http import HttpResponse
 from django.urls import reverse, resolve
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 import json
+
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
@@ -38,6 +39,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 from transcription.models import AudioFileTranscription, TranscriptionSegment
 
+from rest_framework.authtoken.models import Token
+from people.views.stats_views import JSONResponseMixin
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -53,6 +57,7 @@ logger = logging.getLogger('corpora')
 # def record_redirect(request):
 #     return redirect(reverse('corpus:record'))
 
+
 class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
@@ -60,6 +65,19 @@ class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
 
     def test_func(self):
         return self.request.user.is_authenticated
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            DashboardView, self).get_context_data(**kwargs)
+        person = get_person(self.request)
+
+        try:
+            token = Token.objects.get(user=person.user)
+            context['token'] = token.key
+        except ObjectDoesNotExist:
+            pass
+
+        return context
 
 
 class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):

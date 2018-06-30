@@ -122,6 +122,16 @@ div.col.viewport{
 		background-color: white;
 		overflow-y: hidden;
 		overflow-x: scroll;
+
+    .title{
+      border-bottom: 2px solid black;
+      text-align: center;
+      h1{
+        font-weight: 700;
+      }
+    }
+
+
 	}
 
 }

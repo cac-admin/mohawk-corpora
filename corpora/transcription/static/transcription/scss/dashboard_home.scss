@@ -15,15 +15,15 @@ div.col.viewport div.viewport{
 	-ms-overflow-style: -ms-autohiding-scrollbar; 	
 }
 
+div[class*='col-']{
+  margin-top: 30px;
+}
 
 .main{
   color: $brand_darkest;
 h1{
   font-weight: 700;
   @include media-breakpoint-down(sm) {
-  	
-  		margin-left: 50px;
-  	
   }
 }
 h4{
@@ -32,9 +32,7 @@ h4{
 
 
 
-div[class*='col']{
-  margin-top: 30px;
-}
+
 
 
 }

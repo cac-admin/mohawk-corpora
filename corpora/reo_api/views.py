@@ -6,6 +6,9 @@ from django.shortcuts import render
 
 from django.views.generic.base import TemplateView
 from corpora.mixins import SiteInfoMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from people.views.stats_views import JSONResponseMixin
+from django.views import View
 
 from django.contrib.auth.models import User
 from rest_framework.renderers import JSONRenderer
@@ -19,6 +22,10 @@ from rest_framework.schemas import SchemaGenerator, get_schema_view
 from rest_framework import authentication, permissions
 from rest_framework.schemas import AutoSchema
 from rest_framework.response import Response
+
+from people.helpers import get_person
+from rest_framework.authtoken.models import Token
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -40,3 +47,26 @@ class BrowseAPIDashboardView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/api_browse.html"
     x_title = _('Browseable API')
     x_description = _('Browseable API.')
+
+
+class TokenView(
+        JSONResponseMixin, UserPassesTestMixin, View):
+
+    def render_to_response(self, context):
+        return self.render_to_json_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response(self.get_context(request))
+
+    def post(self, request, *args, **kwargs):
+        person = get_person(request)
+        token, created = Token.objects.get_or_create(user=person.user)
+        return self.render_to_response({'token': token.key})
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def get_context(self, request):
+        person = get_person(request)
+        token = Token.objects.get(user=person.user)
+        return {'token': token.key}

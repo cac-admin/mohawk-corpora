@@ -26,6 +26,7 @@ import sys
 import requests
 import urllib2
 import json
+import uuid
 from subprocess import Popen, PIPE
 import time
 
@@ -80,7 +81,6 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
 
     headers = {
         'x-api-token': settings.TRANSCODE_API_TOKEN,
-        'content-type': 'audio/x-wav',
         'Accept': 'application/json',
     }
 
@@ -106,6 +106,50 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
     result['API_URL'] = API_URL
 
     return result
+
+
+def transcribe_audio_quick(file_object):
+    logger.debug('DOING QUICK TRANSCRIPTION')
+
+    tmp_file = "/tmp/tmp_file_{0}".format(uuid.uuid4())
+
+    f = file(tmp_file, 'wb')
+    for chunk in file_object.chunks():
+        f.write(chunk)
+    f.close()
+
+    p = Popen(
+        ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of',
+         'default=noprint_wrappers=1:nokey=1', tmp_file],
+        stdin=PIPE, stdout=PIPE)
+
+    output, errors = p.communicate()
+    duration = float(output)
+
+    if duration > 10:
+        return {'transcription': ''}
+
+    convert = [
+        'ffmpeg', '-y', '-i', tmp_file, '-ar', '16000', '-ac', '1',
+        '{0}.wav'.format(tmp_file)]
+
+    post = [
+        'curl', '-X', 'POST', '--data-binary', '@{0}.wav'.format(tmp_file),
+        '--header', '"Accept: application/json"',
+        'http://waha-tuhi-api-17.dragonfly.nz/transcribe']
+
+    p = Popen(convert, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    (output, errors) = p.communicate()
+
+    p = Popen(post, stdout=PIPE)
+    (output, errors) = p.communicate()
+
+    p = Popen(['rm', tmp_file])
+    p.communicate()
+    p = Popen(['rm', '{0}.wav'.format(tmp_file)])
+    p.communicate()
+
+    return json.loads(output.strip())
 
 
 def transcribe_audio(recording, file_object):
