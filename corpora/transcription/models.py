@@ -11,6 +11,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 
 from uuid import uuid4
+import os
 
 
 def upload_directory(instance, filename):

@@ -30,7 +30,7 @@ logger = logging.getLogger('corpora')
 
 @shared_task
 def transcode_audio(app, model, pk):
-    model_class = ContentType.objects.get(app_label=app, model=model)
+    model_class = ContentType.objects.get(app_label=app, model=model.lower())
 
     try:
         obj = model_class.get_object_for_this_type(pk=pk)

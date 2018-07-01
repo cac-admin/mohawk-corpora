@@ -78,7 +78,7 @@
 
 
     <audio controls="">
-      <source src="{{aft.audio_file_aac|access_url}}" type="audio/m4a" />
+      {% if aft.audio_file_aac %}<source src="{{aft.audio_file_aac|access_url}}"  />{% endif %}
       <source src="{{aft.audio_file|access_url}}" />
     </audio>
 

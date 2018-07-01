@@ -11,6 +11,8 @@ from transcription.transcribe import \
 from transcription.utils import \
     compile_aft
 
+from corpora.utils.tasks_transcoding import transcode_audio
+
 from corpora.celery import app
 
 from django.core.cache import cache
@@ -46,6 +48,17 @@ def query_transcription_api(
         cache.set('TRANSCRIPTION_JOBS', num_jobs+1)
         logger.debug('LAUNCHING API FOR: {0:<4f} jobs'.format(num_jobs))
         launch_transcription_api.apply_async()
+
+
+@receiver(signals.post_save, sender=AudioFileTranscription)
+def encode_audio_if_not_encoded(
+        sender, instance, created, **kwargs):
+
+    if not instance.audio_file_aac:
+
+        transcode_audio.apply_async(
+            args=['transcription', 'AudioFileTranscription', instance.pk],
+            task_id='aft_encode-{0}'.format(instance.pk))
 
 
 @receiver(signals.post_save, sender=AudioFileTranscription)
