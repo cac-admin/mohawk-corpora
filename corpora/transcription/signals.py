@@ -37,6 +37,16 @@ logger = logging.getLogger('corpora')
 #             args=[instance.pk],
 #             task_id='transcribe_segment-{0}'.format(instance.pk))
 
+@receiver(signals.post_save, sender=AudioFileTranscription)
+def query_transcription_api(
+        sender, instance, created, **kwargs):
+
+    if created:
+        num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
+        cache.set('TRANSCRIPTION_JOBS', num_jobs+1)
+        logger.debug('LAUNCHING API FOR: {0:<4f} jobs'.format(num_jobs))
+        launch_transcription_api.apply_async()
+
 
 @receiver(signals.post_save, sender=AudioFileTranscription)
 def create_segments_and_transcribe_on_create(

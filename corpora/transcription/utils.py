@@ -13,6 +13,8 @@ from wahi_korero import default_segmenter
 import ast
 from django.core.files import File
 
+from django.core.files.base import ContentFile
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -206,11 +208,25 @@ def compile_aft(aft_pk):
         .filter(parent=aft)\
         .order_by('start')
 
+    if not aft.original_transcription:
+        logger.debug('NEED TO COMPILE FILE')
+        compile_original = True
+    else:
+        compile_original = False
+
     transcriptions = []
+    original_transcriptions = []
     for t in ts:
         if t.corrected_text:
             transcriptions.append(t.corrected_text.strip())
+        if t.text and compile_original:
+            original_transcriptions.append(t.text.strip())
 
     aft.transcription = " ".join(transcriptions)
+
+    if compile_original:
+        original_transcription = " ".join(original_transcriptions)
+        f = ContentFile(original_transcription)
+        aft.original_transcription.save('original.txt', f)
 
     aft.save()

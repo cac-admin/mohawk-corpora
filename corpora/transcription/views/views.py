@@ -149,7 +149,7 @@ class AudioFileTranscriptionListView(
         person = get_person(self.request)
         qs = AudioFileTranscription.objects\
             .filter(uploaded_by=person)\
-            .order_by('-created')
+            .order_by('-updated')
         return qs
 
     def test_func(self):

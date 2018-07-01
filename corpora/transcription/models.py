@@ -24,6 +24,17 @@ def upload_directory(instance, filename):
         p)
 
 
+def transcription_directory(instance, filename):
+    d = timezone.now()
+    i = str(uuid4())
+    p = instance.uploaded_by.uuid
+    return 'transcriptions/{3}/{0}/{1}.{2}'.format(
+        d.strftime('%Y/%m/%d'),
+        i,
+        filename.split('.')[-1],
+        p)
+
+
 class Transcription(models.Model):
     recording = models.ForeignKey(
         'corpus.Recording')
@@ -158,16 +169,19 @@ class AudioFileTranscription(models.Model):
             Supported file extensions include\
             .aac, .mp3, .wav, .aiff, and .m4a. '))
 
-    # audio_file_aac = models.FileField(
-    #     upload_to=upload_directory,
-    #     null=True,
-    #     blank=True)
+    audio_file_aac = models.FileField(
+        upload_to=upload_directory,
+        null=True,
+        blank=True,
+        help_text=_('\
+            HE-AAC encoded version of audio_file\
+            for low bitrate playback.'))
 
     transcription = models.TextField(
         blank=True)
 
     original_transcription = models.FileField(
-        upload_to=upload_directory,
+        upload_to=transcription_directory,
         blank=True)
 
     uploaded_by = models.ForeignKey(
@@ -202,5 +216,12 @@ class AudioFileTranscription(models.Model):
         if self.name:
             return self.name
         return 'None'
+
+    def get_file_name(self):
+        parts = self.audio_file.name.split('.')
+        parts.pop()
+        return os.path.basename('.'.join(parts))
+
+
 
 # To Do: class LongTranscription - for transcription of a very long audio.

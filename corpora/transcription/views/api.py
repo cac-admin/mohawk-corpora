@@ -7,9 +7,11 @@ from transcription.serializers import \
     AudioFileTranscriptionSerializer
 
 from rest_framework import viewsets, permissions, pagination
+from rest_framework.response import Response
 
 from people.helpers import get_person
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 
 from corpus.views.api import TenResultPagination
 
@@ -141,6 +143,19 @@ class TranscriptionSegmentViewSet(viewsets.ModelViewSet):
             .order_by('-parent__created')
 
         return queryset
+
+    # This doesn't appear to speed things up much.
+    # def retrieve(self, request, pk=None):
+    #     ts = get_object_or_404(self.get_queryset(), pk=pk)
+    #     serializer = self.serializer_class(ts)
+
+    #     response = Response(serializer.data)
+
+    #     rest = cache.get('test-key', 'NOT-READY')
+
+    #     response['STATUS'] = rest
+
+    #     return response
 
 
 class AudioFileTranscriptionPermissions(permissions.BasePermission):
