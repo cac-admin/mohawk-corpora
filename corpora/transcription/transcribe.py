@@ -64,7 +64,7 @@ def parse_sphinx_transcription(lines):
 def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
     # api_url = "https://waha-tuhi.dragonfly.nz/transcribe"
     # DeepSpeech: http://waha-tuhi-api-17.dragonfly.nz
-    API_URL = "http://waha-tuhi-api-17.dragonfly.nz/transcribe"
+    API_URL = settings.DEEPSPEECH_URL
     if continuous:
         pass  # not available with deepspeech
         # API_URL = "http://waha-tuhi-api-15.dragonfly.nz/transcribe_continuous"
@@ -80,7 +80,6 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
         f.close()
 
     headers = {
-        'x-api-token': settings.TRANSCODE_API_TOKEN,
         'Accept': 'application/json',
     }
 
@@ -136,7 +135,7 @@ def transcribe_audio_quick(file_object):
     post = [
         'curl', '-X', 'POST', '--data-binary', '@{0}.wav'.format(tmp_file),
         '--header', '"Accept: application/json"',
-        'http://waha-tuhi-api-17.dragonfly.nz/transcribe']
+        settings.DEEPSPEECH_URL]
 
     p = Popen(convert, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     (output, errors) = p.communicate()
