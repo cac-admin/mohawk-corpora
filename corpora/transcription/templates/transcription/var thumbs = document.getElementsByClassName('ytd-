@@ -1,0 +1,38 @@
+var thumbs = document.getElementsByClassName('ytd-thumbnail-overlay-time-status-renderer');
+var m=[];
+var s=[];
+var dur = 0;
+for (let video of thumbs){
+	var text = video.innerHTML
+	parts = text.split(":");
+	m.push(parseInt(parts[0]));
+	s.push(parseInt(parts[1]));
+	dur = dur + parseInt(parts[0])*60+parseInt(parts[1])
+}
+console.log(dur)
+console.log(thumbs.length)
+console.log(dur/thumbs.length)
+
+
+
+
+var v = document.querySelectorAll('#metadata-line span.ytd-grid-video-renderer:first-child')
+var views = 0
+for (let i in v){
+	var elm = v[i]
+	try{
+	  var text = elm.innerHTML;
+	  var parts = text.split(" views");
+	  var views =
+	  try{
+	  	if (parts[0].search('K')>0){
+	  		console.log(parseInt(parts[0].split('K')[0])*1000)
+	  	} else{
+	  		console.log(parseInt(parts[0].split('K')[0]))
+	  	}
+	  } catch{
+
+	  }
+	} catch{
+	}
+}
