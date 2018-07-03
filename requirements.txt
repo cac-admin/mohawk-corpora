@@ -2,6 +2,7 @@
 
 Django==1.11.8
 boto
+boto3
 Pillow
 Celery
 flower #used to monitor Celery

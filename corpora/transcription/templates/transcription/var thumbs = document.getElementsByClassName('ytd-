@@ -17,22 +17,29 @@ console.log(dur/thumbs.length)
 
 
 var v = document.querySelectorAll('#metadata-line span.ytd-grid-video-renderer:first-child')
-var views = 0
+var views = 0.0
+var count = 1.0
 for (let i in v){
 	var elm = v[i]
 	try{
 	  var text = elm.innerHTML;
 	  var parts = text.split(" views");
-	  var views =
 	  try{
 	  	if (parts[0].search('K')>0){
-	  		console.log(parseInt(parts[0].split('K')[0])*1000)
-	  	} else{
-	  		console.log(parseInt(parts[0].split('K')[0]))
+	  		views = views + parseFloat(parts[0].split('K')[0])*1000
+	  	} else if (parts[0].search('M')>0){
+		  	views = views + parseFloat(parts[0].split('K')[0])*1000*1000
 	  	}
+	  	else{
+	  		views = views + parseFloat(parts[0].split('K')[0])
+	  	}
+	  	count = count + 1
 	  } catch{
 
 	  }
 	} catch{
 	}
 }
+console.log(views)
+console.log(count)
+console.log(views/count)

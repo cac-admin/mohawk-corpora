@@ -17,6 +17,8 @@ from corpora.celery import app
 
 from django.core.cache import cache
 
+from transcription.tasks import launch_transcription_api
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -43,11 +45,36 @@ logger = logging.getLogger('corpora')
 def query_transcription_api(
         sender, instance, created, **kwargs):
 
+    num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
+    if num_jobs < 0:
+        num_jobs = 1
+
     if created:
-        num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
         cache.set('TRANSCRIPTION_JOBS', num_jobs+1)
         logger.debug('LAUNCHING API FOR: {0:<4f} jobs'.format(num_jobs))
         launch_transcription_api.apply_async()
+    else:
+        # If self if done, then subtract from jobs
+        if instance.original_transcription:
+            cache.set('TRANSCRIPTION_JOBS', num_jobs-1)
+
+
+@receiver(signals.post_save, sender=TranscriptionSegment)
+def query_transcription_api_segment(
+        sender, instance, created, **kwargs):
+
+    num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
+    if num_jobs < 0:
+        num_jobs = 1
+
+    if created:
+        cache.set('TRANSCRIPTION_JOBS', num_jobs+1)
+        logger.debug('LAUNCHING API FOR: {0:<4f} jobs'.format(num_jobs))
+        launch_transcription_api.apply_async()
+    else:
+        # If self if done, then subtract from jobs
+        if instance.text is not '':
+            cache.set('TRANSCRIPTION_JOBS', num_jobs-1)
 
 
 @receiver(signals.post_save, sender=AudioFileTranscription)

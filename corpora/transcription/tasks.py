@@ -42,3 +42,63 @@ def launch_transcription_api():
     num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
 
     logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
+
+    '''
+    Let's check jobs every minut, and maybe have a cooldown of 5 minutes
+    so the initial get re4quests cause us to ensure that we're running a server,
+    but after 5 minutes if there are no actual transcription jobs then we should
+    just take the servers down
+    '''
+
+    logger.debug('LAUNCHING')
+
+    import boto3
+    import os
+    os.environ['PROJECT_NAME']
+    client = boto3.client(
+        'autoscaling',
+        aws_access_key_id=os.environ['AWS_ID'],
+        aws_secret_access_key=os.environ['AWS_SECRET'],
+        region_name='ap-southeast-2')
+
+    response = client.set_desired_capacity(
+            AutoScalingGroupName='asg-corpora-production-deepspeech',
+            DesiredCapacity=1,
+            HonorCooldown=False,
+        )
+
+
+@shared_task
+def launch_watcher():
+    # Use beat to schedule this
+    last_queue = cache.get('JOBS_PING', [])
+    num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
+    last_queue.insert(0, num_jobs)
+
+    count = 0
+    for i in range(len(last_queue)-1):
+        if last_queue[i] - last_queue[i+1] == 0:
+            count = count + 1
+
+    if count == 3:
+        num_jobs = 0
+
+    last_queue = cache.set('JOBS_PING', last_queue)
+    logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
+
+    if num_jobs <= 0:
+        logger.debug('STOPPING')
+
+        import boto3
+
+        client = boto3.client(
+            'autoscaling',
+            aws_access_key_id=os.environ['AWS_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET'],
+            region_name='ap-southeast-2')
+
+        response = client.set_desired_capacity(
+                AutoScalingGroupName='asg-corpora-production-deepspeech',
+                DesiredCapacity=0,
+                HonorCooldown=True,
+            )

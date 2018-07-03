@@ -42,6 +42,8 @@ from transcription.models import AudioFileTranscription, TranscriptionSegment
 from rest_framework.authtoken.models import Token
 from people.views.stats_views import JSONResponseMixin
 
+from transcription.tasks import launch_transcription_api
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -58,7 +60,18 @@ logger = logging.getLogger('corpora')
 #     return redirect(reverse('corpus:record'))
 
 
-class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
+class EnsureDeepSpeechRunning(object):
+
+    def launch_ds(self):
+        launch_transcription_api.apply_async()
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            self.launch_ds()
+        return super(EnsureDeepSpeechRunning, self).get(request)
+
+
+class DashboardView(EnsureDeepSpeechRunning, SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
     template_name = "transcription/dashboard.html"
@@ -80,7 +93,7 @@ class DashboardView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
         return context
 
 
-class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
+class TranscribeView(EnsureDeepSpeechRunning, SiteInfoMixin, UserPassesTestMixin, TemplateView):
     x_description = _('Try the speech recognizer!')
     x_title = _('Kōrero Demo')
     template_name = "transcription/speak.html"
@@ -98,6 +111,7 @@ class TranscribeView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
 
 
 class AudioFileTranscriptionView(
+        EnsureDeepSpeechRunning,
         SiteInfoMixin, UserPassesTestMixin, DetailView):
     x_description = _('Edit your transcription.')
     x_title = _('Edit Transcription')
@@ -138,6 +152,7 @@ class AudioFileTranscriptionView(
 
 
 class AudioFileTranscriptionListView(
+        EnsureDeepSpeechRunning,
         SiteInfoMixin, UserPassesTestMixin, ListView):
     x_description = _('List of your transcriptions.')
     x_title = _('Transcriptions')
