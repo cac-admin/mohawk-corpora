@@ -135,6 +135,7 @@ def transcribe_audio_quick(file_object):
     post = [
         'curl', '-X', 'POST', '--data-binary', '@{0}.wav'.format(tmp_file),
         '--header', '"Accept: application/json"',
+        '--header', '"Content-Type: application/json"',
         settings.DEEPSPEECH_URL]
 
     p = Popen(convert, stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -147,6 +148,9 @@ def transcribe_audio_quick(file_object):
     p.communicate()
     p = Popen(['rm', '{0}.wav'.format(tmp_file)])
     p.communicate()
+
+    logger.debug(output)
+    logger.debug(post)
 
     return json.loads(output.strip())
 

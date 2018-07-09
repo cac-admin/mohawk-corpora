@@ -65,13 +65,17 @@ class EnsureDeepSpeechRunning(object):
     def launch_ds(self):
         launch_transcription_api.apply_async()
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         if request.user.is_authenticated:
             self.launch_ds()
-        return super(EnsureDeepSpeechRunning, self).get(request)
+        return super(EnsureDeepSpeechRunning, self).get(request, **kwargs)
 
 
-class DashboardView(EnsureDeepSpeechRunning, SiteInfoMixin, UserPassesTestMixin, TemplateView):
+class DashboardView(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
     template_name = "transcription/dashboard.html"
@@ -93,7 +97,11 @@ class DashboardView(EnsureDeepSpeechRunning, SiteInfoMixin, UserPassesTestMixin,
         return context
 
 
-class TranscribeView(EnsureDeepSpeechRunning, SiteInfoMixin, UserPassesTestMixin, TemplateView):
+class TranscribeView(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
     x_description = _('Try the speech recognizer!')
     x_title = _('Kōrero Demo')
     template_name = "transcription/speak.html"
