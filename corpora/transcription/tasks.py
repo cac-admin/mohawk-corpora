@@ -51,6 +51,7 @@ def launch_transcription_api():
     '''
 
     logger.debug('LAUNCHING')
+    return "DISABLED CHANGING OF AUTOSCALINGGROUP"
 
     import boto3
     import os
@@ -89,7 +90,7 @@ def launch_watcher():
     if num_jobs <= 0:
         logger.debug('STOPPING')
 
-        import boto3
+        return "DISABLED CHANGING OF AUTOSCALINGGROUP"
 
         client = boto3.client(
             'autoscaling',
