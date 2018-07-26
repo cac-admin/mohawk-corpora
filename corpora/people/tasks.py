@@ -42,7 +42,9 @@ def clean_empty_person_models():
         .filter(full_name='')\
         .filter(user__isnull=True)\
         .filter(demographic__isnull=True)\
-        .filter(known_languages__isnull=True)
+        .filter(known_languages__isnull=True)\
+        .annotate(num_recordings=Count('recording'))\
+        .filter(num_recordings=0)
 
     if len(people) == 0:
         logger.debug('No person models to clean')
@@ -50,13 +52,7 @@ def clean_empty_person_models():
         logger.debug('Found {0} to clean'.format(len(people)))
 
     for person in people:
-        recordings = Recording.objects.filter(person=person)
-        if len(recordings) == 0:
-            logger.debug('Removing: {0}'.format(person))
-            person.delete()
-        else:
-            logger.debug(
-                'Not removing {0} as recordings exist.'.format(person))
+        person.delete()
 
 
 @shared_task
