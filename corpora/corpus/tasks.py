@@ -62,7 +62,9 @@ def set_all_recording_durations():
 @shared_task
 def set_all_recording_md5():
     recordings = Recording.objects\
-        .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))
+        .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))\
+        .exclude(quality_control__delete=True)
+
     count = 1
     total = recordings.count()
     for recording in recordings:
