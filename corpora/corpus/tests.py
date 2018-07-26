@@ -5,6 +5,36 @@ from django.test import TestCase
 
 from . import parser
 
+from corpus.models import Recording, Sentence, Source
+from django.core.files import File
+
+
+class CorpusRecordingTestCase(TestCase):
+
+    def setUp(self):
+        # test_short_audio_file = open('test.aac')
+        source = Source.objects.create(
+            description="Test source.",
+            author="Hone Heke",
+            source_type="D",
+            source_name="Souce"
+            )
+        sentence = Sentence.objects.create(
+            text="He test tēnei.",
+            language='mi',
+            source=source)
+        file = File(open('/webapp/corpora/corpora/transcription/tests/test.aac'))
+        Recording.objects.create(
+            audio_file=file,
+            sentence=sentence)
+
+    def test_create_md5_hex(self):
+        recording = Recording.objects.first()
+
+        self.assertEqual(
+            '069576370ff3d8c4269bdbe31170ee47',
+            recording.audio_file_md5)
+
 
 class CorpusTextTestCase(TestCase):
     def test_get_sentences(self):
