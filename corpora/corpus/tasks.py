@@ -27,6 +27,7 @@ from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
+logger_test = logging.getLogger('django.test')
 
 
 @shared_task
@@ -67,13 +68,15 @@ def set_all_recording_md5():
 
     count = 1
     total = recordings.count()
+    logger_test.debug('Found {0} recordings to work on.'.format(total))
     for recording in recordings:
         try:
             recording.audio_file_md5 = \
                 get_md5_hexdigest_of_file(recording.audio_file)
             recording.save()
+            logger_test('{0} done.'.format(recording.pk))
         except IOError as e:
-            logger.debug(
+            logger_test.debug(
                 '{1: 6}/{2} Recording {0}: Files does not exist.'.format(
                     recording.pk, count, total))
             qc = QualityControl.objects.create(
