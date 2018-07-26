@@ -3,6 +3,7 @@ from rest_framework import serializers
 from people.helpers import get_person
 from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
+from django.utils.timezone import localtime
 
 
 class QualityControlHyperLinkedRelatedField(
@@ -136,10 +137,19 @@ class RecordingSerializer(serializers.ModelSerializer):
         format="%d-%m-%y %H:%M %Z",
         read_only=True)
 
+    updated = serializers.SerializerMethodField()
+
     class Meta:
         model = Recording
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
-                  'id', 'sentence_text', 'user_agent', 'created')
+                  'id', 'sentence_text', 'user_agent', 'created', 'updated')
+
+    def get_updated(self, obj):
+        qc = obj.quality_control.all().order_by('-updated').first()
+        if qc.updated > obj.updated:
+            return localtime(qc.updated)
+        else:
+            return localtime(obj.updated)
 
 
 class ListenSerializer(serializers.ModelSerializer):
