@@ -142,7 +142,8 @@ class RecordingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recording
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
-                  'id', 'sentence_text', 'user_agent', 'created', 'updated')
+                  'id', 'sentence_text', 'user_agent', 'created', 'updated',
+                  'audio_file_md5')
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
