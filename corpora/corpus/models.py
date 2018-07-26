@@ -16,8 +16,17 @@ from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS
 
 from uuid import uuid4
 import os
+import hashlib
 
 from django.utils.safestring import mark_safe
+
+
+def get_md5_hexdigest_of_file(file_object):
+    hash_md5 = hashlib.md5()
+    file_object.open('rb')
+    for chunk in iter(file_object.chunks()):
+        hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 
 def upload_directory(instance, filename):
@@ -219,6 +228,9 @@ class Recording(models.Model):
         verbose_name=_('dialect'))
 
     audio_file = models.FileField(upload_to=upload_directory)
+    audio_file_md5 = models.CharField(
+        max_length=32, editable=False, default=None)
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
@@ -295,6 +307,11 @@ class Recording(models.Model):
         net_votes = decimal.Decimal(net_votes['value'] or 0)
         damper = 4
         return max(0, 1 - math.exp(-(net_votes + 1) / damper))
+
+    def save(self, *args, **kwargs):
+        if self.audio_file_md5 is None:
+            self.audio_file_md5 = get_md5_hexdigest_of_file(self.audio_file)
+        super(Recording, self).save(*args, **kwargs)
 
 
 class Text(models.Model):
