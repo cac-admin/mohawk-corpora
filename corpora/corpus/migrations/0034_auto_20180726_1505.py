@@ -5,18 +5,44 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 from corpus.models import get_md5_hexdigest_of_file
+from django.db.models import Q
+
+import logging
+logger = logging.getLogger('corpora')
 
 
 def create_md5_for_files(apps, schema_editor):
     Recording = apps.get_model('corpus', 'Recording')
-    for recording in Recording.objects.filter(audio_file_md5=None):
-        recording.audio_file_md5 = \
-            get_md5_hexdigest_of_file(recording.audio_file)
-        recording.save()
-    for recording in Recording.objects.filter(audio_file_md5__isnull=True):
-        recording.audio_file_md5 = \
-            get_md5_hexdigest_of_file(recording.audio_file)
-        recording.save()
+    QualityControl = apps.get_model('corpus', 'QualityControl')
+    ContentType = apps.get_model('contenttypes', 'ContentType')
+    recordings = Recording.objects\
+        .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))
+
+    print ' '
+    for recording in recordings:
+        try:
+            recording.audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file)
+            recording.save()
+        except IOError as e:
+            print "  File does not exist - R{0}".format(recording.pk)
+            # if 'file does not exist' in str(e).lower():
+            logger.debug(
+                'Recording {0}: Files does not exist.'.format(
+                    recording.pk))
+            qc = QualityControl.objects.create(
+                delete=True,
+                content_type=ContentType.objects.get_for_model(
+                    recording),
+                object_id=recording.pk)
+            qc.save()
+
+
+def remove_md5(apps, schema_editor):
+    '''These can be a dummy method because we'll just lose the data when
+    the field is dropped.
+    '''
+    pass
 
 
 class Migration(migrations.Migration):
@@ -26,5 +52,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_md5_for_files),
+        migrations.RunPython(create_md5_for_files, reverse_code=remove_md5),
     ]
