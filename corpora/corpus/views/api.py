@@ -205,7 +205,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     returend queryset.
 
     This api provides acces to a audio_file_url field. This allows the retrival
-    of an audio file in the m4a container with the aac audio codec. To retried
+    of an audio file in the m4a container with the aac audio codec. To retrieve
     an audio file in the wave format at 16kHz and 16bits, append the query
     ?format=wav to the url given by the audio_file_url field.
     """
@@ -242,44 +242,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 .exclude(quality_control__good__gte=1)\
                 .exclude(quality_control__bad__gte=1)\
                 .exclude(quality_control__delete=True)
-
-            # Exclude approved items
-            # queryset = queryset\
-            #     .annotate(num_approved=Sum(
-            #         Case(
-            #             When(
-            #                 quality_control__isnull=True,
-            #                 then=Value(0)),
-            #             When(
-            #                 quality_control__approved=True,
-            #                 then=Value(1)),
-            #             When(
-            #                 quality_control__approved=False,
-            #                 then=Value(0)),
-            #             default=Value(0),
-            #             output_field=IntegerField())))
-            # queryset = queryset.exclude(num_approved__gte=1)
-
-            # Exclude things with at least 1 vote
-            # queryset = queryset\
-            #     .annotate(count_votes=Sum(
-            #         Case(
-            #             When(
-            #                 quality_control__isnull=True,
-            #                 then=Value(0)),
-            #             When(
-            #                 quality_control__approved=True,
-            #                 then=Value(1)),
-            #             When(
-            #                 quality_control__good__gte=1,
-            #                 then=Value(1)),
-            #             When(
-            #                 quality_control__bad__gte=1,
-            #                 then=Value(1)),
-            #             default=Value(0),
-            #             output_field=IntegerField())))
-            # queryset = queryset\
-            #     .exclude(count_votes__gte=1)
 
             # Exclude things person listened to
 
