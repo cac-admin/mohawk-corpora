@@ -13,4 +13,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'corpus.tasks.transcode_all_audio',
         'schedule': crontab(minute=30, hour='*/12', day_of_week='*'),
     },
+    'set_recording_md5': {
+        'task': 'corpus.tasks.set_all_recording_md5',
+        'schedule': crontab(minute=3, hour=13, day_of_week='*'),
+    },
 }

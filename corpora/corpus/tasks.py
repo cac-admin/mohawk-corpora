@@ -8,6 +8,8 @@ from corpus.models import Recording
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
+from corpus.models import get_md5_hexdigest_of_file
+
 from django.utils import timezone
 import datetime
 
@@ -54,6 +56,31 @@ def set_all_recording_durations():
     recordings = Recording.objects.filter(duration__lte=0)
     for recording in recordings:
         set_recording_length(recording.pk)
+
+
+@shared_task
+def set_all_recording_md5():
+    recordings = Recording.objects\
+        .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))
+
+    for recording in recordings:
+        try:
+            recording.audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file)
+            recording.save()
+        except IOError as e:
+            print "  {1:06}/{2} File does not exist - R{0}".format(
+                recording.pk, count, total)
+            # if 'file does not exist' in str(e).lower():
+            logger.debug(
+                'Recording {0}: Files does not exist.'.format(
+                    recording.pk))
+            qc = QualityControl.objects.create(
+                delete=True,
+                content_type=ContentType.objects.get_for_model(
+                    recording),
+                object_id=recording.pk)
+            qc.save()
 
 
 @shared_task
