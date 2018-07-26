@@ -28,7 +28,7 @@ def get_md5_hexdigest_of_file(file_object):
         for chunk in iter(file_object.chunks()):
             hash_md5.update(chunk)
         return hash_md5.hexdigest()
-    except IOError as:
+    except IOError:
         return None
 
 
