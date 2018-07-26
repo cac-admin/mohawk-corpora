@@ -19,13 +19,16 @@ def create_md5_for_files(apps, schema_editor):
         .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))
 
     print ' '
+    count = 1
+    total = recordings.count()
     for recording in recordings:
         try:
             recording.audio_file_md5 = \
                 get_md5_hexdigest_of_file(recording.audio_file)
             recording.save()
         except IOError as e:
-            print "  File does not exist - R{0}".format(recording.pk)
+            print "  {1:06}/{2} File does not exist - R{0}".format(
+                recording.pk, count, total)
             # if 'file does not exist' in str(e).lower():
             logger.debug(
                 'Recording {0}: Files does not exist.'.format(
@@ -36,6 +39,7 @@ def create_md5_for_files(apps, schema_editor):
                     recording),
                 object_id=recording.pk)
             qc.save()
+        count = count + 1
 
 
 def remove_md5(apps, schema_editor):
