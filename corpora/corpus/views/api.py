@@ -66,12 +66,26 @@ class QualityControlViewSet(viewsets.ModelViewSet):
 
 class SourceViewSet(viewsets.ModelViewSet):
     """
-    API enpoint that alows sources to be viewed or edited.
+    list:
+    Returns a list of all Sources.
+
+    Supported query parameters: `author`
+
+    - `author=name` returns a list of all sources which contain 'name'
+      in their author field.
     """
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
     permission_classes = (permissions.IsAdminUser,)
     pagination_class = OneHundredResultPagination
+
+    def get_queryset(self):
+        queryset = Source.objects.all()
+        filter_author = self.request.query_params.get('author', None)
+        if filter_author:
+            queryset = queryset.filter(author__icontains=filter_author)
+
+        return queryset
 
 
 class SentenceViewSet(viewsets.ModelViewSet):
