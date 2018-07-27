@@ -152,11 +152,10 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
-        if qc:
+        if qc is not None:
             if qc.updated > obj.updated:
                 return localtime(qc.updated)
-        else:
-            return localtime(obj.updated)
+        return localtime(obj.updated)
 
     def get_quality_control_aggregate(self, obj):
         return build_qualitycontrol_stat_dict(obj.quality_control.all())
