@@ -147,8 +147,9 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
-        if qc.updated > obj.updated:
-            return localtime(qc.updated)
+        if qc:
+            if qc.updated > obj.updated:
+                return localtime(qc.updated)
         else:
             return localtime(obj.updated)
 
