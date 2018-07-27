@@ -85,7 +85,8 @@ def set_all_recording_md5():
                 delete=True,
                 content_type=ContentType.objects.get_for_model(
                     recording),
-                object_id=recording.pk)
+                object_id=recording.pk,
+                notes='File does not exist.')
             qc.save()
             del qc
 
