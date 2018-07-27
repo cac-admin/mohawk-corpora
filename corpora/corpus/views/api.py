@@ -237,13 +237,17 @@ class RecordingViewSet(viewsets.ModelViewSet):
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
 
-    The additional filters are implented as a query:
+    ### Custom Query Parameters
+    The following query parameters are implemented.
 
-     - `updated_after`: get recording objects that were updated after the
-     provided datetime. Format is `'%Y-%m-%dT%H:%M:%S%z'` e.g.
-     "2016-10-03T19:00:00+0200". If time zoen offset is omited, we assume
-     local time for the machine (likely +1200).
 
+    - `updated_after`
+
+        Get recording objects that were updated after the provided datetime.
+        Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
+        assume local time for the machine (likely +1200).
+
+            /api/recordings/?update_after=2016-10-03T19:00:00%2B0200
 
     read:
     This api provides acces to a `audio_file_url` field. This allows the
