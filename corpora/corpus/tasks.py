@@ -86,7 +86,16 @@ def set_all_recording_md5():
                     recording),
                 object_id=recording.pk)
             qc.save()
+            del qc
         count = count + 1
+
+        if count > 10000:
+            # Terminate an respawn later.
+            minutes = 60*5
+            set_all_recording_md5.apply_async(countdown=minutes)
+
+            return "Churned through {0} recordings. \
+                    Respawning in {1} minutes.".format(count, minutes)
 
 
 @shared_task

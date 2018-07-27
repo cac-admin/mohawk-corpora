@@ -35,9 +35,12 @@ def get_md5_hexdigest_of_file(file_object):
         if close_file:
             file_object.close()
 
-        return hash_md5.hexdigest()
+        result = hash_md5.hexdigest()
+        del hash_md5
+        return result
 
     except IOError:
+        del hash_md5
         return None
 
 
