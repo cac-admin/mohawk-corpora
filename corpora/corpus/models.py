@@ -150,7 +150,12 @@ class Source(models.Model):
         max_length=1,
         choices=SOURCE_TYPES,
         null=True,
-        blank=True)
+        blank=True,
+        help_text='Source type is a single character.\
+            Valid source types include {0}.'.format(
+            ", ".join(
+                ["'{0}' ({1})".format(i[0], i[1]) for i in SOURCE_TYPES]))
+            )
     source_name = models.CharField(
         help_text="Name of the source",
         max_length=256,
@@ -167,7 +172,8 @@ class Source(models.Model):
     class Meta:
         verbose_name = 'Source'
         verbose_name_plural = 'Sources'
-        unique_together = (("added_by", "source_name", "source_type", "author"),)
+        unique_together = (
+            ("source_name", "source_type", "author", 'source_url'),)
 
     def __unicode__(self):
         return "{0} by {1}".format(self.source_name, self.author)
