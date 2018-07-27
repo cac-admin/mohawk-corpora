@@ -74,7 +74,7 @@ def set_all_recording_md5():
             recording.audio_file_md5 = \
                 get_md5_hexdigest_of_file(recording.audio_file)
             recording.save()
-            logger_test('{0} done.'.format(recording.pk))
+            logger_test.debug('{0} done.'.format(recording.pk))
         except IOError as e:
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: Files does not exist.'.format(
