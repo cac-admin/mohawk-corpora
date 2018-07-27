@@ -74,6 +74,11 @@ class QualityControl(models.Model):
     updated = models.DateTimeField(auto_now=True)
     person = models.ForeignKey('people.Person', null=True, blank=True)
 
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Field for providing extra information about a review.")
+
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
 
@@ -241,7 +246,7 @@ class Recording(models.Model):
 
     audio_file = models.FileField(upload_to=upload_directory)
     audio_file_md5 = models.CharField(
-        max_length=32, editable=False, default=None)
+        max_length=32, editable=False, default=None, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
