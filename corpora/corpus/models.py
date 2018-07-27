@@ -23,13 +23,20 @@ from django.utils.safestring import mark_safe
 
 def get_md5_hexdigest_of_file(file_object):
     hash_md5 = hashlib.md5()
+    close_file = False
     try:
-        file_object.open('rb')
+        if file_object.closed:
+            file_object.open('rb')
+            close_file = True
+
         for chunk in iter(file_object.chunks()):
             hash_md5.update(chunk)
         return hash_md5.hexdigest()
     except IOError:
         return None
+
+    if close_file:
+        file_object.close()
 
 
 def upload_directory(instance, filename):

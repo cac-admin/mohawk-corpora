@@ -369,10 +369,10 @@ LOGGING = {
         }
     },
     'loggers': {
-        'django.test':{
+        'django.test': {
             'handlers': ['testconsole'],
             'level': 'DEBUG',
-            'propogate': True        
+            'propogate': True
         },
         'django.request': {
             'handlers': ['console'],
