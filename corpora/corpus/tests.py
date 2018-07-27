@@ -5,7 +5,10 @@ from django.test import TestCase
 
 from . import parser
 
-from corpus.models import Recording, Sentence, Source
+from corpus.models import Recording, Sentence, Source, QualityControl
+from django.contrib.contenttypes.models import ContentType
+import corpus.aggregate as aggregate
+
 from django.core.files import File
 
 
@@ -23,10 +26,42 @@ class CorpusRecordingTestCase(TestCase):
             text="He test tēnei.",
             language='mi',
             source=source)
-        file = File(open('/webapp/corpora/corpora/transcription/tests/test.aac'))
-        Recording.objects.create(
+        file = File(
+            open('/webapp/corpora/corpora/transcription/tests/test.aac'))
+
+        recording = Recording.objects.create(
             audio_file=file,
             sentence=sentence)
+
+        recording_ct = ContentType.objects.get_for_model(recording)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            good=1)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            good=1)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            approved=True)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            bad=1)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            delete=1)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            star=3)
+        QualityControl.objects.create(
+            object_id=recording.pk,
+            content_type=recording_ct,
+            star=1)
 
     def test_create_md5_hex(self):
         recording = Recording.objects.first()
@@ -34,6 +69,16 @@ class CorpusRecordingTestCase(TestCase):
         self.assertEqual(
             '069576370ff3d8c4269bdbe31170ee47',
             recording.audio_file_md5)
+
+    def test_build_qualitycontrol_stat_dict(self):
+        recording = Recording.objects.first()
+        stats = aggregate.build_qualitycontrol_stat_dict(recording.quality_control.all())
+        self.assertEqual(stats['approved'], 1)
+        self.assertEqual(stats['good'], 2)
+        self.assertEqual(stats['bad'], 1)
+        self.assertEqual(stats['delete'], 1)
+        self.assertEqual(stats['star'], 4)
+        self.assertEqual(stats['count'], 7)
 
 
 class CorpusTextTestCase(TestCase):

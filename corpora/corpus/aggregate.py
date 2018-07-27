@@ -106,14 +106,18 @@ def build_qualitycontrol_stat_dict(queryset):
     approved = \
         queryset.filter(approved=True)
 
-    goods = queryset.filter(good__gte=1).count()
-    bads = queryset.filter(bad__gte=1).count()
+    goods = queryset.filter(good__gte=1).aggregate(sum=Sum('good'))
+    bads = queryset.filter(bad__gte=1).aggregate(sum=Sum('bad'))
+    deletes = queryset.filter(delete=True)
+    stars = queryset.filter(star__gte=1).aggregate(sum=Sum('star'))
 
     stats = {
-        'total': queryset.count(),
-        'num_approved': approved.count(),
-        'up_votes': goods,
-        'down_votes': bads,
+        'count': queryset.count(),
+        'approved': approved.count(),
+        'good': goods['sum'],
+        'bad': bads['sum'],
+        'delete': deletes.count(),
+        'star': stars['sum'],
     }
 
     return stats

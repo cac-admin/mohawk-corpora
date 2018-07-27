@@ -226,17 +226,23 @@ class RecordingPermissions(permissions.BasePermission):
 
 class RecordingViewSet(viewsets.ModelViewSet):
     """
+    list:
     API endpoint that allows recordings to be viewed or edited. This is used by
-    staff.
+    staff only.
 
-    If a sort_by query is provided, we exclude approved recordings in the
-    returend queryset.
+    If a `sort_by` query is provided, we exclude recordings that have have
+    one or more reviews.
 
-    This api provides acces to a audio_file_url field. This allows the retrival
-    of an audio file in the m4a container with the aac audio codec. To retrieve
-    an audio file in the wave format at 16kHz and 16bits, append the query
-    ?format=wav to the url given by the audio_file_url field.
+    read:
+    This api provides acces to a `audio_file_url` field. This allows the
+    retrival of an audio file in the m4a container with the aac audio codec.
+    To retrieve an audio file in the wave format at 16kHz and 16bits, append
+    the query `?format=wav` to the url given by the `audio_file_url` field.
+
+    `audio_file_url` provides an a link to an s3 object that will expire after
+    a certain duration.
     """
+
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)

@@ -5,6 +5,8 @@ from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
 from django.utils.timezone import localtime
 
+from corpus.aggregate import build_qualitycontrol_stat_dict
+
 
 class QualityControlHyperLinkedRelatedField(
         serializers.HyperlinkedRelatedField):
@@ -140,12 +142,13 @@ class RecordingSerializer(serializers.ModelSerializer):
         read_only=True)
 
     updated = serializers.SerializerMethodField()
+    quality_control_aggregate = serializers.SerializerMethodField()
 
     class Meta:
         model = Recording
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
                   'id', 'sentence_text', 'user_agent', 'created', 'updated',
-                  'audio_file_md5')
+                  'audio_file_md5', 'quality_control_aggregate')
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
@@ -154,6 +157,9 @@ class RecordingSerializer(serializers.ModelSerializer):
                 return localtime(qc.updated)
         else:
             return localtime(obj.updated)
+
+    def get_quality_control_aggregate(self, obj):
+        return build_qualitycontrol_stat_dict(obj.quality_control.all())
 
 
 class ListenSerializer(serializers.ModelSerializer):

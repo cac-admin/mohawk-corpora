@@ -70,20 +70,20 @@ class Stats{
     
     self.update_view(
       '.stat-value.stat-total-upvotes', 
-      self.stats[self.data_key]['up_votes'])
+      self.stats[self.data_key]['good'])
 
     self.update_view(
       '.stat-value.stat-total-approvals', 
-      self.stats[self.data_key]['num_approved'])
+      self.stats[self.data_key]['approved'])
 
     self.update_view('.stat-value.stat-total-downvotes', 
-      self.stats[self.data_key]['down_votes'])
+      self.stats[self.data_key]['bad'])
 
     self.update_view('.stat-value.stat-total-total', 
-      self.stats[self.data_key]['total'])
+      self.stats[self.data_key]['count'])
   
     self.update_view('.stat-value.stat-total-overalltotal', 
-      self.stats['qcs']['total'])
+      self.stats['qcs']['count'])
 
   }
 
