@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from corpus.models import QualityControl, Sentence, Recording, Source
-from django.db.models import Count, Q, Sum, Case, When, Value, IntegerField
+from django.db.models import \
+    Count, Q, Sum, Case, When, Value, IntegerField, Max
 from people.helpers import get_person
 from people.competition import \
     filter_recordings_for_competition, \
@@ -14,10 +15,13 @@ from corpus.serializers import QualityControlSerializer,\
                          RecordingSerializerPost, \
                          ListenSerializer, \
                          SourceSerializer
-from rest_framework import generics
+from rest_framework import generics, serializers
 from django.core.cache import cache
 import random
 import logging
+
+from django.utils.dateparse import parse_datetime
+
 logger = logging.getLogger('corpora')
 
 
@@ -233,6 +237,14 @@ class RecordingViewSet(viewsets.ModelViewSet):
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
 
+    The additional filters are implented as a query:
+
+     - `updated_after`: get recording objects that were updated after the
+     provided datetime. Format is `'%Y-%m-%dT%H:%M:%S%z'` e.g.
+     "2016-10-03T19:00:00+0200". If time zoen offset is omited, we assume
+     local time for the machine (likely +1200).
+
+
     read:
     This api provides acces to a `audio_file_url` field. This allows the
     retrival of an audio file in the m4a container with the aac audio codec.
@@ -304,6 +316,21 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 return [queryset[i]]
             else:
                 return queryset
+
+        updated_after = self.request.query_params.get('updated_after', None)
+        if updated_after:
+
+            date = parse_datetime(updated_after)
+            if date is None:
+                raise serializers.ValidationError("Improper datetime fromat.")
+            q1 = queryset\
+                .filter(updated__gte=date)\
+                .annotate(changed=Max('updated'))  # Added as dummy for join.
+            q2 = queryset\
+                .filter(updated__lt=date)\
+                .annotate(changed=Max('quality_control__updated'))\
+                .filter(changed__gte=date)
+            queryset = q1.union(q2)
 
         return queryset
 
