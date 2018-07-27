@@ -73,6 +73,20 @@ class SourceViewSet(viewsets.ModelViewSet):
 
     - `author=name` returns a list of all sources which contain 'name'
       in their author field.
+
+    create:
+    When creating Sources for Machines, use the following convention.
+
+    - `source_type: 'M'`
+    - `author`: Use an API version string for the particular API that belongs
+    to the machine. For example, 'nga-korero-hohonu.1.0.2018-06-13' is the API
+    version string for a particular Machine Transcription model.
+    - `source_name`: For machines that transcrinbe, use 'Transcription API.'
+    For machines that review, use 'Review API', etc.
+
+    Sources are unique by `source_type`, `author`, `source_url`, and `source_name. If you
+    can't create a source because it already exists, use `list` to find the
+    source id.
     """
     queryset = Source.objects.all()
     serializer_class = SourceSerializer

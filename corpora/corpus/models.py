@@ -167,7 +167,9 @@ class Source(models.Model):
         blank=True)
     source_url = models.URLField(
         null=True,
-        blank=True)
+        blank=True,
+        help_text="URL for the source (e.g. a website or API endpoint).\
+        This field can be None.")
 
     class Meta:
         verbose_name = 'Source'

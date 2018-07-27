@@ -69,13 +69,14 @@ class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
         fields = ('author',
-                  'added_by',
                   'id',
                   'description',
                   'source_name',
                   'source_type',
                   'url',
-                  'source_url')
+                  'source_url',
+                  'added_by',)
+        read_only_fields = ('added_by',)
         extra_kwargs = {
             'url': {'view_name': 'api:source-detail'}
         }
