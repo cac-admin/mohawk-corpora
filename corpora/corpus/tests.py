@@ -33,6 +33,10 @@ class CorpusRecordingTestCase(TestCase):
             audio_file=file,
             sentence=sentence)
 
+        recording2 = Recording.objects.create(
+            audio_file=file,
+            sentence=sentence)
+
         recording_ct = ContentType.objects.get_for_model(recording)
         QualityControl.objects.create(
             object_id=recording.pk,
@@ -72,13 +76,24 @@ class CorpusRecordingTestCase(TestCase):
 
     def test_build_qualitycontrol_stat_dict(self):
         recording = Recording.objects.first()
-        stats = aggregate.build_qualitycontrol_stat_dict(recording.quality_control.all())
+        recording2 = Recording.objects.last()
+        stats = aggregate.build_qualitycontrol_stat_dict(
+            recording.quality_control.all())
         self.assertEqual(stats['approved'], 1)
         self.assertEqual(stats['good'], 2)
         self.assertEqual(stats['bad'], 1)
         self.assertEqual(stats['delete'], 1)
         self.assertEqual(stats['star'], 4)
         self.assertEqual(stats['count'], 7)
+
+        stats = aggregate.build_qualitycontrol_stat_dict(
+            recording2.quality_control.all())
+        self.assertEqual(stats['approved'], 0)
+        self.assertEqual(stats['good'], 0)
+        self.assertEqual(stats['bad'], 0)
+        self.assertEqual(stats['delete'], 0)
+        self.assertEqual(stats['star'], 0)
+        self.assertEqual(stats['count'], 0)
 
 
 class CorpusTextTestCase(TestCase):

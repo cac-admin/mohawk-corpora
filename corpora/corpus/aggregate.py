@@ -114,10 +114,10 @@ def build_qualitycontrol_stat_dict(queryset):
     stats = {
         'count': queryset.count(),
         'approved': approved.count(),
-        'good': goods['sum'],
-        'bad': bads['sum'],
+        'good': goods['sum'] if goods['sum'] is not None else 0,
+        'bad': bads['sum'] if bads['sum'] is not None else 0,
         'delete': deletes.count(),
-        'star': stars['sum'],
+        'star': stars['sum'] if stars['sum'] is not None else 0,
     }
 
     return stats
