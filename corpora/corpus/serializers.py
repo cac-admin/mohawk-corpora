@@ -43,7 +43,8 @@ class QualityControlSerializer(serializers.ModelSerializer):
         model = QualityControl
         fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'object_id',
                   'content_type', 'content_object', 'updated', 'person',
-                  'delete', 'follow_up', 'noise', 'star')
+                  'delete', 'follow_up', 'noise', 'star',
+                  'machine', 'source', 'notes')
 
 
 class QualityControRelatedField(serializers.RelatedField):
