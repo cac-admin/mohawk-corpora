@@ -31,12 +31,14 @@ def get_md5_hexdigest_of_file(file_object):
 
         for chunk in iter(file_object.chunks()):
             hash_md5.update(chunk)
+
+        if close_file:
+            file_object.close()
+
         return hash_md5.hexdigest()
+
     except IOError:
         return None
-
-    if close_file:
-        file_object.close()
 
 
 def upload_directory(instance, filename):
