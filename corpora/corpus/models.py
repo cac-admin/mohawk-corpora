@@ -82,6 +82,16 @@ class QualityControl(models.Model):
         null=True,
         help_text="Field for providing extra information about a review.")
 
+    machine = models.BooleanField(
+        default=False,
+        help_text='Boolean to indicate if a machine made the review.')
+    source = models.ForeignKey(
+        'Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='Used to identify machines.')
+
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
 
