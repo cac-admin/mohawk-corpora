@@ -70,12 +70,13 @@ def set_all_recording_md5():
     total = recordings.count()
     logger_test.debug('Found {0} recordings to work on.'.format(total))
     for recording in recordings:
-        try:
-            recording.audio_file_md5 = \
-                get_md5_hexdigest_of_file(recording.audio_file)
+        audio_file_md5 = \
+            get_md5_hexdigest_of_file(recording.audio_file)
+        if audio_file_md5 is not None:
+            recording.audio_file_md5 = audio_file_md5
             recording.save()
             logger_test.debug('{0} done.'.format(recording.pk))
-        except IOError as e:
+        else:
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: Files does not exist.'.format(
                     recording.pk, count, total))
