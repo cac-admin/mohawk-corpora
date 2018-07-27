@@ -66,10 +66,11 @@ def set_all_recording_md5():
         .filter(Q(audio_file_md5=None) | Q(audio_file_md5__isnull=True))\
         .exclude(quality_control__delete=True)
 
-    count = 1
+    count = 0
     total = recordings.count()
     logger_test.debug('Found {0} recordings to work on.'.format(total))
     for recording in recordings:
+        count = count + 1
         audio_file_md5 = \
             get_md5_hexdigest_of_file(recording.audio_file)
         if audio_file_md5 is not None:
@@ -87,7 +88,6 @@ def set_all_recording_md5():
                 object_id=recording.pk)
             qc.save()
             del qc
-        count = count + 1
 
         if count > 10000:
             # Terminate an respawn later.
