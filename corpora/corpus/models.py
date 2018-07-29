@@ -54,10 +54,18 @@ def upload_directory(instance, filename):
 
 
 class QualityControl(models.Model):
-    good = models.PositiveIntegerField(default=0)
-    bad = models.PositiveIntegerField(default=0)
-    approved = models.BooleanField(default=False)
-    approved_by = models.ForeignKey(User, null=True, blank=True)
+    good = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is good. Can be any interger >= 0.')
+    bad = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is bad. Can be any interger >= 0.')
+    approved = models.BooleanField(
+        default=False,
+        help_text='Approved indicates that the object is suitable for use.')
+    approved_by = models.ForeignKey(
+        User, null=True, blank=True,
+        help_text='User that approved the object. Should be a user ID.')
     delete = models.BooleanField(
         default=False,
         help_text='Flag for deletion.')
@@ -71,7 +79,11 @@ class QualityControl(models.Model):
     noise = models.BooleanField(
         default=False,
         help_text='Check if an item has noise but is still intelligible.')
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE,
+        help_text='Model to which this QualityControl refers. This should be \
+        the content type ID. Implemented types are Recordings (id=8),\
+        Sentences (id=10), Transcription Segments (id=24).')
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     updated = models.DateTimeField(auto_now=True)
