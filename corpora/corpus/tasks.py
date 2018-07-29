@@ -4,7 +4,7 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from corpus.models import Recording, QualityControl
+from corpus.models import Recording, QualityControl, Source
 from django.contrib.contenttypes.models import ContentType
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
@@ -85,16 +85,27 @@ def set_all_recording_md5():
             logger_test.debug('{0} done.'.format(recording.pk))
         else:
             logger_test.debug(
-                '{1: 6}/{2} Recording {0}: Files does not exist.'.format(
+                '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
-            qc = QualityControl.objects.create(
+            source, created = Source.objects.get_or_create(
+                source_name='Scheduled Task',
+                source_type='M',
+                author='Keoni Mahelona',
+                source_url='',
+                description='Source for automated quality control stuff.'
+                )
+            qc, created = QualityControl.objects.get_or_create(
                 delete=True,
                 content_type=ContentType.objects.get_for_model(
                     recording),
                 object_id=recording.pk,
-                notes='File does not exist.')
-            qc.save()
+                notes='File does not exist.',
+                machine=True,
+                source=source)
+            if not created:
+                qc.save()
             del qc
+            del source
 
         if count > 10000:
             # Terminate an respawn later.
