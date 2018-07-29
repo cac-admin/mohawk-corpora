@@ -64,6 +64,10 @@ class Transcription(models.Model):
         related_query_name='transcription'
         )
 
+    transcriber_log = JSONField(
+        null=True,
+        blank=True)
+
     # Need a model to store the extra metadata from the transcription
     # But we also need the nice times info
     # meta_data = models.
