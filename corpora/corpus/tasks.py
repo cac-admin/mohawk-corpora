@@ -94,6 +94,9 @@ def set_all_recording_md5():
                 source_url='',
                 description='Source for automated quality control stuff.'
                 )
+            if created:
+                source.save()
+
             qc, created = QualityControl.objects.get_or_create(
                 delete=True,
                 content_type=ContentType.objects.get_for_model(
@@ -102,8 +105,9 @@ def set_all_recording_md5():
                 notes='File does not exist.',
                 machine=True,
                 source=source)
-            if not created:
+            if created:
                 qc.save()
+
             del qc
             del source
 

@@ -125,6 +125,8 @@ def transcribe_recordings_without_reviews():
                 source_url=settings.DEEPSPEECH_URL,
                 author=''
             )
+            if created:
+                source.save()
 
             t, created = Transcription.objects.get_or_create(
                 recording=recording,
@@ -141,6 +143,7 @@ def transcribe_recordings_without_reviews():
 
         except Exception as e:
             logger_test.error(e)
+    return "Done with {0} recordings.".format(count)
 
 
 @shared_task
