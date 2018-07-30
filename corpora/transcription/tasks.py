@@ -114,35 +114,40 @@ def transcribe_recordings_without_reviews():
         .filter(quality_control__isnull=True)\
         .filter(transcription__isnull=True)
     count = recordings.count()
-    logger_test.debug('Recordings that need reviewing: {0}'.format(count))
+    logger.debug('Recordings that need reviewing: {0}'.format(count))
+
+    source, created = Source.objects.get_or_create(
+        source_name='Transcription API',
+        source_type='M',
+        source_url=settings.DEEPSPEECH_URL,
+        author=''
+    )
+    source.save()
 
     for recording in recordings:
         try:
-
-            source, created = Source.objects.get_or_create(
-                source_name='Transcription API',
-                source_type='M',
-                source_url=settings.DEEPSPEECH_URL,
-                author=''
-            )
-            if created:
-                source.save()
+            # This should tell us if the file exists
+            recording.audio_file_wav.open('rb')
 
             t, created = Transcription.objects.get_or_create(
                 recording=recording,
                 source=source,
             )
 
-            if created:
-                recording.audio_file_wav.open('rb')
-                result = transcribe_audio_sphinx(
-                    recording.audio_file_wav.read())
-                logger_test.debug(result)
-                t.text = result['transcription'].strip()
-                t.save()
+            result = transcribe_audio_sphinx(
+                recording.audio_file_wav.read())
+            logger_test.debug(result)
+            t.text = result['transcription'].strip()
+            t.transciber_log = result
+            t.save()
+
+            recording.audio_file_wav.close()
+            del t
 
         except Exception as e:
-            logger_test.error(e)
+            logger.error(e)
+            return e
+
     return "Done with {0} recordings.".format(count)
 
 
