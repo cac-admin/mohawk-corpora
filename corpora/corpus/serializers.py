@@ -1,7 +1,6 @@
 from .models import QualityControl, Sentence, Recording, Source
 from rest_framework import serializers
 from people.helpers import get_person
-from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
 from django.utils.timezone import localtime
 
@@ -114,7 +113,7 @@ class RecordingSerializerPost(serializers.ModelSerializer):
         recording = \
             super(RecordingSerializerPost, self).create(validated_data)
 
-        result = transcribe_audio(recording, validated_data['audio_file'])
+        # result = transcribe_audio(recording, validated_data['audio_file'])
 
         return recording
         # serializer = self.get_serializer(recording)
@@ -143,12 +142,14 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     updated = serializers.SerializerMethodField()
     quality_control_aggregate = serializers.SerializerMethodField()
+    transcription = serializers.SerializerMethodField()
 
     class Meta:
         model = Recording
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
                   'id', 'sentence_text', 'user_agent', 'created', 'updated',
-                  'audio_file_md5', 'quality_control_aggregate')
+                  'audio_file_md5', 'quality_control_aggregate',
+                  'transcription',)
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
@@ -159,6 +160,14 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     def get_quality_control_aggregate(self, obj):
         return build_qualitycontrol_stat_dict(obj.quality_control.all())
+
+    def get_transcription(self, obj):
+        try:
+            t = obj.transcription_set.first()
+            return t.text
+        except:
+            pass
+        return None
 
 
 class ListenSerializer(serializers.ModelSerializer):
