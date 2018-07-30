@@ -155,60 +155,60 @@ def transcribe_audio_quick(file_object):
     return json.loads(output.strip())
 
 
-def transcribe_audio(recording, file_object):
+# def transcribe_audio(recording, file_object):
 
-    file_object.open()
-    p = Popen(
-        ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1',  '-'],  # '-f', 's16le',
-        stdin=PIPE, stdout=PIPE)
+#     file_object.open()
+#     p = Popen(
+#         ['ffmpeg', '-i', '-', '-ar', '16000', '-ac', '1',  '-'],  # '-f', 's16le',
+#         stdin=PIPE, stdout=PIPE)
 
-    output, errors = p.communicate(file_object.read())
-    file_object.close()
+#     output, errors = p.communicate(file_object.read())
+#     file_object.close()
 
-    # result2 = transcribe_audio_sphinx(output, continuous=True)
-    result = transcribe_audio_sphinx(output)
+#     # result2 = transcribe_audio_sphinx(output, continuous=True)
+#     result = transcribe_audio_sphinx(output)
 
-    recording.sentence_text = result['transcription'].strip()
-    recording.save()
-    if result['success']:
+#     recording.sentence_text = result['transcription'].strip()
+#     recording.save()
+#     if result['success']:
 
-        # Get or create a source for the API
-        source, created = Source.objects.get_or_create(
-            source_name='Transcription API',
-            author="{0}".format(result['model_version']),
-            source_type='M',
-            source_url=result['API_URL'])
+#         # Get or create a source for the API
+#         source, created = Source.objects.get_or_create(
+#             source_name='Transcription API',
+#             author="{0}".format(result['model_version']),
+#             source_type='M',
+#             source_url=result['API_URL'])
 
-        # Create a new sentence (because why not though this could blow things up in the future!)
-        # We should only do this if they're using the live demo on the website
-        # This makes sense if a person is reading freely to the machine
-        # But doesn't make sense if someone is uploading a recording from
-        # somewhere else.
-        sentence, created = Sentence.objects.get_or_create(
-            text=result['transcription'].strip())
-        known_language = get_current_known_language_for_person(recording.person)
+#         # Create a new sentence (because why not though this could blow things up in the future!)
+#         # We should only do this if they're using the live demo on the website
+#         # This makes sense if a person is reading freely to the machine
+#         # But doesn't make sense if someone is uploading a recording from
+#         # somewhere else.
+#         sentence, created = Sentence.objects.get_or_create(
+#             text=result['transcription'].strip())
+#         known_language = get_current_known_language_for_person(recording.person)
 
-        if created:
-            sentence.source = source
-            sentence.language = known_language.language
-            sentence.dialect = known_language.dialect
-            sentence.save()
+#         if created:
+#             sentence.source = source
+#             sentence.language = known_language.language
+#             sentence.dialect = known_language.dialect
+#             sentence.save()
 
-        # Create a new transcription
-        transcription = Transcription.objects.create(
-            recording=recording,
-            text=result['transcription'].strip(),
-            source=source)
-        transcription.save()
+#         # Create a new transcription
+#         transcription = Transcription.objects.create(
+#             recording=recording,
+#             text=result['transcription'].strip(),
+#             source=source)
+#         transcription.save()
 
-    return recording.sentence_text
+#     return recording.sentence_text
 
 
-@shared_task
-def transcribe_audio_task(recording_id):
-    recording = Recording.objects.get(id=recording_id)
-    response = transcribe_audio(recording, recording.audio_file)
-    return response
+# @shared_task
+# def transcribe_audio_task(recording_id):
+#     recording = Recording.objects.get(id=recording_id)
+#     response = transcribe_audio(recording, recording.audio_file)
+#     return response
 
 
 @shared_task
