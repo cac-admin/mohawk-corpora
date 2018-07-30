@@ -146,5 +146,5 @@ def transcribe_recordings_without_reviews():
 @shared_task
 def delete_transcriptions_for_approved_recordings():
     transcriptions = Transcription.objects\
-        .filter(recording__quality_control__aproved=True)
+        .filter(recording__quality_control__approved=True)
     transcriptions.delete()

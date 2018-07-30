@@ -228,5 +228,4 @@ class AudioFileTranscription(models.Model):
         return os.path.basename('.'.join(parts))
 
 
-
 # To Do: class LongTranscription - for transcription of a very long audio.
