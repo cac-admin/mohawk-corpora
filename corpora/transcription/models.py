@@ -74,7 +74,7 @@ class Transcription(models.Model):
     # times = words and the time the start? JSON?
 
     class Meta:
-        pass
+        unique_together = (("recording", "source",),)
 
     # Is this still relevant?
     def clean(self):

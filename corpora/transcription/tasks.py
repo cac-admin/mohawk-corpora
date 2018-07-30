@@ -15,6 +15,8 @@ from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
 
+from transcription.transcribe import transcribe_audio_sphinx
+
 from django.core.files import File
 import wave
 import contextlib
@@ -35,6 +37,7 @@ from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
+logger_test = logging.getLogger('django.test')
 
 
 @shared_task
@@ -103,3 +106,45 @@ def launch_watcher():
                 DesiredCapacity=0,
                 HonorCooldown=True,
             )
+
+
+@shared_task
+def transcribe_recordings_without_reviews():
+    recordings = Recording.objects\
+        .filter(quality_control__isnull=True)\
+        .filter(transcription__isnull=True)
+    count = recordings.count()
+    logger_test.debug('Recordings that need reviewing: {0}'.format(count))
+
+    for recording in recordings:
+        try:
+
+            source, created = Source.objects.get_or_create(
+                source_name='Transcription API',
+                source_type='M',
+                source_url=settings.DEEPSPEECH_URL,
+                author=''
+            )
+
+            t, created = Transcription.objects.get_or_create(
+                recording=recording,
+                source=source,
+            )
+
+            if created:
+                recording.audio_file_wav.open('rb')
+                result = transcribe_audio_sphinx(
+                    recording.audio_file_wav.read())
+                logger_test.debug(result)
+                t.text = result['transcription'].strip()
+                t.save()
+
+        except Exception as e:
+            logger_test.error(e)
+
+
+@shared_task
+def delete_transcriptions_for_approved_recordings():
+    transcriptions = Transcription.objects\
+        .filter(recording__quality_control__aproved=True)
+    transcriptions.delete()
