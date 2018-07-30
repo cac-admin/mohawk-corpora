@@ -75,6 +75,18 @@ def set_all_recording_md5():
     count = 0
     total = recordings.count()
     logger_test.debug('Found {0} recordings to work on.'.format(total))
+
+    source, created = Source.objects.get_or_create(
+        source_name='Scheduled Task',
+        source_type='M',
+        author='Keoni Mahelona',
+        source_url='',
+        description='Source for automated quality control stuff.'
+    )
+    if created:
+        source.save()
+    recording_ct = ContentType.objects.get_for_model(recording)
+
     for recording in recordings:
         count = count + 1
         audio_file_md5 = \
@@ -87,20 +99,10 @@ def set_all_recording_md5():
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
-            source, created = Source.objects.get_or_create(
-                source_name='Scheduled Task',
-                source_type='M',
-                author='Keoni Mahelona',
-                source_url='',
-                description='Source for automated quality control stuff.'
-                )
-            if created:
-                source.save()
 
             qc, created = QualityControl.objects.get_or_create(
                 delete=True,
-                content_type=ContentType.objects.get_for_model(
-                    recording),
+                content_type=recording_ct,
                 object_id=recording.pk,
                 notes='File does not exist.',
                 machine=True,
@@ -109,12 +111,14 @@ def set_all_recording_md5():
                 qc.save()
 
             del qc
-            del source
 
         if count > 10000:
             # Terminate an respawn later.
             minutes = 60*5
-            set_all_recording_md5.apply_async(countdown=minutes)
+            set_all_recording_md5.apply_async(
+                countdown=minutes,
+                task_id='set_all_recording_md5'
+            )
 
             return "Churned through {0} of {2} recordings. \
                     Respawning in {1} minutes.".format(count, minutes, total)
