@@ -124,6 +124,7 @@ def transcribe_recordings_without_reviews():
     )
     source.save()
 
+    errors = 0
     for recording in recordings:
         try:
             # This should tell us if the file exists
@@ -146,9 +147,10 @@ def transcribe_recordings_without_reviews():
 
         except Exception as e:
             logger.error(e)
-            return str(e)
+            error = error + 1
 
-    return "Done with {0} recordings.".format(count)
+    return "Done with {0} recordings. Failed with {1} recordings".format(
+        count-error, error)
 
 
 @shared_task
