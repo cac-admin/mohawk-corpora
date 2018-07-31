@@ -63,12 +63,8 @@ def set_all_recording_durations():
 @shared_task
 def set_all_recording_md5():
     recordings = Recording.objects\
-        .filter(
-            Q(quality_control__isnull=True) |
-            Q(quality_control__delete=False))\
-        .filter(
-            Q(audio_file_md5=None) |
-            Q(audio_file_md5__isnull=True))\
+        .filter(audio_file_md5=None)\
+        .exclude(quality_control__delete=True)\
         .distinct()
     count = 0
     total = recordings.count()
@@ -86,6 +82,7 @@ def set_all_recording_md5():
     if recordings:
         recording_ct = ContentType.objects.get_for_model(recordings.first())
     error = 0
+    new_qc = 0
     for recording in recordings:
         count = count + 1
         audio_file_md5 = \
@@ -107,6 +104,10 @@ def set_all_recording_md5():
                 machine=True,
                 source=source,
                 person=person)
+            if created:
+                new_qc = new_qc + 1
+            elif not qc:
+                return "FATAL: WHY DON'T WE GET A QC!"
         if count > 1000:
             # Terminate and respawn later.
             # minutes = 60*1
@@ -114,8 +115,8 @@ def set_all_recording_md5():
             #     countdown=minutes,
             # )
             return "Churned through {0} of {2} recordings with {3} errors. \
-                    Respawning in {1} minutes.".format(
-                        count, 'NEVER', total, error)
+                    Created {1} QCs.".format(
+                        count, new_qc, total, error)
 
 
 @shared_task
