@@ -117,7 +117,7 @@ def set_all_recording_md5():
             minutes = 60*5
             set_all_recording_md5.apply_async(
                 countdown=minutes,
-                task_id='set_all_recording_md5'
+                task_id='set_recordings_md5s'
             )
 
             return "Churned through {0} of {2} recordings. \
