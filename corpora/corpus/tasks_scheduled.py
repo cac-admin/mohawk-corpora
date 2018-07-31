@@ -16,6 +16,6 @@ CELERYBEAT_SCHEDULE = {
     'set_recording_md5': {
         'task': 'corpus.tasks.set_all_recording_md5',
         'schedule': crontab(minute='*', hour='*', day_of_week='*'),
-        'options': {'task_id': 'set_recordings_md5s'},
+        # 'options': {'task_id': 'set_recordings_md5s'},
     },
 }
