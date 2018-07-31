@@ -112,7 +112,9 @@ def launch_watcher():
 def transcribe_recordings_without_reviews():
     recordings = Recording.objects\
         .filter(quality_control__isnull=True)\
-        .filter(transcription__isnull=True)
+        .filter(transcription__isnull=True)\
+        .distinct()
+
     count = recordings.count()
     logger.debug('Recordings that need reviewing: {0}'.format(count))
 
@@ -129,21 +131,19 @@ def transcribe_recordings_without_reviews():
         try:
             # This should tell us if the file exists
             recording.audio_file_wav.open('rb')
+            result = transcribe_audio_sphinx(
+                recording.audio_file_wav.read())
+            recording.audio_file_wav.close()
+            logger_test.debug(result)
 
             t, created = Transcription.objects.get_or_create(
                 recording=recording,
                 source=source,
             )
 
-            result = transcribe_audio_sphinx(
-                recording.audio_file_wav.read())
-            logger_test.debug(result)
             t.text = result['transcription'].strip()
             t.transciber_log = result
             t.save()
-
-            recording.audio_file_wav.close()
-            del t
 
         except Exception as e:
             logger.error(e)
