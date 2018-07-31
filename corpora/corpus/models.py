@@ -129,10 +129,15 @@ class QualityControl(models.Model):
         return 1 - decimal.Decimal(abs(vote - avg)) / 2
 
     def __unicode__(self):
-        return u'{0}: {1}'.format(
-            str(self.content_type).title(),
-            str(self.content_object)
-        )
+        try:
+            ct = str(self.content_type).title()
+        except:
+            ct = 'None'
+        try:
+            co = self.content_object.__unicode__()
+        except:
+            co = 'None'
+        return u'{0}: {1}'.format(ct, co)
 
 
 class Source(models.Model):
@@ -385,7 +390,3 @@ class Text(models.Model):
 
     def __unicode__(self):
         return str(self.uploaded_file)
-
-
-
-

@@ -108,7 +108,7 @@ def set_all_recording_md5():
                 new_qc = new_qc + 1
             elif not qc:
                 return "FATAL: WHY DON'T WE GET A QC!"
-        if count >= 10000:
+        if count >= 5000:
             # Terminate and respawn later.
             # minutes = 60*1
             # set_all_recording_md5.apply_async(
