@@ -10,7 +10,7 @@ from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
 from corpus.models import get_md5_hexdigest_of_file
-
+from people.models import Person
 from django.utils import timezone
 import datetime
 
@@ -80,12 +80,16 @@ def set_all_recording_md5():
         source_name='Scheduled Task',
         source_type='M',
         author='Keoni Mahelona',
-        source_url='',
+        source_url='/',
         description='Source for automated quality control stuff.'
     )
-    if created:
-        source.save()
-    recording_ct = ContentType.objects.get_for_model(recordings.first())
+
+    person, created = Person.objects.get_or_create(
+        uuid=settings.MACHINE_PERSON_UUID)
+    # if created:
+    #     source.save()
+    if recordings:
+        recording_ct = ContentType.objects.get_for_model(recordings.first())
 
     for recording in recordings:
         count = count + 1
@@ -106,10 +110,11 @@ def set_all_recording_md5():
                 object_id=recording.pk,
                 notes='File does not exist.',
                 machine=True,
-                source=source)
+                source=source,
+                person=person)
             # if created: # for some reason this wasn't saving!
 
-            qc.save()
+            # qc.save()
 
             del qc
 

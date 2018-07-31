@@ -65,6 +65,7 @@ class Person(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True)
+
     full_name = models.CharField(
         help_text=_('Full Name'),
         max_length=200,

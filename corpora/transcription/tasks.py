@@ -120,7 +120,7 @@ def transcribe_recordings_without_reviews():
         source_name='Transcription API',
         source_type='M',
         source_url=settings.DEEPSPEECH_URL,
-        author=''
+        author='Keoni Mahelona'
     )
     source.save()
 
