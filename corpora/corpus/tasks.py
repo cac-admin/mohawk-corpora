@@ -107,8 +107,9 @@ def set_all_recording_md5():
                 notes='File does not exist.',
                 machine=True,
                 source=source)
-            if created:
-                qc.save()
+            # if created: # for some reason this wasn't saving!
+
+            qc.save()
 
             del qc
 
