@@ -85,6 +85,7 @@ def set_all_recording_md5():
         full_name="Machine Person for Automated Tasks")
     if recordings:
         recording_ct = ContentType.objects.get_for_model(recordings.first())
+    error = 0
     for recording in recordings:
         count = count + 1
         audio_file_md5 = \
@@ -94,6 +95,7 @@ def set_all_recording_md5():
             recording.save()
             logger_test.debug('{0} done.'.format(recording.pk))
         else:
+            error = error + 1
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
@@ -111,8 +113,9 @@ def set_all_recording_md5():
             set_all_recording_md5.apply_async(
                 countdown=minutes,
             )
-            return "Churned through {0} of {2} recordings. \
-                    Respawning in {1} minutes.".format(count, minutes, total)
+            return "Churned through {0} of {2} recordings with {3} errors. \
+                    Respawning in {1} minutes.".format(
+                        count, minutes, total, error)
 
 
 @shared_task
