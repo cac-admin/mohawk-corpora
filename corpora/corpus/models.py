@@ -107,10 +107,6 @@ class QualityControl(models.Model):
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
 
-    def __unicode__(self):
-        return "{0}:{1}:{2}".format(
-            self.content_type, self.object_id, self.good-self.bad)
-
     def clear(self):
         self.good = 0
         self.bad = 0
@@ -135,7 +131,8 @@ class QualityControl(models.Model):
     def __unicode__(self):
         return u'{0}: {1}'.format(
             str(self.content_type).title(),
-            self.content_object.__unicode__())
+            str(self.content_object)
+        )
 
 
 class Source(models.Model):
