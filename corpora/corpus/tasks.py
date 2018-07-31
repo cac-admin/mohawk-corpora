@@ -85,7 +85,7 @@ def set_all_recording_md5():
     )
     if created:
         source.save()
-    recording_ct = ContentType.objects.get_for_model(recording)
+    recording_ct = ContentType.objects.get_for_model(recordings.first())
 
     for recording in recordings:
         count = count + 1
