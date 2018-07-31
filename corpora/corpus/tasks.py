@@ -115,7 +115,7 @@ def set_all_recording_md5():
             # )
             return "Churned through {0} of {2} recordings with {3} errors. \
                     Respawning in {1} minutes.".format(
-                        count, minutes, total, error)
+                        count, 'NEVER', total, error)
 
 
 @shared_task
