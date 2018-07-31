@@ -146,7 +146,7 @@ def transcribe_recordings_without_reviews():
 
         except Exception as e:
             logger.error(e)
-            return e
+            return str(e)
 
     return "Done with {0} recordings.".format(count)
 
