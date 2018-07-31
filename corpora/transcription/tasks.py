@@ -124,7 +124,7 @@ def transcribe_recordings_without_reviews():
     )
     source.save()
 
-    errors = 0
+    error = 0
     for recording in recordings:
         try:
             # This should tell us if the file exists

@@ -81,7 +81,8 @@ def set_all_recording_md5():
         description='Source for automated quality control stuff.'
     )
     person, created = Person.objects.get_or_create(
-        uuid=settings.MACHINE_PERSON_UUID)
+        uuid=settings.MACHINE_PERSON_UUID,
+        full_name="Machine Person for Automated Tasks")
     if recordings:
         recording_ct = ContentType.objects.get_for_model(recordings.first())
     for recording in recordings:
@@ -109,7 +110,6 @@ def set_all_recording_md5():
             minutes = 60*1
             set_all_recording_md5.apply_async(
                 countdown=minutes,
-                task_id='set_recordings_md5s'
             )
             return "Churned through {0} of {2} recordings. \
                     Respawning in {1} minutes.".format(count, minutes, total)
