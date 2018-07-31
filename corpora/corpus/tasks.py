@@ -109,10 +109,10 @@ def set_all_recording_md5():
                 person=person)
         if count > 1000:
             # Terminate and respawn later.
-            minutes = 60*1
-            set_all_recording_md5.apply_async(
-                countdown=minutes,
-            )
+            # minutes = 60*1
+            # set_all_recording_md5.apply_async(
+            #     countdown=minutes,
+            # )
             return "Churned through {0} of {2} recordings with {3} errors. \
                     Respawning in {1} minutes.".format(
                         count, minutes, total, error)
