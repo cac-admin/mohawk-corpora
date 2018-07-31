@@ -62,20 +62,17 @@ def set_all_recording_durations():
 
 @shared_task
 def set_all_recording_md5():
-    # Since this could be HUGE, we need to do this diffeerently.
-
     recordings = Recording.objects\
         .filter(
             Q(quality_control__isnull=True) |
             Q(quality_control__delete=False))\
         .filter(
             Q(audio_file_md5=None) |
-            Q(audio_file_md5__isnull=True))
-
+            Q(audio_file_md5__isnull=True))\
+        .distinct()
     count = 0
     total = recordings.count()
     logger_test.debug('Found {0} recordings to work on.'.format(total))
-
     source, created = Source.objects.get_or_create(
         source_name='Scheduled Task',
         source_type='M',
@@ -83,14 +80,10 @@ def set_all_recording_md5():
         source_url='/',
         description='Source for automated quality control stuff.'
     )
-
     person, created = Person.objects.get_or_create(
         uuid=settings.MACHINE_PERSON_UUID)
-    # if created:
-    #     source.save()
     if recordings:
         recording_ct = ContentType.objects.get_for_model(recordings.first())
-
     for recording in recordings:
         count = count + 1
         audio_file_md5 = \
@@ -103,7 +96,6 @@ def set_all_recording_md5():
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
-
             qc, created = QualityControl.objects.get_or_create(
                 delete=True,
                 content_type=recording_ct,
@@ -112,20 +104,13 @@ def set_all_recording_md5():
                 machine=True,
                 source=source,
                 person=person)
-            # if created: # for some reason this wasn't saving!
-
-            # qc.save()
-
-            del qc
-
-        if count > 10000:
-            # Terminate an respawn later.
-            minutes = 60*5
+        if count > 1000:
+            # Terminate and respawn later.
+            minutes = 60*1
             set_all_recording_md5.apply_async(
                 countdown=minutes,
                 task_id='set_recordings_md5s'
             )
-
             return "Churned through {0} of {2} recordings. \
                     Respawning in {1} minutes.".format(count, minutes, total)
 
