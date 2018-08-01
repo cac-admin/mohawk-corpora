@@ -1,5 +1,4 @@
   {% load static i18n url_filters cache %}
-  {% cache 500 socialmeta request.path %}
 
   <meta name="description" content="{{x_description}}" />
   <meta name="title" content="{{x_title}}" />
@@ -9,6 +8,7 @@
   <meta property="og:url"              content="{% get_request_url_relative %}" />
   <meta property="og:site_name"        content="{{request.site.name}}"/>
   <meta property="og:description"      content="{{x_description}}"/>
+  <meta property="og:image"            content="{{x_image}}"/>
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@tehiku" />
@@ -16,4 +16,4 @@
   <meta name="twitter:description" content="{{x_description}}" />
   <meta name="twitter:image" content="{{x_image}}" />
 
-  {% endcache %}
+  

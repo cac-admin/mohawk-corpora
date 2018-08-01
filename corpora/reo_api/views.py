@@ -35,18 +35,21 @@ class HomeView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/home.html"
     x_title = _('kōreromāori.io')
     x_description = _('Indigenous language tools powered by machine learning.')
+    x_image = "/static/reo_api/img/home.jpg"
 
 
 class DocsDashboardView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/docs.html"
     x_title = _('Documentation')
     x_description = _('API documentation.')
+    x_image = "/static/reo_api/img/transcribe_tool.jpg"
 
 
 class BrowseAPIDashboardView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/api_browse.html"
     x_title = _('Browseable API')
     x_description = _('Browseable API.')
+    x_image = "/static/reo_api/img/api.jpg"
 
 
 class TokenView(
