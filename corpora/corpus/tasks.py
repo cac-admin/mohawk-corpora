@@ -118,6 +118,10 @@ def set_all_recording_md5():
                     Created {1} QCs.".format(
                         count, new_qc, total, error)
 
+    return "Churned through {0} of {2} recordings with {3} errors. \
+            Created {1} QCs.".format(
+            count, new_qc, total, error)
+
 
 @shared_task
 def transcode_audio(recording_pk):

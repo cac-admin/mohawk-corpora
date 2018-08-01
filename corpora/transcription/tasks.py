@@ -115,8 +115,8 @@ def transcribe_recordings_without_reviews():
         .filter(transcription__isnull=True)\
         .distinct()
 
-    count = recordings.count()
-    logger.debug('Recordings that need reviewing: {0}'.format(count))
+    total = recordings.count()
+    logger.debug('Recordings that need reviewing: {0}'.format(total))
 
     source, created = Source.objects.get_or_create(
         source_name='Transcription API',
@@ -126,6 +126,7 @@ def transcribe_recordings_without_reviews():
     )
     source.save()
 
+    count = 0
     error = 0
     e = 'None'
     for recording in recordings:
@@ -149,10 +150,16 @@ def transcribe_recordings_without_reviews():
         except Exception as e:
             logger.error(e)
             error = error + 1
+        count = count + 1
+
+        if count >= 1000:
+            return "Done with {0} recordings. Failed with {1} recordings.\
+                Last error: {2}".format(
+                total-error, error, e)
 
     return "Done with {0} recordings. Failed with {1} recordings.\
     Last error: {2}".format(
-        count-error, error, e)
+        total-error, error, e)
 
 
 @shared_task
