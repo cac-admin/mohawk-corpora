@@ -187,7 +187,8 @@ class AudioFileTranscription(models.Model):
 
     original_transcription = models.FileField(
         upload_to=transcription_directory,
-        blank=True)
+        blank=True,
+        max_length=254)
 
     uploaded_by = models.ForeignKey(
         'people.Person',
