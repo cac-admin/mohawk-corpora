@@ -116,6 +116,14 @@ def transcribe_recordings_without_reviews():
         .filter(transcription__isnull=True)\
         .distinct().order_by('created')
 
+    # Once we're done with all the recordings,
+    # let's see if there are some unfinished ones.
+    if recordings.count() == 0:
+        recordings = Recording.objects\
+            .filter(quality_control__isnull=True)\
+            .filter(transcription__text=None)\
+            .distinct().order_by('created')
+
     total = recordings.count()
 
     start = timezone.now()
