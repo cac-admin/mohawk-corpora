@@ -181,7 +181,8 @@ def transcribe_recording(pk):
             # This should tell us if the file exists
             recording.audio_file_wav.open('rb')
             result = transcribe_audio_sphinx(
-                recording.audio_file_wav.read())
+                recording.audio_file_wav.read(),
+                timeout=60)
             recording.audio_file_wav.close()
 
             transcription.text = result['transcription'].strip()

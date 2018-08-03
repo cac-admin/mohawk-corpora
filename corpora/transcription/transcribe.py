@@ -61,7 +61,8 @@ def parse_sphinx_transcription(lines):
     return text
 
 
-def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
+def transcribe_audio_sphinx(
+        audio, continuous=False, file_path=None, timeout=10):
     # api_url = "https://waha-tuhi.dragonfly.nz/transcribe"
     # DeepSpeech: http://waha-tuhi-api-17.dragonfly.nz
     API_URL = settings.DEEPSPEECH_URL
@@ -89,7 +90,7 @@ def transcribe_audio_sphinx(audio, continuous=False, file_path=None):
         response = requests.post(
             API_URL,
             data=audio,
-            timeout=10,
+            timeout=timeout,
             headers=headers)
         logger.debug(u'{0}'.format(response.text))
 
