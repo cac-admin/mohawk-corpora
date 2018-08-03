@@ -135,7 +135,6 @@ def transcribe_recordings_without_reviews():
     )
     source.save()
 
-    count = 0
     error = 0
     e = 'None'
     for recording in recordings:
@@ -144,11 +143,13 @@ def transcribe_recordings_without_reviews():
                 source=source,
             )
 
+    count = 0
     for recording in recordings:
         transcribe_recording.apply_async(
             args=[recording.pk],
-            countdown=60
+            countdown=10*count
         )
+        count = count+1
 
     if total > MAX_LOOP:
         t = MAX_LOOP
