@@ -3,7 +3,7 @@ from celery import shared_task
 
 from django.conf import settings
 from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from corpus.models import Recording, Sentence, Source
 from transcription.models import \
     Transcription, TranscriptionSegment, AudioFileTranscription
@@ -165,7 +165,15 @@ def transcribe_recordings_without_reviews():
 @shared_task
 def transcribe_recording(pk):
     recording = Recording.objects.get(pk=pk)
-    transcription = Transcription.objects.get(recording=recording)
+    try:
+        transcription = Transcription.objects.get(recording=recording)
+    except MultipleObjectsReturned:
+        transcriptions = Transcription.objects\
+            .filter(recording=recording).order_by('pk')
+        transcription = transcriptions.last()
+        t = transcriptions.first()
+        t.delete()
+
     start = timezone.now()
     if not transcription.text:
         try:
