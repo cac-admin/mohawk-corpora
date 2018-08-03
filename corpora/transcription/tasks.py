@@ -179,8 +179,8 @@ def transcribe_recording(pk):
             transcription.transciber_log = result
             transcription.save()
             dt = timezone.now() - start
-            return "Transcribed '{0}' in {1}s".format(
-                transcription.text, dt.total_seconds)
+            return "Transcribed {0} in {1}s".format(
+                transcription.text, dt.total_seconds())
 
         except Exception as e:
             logger.error(e)
