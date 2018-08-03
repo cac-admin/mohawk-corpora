@@ -192,6 +192,7 @@ def transcribe_recording(pk):
 
         except Exception as e:
             logger.error(e)
+            transcription.delete()
             return str(e)
     else:
         return "Already transcribed: {0}".format(transcription.text)
