@@ -16,7 +16,7 @@ from people.helpers import get_current_known_language_for_person
 from transcription.utils import create_and_return_transcription_segments
 
 from transcription.transcribe import transcribe_audio_sphinx
-
+from django.utils import timezone
 from django.core.files import File
 import wave
 import contextlib
@@ -118,6 +118,8 @@ def transcribe_recordings_without_reviews():
 
     total = recordings.count()
 
+    start = timezone.now()
+
     if total == 0:
         return "No recordings to transcribe."
 
@@ -143,26 +145,10 @@ def transcribe_recordings_without_reviews():
             )
 
     for recording in recordings:
-        try:
-            # This should tell us if the file exists
-            recording.audio_file_wav.open('rb')
-            result = transcribe_audio_sphinx(
-                recording.audio_file_wav.read())
-            recording.audio_file_wav.close()
-            logger_test.debug(result)
-
-            t, created = Transcription.objects.get_or_create(
-                recording=recording,
-                source=source,
-            )
-
-            t.text = result['transcription'].strip()
-            t.transciber_log = result
-            t.save()
-
-        except Exception as e:
-            logger.error(e)
-            error = error + 1
+        transcribe_recording.apply_async(
+            args=[recording.pk],
+            countdown=60
+        )
 
     if total > MAX_LOOP:
         t = MAX_LOOP
@@ -170,9 +156,37 @@ def transcribe_recordings_without_reviews():
     else:
         t = total
         left = 0
-    return "Done with {0} recordings. Failed with {1} recordings.\
-Last error: {2}. {3} more to transcribe".format(
-        t-error, error, e, 0)
+
+    time = timezone.now()-start
+    return "Done with {0} recordings. {1} to transcribe. Took {2}s" \
+        .format(recordings.count(), left, time.total_seconds())
+
+
+@shared_task
+def transcribe_recording(pk):
+    recording = Recording.objects.get(pk=pk)
+    transcription = Transcription.objects.get(recording=recording)
+    start = timezone.now()
+    if not transcription.text:
+        try:
+            # This should tell us if the file exists
+            recording.audio_file_wav.open('rb')
+            result = transcribe_audio_sphinx(
+                recording.audio_file_wav.read())
+            recording.audio_file_wav.close()
+
+            transcription.text = result['transcription'].strip()
+            transcription.transciber_log = result
+            transcription.save()
+            dt = timezone.now() - start
+            return "Transcribed '{0}' in {1}s".format(
+                transcription.text, dt.total_seconds)
+
+        except Exception as e:
+            logger.error(e)
+            return str(e)
+    else:
+        return "Already transcribed: {0}".format(transcription.text)
 
 
 @shared_task
