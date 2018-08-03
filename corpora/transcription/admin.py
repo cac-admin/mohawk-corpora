@@ -15,7 +15,7 @@ from transcription.utils import create_transcription_segments_admin
 class TranscriptionAdmin(admin.ModelAdmin):
     list_display = ('text', 'corrected_text', 'recording')
     date_hierarchy = 'updated'
-    raw_id_fields = ('recording')
+    raw_id_fields = ('recording',)
 
 
 @admin.register(AudioFileTranscription)
