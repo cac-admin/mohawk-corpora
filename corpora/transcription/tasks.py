@@ -117,6 +117,10 @@ def transcribe_recordings_without_reviews():
         .distinct().order_by('created')
 
     total = recordings.count()
+
+    if total == 0:
+        return "No recordings to transcribe."
+
     logger.debug('Recordings that need reviewing: {0}'.format(total))
 
     recordings = recordings[:MAX_LOOP]
@@ -160,9 +164,15 @@ def transcribe_recordings_without_reviews():
             logger.error(e)
             error = error + 1
 
+    if total > MAX_LOOP:
+        t = MAX_LOOP
+        left = total - MAX_LOOP
+    else:
+        t = total
+        left = 0
     return "Done with {0} recordings. Failed with {1} recordings.\
-    Last error: {2}. {3} more to transcribe".format(
-        MAX_LOOP-error, error, e, total - MAX_LOOP)
+Last error: {2}. {3} more to transcribe".format(
+        t-error, error, e, 0)
 
 
 @shared_task
