@@ -11,12 +11,12 @@ CELERYBEAT_SCHEDULE = {
     },
     'transcribe_recordings_without_reviews': {
         'task': 'transcription.tasks.transcribe_recordings_without_reviews',
-        'schedule': crontab(minute=35, hour='*/2', day_of_week='*'),
+        'schedule': crontab(minute='*/30', hour='*', day_of_week='*'),
         # 'options': {'task_id': 'xribe_rec_without_rev'},
     },
     'delete_transcriptions_for_approved_recordings': {
         'task': 'transcription.tasks.delete_transcriptions_for_approved_recordings',
-        'schedule': crontab(minute='*/30', hour='*', day_of_week='*'),
+        'schedule': crontab(minute=42, hour='*/2', day_of_week='*'),
         # 'options': {'task_id': 'del_xtions_for_approved_recs'},
     },
 }
