@@ -110,13 +110,16 @@ def launch_watcher():
 
 @shared_task
 def transcribe_recordings_without_reviews():
+    MAX_LOOP = 2000
     recordings = Recording.objects\
         .filter(quality_control__isnull=True)\
         .filter(transcription__isnull=True)\
-        .distinct()
+        .distinct().order_by('created')
 
     total = recordings.count()
     logger.debug('Recordings that need reviewing: {0}'.format(total))
+
+    recordings = recordings[:MAX_LOOP]
 
     source, created = Source.objects.get_or_create(
         source_name='Transcription API',
@@ -129,6 +132,12 @@ def transcribe_recordings_without_reviews():
     count = 0
     error = 0
     e = 'None'
+    for recording in recordings:
+        t, created = Transcription.objects.get_or_create(
+                recording=recording,
+                source=source,
+            )
+
     for recording in recordings:
         try:
             # This should tell us if the file exists
@@ -150,16 +159,10 @@ def transcribe_recordings_without_reviews():
         except Exception as e:
             logger.error(e)
             error = error + 1
-        count = count + 1
-
-        if count >= 1000:
-            return "Done with {0} recordings. Failed with {1} recordings.\
-                Last error: {2}".format(
-                total-error, error, e)
 
     return "Done with {0} recordings. Failed with {1} recordings.\
-    Last error: {2}".format(
-        total-error, error, e)
+    Last error: {2}. {3} more to transcribe".format(
+        MAX_LOOP-error, error, e, total - MAX_LOOP)
 
 
 @shared_task
