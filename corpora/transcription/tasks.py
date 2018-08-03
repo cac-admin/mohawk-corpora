@@ -194,7 +194,7 @@ def transcribe_recording(pk):
             recording.audio_file_wav.close()
 
             transcription.text = result['transcription'].strip()
-            transcription.transciber_log = result
+            transcription.transcriber_log = result
             transcription.save()
             dt = timezone.now() - start
             return "Transcribed {0} in {1}s".format(
