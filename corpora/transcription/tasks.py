@@ -155,7 +155,6 @@ def transcribe_recordings_without_reviews():
     for recording in recordings:
         transcribe_recording.apply_async(
             args=[recording.pk],
-            countdown=int(1+100.0*count/MAX_LOOP)
         )
         count = count+1
 
