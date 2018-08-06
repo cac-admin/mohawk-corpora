@@ -77,6 +77,8 @@ def set_all_recording_md5():
     total = recordings.count()
     file_field = 'audio_file'
 
+    start = timezone.now()
+
     if total == 0:
         recordings = Recording.objects\
             .filter(audio_file_wav_md5=None)\
@@ -139,13 +141,15 @@ def set_all_recording_md5():
             # set_all_recording_md5.apply_async(
             #     countdown=minutes,
             # )
+            time = timezone.now()-start
             return "Churned through {0} of {2} recordings with {3} errors. \
-                    Created {1} QCs.".format(
-                        count, new_qc, total, error)
+                    Created {1} QCs. Took {4}s".format(
+                        count, new_qc, total, error, time.total_seconds())
 
+    time = timezone.now()-start
     return "Churned through {0} of {2} recordings with {3} errors. \
-            Created {1} QCs.".format(
-            count, new_qc, total, error)
+            Created {1} QCs. Took {4}s".format(
+            count, new_qc, total, error, time.total_seconds())
 
 
 @shared_task
