@@ -287,10 +287,15 @@ class Recording(models.Model):
     updated = models.DateTimeField(auto_now=True)
     sentence_text = models.CharField(max_length=250, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
+
     audio_file_aac = models.FileField(
         upload_to=upload_directory, null=True, blank=True)
+
     audio_file_wav = models.FileField(
         upload_to=upload_directory, null=True, blank=True)
+    audio_file_wav_md5 = models.CharField(
+        max_length=32, editable=False, default=None, null=True)
+
     user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
 
@@ -363,6 +368,9 @@ class Recording(models.Model):
     def save(self, *args, **kwargs):
         if self.audio_file_md5 is None:
             self.audio_file_md5 = get_md5_hexdigest_of_file(self.audio_file)
+        if self.audio_file_wav_md5 is None:
+            self.audio_file_wav_md5 = \
+                get_md5_hexdigest_of_file(self.audio_file_wav)
         super(Recording, self).save(*args, **kwargs)
 
 

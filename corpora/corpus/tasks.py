@@ -62,12 +62,31 @@ def set_all_recording_durations():
 
 @shared_task
 def set_all_recording_md5():
+    '''This method shouldn't live around too long because it's
+   here to help with "migration". Once migration is done
+   we could just run a task to ensure these fields are
+   created. So this method is not very efficient and
+   succient because we're gocusing on getting it done
+   and then wil;l just delete it.
+    '''
     recordings = Recording.objects\
         .filter(audio_file_md5=None)\
         .exclude(quality_control__delete=True)\
         .distinct()
     count = 0
     total = recordings.count()
+    file_field = 'audio_file'
+
+    if total == 0:
+        recordings = Recording.objects\
+            .filter(audio_file_wav_md5=None)\
+            .exclude(quality_control__delete=True)\
+            .distinct()
+
+        count = 0
+        total = recordings.count()
+        file_field = 'audio_file_wav'
+
     logger_test.debug('Found {0} recordings to work on.'.format(total))
     source, created = Source.objects.get_or_create(
         source_name='Scheduled Task',
@@ -85,10 +104,16 @@ def set_all_recording_md5():
     new_qc = 0
     for recording in recordings:
         count = count + 1
-        audio_file_md5 = \
-            get_md5_hexdigest_of_file(recording.audio_file)
-        if audio_file_md5 is not None:
+        if file_field == 'audio_file':
+            audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file)
             recording.audio_file_md5 = audio_file_md5
+        elif file_field == 'audio_file_wav':
+            audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file_wav)
+            recording.audio_file_wav_md5 = audio_file_md5
+
+        if audio_file_md5 is not None:
             recording.save()
             logger_test.debug('{0} done.'.format(recording.pk))
         else:
