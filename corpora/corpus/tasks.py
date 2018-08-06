@@ -114,6 +114,8 @@ def set_all_recording_md5():
             audio_file_md5 = \
                 get_md5_hexdigest_of_file(recording.audio_file_wav)
             recording.audio_file_wav_md5 = audio_file_md5
+        else:
+            continue
 
         if audio_file_md5 is not None:
             recording.save()
