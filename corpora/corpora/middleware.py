@@ -103,3 +103,8 @@ class LicenseMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
         return response
+
+
+def show_toolbar_callback(arg):
+    if settings.DEBUG:
+        return True

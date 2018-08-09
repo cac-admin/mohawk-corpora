@@ -31,6 +31,8 @@ DEBUG = eval(os.environ['DJANGO_ISNOT_PRODUCTION'])
 
 ALLOWED_HOSTS = ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 
+# INTERNAL_IPS = ['corporalocal.nz', 'corporalocal.io', 'dev.koreromaori.com', '10.1.160.139', '127.0.0.1']
+
 # For ELB Certificate & NGINX settings.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -84,25 +86,38 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware', # <= for caching entire site
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'django.middleware.locale.LocaleMiddleware',
+
+
+
+    'corpora.middleware.LanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware', # <= for caching entire site
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'corpora.middleware.PersonMiddleware',
-    'corpora.middleware.LanguageMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corpora.middleware.PersonMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": 'corpora.middleware.show_toolbar_callback'
+}
+
 
 ROOT_URLCONF = 'corpora.urls'
 
