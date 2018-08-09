@@ -109,9 +109,6 @@ MIDDLEWARE = [
     'corpora.middleware.PersonMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-
-
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
