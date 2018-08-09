@@ -19,6 +19,10 @@ from people.views import views as people_views
 
 from django.views.decorators.cache import cache_page
 
+from django.conf import settings
+from django.conf.urls import include, url
+
+
 urlpatterns = [
 
     url(r'^$',
@@ -128,6 +132,12 @@ urlpatterns = [
 
 ]
 
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
 
 
 # I think it's better we store language preference in cookie and not do url redirects

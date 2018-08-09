@@ -79,22 +79,29 @@ INSTALLED_APPS = [
     'analytical',
     'ckeditor',
     'ckeditor_uploader',
+
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware', # <= for caching entire site
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.locale.LocaleMiddleware',
-    'corpora.middleware.LanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware', # <= for caching entire site
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'corpora.middleware.PersonMiddleware',
+    'corpora.middleware.LanguageMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corpora.middleware.PersonMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
+
 ]
 
 ROOT_URLCONF = 'corpora.urls'

@@ -18,6 +18,8 @@ pytz
 django-storages
 django-bower
 
+django-debug-toolbar
+
 # changing social auth app
 # certifi==2015.04.28
 certifi
