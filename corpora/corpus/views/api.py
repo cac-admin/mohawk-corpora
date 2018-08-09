@@ -16,6 +16,7 @@ from corpus.serializers import QualityControlSerializer,\
                          ListenSerializer, \
                          SourceSerializer
 from rest_framework import generics, serializers
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from django.core.cache import cache
 import random
 import logging
@@ -247,7 +248,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
         Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
         assume local time for the machine (likely +1200).
 
-            /api/recordings/?update_after=2016-10-03T19:00:00%2B0200
+            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
 
     read:
     This api provides acces to a `audio_file_url` field. This allows the
@@ -263,6 +264,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)
     pagination_class = TenResultPagination
+
+    # parser_classes = (MultiPartParser, JSONParser, FormParser, )
 
     def get_serializer_class(self):
         serializer_class = self.serializer_class
@@ -287,13 +290,39 @@ class RecordingViewSet(viewsets.ModelViewSet):
             # if sort_by not in 'recent':
             #    queryset = filter_recordings_for_competition(queryset)
 
+
+            # COuld this be faster?
+            # queryset = queryset.annotate(reviewed=Sum(
+            #     Case(
+            #         When(
+            #             quality_control__isnull=True,
+            #             then=Value(0)),
+            #         When(
+            #             quality_control__approved=True,
+            #             then=Value(1)),
+            #         When(
+            #             quality_control__bad__gte=1,
+            #             then=Value(1)),
+            #         When(
+            #             quality_control__good__gte=1,
+            #             then=Value(1)),
+            #         When(
+            #             quality_control__delete=True,
+            #             then=Value(1)),
+            #         default=Value(0),
+            #         output_field=IntegerField())))\
+            #     .filter(reviewed=0)\
+            #     .distinct()
+
             queryset = queryset\
                 .exclude(quality_control__approved=True)\
                 .exclude(quality_control__good__gte=1)\
                 .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__delete=True)
+                .exclude(quality_control__delete=True)\
+                .distinct()
 
             # Exclude things person listened to
+            queryset = queryset.exclude(quality_control__person=person)
 
             # If we want to handle simultaneous but recent
             # we could serve 5 sets of the most recent recordings
@@ -337,6 +366,19 @@ class RecordingViewSet(viewsets.ModelViewSet):
             queryset = q1.union(q2)
 
         return queryset
+
+    # def create(self, request, *args, **kwargs):
+    #     # Taken from source: https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py#L14
+    #     logger.debug(request.data)
+    #     serializer = self.get_serializer(data=request.data)
+    #     logger.debug(serializer)
+
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    #     response = super(RecordingViewSet, self).create(request)
 
 
 class ListenPermissions(permissions.BasePermission):
@@ -392,21 +434,26 @@ class ListenViewSet(viewsets.ModelViewSet):
             .exclude(person=person)
 
         # Exclude all approved recordings
+        # queryset = queryset\
+        #     .annotate(num_approved=Sum(
+        #         Case(
+        #             When(
+        #                 quality_control__isnull=True,
+        #                 then=Value(0)),
+        #             When(
+        #                 quality_control__approved=True,
+        #                 then=Value(1)),
+        #             When(
+        #                 quality_control__approved=False,
+        #                 then=Value(0)),
+        #             default=Value(0),
+        #             output_field=IntegerField())))
+        # queryset = queryset.exclude(num_approved__gte=1)
+
         queryset = queryset\
-            .annotate(num_approved=Sum(
-                Case(
-                    When(
-                        quality_control__isnull=True,
-                        then=Value(0)),
-                    When(
-                        quality_control__approved=True,
-                        then=Value(1)),
-                    When(
-                        quality_control__approved=False,
-                        then=Value(0)),
-                    default=Value(0),
-                    output_field=IntegerField())))
-        queryset = queryset.exclude(num_approved__gte=1)
+            .exclude(quality_control__approved=True) \
+            .exclude(quality_control__delete=True) \
+            .exclude(quality_control__follow_up=True)
 
         # Exclude items you already listened to
         queryset = queryset.exclude(quality_control__person=person)
