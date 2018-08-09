@@ -428,35 +428,46 @@ class ListenViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
-
-        # Don't listen to one's own recording
         queryset = Recording.objects\
             .exclude(person=person)
+            # .prefetch_related('quality_control')
 
-        # Exclude all approved recordings
-        # queryset = queryset\
-        #     .annotate(num_approved=Sum(
-        #         Case(
-        #             When(
-        #                 quality_control__isnull=True,
-        #                 then=Value(0)),
-        #             When(
-        #                 quality_control__approved=True,
-        #                 then=Value(1)),
-        #             When(
-        #                 quality_control__approved=False,
-        #                 then=Value(0)),
-        #             default=Value(0),
-        #             output_field=IntegerField())))
-        # queryset = queryset.exclude(num_approved__gte=1)
+        test_query = self.request.query_params.get('test_query', 'exclude')
 
-        queryset = queryset\
-            .exclude(quality_control__approved=True) \
-            .exclude(quality_control__delete=True) \
-            .exclude(quality_control__follow_up=True)
+        if test_query == 'exclude':
+            queryset = queryset\
+                .exclude(quality_control__approved=True) \
+                .exclude(quality_control__delete=True) \
+                .exclude(quality_control__bad__gte=1)\
+                .exclude(quality_control__good__gte=1)\
+                .exclude(quality_control__person=person)\
+                .distinct()
 
-        # Exclude items you already listened to
-        queryset = queryset.exclude(quality_control__person=person)
+        elif test_query == 'when':
+            queryset = queryset.annotate(reviewed=Sum(
+                Case(
+                    When(
+                        quality_control__isnull=True,
+                        then=Value(0)),
+                    When(
+                        quality_control__approved=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__bad__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__good__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__delete=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__person=person,
+                        then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField())))\
+                .filter(reviewed=0)\
+                .distinct()
 
         sort_by = self.request.query_params.get('sort_by', '')
 
