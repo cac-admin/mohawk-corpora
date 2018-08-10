@@ -458,7 +458,7 @@ class ListenViewSet(viewsets.ModelViewSet):
 
             # .prefetch_related('quality_control')
 
-        test_query = self.request.query_params.get('test_query', 'exclude')
+        test_query = self.request.query_params.get('test_query', '')
 
         if test_query == 'exclude':
             queryset = queryset\
@@ -466,7 +466,7 @@ class ListenViewSet(viewsets.ModelViewSet):
                 .exclude(quality_control__delete=True) \
                 .exclude(quality_control__bad__gte=1)\
                 .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__person=person)\
+                .exclude(quality_control__person=person)
 
         elif test_query == 'when':
             queryset = queryset.annotate(reviewed=Sum(
@@ -491,7 +491,11 @@ class ListenViewSet(viewsets.ModelViewSet):
                         then=Value(1)),
                     default=Value(0),
                     output_field=IntegerField())))\
-                .filter(reviewed=0)\
+                .filter(reviewed=0)
+        else:
+            queryset = queryset\
+                .exclude(quality_control__approved=True) \
+                .exclude(quality_control__person=person)
 
         sort_by = self.request.query_params.get('sort_by', '')
 
