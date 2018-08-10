@@ -1,7 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from corpus.models import QualityControl, Sentence, Recording, Source
 from django.db.models import \
-    Count, Q, Sum, Case, When, Value, IntegerField, Max
+    Count, Q, Sum, Case, When, Value, IntegerField, Max,\
+    Prefetch
+
+from django.contrib.contenttypes.models import ContentType
+
 from people.helpers import get_person
 from people.competition import \
     filter_recordings_for_competition, \
@@ -428,8 +432,19 @@ class ListenViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
+        # ctm = ContentTypeManager()
         queryset = Recording.objects\
-            .exclude(person=person)
+            .exclude(person=person)\
+            .prefetch_related(
+                Prefetch(
+                    'quality_control',
+                    queryset=QualityControl.objects.filter(
+                        content_type=ContentType.objects.get_for_model(
+                            Recording))
+                    )
+                )\
+            .select_related('person', 'sentence', 'source')
+
             # .prefetch_related('quality_control')
 
         test_query = self.request.query_params.get('test_query', 'exclude')
