@@ -437,7 +437,7 @@ class ListenViewSet(viewsets.ModelViewSet):
     TODO: Add a query so we can get all recordings (or just approved ones).
     """
     queryset = Recording.objects.all()
-    pagination_class = OneHundredResultPagination
+    pagination_class = TenResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
 
@@ -454,7 +454,7 @@ class ListenViewSet(viewsets.ModelViewSet):
                             Recording))
                     )
                 )\
-            .select_related('person', 'sentence', 'source')
+            .select_related('sentence')
 
             # .prefetch_related('quality_control')
 
@@ -467,7 +467,6 @@ class ListenViewSet(viewsets.ModelViewSet):
                 .exclude(quality_control__bad__gte=1)\
                 .exclude(quality_control__good__gte=1)\
                 .exclude(quality_control__person=person)\
-                .distinct()
 
         elif test_query == 'when':
             queryset = queryset.annotate(reviewed=Sum(
@@ -493,7 +492,6 @@ class ListenViewSet(viewsets.ModelViewSet):
                     default=Value(0),
                     output_field=IntegerField())))\
                 .filter(reviewed=0)\
-                .distinct()
 
         sort_by = self.request.query_params.get('sort_by', '')
 

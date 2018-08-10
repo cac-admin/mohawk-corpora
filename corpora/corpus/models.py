@@ -106,6 +106,7 @@ class QualityControl(models.Model):
 
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
+        index_together = [('content_type', 'object_id')]
 
     def clear(self):
         self.good = 0
