@@ -267,7 +267,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)
-    pagination_class = OneHundredResultPagination
+    pagination_class = TenResultPagination
 
     # parser_classes = (MultiPartParser, JSONParser, FormParser, )
 
@@ -305,7 +305,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
             #    queryset = filter_recordings_for_competition(queryset)
 
 
-            # COuld this be faster?
+            # Could this be faster?
             # queryset = queryset.annotate(reviewed=Sum(
             #     Case(
             #         When(
@@ -354,8 +354,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 queryset = queryset.order_by('-pk')
                 return queryset
 
+            # We use these for comps, disabling for now as they're VERY slow.
             # queryset = filter_recordings_to_top_ten(queryset)
-            queryset = filter_recordings_distribute_reviews(queryset)
+            # queryset = filter_recordings_distribute_reviews(queryset)
 
             count = queryset.count()
             if count > 1:
