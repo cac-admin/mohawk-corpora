@@ -306,34 +306,34 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
 
             # Could this be faster?
-            # queryset = queryset.annotate(reviewed=Sum(
-            #     Case(
-            #         When(
-            #             quality_control__isnull=True,
-            #             then=Value(0)),
-            #         When(
-            #             quality_control__approved=True,
-            #             then=Value(1)),
-            #         When(
-            #             quality_control__bad__gte=1,
-            #             then=Value(1)),
-            #         When(
-            #             quality_control__good__gte=1,
-            #             then=Value(1)),
-            #         When(
-            #             quality_control__delete=True,
-            #             then=Value(1)),
-            #         default=Value(0),
-            #         output_field=IntegerField())))\
-            #     .filter(reviewed=0)\
-            #     .distinct()
-
-            queryset = queryset\
-                .exclude(quality_control__approved=True)\
-                .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__delete=True)\
+            queryset = queryset.annotate(reviewed=Sum(
+                Case(
+                    When(
+                        quality_control__isnull=True,
+                        then=Value(0)),
+                    When(
+                        quality_control__approved=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__bad__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__good__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__delete=True,
+                        then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField())))\
+                .filter(reviewed=0)\
                 .distinct()
+
+            # queryset = queryset\
+            #     .exclude(quality_control__approved=True)\
+            #     .exclude(quality_control__good__gte=1)\
+            #     .exclude(quality_control__bad__gte=1)\
+            #     .exclude(quality_control__delete=True)\
+            #     .distinct()
 
             # Exclude things person listened to
             queryset = queryset.exclude(quality_control__person=person)
