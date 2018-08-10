@@ -9,7 +9,7 @@ CELERYBEAT_SCHEDULE = {
     'clean_empty_person_models': {
         'task': 'people.tasks.clean_empty_person_models',
         'options': {'task_id': 'clean_empty_person_models'},
-        'schedule': crontab(minute='*/5', hour='*'),
+        'schedule': crontab(minute='*/25', hour='*'),
         'relative': True,
     },
 

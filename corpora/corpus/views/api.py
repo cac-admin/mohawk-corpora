@@ -267,7 +267,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     queryset = Recording.objects.all()
     serializer_class = RecordingSerializer
     permission_classes = (RecordingPermissions,)
-    pagination_class = TenResultPagination
+    pagination_class = OneHundredResultPagination
 
     # parser_classes = (MultiPartParser, JSONParser, FormParser, )
 
@@ -283,7 +283,17 @@ class RecordingViewSet(viewsets.ModelViewSet):
         return serializer_class
 
     def get_queryset(self):
-        queryset = Recording.objects.all()
+        queryset = Recording.objects.all()\
+            .prefetch_related(
+                Prefetch(
+                    'quality_control',
+                    queryset=QualityControl.objects.filter(
+                        content_type=ContentType.objects.get_for_model(
+                            Recording))
+                    )
+                )\
+            .select_related('person', 'sentence', 'source')
+
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
@@ -426,7 +436,7 @@ class ListenViewSet(viewsets.ModelViewSet):
     TODO: Add a query so we can get all recordings (or just approved ones).
     """
     queryset = Recording.objects.all()
-    pagination_class = OneResultPagination
+    pagination_class = OneHundredResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
 
