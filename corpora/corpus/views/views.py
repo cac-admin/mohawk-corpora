@@ -34,6 +34,8 @@ from corpora.mixins import SiteInfoMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+import json
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -196,6 +198,12 @@ class RecordingFileView(RedirectView):
                     url = audio_file.url
 
             if url:
+                rType = request.GET.get('json', False)
+                if rType:
+                    return http.HttpResponse(
+                        json.dumps({'url': url}),
+                        content_type="application/json")
+
                 if self.permanent:
                     return http.HttpResponsePermanentRedirect(url)
                 else:
