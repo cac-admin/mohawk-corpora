@@ -304,7 +304,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
             # if sort_by not in 'recent':
             #    queryset = filter_recordings_for_competition(queryset)
 
-
             # Could this be faster?
             queryset = queryset.annotate(reviewed=Sum(
                 Case(
@@ -323,20 +322,13 @@ class RecordingViewSet(viewsets.ModelViewSet):
                     When(
                         quality_control__delete=True,
                         then=Value(1)),
+                    When(
+                        quality_control__person=person,
+                        then=Value(1)),
                     default=Value(0),
                     output_field=IntegerField())))\
                 .filter(reviewed=0)\
-                .distinct()
-
-            # queryset = queryset\
-            #     .exclude(quality_control__approved=True)\
-            #     .exclude(quality_control__good__gte=1)\
-            #     .exclude(quality_control__bad__gte=1)\
-            #     .exclude(quality_control__delete=True)\
-            #     .distinct()
-
-            # Exclude things person listened to
-            queryset = queryset.exclude(quality_control__person=person)
+                # .distinct()
 
             # If we want to handle simultaneous but recent
             # we could serve 5 sets of the most recent recordings
