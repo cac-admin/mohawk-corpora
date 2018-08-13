@@ -11,6 +11,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey,\
                                                GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
+from django.contrib.postgres.indexes import BrinIndex
+
 from django.contrib.auth.models import User
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS
 
@@ -309,6 +311,9 @@ class Sentence(models.Model):
     class Meta:
         verbose_name = 'Sentence'
         verbose_name_plural = 'Sentences'
+        indexes = [
+            models.Index(fields=['quality_control'])
+        ]
 
     def clean(self):
         if len(self.text) > 124:
@@ -385,6 +390,11 @@ class Recording(models.Model):
         verbose_name = 'Recording'
         verbose_name_plural = 'Recordings'
         unique_together = (("person", "sentence"),)
+        indexes = [
+            BrinIndex(fields=['-created']),
+            models.Index(fields=['-updated']),
+            models.Index(fields=['quality_control'])
+        ]
 
     def __unicode__(self):
         try:
