@@ -237,7 +237,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     """
     list:
     API endpoint that allows recordings to be viewed or edited. This is used by
-    staff only.
+    staff only for GET requests. This is used by anyone to POST recordings.
 
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
@@ -305,28 +305,13 @@ class RecordingViewSet(viewsets.ModelViewSet):
             #    queryset = filter_recordings_for_competition(queryset)
 
             # Could this be faster?
-            queryset = queryset.annotate(reviewed=Sum(
-                Case(
-                    When(
-                        quality_control__isnull=True,
-                        then=Value(0)),
-                    When(
-                        quality_control__approved=True,
-                        then=Value(1)),
-                    When(
-                        quality_control__bad__gte=1,
-                        then=Value(1)),
-                    When(
-                        quality_control__good__gte=1,
-                        then=Value(1)),
-                    When(
-                        quality_control__delete=True,
-                        then=Value(1)),
-                    When(
-                        quality_control__person=person,
-                        then=Value(1)),
-                    default=Value(0),
-                    output_field=IntegerField())))\
+            queryset = queryset\
+                .annotate(
+                    reviewed=Case(
+                        When(quality_control__isnull=True, then=Value(0)),
+                        When(quality_control__follow_up=True, then=Value(0)),
+                        default=Value(1),
+                        output_field=IntegerField()))\
                 .filter(reviewed=0)\
                 # .distinct()
 
@@ -448,8 +433,6 @@ class ListenViewSet(viewsets.ModelViewSet):
                 )\
             .select_related('sentence')
 
-            # .prefetch_related('quality_control')
-
         test_query = self.request.query_params.get('test_query', '')
 
         if test_query == 'exclude':
@@ -485,9 +468,18 @@ class ListenViewSet(viewsets.ModelViewSet):
                     output_field=IntegerField())))\
                 .filter(reviewed=0)
         else:
-            queryset = queryset\
-                .exclude(quality_control__approved=True) \
-                .exclude(quality_control__person=person)
+
+            # This strategy is fast but it means we only get one review per
+            # item. It works for now until we reviewed everything.
+            q1 = queryset\
+                .filter(quality_control__isnull=True)
+
+            if q1.count() > 0:
+                queryset = q1
+            else:
+                queryset = queryset\
+                    .exclude(quality_control__approved=True) \
+                    .exclude(quality_control__person=person)
 
         sort_by = self.request.query_params.get('sort_by', '')
 
