@@ -141,6 +141,14 @@ class IsStaffOrReadOnly(permissions.BasePermission):
 class SentencesView(generics.ListCreateAPIView):
     """
     API endpoint that allows sentences to be viewed or edited.
+
+    To get sentences for recording, use the query parameter `recording=True`.
+    This will return a random, approved sentence that the person hasn't read.
+
+    To get all of the approved sentences, use the query parameter
+    `quality_control__approved=True`. These will be paginated results,
+    so you will need to follwo the `next` url to load all available sentences.
+
     """
 
     queryset = Sentence.objects.all()
@@ -173,20 +181,25 @@ class SentencesView(generics.ListCreateAPIView):
                         When(
                             quality_control__approved=False,
                             then=Value(0)),
+                        When(
+                            quality_control__isnull=True,
+                            then=Value(0)),
                         default=Value(0),
                         output_field=IntegerField())
                 ))
-
-                if eval(query) is True:
-
-                    queryset = queryset.filter(sum_approved__gte=1).order_by('-sum_approved')
-                    # queryset = queryset.filter(quality_control__isnull=False)
-
-                # filter by approved = false
-                elif eval(query) is False:
-                    queryset = queryset.filter(sum_approved__lte=0).order_by('-sum_approved')
-                else:
-                    raise TypeError
+                try:
+                    if eval(query) is True:
+                        queryset = queryset\
+                            .filter(sum_approved__gte=1)\
+                            .order_by('-sum_approved')
+                    elif eval(query) is False:
+                        queryset = queryset\
+                            .filter(sum_approved__lte=0)\
+                            .order_by('-sum_approved')
+                    else:
+                        raise ValueError
+                except:
+                    raise ValueError
 
         return queryset
 
@@ -358,19 +371,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
             queryset = q1.union(q2)
 
         return queryset
-
-    # def create(self, request, *args, **kwargs):
-    #     # Taken from source: https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py#L14
-    #     logger.debug(request.data)
-    #     serializer = self.get_serializer(data=request.data)
-    #     logger.debug(serializer)
-
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    #     response = super(RecordingViewSet, self).create(request)
 
 
 class ListenPermissions(permissions.BasePermission):
