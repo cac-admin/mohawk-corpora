@@ -172,7 +172,7 @@ class RecordingFileView(RedirectView):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
         p = get_or_create_person(request)
-
+        rType = request.GET.get('json', False)
         audio_file = m.audio_file
 
         f = request.GET.get('format', 'aac')
@@ -198,7 +198,6 @@ class RecordingFileView(RedirectView):
                     url = audio_file.url
 
             if url:
-                rType = request.GET.get('json', False)
                 if rType:
                     return http.HttpResponse(
                         json.dumps({'url': url}),
@@ -216,6 +215,10 @@ class RecordingFileView(RedirectView):
                                })
                 return http.HttpResponseGone()
         else:
+            if rType:
+                return http.HttpResponse(
+                        json.dumps({'error': 'Access denied.'}),
+                        content_type="application/json")
             raise http.Http404
 
 
