@@ -472,14 +472,15 @@ class ListenViewSet(viewsets.ModelViewSet):
             # This strategy is fast but it means we only get one review per
             # item. It works for now until we reviewed everything.
             q1 = queryset\
-                .filter(quality_control__isnull=True)
+                .annotate(num_qc=Count('quality_control'))\
+                .filter(num_qc__lte=0)
 
             if q1.count() > 0:
                 queryset = q1
             else:
                 queryset = queryset\
-                    .exclude(quality_control__approved=True) \
-                    .exclude(quality_control__person=person)
+                    .annotate(num_qc=Count('quality_control'))\
+                    .filter(num_qc__lte=2)
 
         sort_by = self.request.query_params.get('sort_by', '')
 
