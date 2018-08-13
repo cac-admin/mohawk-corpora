@@ -312,7 +312,7 @@ class Sentence(models.Model):
         verbose_name = 'Sentence'
         verbose_name_plural = 'Sentences'
         indexes = [
-            models.Index(fields=['quality_control'])
+            # models.Index(fields=['quality_control'])
         ]
 
     def clean(self):
@@ -393,7 +393,7 @@ class Recording(models.Model):
         indexes = [
             BrinIndex(fields=['-created']),
             models.Index(fields=['-updated']),
-            models.Index(fields=['quality_control'])
+            # models.Index(fields=['quality_control'])
         ]
 
     def __unicode__(self):
