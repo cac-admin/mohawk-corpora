@@ -197,9 +197,11 @@ class SentencesView(generics.ListCreateAPIView):
                             .filter(sum_approved__lte=0)\
                             .order_by('-sum_approved')
                     else:
-                        raise ValueError
+                        raise ValueError(
+                            "Specify either True or False for quality_control__approved=")
                 except:
-                    raise ValueError
+                    raise ValueError(
+                        "Specify either True or False for quality_control__approved=")
 
         return queryset
 
