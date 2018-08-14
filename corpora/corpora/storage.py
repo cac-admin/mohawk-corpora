@@ -10,6 +10,8 @@ class S3StaticStorage(S3BotoStorage):
     def __init__(self, *args, **kwargs):
         kwargs['bucket_name'] = settings.AWS_STATIC_BUCKET_NAME
         kwargs['bucket_acl'] = settings.AWS_STATIC_DEFAULT_ACL
+        kwargs['acl'] = settings.AWS_STATIC_DEFAULT_ACL
+        kwargs['bucket'] = settings.AWS_STATIC_BUCKET_NAME
         super(S3StaticStorage, self).__init__(*args, **kwargs)
 
 
