@@ -461,10 +461,15 @@ class Recording(models.Model):
         if self.audio_file is not None and self.audio_file_md5 is None:
             self.audio_file_md5 = get_md5_hexdigest_of_file(self.audio_file)
 
-        if self.audio_file_wav is not None:
-            if self.audio_file_wav_md5 is None:
-                self.audio_file_wav_md5 = \
-                    get_md5_hexdigest_of_file(self.audio_file_wav)
+        # I really don't understand something fundamendal here! why does
+        # if self.audio_file_wav is not None: not work!
+        try:
+            if self.audio_file_wav is not None:
+                if self.audio_file_wav_md5 is None:
+                    self.audio_file_wav_md5 = \
+                        get_md5_hexdigest_of_file(self.audio_file_wav)
+        except:
+            pass
 
         super(Recording, self).save(*args, **kwargs)
 
