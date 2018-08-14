@@ -57,6 +57,11 @@ class Group(models.Model):
     class Meta:
         verbose_name = _('group')
         verbose_name_plural = _('groups')
+        indexes = [
+            models.Index(fields=['-score']),
+            models.Index(fields=['num_recordings']),
+            models.Index(fields=['duration'])
+        ]
 
 
 class Person(models.Model):
@@ -155,6 +160,10 @@ class Person(models.Model):
     class Meta:
         verbose_name = _('Person')
         verbose_name_plural = _('People')
+        indexes = [
+            models.Index(fields=['-score']),
+            models.Index(fields=['score_comp'])
+        ]
 
     def __unicode__(self):
         return self.full_name

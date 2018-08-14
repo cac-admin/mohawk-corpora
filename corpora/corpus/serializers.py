@@ -97,6 +97,20 @@ class SentenceSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 
+class SentenceSerializerNotNested(serializers.HyperlinkedModelSerializer):
+    quality_control = serializers.PrimaryKeyRelatedField(
+        many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model = Sentence
+        fields = ('id', 'text', 'language', 'quality_control', 'updated', 'source')
+        extra_kwargs = {
+            'source': {'view_name': 'api:source-detail'}
+        }
+
+
 class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -122,7 +136,7 @@ class RecordingSerializerPost(serializers.ModelSerializer):
 
 
 class RecordingSerializer(serializers.ModelSerializer):
-    sentence = SentenceSerializer(
+    sentence = SentenceSerializerNotNested(
         many=False,
         read_only=True
     )
@@ -175,13 +189,16 @@ class ListenSerializer(serializers.ModelSerializer):
         many=False,
         read_only=True
     )
-    quality_control = QualityControRelatedField(
-        many=True,
-        read_only=True,
-    )
+    # quality_control = QualityControRelatedField(
+    #     many=True,
+    #     read_only=True,
+    # )
     audio_file_url = serializers.CharField(source='get_recording_file_url',
                                            read_only=True)
 
     class Meta:
         model = Recording
-        fields = ('sentence', 'audio_file_url', 'id', 'sentence_text', 'quality_control')
+        fields = ('sentence', 'audio_file_url', 'id', 'sentence_text', # 'quality_control'
+            )
+
+

@@ -5,10 +5,10 @@ from celery.schedules import crontab
 # celery -A proj beat -s /webapp/logs/celery/celerybeat-schedule
 
 CELERYBEAT_SCHEDULE = {
-    'asg_launch_watchdog': {
-        'task': 'transcription.tasks.launch_watcher',
-        'schedule': crontab(minute='*/5'),
-    },
+    # 'asg_launch_watchdog': {
+    #     'task': 'transcription.tasks.launch_watcher',
+    #     'schedule': crontab(minute='*/5'),
+    # },
     'transcribe_recordings_without_reviews': {
         'task': 'transcription.tasks.transcribe_recordings_without_reviews',
         'schedule': crontab(minute=42, hour=1, day_of_week='*'),

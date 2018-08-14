@@ -11,6 +11,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey,\
                                                GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
+from django.contrib.postgres.indexes import BrinIndex
+
 from django.contrib.auth.models import User
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS
 
@@ -89,6 +91,9 @@ class QualityControl(models.Model):
     updated = models.DateTimeField(auto_now=True)
     person = models.ForeignKey('people.Person', null=True, blank=True)
 
+    # Move to Recording QC
+    # recording = models.ForeignKey('corpus.Recording', null=True)
+
     notes = models.TextField(
         blank=True,
         null=True,
@@ -106,6 +111,14 @@ class QualityControl(models.Model):
 
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
+        indexes = [
+            models.Index(fields=['object_id', 'content_type', ]),
+            models.Index(fields=['delete', ]),
+            models.Index(fields=['approved', ]),
+            models.Index(fields=['good', ]),
+            models.Index(fields=['bad', ]),
+            # models.Index(fields=['first_name'], name='first_name_idx'),
+        ]
 
     def clear(self):
         self.good = 0
@@ -138,6 +151,77 @@ class QualityControl(models.Model):
         except:
             co = 'None'
         return u'{0}: {1}'.format(ct, co)
+
+
+# class SentenceQualityControl(models.Model):
+
+#     good = models.PositiveIntegerField(
+#         default=0,
+#         help_text='Indicates the object is good. Can be any interger >= 0.')
+#     bad = models.PositiveIntegerField(
+#         default=0,
+#         help_text='Indicates the object is bad. Can be any interger >= 0.')
+#     approved = models.BooleanField(
+#         default=False,
+#         help_text='Approved indicates that the object is suitable for use.')
+#     approved_by = models.ForeignKey(
+#         User, null=True, blank=True,
+#         help_text='User that approved the object. Should be a user ID.')
+#     delete = models.BooleanField(
+#         default=False,
+#         help_text='Flag for deletion.')
+#     star = models.PositiveIntegerField(
+#         default=0,
+#         help_text='Stars are to indicate an object is amazing. This is a positive\
+#         interger field so we can, for example, do a 5 star rating system.')
+#     follow_up = models.BooleanField(
+#         default=False,
+#         help_text='Flag an item for follow up later.')
+
+#     updated = models.DateTimeField(auto_now=True)
+#     person = models.ForeignKey('people.Person', null=True, blank=True)
+
+#     sentence = models.ForeignKey('corpus.Sentence', null=True)
+
+#     notes = models.TextField(
+#         blank=True,
+#         null=True,
+#         help_text="Field for providing extra information about a review.")
+
+#     machine = models.BooleanField(
+#         default=False,
+#         help_text='Boolean to indicate if a machine made the review.')
+
+#     source = models.ForeignKey(
+#         'Source',
+#         null=True,
+#         blank=True,
+#         on_delete=models.SET_NULL,
+#         help_text='Used to identify machines.')
+
+#     class Meta:
+#         unique_together = (("object_id", "content_type", "person"),)
+#         indexes = [
+#             models.Index(fields=['object_id', 'content_type', ]),
+#             # models.Index(fields=['first_name'], name='first_name_idx'),
+#         ]
+
+#     def clear(self):
+#         self.good = 0
+#         self.bad = 0
+#         self.approved = False
+#         self.approved_by = None
+
+#     def __unicode__(self):
+#         try:
+#             ct = str(self.content_type).title()
+#         except:
+#             ct = 'None'
+#         try:
+#             co = self.content_object.__unicode__()
+#         except:
+#             co = 'None'
+#         return u'{0}: {1}'.format(ct, co)
 
 
 class Source(models.Model):
@@ -227,6 +311,9 @@ class Sentence(models.Model):
     class Meta:
         verbose_name = 'Sentence'
         verbose_name_plural = 'Sentences'
+        indexes = [
+            # models.Index(fields=['quality_control'])
+        ]
 
     def clean(self):
         if len(self.text) > 124:
@@ -303,6 +390,11 @@ class Recording(models.Model):
         verbose_name = 'Recording'
         verbose_name_plural = 'Recordings'
         unique_together = (("person", "sentence"),)
+        indexes = [
+            BrinIndex(fields=['created']),
+            models.Index(fields=['-updated']),
+            # models.Index(fields=['quality_control'])
+        ]
 
     def __unicode__(self):
         try:
@@ -366,11 +458,14 @@ class Recording(models.Model):
         return max(0, 1 - math.exp(-(net_votes + 1) / damper))
 
     def save(self, *args, **kwargs):
-        if self.audio_file_md5 is None:
+        if self.audio_file is not None and self.audio_file_md5 is None:
             self.audio_file_md5 = get_md5_hexdigest_of_file(self.audio_file)
-        if self.audio_file_wav_md5 is None:
-            self.audio_file_wav_md5 = \
-                get_md5_hexdigest_of_file(self.audio_file_wav)
+
+        if self.audio_file_wav is not None:
+            if self.audio_file_wav_md5 is None:
+                self.audio_file_wav_md5 = \
+                    get_md5_hexdigest_of_file(self.audio_file_wav)
+
         super(Recording, self).save(*args, **kwargs)
 
 

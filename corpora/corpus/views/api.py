@@ -1,7 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from corpus.models import QualityControl, Sentence, Recording, Source
 from django.db.models import \
-    Count, Q, Sum, Case, When, Value, IntegerField, Max
+    Count, Q, Sum, Case, When, Value, IntegerField, Max,\
+    Prefetch
+
+from django.contrib.contenttypes.models import ContentType
+
 from people.helpers import get_person
 from people.competition import \
     filter_recordings_for_competition, \
@@ -16,6 +20,7 @@ from corpus.serializers import QualityControlSerializer,\
                          ListenSerializer, \
                          SourceSerializer
 from rest_framework import generics, serializers
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from django.core.cache import cache
 import random
 import logging
@@ -136,6 +141,14 @@ class IsStaffOrReadOnly(permissions.BasePermission):
 class SentencesView(generics.ListCreateAPIView):
     """
     API endpoint that allows sentences to be viewed or edited.
+
+    To get sentences for recording, use the query parameter `recording=True`.
+    This will return a random, approved sentence that the person hasn't read.
+
+    To get all of the approved sentences, use the query parameter
+    `quality_control__approved=True`. These will be paginated results,
+    so you will need to follwo the `next` url to load all available sentences.
+
     """
 
     queryset = Sentence.objects.all()
@@ -168,20 +181,27 @@ class SentencesView(generics.ListCreateAPIView):
                         When(
                             quality_control__approved=False,
                             then=Value(0)),
+                        When(
+                            quality_control__isnull=True,
+                            then=Value(0)),
                         default=Value(0),
                         output_field=IntegerField())
                 ))
-
-                if eval(query) is True:
-
-                    queryset = queryset.filter(sum_approved__gte=1).order_by('-sum_approved')
-                    # queryset = queryset.filter(quality_control__isnull=False)
-
-                # filter by approved = false
-                elif eval(query) is False:
-                    queryset = queryset.filter(sum_approved__lte=0).order_by('-sum_approved')
-                else:
-                    raise TypeError
+                try:
+                    if eval(query) is True:
+                        queryset = queryset\
+                            .filter(sum_approved__gte=1)\
+                            .order_by('-sum_approved')
+                    elif eval(query) is False:
+                        queryset = queryset\
+                            .filter(sum_approved__lte=0)\
+                            .order_by('-sum_approved')
+                    else:
+                        raise ValueError(
+                            "Specify either True or False for quality_control__approved=")
+                except:
+                    raise ValueError(
+                        "Specify either True or False for quality_control__approved=")
 
         return queryset
 
@@ -232,7 +252,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     """
     list:
     API endpoint that allows recordings to be viewed or edited. This is used by
-    staff only.
+    staff only for GET requests. This is used by anyone to POST recordings.
 
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
@@ -247,7 +267,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
         Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
         assume local time for the machine (likely +1200).
 
-            /api/recordings/?update_after=2016-10-03T19:00:00%2B0200
+            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
 
     read:
     This api provides acces to a `audio_file_url` field. This allows the
@@ -264,6 +284,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
     permission_classes = (RecordingPermissions,)
     pagination_class = TenResultPagination
 
+    # parser_classes = (MultiPartParser, JSONParser, FormParser, )
+
     def get_serializer_class(self):
         serializer_class = self.serializer_class
 
@@ -276,7 +298,17 @@ class RecordingViewSet(viewsets.ModelViewSet):
         return serializer_class
 
     def get_queryset(self):
-        queryset = Recording.objects.all()
+        queryset = Recording.objects.all()\
+            .prefetch_related(
+                Prefetch(
+                    'quality_control',
+                    queryset=QualityControl.objects.filter(
+                        content_type=ContentType.objects.get_for_model(
+                            Recording))
+                    )
+                )\
+            .select_related('person', 'sentence', 'source')
+
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
@@ -287,13 +319,16 @@ class RecordingViewSet(viewsets.ModelViewSet):
             # if sort_by not in 'recent':
             #    queryset = filter_recordings_for_competition(queryset)
 
+            # Could this be faster?
             queryset = queryset\
-                .exclude(quality_control__approved=True)\
-                .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__delete=True)
-
-            # Exclude things person listened to
+                .annotate(
+                    reviewed=Case(
+                        When(quality_control__isnull=True, then=Value(0)),
+                        When(quality_control__follow_up=True, then=Value(0)),
+                        default=Value(1),
+                        output_field=IntegerField()))\
+                .filter(reviewed=0)\
+                # .distinct()
 
             # If we want to handle simultaneous but recent
             # we could serve 5 sets of the most recent recordings
@@ -311,8 +346,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
                 queryset = queryset.order_by('-pk')
                 return queryset
 
+            # We use these for comps, disabling for now as they're VERY slow.
             # queryset = filter_recordings_to_top_ten(queryset)
-            queryset = filter_recordings_distribute_reviews(queryset)
+            # queryset = filter_recordings_distribute_reviews(queryset)
 
             count = queryset.count()
             if count > 1:
@@ -380,20 +416,37 @@ class ListenViewSet(viewsets.ModelViewSet):
     TODO: Add a query so we can get all recordings (or just approved ones).
     """
     queryset = Recording.objects.all()
-    pagination_class = OneResultPagination
+    pagination_class = TenResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
 
     def get_queryset(self):
         person = get_person(self.request)
-
-        # Don't listen to one's own recording
+        # ctm = ContentTypeManager()
         queryset = Recording.objects\
-            .exclude(person=person)
+            .exclude(person=person)\
+            .prefetch_related(
+                Prefetch(
+                    'quality_control',
+                    queryset=QualityControl.objects.filter(
+                        content_type=ContentType.objects.get_for_model(
+                            Recording))
+                    )
+                )\
+            .select_related('sentence')
 
-        # Exclude all approved recordings
-        queryset = queryset\
-            .annotate(num_approved=Sum(
+        test_query = self.request.query_params.get('test_query', '')
+
+        if test_query == 'exclude':
+            queryset = queryset\
+                .exclude(quality_control__approved=True) \
+                .exclude(quality_control__delete=True) \
+                .exclude(quality_control__bad__gte=1)\
+                .exclude(quality_control__good__gte=1)\
+                .exclude(quality_control__person=person)
+
+        elif test_query == 'when':
+            queryset = queryset.annotate(reviewed=Sum(
                 Case(
                     When(
                         quality_control__isnull=True,
@@ -402,14 +455,34 @@ class ListenViewSet(viewsets.ModelViewSet):
                         quality_control__approved=True,
                         then=Value(1)),
                     When(
-                        quality_control__approved=False,
-                        then=Value(0)),
+                        quality_control__bad__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__good__gte=1,
+                        then=Value(1)),
+                    When(
+                        quality_control__delete=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__person=person,
+                        then=Value(1)),
                     default=Value(0),
-                    output_field=IntegerField())))
-        queryset = queryset.exclude(num_approved__gte=1)
+                    output_field=IntegerField())))\
+                .filter(reviewed=0)
+        else:
 
-        # Exclude items you already listened to
-        queryset = queryset.exclude(quality_control__person=person)
+            # This strategy is fast but it means we only get one review per
+            # item. It works for now until we reviewed everything.
+            q1 = queryset\
+                .annotate(num_qc=Count('quality_control'))\
+                .filter(num_qc__lte=0)
+
+            if q1.count() > 0:
+                queryset = q1
+            else:
+                queryset = queryset\
+                    .annotate(num_qc=Count('quality_control'))\
+                    .filter(num_qc__lte=2)
 
         sort_by = self.request.query_params.get('sort_by', '')
 

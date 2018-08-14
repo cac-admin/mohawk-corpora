@@ -90,7 +90,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'sentence_text',
         'person',
         'get_approved',
-        'get_approved_by',
+        # 'get_approved_by',
         'calculate_score',
         'created',
     )
@@ -135,7 +135,9 @@ class RecordingAdmin(admin.ModelAdmin):
     def get_approved(self, obj):
         return obj.sum_approved
     get_approved.short_description = 'Approvals'
-    get_approved.admin_order_field = 'sum_approved'
+    # This could be cuasing the long response for admin as it would need to
+    # run this on ALL rows for sort!
+    # get_approved.admin_order_field = 'sum_approved'
 
     def get_approved_by(self, obj):
         qc = obj.quality_control
