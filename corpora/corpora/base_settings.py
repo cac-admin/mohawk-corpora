@@ -283,11 +283,9 @@ BOWER_INSTALLED_APPS = {
     'jquery-ui',
     'bootstrap',
     'opus-recorderjs#v4.1.4',
-    'components-font-awesome#^4.7.0',
     'js-cookie',
     'popper.js',
     'chart.js',
-    # 'fortawesome-font-awesome',
 }
 
 # STATICFILES_DIRS = (
@@ -353,6 +351,7 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
     AWS_STATIC_DEFAULT_ACL = 'public-read'
     COMPRESS_URL = os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
+    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_DOMAIN']
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
