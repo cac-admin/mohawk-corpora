@@ -351,7 +351,7 @@ needs protected s3 files (e.g. recordings).
 '''
 if os.environ['ENVIRONMENT_TYPE'] != 'local':
     AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
-    COMPRESS_URL = os.environ['AWS_CLOUDFRONT_DOMAIN']
+    COMPRESS_URL = os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
