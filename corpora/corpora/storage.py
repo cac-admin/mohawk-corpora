@@ -8,7 +8,8 @@ from django.core.files.storage import get_storage_class
 class S3StaticStorage(S3BotoStorage):
 
     def __init__(self, *args, **kwargs):
-        kwargs['bucket'] = settings.AWS_STATIC_BUCKET_NAME
+        kwargs['bucket_name'] = settings.AWS_STATIC_BUCKET_NAME
+        kwargs['bucket_acl'] = settings.AWS_STATIC_DEFAULT_ACL
         super(S3StaticStorage, self).__init__(*args, **kwargs)
 
 
