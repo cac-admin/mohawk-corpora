@@ -460,9 +460,12 @@ class Recording(models.Model):
     def save(self, *args, **kwargs):
         if self.audio_file is not None and self.audio_file_md5 is None:
             self.audio_file_md5 = get_md5_hexdigest_of_file(self.audio_file)
-        if self.audio_file_wav and self.audio_file_wav_md5 is None:
-            self.audio_file_wav_md5 = \
-                get_md5_hexdigest_of_file(self.audio_file_wav)
+
+        if self.audio_file_wav is not None:
+            if self.audio_file_wav_md5 is None:
+                self.audio_file_wav_md5 = \
+                    get_md5_hexdigest_of_file(self.audio_file_wav)
+
         super(Recording, self).save(*args, **kwargs)
 
 
