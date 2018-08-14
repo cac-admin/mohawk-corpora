@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.postgres',
+
+    'collectfast',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
@@ -355,6 +357,7 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
+    AWS_PRELOAD_METADATA = True
 
 
 LOGGING = {

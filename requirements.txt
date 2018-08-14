@@ -62,3 +62,6 @@ pyyaml
 
 # Analytics
 django-analytical
+
+
+Collectfast
