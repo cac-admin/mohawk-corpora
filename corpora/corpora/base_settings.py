@@ -319,8 +319,16 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
         'LOCATION': memcache_servers,
         'TIMEOUT': 300,
-    }
+    },
+    'collectfast': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': memcache_servers,
+        'TIMEOUT': 300,
+    },
 }
+
+AWS_PRELOAD_METADATA = True
+COLLECTFAST_CACHE = 'collectfast'
 
 # These may be required if caching the entire site.
 # CACHE_MIDDLEWARE_ALIAS 
@@ -357,7 +365,6 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
-    AWS_PRELOAD_METADATA = True
 
 
 LOGGING = {
