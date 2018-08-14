@@ -149,8 +149,6 @@ AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'private'
 
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
 
 # S3 only access
 AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
@@ -344,6 +342,19 @@ COMPRESS_PRECOMPILERS = (
 COMPRESS_LOCAL_NPM_INSTALL = False
 # COMPRESS_ENABLED = True
 # COMPRESS_NODE_MODULES = "/usr/local/lib/node_modules/"
+
+
+'''
+There are a set of settings that allow us to use CloudFront for s3 hosted
+files. We also use a separate bucket for static files, because Corpora
+needs protected s3 files (e.g. recordings).
+'''
+if os.environ['ENVIRONMENT_TYPE'] != 'local':
+    AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
+    COMPRESS_URL = os.environ['AWS_CLOUDFRONT_DOMAIN']
+    STATIC_URL = COMPRESS_URL
+    COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
+    STATICFILES_STORAGE = 'corpora.storages.CachedS3BotoStorage'
 
 
 LOGGING = {
