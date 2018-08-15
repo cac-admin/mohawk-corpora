@@ -6,6 +6,10 @@ from django.db.models import \
 
 from django.contrib.contenttypes.models import ContentType
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers, vary_on_cookie
+
 from people.helpers import get_person
 from people.competition import \
     filter_recordings_for_competition, \
@@ -28,6 +32,27 @@ import logging
 from django.utils.dateparse import parse_datetime
 
 logger = logging.getLogger('corpora')
+
+
+class ViewSetCacheMixin(object):
+
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers('Authorization', 'Cookie'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(ViewSetCacheMixin, self)\
+            .dispatch(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers('Authorization', 'Cookie'))
+    def list(self, request, *args, **kwargs):
+        return super(ViewSetCacheMixin, self)\
+            .list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers('Authorization', 'Cookie'))
+    def retrieve(self, request, *args, **kwargs):
+        return super(ViewSetCacheMixin, self)\
+            .retrieve(request, *args, **kwargs)
 
 
 class OneHundredResultPagination(pagination.PageNumberPagination):
@@ -63,7 +88,7 @@ class PutOnlyStaffReadPermission(permissions.BasePermission):
                 return request.user.is_staff
 
 
-class QualityControlViewSet(viewsets.ModelViewSet):
+class QualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows qc to be viewed or edited.
     """
@@ -73,7 +98,7 @@ class QualityControlViewSet(viewsets.ModelViewSet):
     pagination_class = OneHundredResultPagination
 
 
-class SourceViewSet(viewsets.ModelViewSet):
+class SourceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     list:
     Returns a list of all Sources.
@@ -111,7 +136,7 @@ class SourceViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class SentenceViewSet(viewsets.ModelViewSet):
+class SentenceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows sentences to be viewed or edited.
     """
@@ -248,7 +273,7 @@ class RecordingPermissions(permissions.BasePermission):
         return False
 
 
-class RecordingViewSet(viewsets.ModelViewSet):
+class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     list:
     API endpoint that allows recordings to be viewed or edited. This is used by
@@ -404,7 +429,7 @@ class ListenPermissions(permissions.BasePermission):
             return False
 
 
-class ListenViewSet(viewsets.ModelViewSet):
+class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows a single recording to be viewed.
     This api obfuscates extra recording information and only provides the
