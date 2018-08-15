@@ -42,9 +42,10 @@ def clear_quality_control_instance_when_object_modified(
                     object_id=instance.pk,
                     content_type=ContentType.objects.get_for_model(instance)
                     )
-                for qc in qcs:
-                    print "Clearing quality control"
-                    qc.delete()
+                qcs.delete()
+                # for qc in qcs:
+                #     print "Clearing quality control"
+                #     qc.delete()
 
         except ObjectDoesNotExist:
             pass
