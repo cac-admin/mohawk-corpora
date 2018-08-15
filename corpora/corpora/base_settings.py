@@ -146,8 +146,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'corpora.wsgi.application'
 
 # CORS
-CORS_ORIGIN_WHITELIST = (
-)
+CORS_ORIGIN_WHITELIST = \
+    ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
 # STORAGES #
 DEFAULT_FILE_STORAGE =      os.environ['FILE_STORAGE']
