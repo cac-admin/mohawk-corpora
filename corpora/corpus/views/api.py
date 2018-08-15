@@ -36,15 +36,17 @@ logger = logging.getLogger('corpora')
 
 class ViewSetCacheMixin(object):
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers('Authorization', 'Cookie'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ViewSetCacheMixin, self)\
-            .dispatch(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        sort_by = self.request.query_params.get('sort_by', None)
+        if sort_by is None:
+            return self.cached_list(request, *args, **kwargs)
+        else:
+            return super(ViewSetCacheMixin, self)\
+                .list(request, *args, **kwargs)
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers('Authorization', 'Cookie'))
-    def list(self, request, *args, **kwargs):
+    def cached_list(self, request, *args, **kwargs):
         return super(ViewSetCacheMixin, self)\
             .list(request, *args, **kwargs)
 
