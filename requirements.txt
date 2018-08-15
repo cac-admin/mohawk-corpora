@@ -67,3 +67,5 @@ django-analytical
 
 
 Collectfast
+
+django-cors-headers

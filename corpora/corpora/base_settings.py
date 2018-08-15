@@ -85,12 +85,15 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
 
     'debug_toolbar',
+
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
+    'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -142,6 +145,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'corpora.wsgi.application'
 
+# CORS
+CORS_ORIGIN_WHITELIST = (
+)
 
 # STORAGES #
 DEFAULT_FILE_STORAGE =      os.environ['FILE_STORAGE']
@@ -367,6 +373,7 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     AWS_IS_GZIPPED = True
+    CORS_ORIGIN_WHITELIST.append(os.environ['AWS_CLOUDFRONT_DOMAIN'])
 
 
 LOGGING = {
