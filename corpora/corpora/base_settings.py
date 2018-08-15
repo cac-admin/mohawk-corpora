@@ -336,7 +336,7 @@ CACHES = {
 
 AWS_PRELOAD_METADATA = True
 COLLECTFAST_CACHE = 'collectfast'
-# COLLECTFAST_THREADS = 10
+COLLECTFAST_THREADS = 10
 
 # These may be required if caching the entire site.
 # CACHE_MIDDLEWARE_ALIAS 
@@ -373,7 +373,7 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
-    AWS_IS_GZIPPED = True
+    # AWS_IS_GZIPPED = True
     CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + \
         (os.environ['AWS_CLOUDFRONT_DOMAIN'],)
 
