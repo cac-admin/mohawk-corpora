@@ -316,12 +316,12 @@ for srv in memcache_server.split(','):
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': memcache_servers,
         'TIMEOUT': 300,
     },
     'collectfast': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': memcache_servers,
         'TIMEOUT': 300,
     },
