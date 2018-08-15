@@ -373,7 +373,8 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     AWS_IS_GZIPPED = True
-    CORS_ORIGIN_WHITELIST.append(os.environ['AWS_CLOUDFRONT_DOMAIN'])
+    CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + \
+        (os.environ['AWS_CLOUDFRONT_DOMAIN'])
 
 
 LOGGING = {
