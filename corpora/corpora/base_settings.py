@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.postgres',
+
+    'collectfast',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
@@ -148,8 +150,6 @@ AWS_SECRET_ACCESS_KEY =     os.environ['AWS_SECRET']
 AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'private'
-
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 # S3 only access
@@ -285,11 +285,9 @@ BOWER_INSTALLED_APPS = {
     'jquery-ui',
     'bootstrap',
     'opus-recorderjs#v4.1.4',
-    'components-font-awesome#^4.7.0',
     'js-cookie',
     'popper.js',
     'chart.js',
-    # 'fortawesome-font-awesome',
 }
 
 # STATICFILES_DIRS = (
@@ -321,8 +319,16 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
         'LOCATION': memcache_servers,
         'TIMEOUT': 300,
-    }
+    },
+    'collectfast': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': memcache_servers,
+        'TIMEOUT': 300,
+    },
 }
+
+AWS_PRELOAD_METADATA = True
+COLLECTFAST_CACHE = 'collectfast'
 
 # These may be required if caching the entire site.
 # CACHE_MIDDLEWARE_ALIAS 
@@ -344,6 +350,22 @@ COMPRESS_PRECOMPILERS = (
 COMPRESS_LOCAL_NPM_INSTALL = False
 # COMPRESS_ENABLED = True
 # COMPRESS_NODE_MODULES = "/usr/local/lib/node_modules/"
+
+
+'''
+There are a set of settings that allow us to use CloudFront for s3 hosted
+files. We also use a separate bucket for static files, because Corpora
+needs protected s3 files (e.g. recordings).
+'''
+if os.environ['ENVIRONMENT_TYPE'] != 'local':
+    AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
+    AWS_STATIC_DEFAULT_ACL = 'public-read'
+    COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
+    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_DOMAIN']
+    STATIC_URL = COMPRESS_URL
+    COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
+    STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
+    AWS_IS_GZIPPED = True
 
 
 LOGGING = {

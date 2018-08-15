@@ -17,6 +17,7 @@ pycrypto
 pytz
 django-storages
 django-bower
+django-yarn
 
 django-debug-toolbar
 
@@ -62,3 +63,6 @@ pyyaml
 
 # Analytics
 django-analytical
+
+
+Collectfast
