@@ -329,7 +329,7 @@ CACHES = {
 
 AWS_PRELOAD_METADATA = True
 COLLECTFAST_CACHE = 'collectfast'
-COLLECTFAST_THREADS = 10
+# COLLECTFAST_THREADS = 10
 
 # These may be required if caching the entire site.
 # CACHE_MIDDLEWARE_ALIAS 
