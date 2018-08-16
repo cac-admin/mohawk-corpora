@@ -381,7 +381,6 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             # new DB query lets be clever an use a cache. We'll need to get
             # the most recent recording that was served however...
             query_cache_key = '{0}:recording-viewset'.format(person.uuid)
-
             pk = get_random_pk_from_queryset(queryset, query_cache_key)
             return [Recording.objects.get(pk=pk)]
 
@@ -522,10 +521,10 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         '''
 
         if 'random' in sort_by.lower():
-            count = queryset.count()
-            if count > 1:
-                i = random.randint(0, count-1)
-                return [queryset[i]]
+
+            query_cache_key = '{0}:listen-viewset'.format(person.uuid)
+            pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            return [Recording.objects.get(pk=pk)]
 
         return queryset
 
