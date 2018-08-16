@@ -122,7 +122,7 @@ class Listen{
             self.next_url=null
             self.get_recordings()
             self.hide_loading()
-          }, 500 )
+          }, 1500 )
 
         });
   }
@@ -259,7 +259,7 @@ class Listen{
         console.error('FAILED TO GET RECORDING FILE')
         window.setTimeout(function(){
           self.next()
-        }, 1000)
+        }, 1500)
       })
 
 
