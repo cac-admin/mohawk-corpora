@@ -449,6 +449,10 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
+
+        # we should treat all anonymous usesrs as the same so we dont' overload shit!
+
+
         # ctm = ContentTypeManager()
         queryset = Recording.objects\
             .exclude(person=person)\
