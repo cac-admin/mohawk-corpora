@@ -119,7 +119,9 @@ div.content{
 <script type="text/javascript">
 
 listen = new Listen({{person.pk}}, '.sentence-block', {{content_type}} {% if user.can_approve %}, true, {{request.user.pk}} {% endif %});
-listen.next()
+$(document).ready(function(){
+  listen.next()
+});
 
 player = new Player('.sentence-block');
 </script>
@@ -144,13 +146,15 @@ player = new Player('.sentence-block');
       profile.load()
       
       document.addEventListener('profile.loaded', function(){
-        for (var i = 0; i < profile.data.known_languages.length; i++) {
-          kl = profile.data.known_languages[i]['level_of_proficiency']
-          if (typeof kl === 'number'){
-            profile.data.known_languages[i]['level_of_proficiency'] = " "+profs[kl]            
+        if (profile.data.known_languages!=null){
+          for (var i = 0; i < profile.data.known_languages.length; i++) {
+            kl = profile.data.known_languages[i]['level_of_proficiency']
+            if (typeof kl === 'number'){
+              profile.data.known_languages[i]['level_of_proficiency'] = " "+profs[kl]            
+            }
           }
-        }
-        profile.display();  
+          profile.display(); 
+        }         
       })
 
       $('.recording-info').empty()

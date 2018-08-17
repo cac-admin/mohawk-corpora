@@ -67,7 +67,7 @@ class Listen{
       }
     })
 
-    $(self.sentence_block).find('.next').off().on('click', function(e){
+    $(self.sentence_block).find('.next').unbind().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
         self.audio.pause()
@@ -252,8 +252,11 @@ class Listen{
         $(self.sentence_block).find('.next, .auto-play').removeClass('disabled')
         self.hide_loading()
         self.audio.src = self.recording.audio_file_url
+        self.audio.oncanplay=function(){
+
+          document.dispatchEvent(self.recording_loaded_event);
+        }
         self.audio.load()
-        document.dispatchEvent(self.recording_loaded_event);
 
       }).fail(function(){
         console.error('FAILED TO GET RECORDING FILE')
@@ -273,7 +276,9 @@ class Listen{
 
 
       $(self.audio).bind('error', function(){
-        self.next()
+        window.setTimeout(function(){
+          self.next()
+        }, 1500);
       })
     }
   }
