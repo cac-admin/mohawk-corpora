@@ -4,6 +4,7 @@ from django.utils import translation
 from django.conf import settings
 from people.helpers import get_current_language, get_or_create_person
 from license.models import SiteLicense
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class PersonMiddleware(object):
@@ -92,7 +93,7 @@ class LicenseMiddleware(object):
         # the view (and later middleware) are called.
 
         try:
-            license = SiteLicense.objects.get(site=settings.SITE_ID)
+            license = SiteLicense.objects.get(site=get_current_site(request))
         except:
             license = None
 
