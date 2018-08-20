@@ -2,6 +2,7 @@
 
 from django.utils import translation
 from django.conf import settings
+from django.core.cache import cache
 from people.helpers import get_current_language, get_or_create_person
 from license.models import SiteLicense
 from django.contrib.sites.shortcuts import get_current_site
@@ -33,6 +34,33 @@ class PersonMiddleware(object):
                 domain=settings.SESSION_COOKIE_DOMAIN,
                 secure=settings.SESSION_COOKIE_SECURE or None
             )
+        # Code to be executed for each request/response after
+        # the view is called.
+        return response
+
+
+class ExpoLoginMiddleware(object):
+    '''
+    This middleware sets information to allow us to process logins from our
+    expo app.
+    '''
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        # expo_redirect_url = request.META['X_EXPO_REDIRECT']
+        expo_redirect_url = request.META.get('expo-login-url', False)
+
+        if expo_redirect_url:
+            cache.set('EXPO-REDIRECT-URL', expo_redirect_url)
+
+        response = self.get_response(request)
+
         # Code to be executed for each request/response after
         # the view is called.
         return response
