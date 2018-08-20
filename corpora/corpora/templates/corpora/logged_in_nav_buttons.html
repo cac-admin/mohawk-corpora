@@ -27,11 +27,10 @@
 {% endaddtoblock %}
 
 
-{% cache 500 navbar request.user.is_staff request.user_isauthenticated request.path %}
-
-
 <nav class="navbar navbar-expand">
   <div class="container">
+  {% cache 500 navbar request.user.is_staff request.user_isauthenticated request.path %}
+
   <a class="navbar-brand" href="/">{{request.site.name}}</a>
   
   {% get_available_languages as available_languages %}
@@ -176,8 +175,7 @@
 
 
   </ul>
-  
-
+  {% endcache %}
   <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
       
           {% csrf_token %}
@@ -192,10 +190,6 @@
           <input name="language" type="hidden" value="{{current_language}}" />
       
   </form>
-
-
-
 </div>
 </nav>
 
-{% endcache %}

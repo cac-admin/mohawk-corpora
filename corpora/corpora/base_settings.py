@@ -113,7 +113,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corpora.middleware.PersonMiddleware',
     'corpora.middleware.LicenseMiddleware',
-
+    'corpora.middleware.ExpoLoginMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 
 ]

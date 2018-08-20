@@ -409,6 +409,9 @@ class ListenPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
+            # Unregisted people can only listen up to 100 recordings
+
+            # Registered people can only listen up to 1000 recordings
             return True
         else:
             self.message = _("{0} not allowed with this API\
