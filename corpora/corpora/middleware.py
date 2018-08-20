@@ -7,6 +7,13 @@ from people.helpers import get_current_language, get_or_create_person
 from license.models import SiteLicense
 from django.contrib.sites.shortcuts import get_current_site
 
+from urlparse import parse_qs
+
+from uuid import uuid4 as uuid
+
+import logging
+logger = logging.getLogger('corpora')
+
 
 class PersonMiddleware(object):
     '''
@@ -36,6 +43,7 @@ class PersonMiddleware(object):
             )
         # Code to be executed for each request/response after
         # the view is called.
+
         return response
 
 
@@ -53,13 +61,25 @@ class ExpoLoginMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        # expo_redirect_url = request.META['X_EXPO_REDIRECT']
-        expo_redirect_url = request.META.get('expo-login-url', False)
-
-        if expo_redirect_url:
-            cache.set('EXPO-REDIRECT-URL', expo_redirect_url)
+        request.GET.urlencode()
+        expo_redirect_url = request.GET.get('expo-login-url', False)
+        login_uuid = request.get_signed_cookie('uuid-expo-login', None)
 
         response = self.get_response(request)
+
+        if expo_redirect_url:
+            if login_uuid is None:
+                response.set_signed_cookie(
+                    'uuid-expo-login',
+                    str(uuid()),
+                    max_age=120,
+                    domain=settings.SESSION_COOKIE_DOMAIN,
+                    secure=settings.SESSION_COOKIE_SECURE or None
+                )
+            cache.set(
+                'EXPO-REDIRECT-URL', expo_redirect_url, 120)
+            cache.set(
+                'USER-LOGIN-FROM-EXPO-{0}'.format(login_uuid), 120)
 
         # Code to be executed for each request/response after
         # the view is called.

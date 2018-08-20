@@ -19,6 +19,13 @@ class ProcessExpoRedirect(
             'https://auth.expo.io/@kmahelona/corpora-expo')
         if request.user.is_authenticated:
             token, created = Token.objects.get_or_create(user=request.user)
+            cache.delete('EXPO-REDIRECT-URL')
+
+            login_uuid = request.get_signed_cookie('uuid-expo-login', None)
+            cache.delete(
+                'USER-LOGIN-FROM-EXPO-{0}'.format(
+                    login_uuid))
+
             return HttpResponseRedirect(
                 "{0}?token={1}".format(redirect_url, token.key)
             )
