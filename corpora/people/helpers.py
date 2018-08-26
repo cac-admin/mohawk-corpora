@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import Person, KnownLanguage
 
 from allauth.account.models import EmailAddress
+from rest_framework.authentication import TokenAuthentication
 
 import logging
 logger = logging.getLogger('corpora')
@@ -17,9 +18,18 @@ logger = logging.getLogger('corpora')
 
 def get_or_create_person(request):
     user = request.user
+
+    if user is None or user.is_anonymous:
+        try:
+            token_auth = TokenAuthentication()
+            user, token = token_auth.authenticate(request)
+        except:
+            pass
+
     if user.is_anonymous:
         # Check if a session cookie exists
         uuid = request.get_signed_cookie('uuid', None)
+
         if uuid is not None:
             # get person from uuid
             person, created = Person.objects.get_or_create(uuid=uuid)
@@ -68,6 +78,14 @@ def get_or_create_person(request):
 
 def get_person(request):
     user = request.user
+
+    if user is None or user.is_anonymous:
+        try:
+            token_auth = TokenAuthentication()
+            user, token = token_auth.authenticate(request)
+        except:
+            pass
+
     if user.is_anonymous:
         # Check if a session cookie exists
         uuid = request.get_signed_cookie('uuid', None)

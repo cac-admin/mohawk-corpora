@@ -17,7 +17,6 @@ from people.competition import \
     filter_recordings_distribute_reviews
 from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
-from rest_framework.authentication import TokenAuthentication
 
 from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
@@ -423,15 +422,6 @@ class ListenPermissions(permissions.BasePermission):
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
             person = get_person(request)
-            if person is None:
-                token_auth = TokenAuthentication()
-                try:
-                    user, token = token_auth.authenticate(request)
-                    if user is not None:
-                        person = Person.objects.get(user=user)
-                except:
-                    pass
-
             key = '{0}:{1}:listen'.format(person.uuid, obj.id)
             cache.set(key, True, 15)
             # logger.debug('  CACHE KEY: {0}'.format(key))

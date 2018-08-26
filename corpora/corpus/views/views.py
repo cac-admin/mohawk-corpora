@@ -34,8 +34,6 @@ from corpora.mixins import SiteInfoMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from rest_framework.authentication import TokenAuthentication
-
 import json
 
 import logging
@@ -173,20 +171,7 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        p = None
-        if u is None or u.is_anonymous:
-            token_auth = TokenAuthentication()
-            try:
-                user, token = token_auth.authenticate(request)
-                if user is not None:
-                    p = Person.objects.get(user=user)
-                    u = user
-            except:
-                # Not sure why people pass tuple or None - it requries a catch!
-                pass
-
-        if p is None:
-            p = get_or_create_person(request)
+        p = get_or_create_person(request)
 
         rType = request.GET.get('json', False)
         audio_file = m.audio_file
