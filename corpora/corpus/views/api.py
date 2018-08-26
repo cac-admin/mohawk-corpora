@@ -523,8 +523,11 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
         if 'random' in sort_by.lower():
             count = queryset.count()
-            if count > 1:
-                i = random.randint(0, count-1)
+            if count > 0:
+                if count == 1:
+                    i = 0
+                else:
+                    i = random.randint(0, count-1)
 
                 key = '{0}:{1}:listen'.format(person.uuid, queryset[i].id)
                 cache.set(key, True, 15)
