@@ -525,6 +525,10 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             count = queryset.count()
             if count > 1:
                 i = random.randint(0, count-1)
+
+                key = '{0}:{1}:listen'.format(person.uuid, queryset[i].id)
+                cache.set(key, True, 15)
+
                 return [queryset[i]]
 
         return queryset
