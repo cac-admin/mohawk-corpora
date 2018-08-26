@@ -117,3 +117,32 @@ class KnownLanguageViewSet(viewsets.ModelViewSet):
     queryset = KnownLanguage.objects.all()
     serializer_class = KnownLanguageSerializer
     permission_classes = (PersonPermissions,)
+
+
+class ProfilePermissions(PersonPermissions):
+    """
+    A special API endpoint to allow users to get their profile info.
+    """
+
+    def has_permission(self, request, view):
+        return True
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    """
+    The /profile endpoint allows users to access their profiel information.
+
+    `/profile/` will return a single result of the users information. This is
+    a convienince method when a person's ID isn't known but you have their
+    authentication credentials.
+
+    `/profile/id` wille return the person object. This works when you have
+    a person's id.
+    """
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (ProfilePermissions,)
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        return [person]

@@ -21,6 +21,8 @@ router.register(r'sources', corpus_api.SourceViewSet)
 router.register(r'tribes', people_api.TribeViewSet)
 router.register(r'demographics', people_api.DemographicViewSet)
 router.register(r'persons', people_api.PersonViewSet)
+router.register(r'profile', people_api.ProfileViewSet)
+
 router.register(r'knownlangauges', people_api.KnownLanguageViewSet)
 router.register(r'accept_license', license_api.AcceptLicenseViewSet)
 
