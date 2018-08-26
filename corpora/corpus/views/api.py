@@ -318,7 +318,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         serializer_class = self.serializer_class
 
         # This might stuff up our documentation as self.request is none
-        # when buiklding docs.
+        # when building docs.
         if self.request:
             if self.request.method == 'POST':
                 serializer_class = RecordingSerializerPost

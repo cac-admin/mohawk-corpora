@@ -89,7 +89,12 @@ class QualityControl(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     updated = models.DateTimeField(auto_now=True)
-    person = models.ForeignKey('people.Person', null=True, blank=True)
+    person = models.ForeignKey(
+        'people.Person',
+        null=True, blank=True,
+        help_text="ID of person associated with this QualityControl object.\
+        For Token Authenticated API calls, passing 'self' instead of an \
+        Integer will associate the person of the Token with this QC object.")
 
     # Move to Recording QC
     # recording = models.ForeignKey('corpus.Recording', null=True)

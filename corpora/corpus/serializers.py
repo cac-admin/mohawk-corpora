@@ -34,11 +34,7 @@ class QualityControlSerializer(serializers.ModelSerializer):
         read_only=True,
         view_name='api:sentence-detail'
         )
-    # content_type = ContentTypeStringRelatedField()
-
-    # def create(self, validated_data):
-    #     validated_data['content_type_id'] = validated_data['content_type']
-    #     return QualityControl.objects.create(**validated_data)
+    # person = serializers.PrimaryKeyRelatedField()
 
     class Meta:
         model = QualityControl
@@ -46,6 +42,14 @@ class QualityControlSerializer(serializers.ModelSerializer):
                   'content_type', 'content_object', 'updated', 'person',
                   'delete', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
+
+    def run_validation(self, data):
+        if 'person' in data.keys():
+            if data['person'] == 'self':
+                d2 = data.copy()
+                person = get_person(self.context['request'])
+                d2['person'] = person.id
+        return super(QualityControlSerializer, self).run_validation(d2)
 
 
 class QualityControRelatedField(serializers.RelatedField):
@@ -124,6 +128,15 @@ class RecordingSerializerPost(serializers.ModelSerializer):
         fields = ('sentence_text', 'user_agent', 'audio_file', 'person', 'id')
 
     def create(self, validated_data):
+        try:
+            person = validated_data['person']
+            if person is None:
+                raise KeyError
+        except KeyError:
+            person = get_person(self.context['request'])
+            if person is not None:
+                validated_data['person'] = person
+
         recording = \
             super(RecordingSerializerPost, self).create(validated_data)
 
