@@ -308,7 +308,7 @@ def encode_audio(recording, test=False, codec='aac'):
             audio = True
 
     if audio:
-        file_name = recording.get_recordign_file_name() + '_16kHz'
+        file_name = recording.get_recording_file_name() + '_16kHz'
         extension = codecs[codec][1]
 
         if codec in 'wav':

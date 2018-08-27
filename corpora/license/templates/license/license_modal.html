@@ -12,7 +12,7 @@ $(document).ready(function(){
     dataType: 'json'
   }).done(function(response){
     
-    if (response.length == 0){
+    if (response.results.length == 0){
       $('#accept-license').modal()
       $('#accept-license').on('hidden.bs.modal', function (e) {
         $('#accept-license').modal('show')

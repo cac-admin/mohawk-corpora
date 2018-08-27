@@ -33,7 +33,8 @@ class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def save_user(self, request, sociallogin, form=None):
 
-        user = super(PersonSocialAccountAdapter, self).save_user(request, sociallogin, form)
+        user = super(PersonSocialAccountAdapter, self).save_user(
+            request, sociallogin, form)
 
         # Create a People Object with User Information
         request.user = user
@@ -42,7 +43,8 @@ class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
         if user.birthday or user.gender:
             gender = user.gender
 
-            # We should import the choices from people.models and look up the chars from the tuple strings.
+            # We should import the choices from people.models and look up the
+            # chars from the tuple strings.
             if 'male' in gender.lower():
                 gender = 'M'
             elif 'female' in gender.lower():
@@ -53,12 +55,12 @@ class PersonSocialAccountAdapter(DefaultSocialAccountAdapter):
             demo = Demographic.objects.create(gender=gender, person=person)
             demo.save()
 
-
-        # We should try and get demographics from social account - sex, language, etc.
-
+        # We should try and get demographics from social account - sex,
+        # language, etc.
 
     def populate_user(self, request, sociallogin, data):
-        user = super(PersonSocialAccountAdapter, self).populate_user(request, sociallogin, data)
+        user = super(PersonSocialAccountAdapter, self).populate_user(
+            request, sociallogin, data)
 
         if data.get('sex'):
             gender = data.get('sex')

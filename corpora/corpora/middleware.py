@@ -2,8 +2,17 @@
 
 from django.utils import translation
 from django.conf import settings
+from django.core.cache import cache
 from people.helpers import get_current_language, get_or_create_person
 from license.models import SiteLicense
+from django.contrib.sites.shortcuts import get_current_site
+
+from urlparse import parse_qs
+
+from uuid import uuid4 as uuid
+
+import logging
+logger = logging.getLogger('corpora')
 
 
 class PersonMiddleware(object):
@@ -32,6 +41,46 @@ class PersonMiddleware(object):
                 domain=settings.SESSION_COOKIE_DOMAIN,
                 secure=settings.SESSION_COOKIE_SECURE or None
             )
+        # Code to be executed for each request/response after
+        # the view is called.
+
+        return response
+
+
+class ExpoLoginMiddleware(object):
+    '''
+    This middleware sets information to allow us to process logins from our
+    expo app.
+    '''
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        request.GET.urlencode()
+        expo_redirect_url = request.GET.get('expo-login-url', False)
+        login_uuid = request.get_signed_cookie('uuid-expo-login', None)
+
+        response = self.get_response(request)
+
+        if expo_redirect_url:
+            if login_uuid is None:
+                response.set_signed_cookie(
+                    'uuid-expo-login',
+                    str(uuid()),
+                    max_age=120,
+                    domain=settings.SESSION_COOKIE_DOMAIN,
+                    secure=settings.SESSION_COOKIE_SECURE or None
+                )
+            cache.set(
+                'EXPO-REDIRECT-URL', expo_redirect_url, 120)
+            cache.set(
+                'USER-LOGIN-FROM-EXPO-{0}'.format(login_uuid), 120)
+
         # Code to be executed for each request/response after
         # the view is called.
         return response
@@ -92,7 +141,7 @@ class LicenseMiddleware(object):
         # the view (and later middleware) are called.
 
         try:
-            license = SiteLicense.objects.get(site=settings.SITE_ID)
+            license = SiteLicense.objects.get(site=get_current_site(request))
         except:
             license = None
 

@@ -84,6 +84,15 @@ class ProfileDetail(
         #     url = reverse('corpus:record')  # onboard?
         #     return redirect(url)
 
+        login_uuid = request.get_signed_cookie('uuid-expo-login', None)
+        expo_login = \
+            cache.get(
+                'USER-LOGIN-FROM-EXPO-{0}'.format(
+                    login_uuid), False)
+        if expo_login:
+
+            return redirect('/expo-login/')
+
         return super(ProfileDetail, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

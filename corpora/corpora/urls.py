@@ -14,7 +14,7 @@ from rest_framework.documentation import include_docs_urls
 
 from corpus.views.stats_views import RecordingStatsView
 from corpus.views.views import StatsView
-from people.views import stats_views
+from people.views import stats_views, auth
 from people.views import views as people_views
 
 from django.views.decorators.cache import cache_page
@@ -126,6 +126,11 @@ urlpatterns = [
 
     url(r'^', include('corpora.urls_api', namespace='api')),
     url(r'^docs/', include_docs_urls(title='Corpora API', public=False)),
+
+    url(
+        r'^expo-login/(?P<redirect_url>.*)',
+        auth.ProcessExpoRedirect.as_view(),
+        name='expo-login'),
 
     # url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
     #     name='django.contrib.sitemaps.views.sitemap')

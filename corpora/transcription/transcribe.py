@@ -111,7 +111,8 @@ def transcribe_audio_sphinx(
 def transcribe_audio_quick(file_object):
     logger.debug('DOING QUICK TRANSCRIPTION')
 
-    tmp_file = "/tmp/tmp_file_{0}".format(uuid.uuid4())
+    tmp_file = "/tmp/tmp_file_{0}.{1}".format(
+        uuid.uuid4(), file_object.name.split('.')[-1])
 
     f = file(tmp_file, 'wb')
     for chunk in file_object.chunks():
@@ -141,6 +142,9 @@ def transcribe_audio_quick(file_object):
 
     p = Popen(convert, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     (output, errors) = p.communicate()
+    p_status = p.poll()
+    while p_status is None:
+        p_status = p.poll()
 
     p = Popen(post, stdout=PIPE)
     (output, errors) = p.communicate()

@@ -378,12 +378,12 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             # queryset = filter_recordings_to_top_ten(queryset)
             # queryset = filter_recordings_distribute_reviews(queryset)
 
-            count = queryset.count()
-            if count > 1:
-                i = random.randint(0, count - 1)
-                return [queryset[i]]
-            else:
-                return queryset
+            # Here we return a single object, so rather than making a whole
+            # new DB query lets be clever an use a cache. We'll need to get
+            # the most recent recording that was served however...
+            query_cache_key = '{0}:recording-viewset'.format(person.uuid)
+            pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            return [Recording.objects.get(pk=pk)]
 
         updated_after = self.request.query_params.get('updated_after', None)
         if updated_after:
@@ -410,6 +410,9 @@ class ListenPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
+            # Unregisted people can only listen up to 100 recordings
+
+            # Registered people can only listen up to 1000 recordings
             return True
         else:
             self.message = _("{0} not allowed with this API\
@@ -450,6 +453,10 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
+
+        # we should treat all anonymous usesrs as the same so we dont' overload shit!
+
+
         # ctm = ContentTypeManager()
         queryset = Recording.objects\
             .exclude(person=person)\
@@ -522,16 +529,47 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         '''
 
         if 'random' in sort_by.lower():
-            count = queryset.count()
-            if count > 0:
-                if count == 1:
-                    i = 0
-                else:
-                    i = random.randint(0, count-1)
+            query_cache_key = '{0}:listen-viewset'.format(person.uuid)
+            pk = get_random_pk_from_queryset(queryset, query_cache_key)
 
-                key = '{0}:{1}:listen'.format(person.uuid, queryset[i].id)
-                cache.set(key, True, 15)
+            key = '{0}:{1}:listen'.format(person.uuid, pk)
+            cache.set(key, True, 15)
 
-                return [queryset[i]]
+            return [Recording.objects.get(pk=pk)]
 
         return queryset
+
+
+def get_random_pk_from_queryset(queryset, cache_key):
+    '''
+    Returns a random object from a queryset in the form of a queryset e.g. [obj].
+
+    This function caches the original queryset and picks a new random object from 
+    the first set while excluding objects that were already returned. It sets a max
+    list size so as to not blow up the cache size. It also randobly picks a block
+    from a queryset that exceeepts the max size so as to introduce more randomness
+    from the
+    '''
+
+    MAX_LIST_SIZE = 100
+
+    queryset_cache_key = "{0}:avai-pks".format(cache_key)
+    queryset_cache = cache.get(queryset_cache_key)
+
+    if queryset_cache is None or len(queryset_cache) == 0:
+        pks = list(queryset.values_list('pk', flat=True))
+        queryset_cache = []
+        loop_count = 0
+        while len(queryset_cache) <= MAX_LIST_SIZE and len(pks) > 0:
+            i = random.randint(0, len(pks) - 1)
+            queryset_cache.append(pks.pop(i))
+      
+
+    pk = queryset_cache.pop()
+    cache.set(queryset_cache_key, queryset_cache, 60*5)
+
+    return pk
+
+
+
+
