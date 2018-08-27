@@ -7,6 +7,16 @@ from django.utils.timezone import localtime
 from corpus.aggregate import build_qualitycontrol_stat_dict
 
 
+class SetPersonFromTokenWhenSelf(object):
+    def run_validation(self, data):
+        if 'person' in data.keys():
+            if data['person'] == 'self':
+                d2 = data.copy()
+                person = get_person(self.context['request'])
+                d2['person'] = person.id
+        return super(SetPersonFromTokenWhenSelf, self).run_validation(d2)
+
+
 class QualityControlHyperLinkedRelatedField(
         serializers.HyperlinkedRelatedField):
 
@@ -29,7 +39,8 @@ class QualityControlHyperLinkedRelatedField(
 #         return model.id
 
 
-class QualityControlSerializer(serializers.ModelSerializer):
+class QualityControlSerializer(
+        SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
     content_object = QualityControlHyperLinkedRelatedField(
         read_only=True,
         view_name='api:sentence-detail'
@@ -43,13 +54,13 @@ class QualityControlSerializer(serializers.ModelSerializer):
                   'delete', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
 
-    def run_validation(self, data):
-        if 'person' in data.keys():
-            if data['person'] == 'self':
-                d2 = data.copy()
-                person = get_person(self.context['request'])
-                d2['person'] = person.id
-        return super(QualityControlSerializer, self).run_validation(d2)
+    # def run_validation(self, data):
+    #     if 'person' in data.keys():
+    #         if data['person'] == 'self':
+    #             d2 = data.copy()
+    #             person = get_person(self.context['request'])
+    #             d2['person'] = person.id
+    #     return super(QualityControlSerializer, self).run_validation(d2)
 
 
 class QualityControRelatedField(serializers.RelatedField):
@@ -122,10 +133,13 @@ class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'text', 'language',)
 
 
-class RecordingSerializerPost(serializers.ModelSerializer):
+class RecordingSerializerPost(
+        SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
     class Meta:
         model = Recording
-        fields = ('sentence_text', 'user_agent', 'audio_file', 'person', 'id')
+        fields = (
+            'sentence_text', 'user_agent', 'audio_file',
+            'person', 'id', 'sentence')
 
     def create(self, validated_data):
         try:
