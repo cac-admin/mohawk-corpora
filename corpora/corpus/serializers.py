@@ -9,11 +9,14 @@ from corpus.aggregate import build_qualitycontrol_stat_dict
 
 class SetPersonFromTokenWhenSelf(object):
     def run_validation(self, data):
+        d2 = None
         if 'person' in data.keys():
             if data['person'] == 'self':
                 d2 = data.copy()
                 person = get_person(self.context['request'])
                 d2['person'] = person.id
+        if d2 is None:
+            d2 = data
         return super(SetPersonFromTokenWhenSelf, self).run_validation(d2)
 
 
