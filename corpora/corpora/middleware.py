@@ -155,5 +155,6 @@ class LicenseMiddleware(object):
 
 
 def show_toolbar_callback(arg):
+    return False
     if settings.DEBUG:
         return True

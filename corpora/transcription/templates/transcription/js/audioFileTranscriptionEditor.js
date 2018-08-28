@@ -1,22 +1,34 @@
 class AudioFileTranscriptionEditor{
   constructor(){
     this.aft_list = []
-
+    this.currentRequest = null
     var self=this
     $('[x-data-model="audio_file_transcription"][x-data-action="edit"]').each(function(index,element){
       $(element).on('click', function(event){
-        window.location = event.delegateTarget.attributes['x-data-url'].value
+        event.stopPropagation();
+        if (event.delegateTarget == event.target){
+          window.location = event.delegateTarget.attributes['x-data-url'].value    
+        }
       })
     })
 
+    $('[x-data-model="audio_file_transcription"][x-data-action="download"]').each(function(index,element){
+      $(element).on('click', function(event){
+        event.stopPropagation();
+        self.download(event.delegateTarget)
+      })
+    })    
+
     $('[x-data-model="audio_file_transcription"][x-data-field]').each(function(index,element){
       $(element).on('blur', function(event){
+        event.stopPropagation();
         self.save(event.target)
       })
     })
 
     $('a[x-data-model="audio_file_transcription"][x-data-action="delete"]').each(function(index,element){
       $(element).on('click', function(event){
+        event.stopPropagation();
         event.preventDefault();
         var id = element.attributes['x-data-id'].value
         var name = $(`[x-data-model="audio_file_transcription"][x-data-id="${id}"][x-data-field="name"]`).get(0).attributes['x-data-value'].value
@@ -34,6 +46,7 @@ class AudioFileTranscriptionEditor{
 
     $('a[x-data-model="audio_file_transcription"][x-data-action="create"]').each(function(index,element){
       $(element).on('click', function(event){
+        event.stopPropagation();
         event.preventDefault();
 
 
@@ -69,19 +82,47 @@ class AudioFileTranscriptionEditor{
   }
 
   create(form_data){
-    $.ajax({
+    var self=this;
+    var progress_bar = `
+        <div class="progress" style="margin-top: 15px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+        </div>
+`
+    $('.modal-body').append(progress_bar)
+
+    this.currentRequest = $.ajax({
         url: '/api/transcription/',
         type: 'POST',
         data: form_data,
         cache: false,
         contentType: false,
         processData: false,
+        xhr: function() {
+          var xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener("progress", function(evt) {
+            if (evt.lengthComputable) {
+                var percentComplete = parseInt(evt.loaded / evt.total * 100);
+                //Do something with upload progress here
+                console.log(percentComplete)
+                $('.progress-bar').attr({
+                  'aria-valuenow': percentComplete,
+                  style: "width: "+percentComplete+"%",});
+
+                // $(".modal-title").html('Uploading... '+percentComplete+"%")
+                
+            }
+          }, false);
+          return xhr
+        },         
     }).done(function(){
-      location.reload();
+      self.currentRequest=null
+      window.location = '/transcriptions/'
     });
+  
   }
 
   save(element){
+    var self=this;
     var formData = new FormData();
     var id = element.attributes['x-data-id'].value
     var field = element.attributes['x-data-field'].value
@@ -94,21 +135,35 @@ class AudioFileTranscriptionEditor{
       type: "PUT",
       cache: false,
       contentType: false,
-      processData: false,      
+      processData: false,
     }).done(function(){
-      console.log('Saved')
+      self.currentRequest=null
     })
   }
 
   delete(element){
     var id = element.attributes['x-data-id'].value
     var url = '/api/transcription/'+id+'/'
-    $.ajax({
+    this.currentRequest = $.ajax({
       url: url,
       type: "DELETE",     
     }).done(function(){
+      self.currentRequest=null
       location.reload()
     })    
+  }
+
+  download(element){
+    var format;
+    var id = element.attributes['x-data-id'].value
+    try{
+      format = element.attributes['x-data-format'].value
+    } catch { format = 'txt'}
+    var link = document.createElement("a");
+    link.download = element.attributes['x-data-file-name'].value
+    link.href = '/api/transcription/'+id+'.'+format;
+    console.log(link.href)
+    link.click();
   }
 
   add_object(){
@@ -124,9 +179,9 @@ class AudioFileTranscriptionEditor{
     //   element.modal('dispose')
     // })
     $('.temporary-modal').remove();
-
+    var self = this;
     var element = $('<div class="temporary-modal"></div>')
-    var button_class = 'primary'
+    var button_class = 'danger'
     if (action.toLowerCase().search('delete')>=0){
       button_class = 'danger'
     }
@@ -166,16 +221,22 @@ class AudioFileTranscriptionEditor{
     $(element).find('[x-data-confirm="true"]').each(function(index, elm){
       var spinner = "<i class='fas fa-circle-notch fa-spin'></i>";
       $(elm).on('click', function(){
-        
-        var result = method();
-        if (result){
-          $(elm).text("")
-          $(elm).append(spinner)
+        if (self.currentRequest == null){
+          var result = method();
+          if (result){
+            $(elm).text("")
+            $(elm).append(spinner)
+          }
         }
-        
       })
-      
     })
+
+    $(element).find('[data-dismiss="modal"]').each(function(index, elm){
+      $(elm).on('click', function(){
+        self.currentRequest.abort()
+        self.currentRequest = null
+      })
+    })    
 
   }
 

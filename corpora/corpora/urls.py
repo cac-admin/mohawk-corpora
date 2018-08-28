@@ -22,7 +22,6 @@ from django.views.decorators.cache import cache_page
 from django.conf import settings
 from django.conf.urls import include, url
 
-
 urlpatterns = [
 
     url(r'^$',

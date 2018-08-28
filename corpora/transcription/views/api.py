@@ -15,6 +15,8 @@ from django.shortcuts import get_object_or_404
 
 from corpus.views.api import TenResultPagination
 
+from transcription.utils import build_vtt
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -200,7 +202,8 @@ class AudioFileTranscriptionPermissions(permissions.BasePermission):
 
 class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Audio File Transcriptions (AFT) to be viewed or edited.
+    API endpoint that allows Audio File Transcriptions (AFT) to be viewed or
+    edited.
 
     retrieve:
     Return an AFT object.
@@ -211,6 +214,17 @@ class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
     create:
     Create an AFT.
 
+    # Downloading Transcriptions #
+    You can download the full transcription by appending `.format` to
+    the API endpoint. For example, to download a plain text file of a
+    transcription call `/api/transcription/123.txt`.
+
+    Supported formats are,
+
+    -  `txt`: A plain text file with all transcription segments joined by a
+    space
+    - `vtt`: A webvtt formatted file which includes timestamps. This file
+      can be used as captions.
 
     """
 
@@ -225,3 +239,15 @@ class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
             .filter(uploaded_by=person)
 
         return queryset
+
+    def retrieve(self, request, pk, format=None):
+        # return format
+        if format:
+            if format in 'txt':
+                aft = self.get_object()
+                return Response(aft.transcription)
+            if format in 'vtt':
+                aft = self.get_object()
+                return Response(build_vtt(aft))
+        #     return 'False'
+        return super(AudioFileTranscriptionViewSet, self).retrieve(request, pk)

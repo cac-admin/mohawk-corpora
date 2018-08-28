@@ -198,6 +198,9 @@ class AudioFileTranscription(models.Model):
             A Person ID. This field is populated automatically if\
             not provided.'))
 
+    # duration = models.PositiveIntegerField(
+    #     blank=True, null=True, editable=False)
+
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
 

@@ -230,3 +230,46 @@ def compile_aft(aft_pk):
         aft.original_transcription.save('original.txt', f)
 
     aft.save()
+
+
+def get_duration_components(duration):
+    h = int(duration/(100*60*60))
+    m = int((duration - h*(100*60*60))/(100*60))
+    s = int((duration - h*(100*60*60) - m*(100*60))/(100))
+    l = int((duration - h*(100*60*60) - m*(100*60) - s*100))
+
+    return (h, m, s, l)
+
+
+@shared_task
+def build_vtt(aft):
+    if type(aft) == str or type(aft) == int:
+        aft = AudioFileTranscription.objects.get(pk=aft)
+
+    segments = TranscriptionSegment.objects\
+        .filter(parent=aft)\
+        .order_by('start')
+
+    data = []
+    data.append('WEBVTT')
+    data.append('')
+
+    count = 1
+    for segment in segments:
+        if segment.corrected_text is None:
+            if segment.text is None:
+                continue
+            segment.corrected_text = segment.text
+
+        data.append(str(count))
+        count = count + 1
+        (sh, sm, ss, sl) = get_duration_components(segment.start)
+        (eh, em, es, el) = get_duration_components(segment.end)
+        data.append(
+            '{0:02d}:{1:02d}:{2:02d}.{3:03d} --> {4:02d}:{5:02d}:{6:02d}.{7:03d}'
+            .format(sh, sm, ss, sl, eh, em, es, el)
+            )
+        data.append(segment.corrected_text)
+        data.append('')
+
+    return '\n'.join(data)

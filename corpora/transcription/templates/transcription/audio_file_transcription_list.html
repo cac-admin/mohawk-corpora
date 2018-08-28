@@ -15,81 +15,179 @@
 </style>
 {% endaddtoblock %}
   
-
-<div class="container-fluid">
-
-
-<!--   <div class="topbar"><div>
-    <div class="row">
-      <div class="col">
-        <div class="name" ><h2>Transcriptions</h2>    
-        </div>
-      </div>
-    </div>
-  </div></div> -->
+<div class="viewport-header container-fluid">
   <div class="row">
     <div class="col ">
-      <div class="title">
       <h1>Transcriptions</h1>
-      </div>
     </div>
   </div>
+</div>
 
+<div class="viewport-title container-fluid">
   <div class="row">
     <div class="col">
-      <div class="table-responsive ">
-      <table class="table table-striped  table-hover">
+
+<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+
+<!--   <div class="input-group">
+    <div class="input-group-prepend">
+      <div class="input-group-text" id="btnGroupAddon"><i class="fal fa-plus fa-search" ></i></div>
+    </div>
+    <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="btnGroupAddon">
+  </div> -->
+
+  <div class="btn-group " role="group" aria-label="First group">
+
+     <a href="#"
+         class="btn btn-light" role="button"
+         x-data-model="audio_file_transcription"
+         x-data-action="create">
+        <i class="fal fa-plus fa-fw" ></i> Upload Audio
+      </a>
+
+  </div>
+
+
+
+</div>
+
+     
+
+    </div>
+  </div>
+</div>
+
+
+<div class="viewport-body container-fluid">
+  <div class="row">
+    <div class="col">
+      <table class="table table-striped table-hover" align="center">
         <thead class="thead">
           <tr>
-            <!-- <th scope="col">#</th> -->
-            <th scope="col">Name</th>
-            <th scope="col">Transcription</th>
-            <th scope="col">Uploaded By</th>
             <th scope="col">Actions</th>      
-            
-            <!-- <th scope="col">File</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Preview</th>
           </tr>
-        </thead>
+        </thead>        
         <tbody>
           {% for object in transcriptions %}
-          <tr >
+          <tr  >
+            <td>
+              <div>
+                  <a href="#"
+                     class="btn btn-sm btn-dark"
+                     role="button"
+                     x-data-action="edit"
+                     x-data-url="{% url 'transcription:file_transcribe' object.pk %}"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     title="Edit Transcription">
+                    <i class="fas fa-fw fa-edit"></i>
+                  </a>
+
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-dark " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-caret-down fa-fw"></i>
+                  </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+
+
+                  <a href="#"
+                     class="dropdown-item"
+                     x-data-action="download"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     x-data-file-name="{{object.name}}.txt"
+                     title="Download text file">
+                    <i class="far fa-fw fa-file-download"></i> Text
+                  </a>
+
+                  <a href="#"
+                     class="dropdown-item"
+                     x-data-action="download"
+                     x-data-format="vtt"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     x-data-file-name="{{object.name}}.vtt"
+                     title="Download caption file">
+                    <i class="far fa-fw fa-file-download"></i> Captions
+                  </a>
+
+                  <a href="#"
+                   class="dropdown-item"
+                   x-data-action="delete"
+                   x-data-model="audio_file_transcription"
+                   x-data-id="{{object.pk}}"
+                   title="Delete Transcription">
+                    <i class="far fa-fw fa-trash-alt"></i> Delete
+                  </a>
+
+                </div>
+              </div>
+
+              </div>
+            </td>            
+          
             <!-- <th scope="row">{{ forloop.counter }}</th> -->
-            <td x-data-model="audio_file_transcription"
+            <td
+                x-data-model="audio_file_transcription"
                 x-data-id="{{object.pk}}"
                 x-data-field="name"
                 x-data-value="{{object.name}}">
               <a href="{% url 'transcription:file_transcribe' object.pk %}">{{object.name}}</a></td>                        
-            <td>{{object.transcription|truncatechars:12}}</td>
-            <td>{{object.uploaded_by}}</td>
-            <!-- <td>{% if object.audio_file %}<a href="{{object.audio_file.url}}"><i class="fas fa-file-audio fa-fw"></i></a>{% endif %}</td> -->
             <td>
-              <div>
-                <a href="#"
-                   x-data-action="edit"
-                   x-data-url="{% url 'transcription:file_transcribe' object.pk %}"
-                   x-data-model="audio_file_transcription"
-                   x-data-id="{{object.pk}}">
-                  <i class="far fa-edit"></i>
-                </a>
-
-                <a href="#"
-                   x-data-action="delete"
-                   x-data-model="audio_file_transcription"
-                   x-data-id="{{object.pk}}">
-                  <i class="far fa-trash-alt"></i>
-                </a>
-              </div>
+              <a href="{% url 'transcription:file_transcribe' object.pk %}">
+                {{object.transcription|truncatechars:32}}
+              </a>
             </td>
+
+
+            <!-- <td>{{object.uploaded_by}}</td> -->
+            <!-- <td>{% if object.audio_file %}<a href="{{object.audio_file.url}}"><i class="fas fa-file-audio fa-fw"></i></a>{% endif %}</td> -->
+
           </tr>
           {% endfor %}
         </tbody>
-      </table>
-      </div>      
+      </table>      
     </div>
   </div>
+</div>
 
 
+<div class="viewport-footer container-fluid">
+  <div class="row">
+    <div class="col">
+        <nav aria-label="Page navigation ">
+          <ul class="pagination justify-content-end">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{%endif%}">
+              <a class="page-link" href="{% if not page_obj.has_previous %}#{%else%}?page={{ page_obj.previous_page_number }}{%endif%}" tabindex="-1">
+                <i class="far fa-angle-left"></i></a>
+            </li>
 
+            {% with 4 as page_space %}{% with -4  as page_space_neg%}
+            {% for page in page_obj.paginator.page_range %}
+            {% if page <= page_space %}
+              <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% elif page > page_obj.paginator.num_pages|add:page_space_neg %}
+              <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% elif page > page_space and page <= page_obj.paginator.num_pages|add:page_space_neg %}
+              {% if page > page_obj.number|add:page_space_neg and page < page_obj.number|add:page_space %}
+               <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+              {% elif page == page_obj.number|add:page_space_neg or page == page_obj.number|add:page_space  %}
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            {% else %}{% endif %}{% else %}{% endif %}
+            {% endfor %}{% endwith %}{% endwith %}
+
+            <li class="page-item {% if not page_obj.has_next %}disabled{%endif%}">
+              <a class="page-link " href="{% if not page_obj.has_next %}#{%else%}?page={{ page_obj.next_page_number }}{%endif%}">
+                <i class="far fa-angle-right"></i></a>
+            </li>
+          </ul>
+        </nav>
+    </div>
+  </div>
+</div>
   
 
 <!--   <div class="add_file" 
@@ -136,17 +234,17 @@
 {% addtoblock "js-end" %}
 <script type="text/javascript">
 
-var addButton = `
-<div class="add_file">
-    <a href="#"
-       x-data-model="audio_file_transcription"
-       x-data-action="create">
-      <i class="fal fa-plus fa-fw" ></i>
-    </a>
-  </div>
-`
+// var addButton = `
+// <div class="add_file">
+//     <a href="#"
+//        x-data-model="audio_file_transcription"
+//        x-data-action="create">
+//       <i class="fal fa-plus fa-fw" ></i>
+//     </a>
+//   </div>
+// `
 
-$('.dashboard').append(addButton)
+// $('.dashboard').append(addButton)
 
 
 
@@ -154,40 +252,40 @@ $('.dashboard').append(addButton)
 var aftEditor = new AudioFileTranscriptionEditor()
 
   
-function submit_form(event){
-  console.log(event)
+// function submit_form(event){
+//   console.log(event)
 
-  var form = $('#file-upload')[0];
-  var f = document.getElementById('audio_file').files[0]
+//   var form = $('#file-upload')[0];
+//   var f = document.getElementById('audio_file').files[0]
 
-  var fd = new FormData($("#file-upload")[0]);
+//   var fd = new FormData($("#file-upload")[0]);
 
-  fd.append('name', f.name);
+//   fd.append('name', f.name);
 
 
 
-  $(event.delegateTarget).text("")
-  $(event.delegateTarget).append("<i class='fas fa-circle-notch fa-spin></i>")
+//   $(event.delegateTarget).text("")
+//   $(event.delegateTarget).append("<i class='fas fa-circle-notch fa-spin></i>")
 
-  $.ajax({
-    url: '/api/transcription/',
-    type: 'POST',
-    data: fd,
-    cache: false,
-    contentType: false,
-    processData: false,
+//   $.ajax({
+//     url: '/api/transcription/',
+//     type: 'POST',
+//     data: fd,
+//     cache: false,
+//     contentType: false,
+//     processData: false,
     
-  }).done(function(){
-    location.reload();
-  });
+//   }).done(function(){
+//     location.reload();
+//   });
 
 
-  // var request = new XMLHttpRequest();
-  // request.open("POST", "/api/transcription/");
-  // request.send(fd)
+//   // var request = new XMLHttpRequest();
+//   // request.open("POST", "/api/transcription/");
+//   // request.send(fd)
 
 
-}
+// }
 
 
 </script>

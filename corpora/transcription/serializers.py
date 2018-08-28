@@ -60,11 +60,19 @@ class TranscriptionSegmentSerializer(serializers.ModelSerializer):
 
 
 class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
+    segments = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = AudioFileTranscription
-        fields = ('uploaded_by', 'audio_file', 'pk', 'name', 'transcription')
+        fields = (
+            'uploaded_by', 'audio_file', 'pk', 'name',
+            'transcription', 'segments')
         read_only_fields = ('uploaded_by',)
+
+    def get_segments(self, obj):
+        return TranscriptionSegment.objects\
+            .filter(parent=obj)\
+            .values_list('pk', flat=True).order_by('pk')
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:

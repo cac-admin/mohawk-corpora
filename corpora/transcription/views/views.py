@@ -170,11 +170,14 @@ class AudioFileTranscriptionListView(
     model = AudioFileTranscription
     context_object_name = 'transcriptions'
     template_name = 'transcription/audio_file_transcription_list.html'
+    paginate_by = 15
 
     def get_queryset(self):
         person = get_person(self.request)
         qs = AudioFileTranscription.objects\
             .filter(uploaded_by=person)\
+            .annotate(num_segments=Count('transcriptionsegment'))\
+            .filter(num_segments__gte=1)\
             .order_by('-updated')
         return qs
 
