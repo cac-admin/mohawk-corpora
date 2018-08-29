@@ -72,18 +72,74 @@ div.col.viewport div.viewport{
 }
 .viewport-body{
   // height: 80vh;
-  // overflow-y: auto;
   // max-height: 85vh;
   div.row{
     padding: 0px 15px;
     div.col{
-      overflow-x: scroll;
+      overflow-x: hidden;
+      overflow-y: hidden;
       max-width: 1200px;
       margin: 0px auto;
       border: 1px solid #ccc;
 
-      table{
-        margin-top: -1px;
+
+      div.row:nth-child(2n){
+        background-color: #f0f0f0;
+      }
+      div.row:hover{
+        background-color: #d9d9d9;
+      }
+
+      div.row{
+        div[class*='col-']{
+          padding: 10px;
+          // margin: 10px;
+        }
+
+        @include media-breakpoint-down(md) {
+            div[class*='col-']:nth-child(3){
+            padding-top: 0px;
+            // margin: 10px;
+          }
+        }
+
+
+        font-size: 1.2em;
+        white-space: nowrap;
+        color: $brand_darkest;
+        border: 1px solid $brand_darkest;
+        border-top: 0px;
+        a[x-data-action]{
+          // font-size: 1.1em;
+          // margin-left: 8px;
+        }
+
+        div.dropdown{
+          display: inline-block;
+          a{
+            color: $brand_darkest;
+
+          }
+        }
+
+        a[x-data-action]:hover{
+          // color: $brand_primary;
+        }
+        @include media-breakpoint-down(md) {
+          font-size:1em;
+        }
+        @include media-breakpoint-down(sm) {
+          font-size:.9em;
+        }
+        @include media-breakpoint-down(xs) {
+          font-size:.85em;
+        }             
+      }
+
+      div.row:first-of-type{
+        background-color: white;
+        font-weight: 600;
+        font-size: .9em;
       }
 
 
@@ -116,43 +172,7 @@ div.col.viewport div.viewport{
 
 }
 
-tr{
 
-  font-size: 1.2em;
-  white-space: nowrap;
-  color: $brand_darkest;
-  a[x-data-action]{
-    // font-size: 1.1em;
-    // margin-left: 8px;
-  }
-
-  div.dropdown{
-    display: inline-block;
-    a{
-      color: $brand_darkest;
-
-    }
-  }
-
-  a[x-data-action]:hover{
-    // color: $brand_primary;
-  }
-  @include media-breakpoint-down(md) {
-    font-size:1em;
-  }
-  @include media-breakpoint-down(sm) {
-    font-size:.9em;
-  }
-  @include media-breakpoint-down(xs) {
-    font-size:.85em;
-  }  
-
-  th{
-    font-size: .9em;
-  }
-
-
-}
 
 
 .btn-dark{

@@ -69,7 +69,58 @@ def dummy_segmenter(audio_file_path):
     return segments
 
 
-def wahi_korero_segmenter(file_path):
+def slice_audio(aft, start, stop):
+    try:
+        file_path, tmp_stor_dir, tmp_file, absolute_directory = \
+            prepare_temporary_environment(aft)
+    except Exception as e:
+        return "Error creating temporary environment. {0}".format(e)
+
+    tmp_seg_file = tmp_stor_dir + '/sliced_{0}_{1}.wav'.format(
+        start, stop)
+
+    command = \
+        ['ffmpeg', '-i', tmp_file,
+         '-ss', '{0:.2f}'.format(start/100.0),
+         '-to', '{0:.2f}'.format(stop/100.0),
+         # '-ar', '16000', '-ac', '1',  # '-f', 's16le',
+         tmp_seg_file]
+
+    logger.debug("COMMAND: {0}".format(' '.join(command)))
+
+    p = Popen(command, stdin=PIPE, stdout=PIPE)
+
+    output, errors = p.communicate()
+
+    return tmp_seg_file
+
+
+def long_audio_segmenter(aft, duration):
+
+    # We'll need to cut up audio and then segment it
+    files = []
+    slice_length = 10*60*100
+    for i in range(int(duration/slice_length)+1):
+        start = i*slice_length
+        end = start+slice_length
+        if end > duration:
+            end = duration
+
+        files.append(slice_audio(aft, start, end))
+
+    captioned = []
+
+    count = 0.0
+    for file in files:
+        offset = count*slice_length
+        this_segments = wahi_korero_segmenter(file, offset=offset/100.0)
+        captioned = captioned + this_segments
+        count = count+1
+
+    return captioned
+
+
+def wahi_korero_segmenter(file_path, aft=None, offset=0):
     MIN_DURATION = 3*100
 
     p = Popen(
@@ -78,17 +129,23 @@ def wahi_korero_segmenter(file_path):
         stdin=PIPE, stdout=PIPE)
 
     output, errors = p.communicate()
-    duration = float(output)*100  # Milliseconds
+    duration = float(output)*100  # Hundreths of a second
 
     # Don't need to do this for short recordings!
     if duration < 10*100:
         return dummy_segmenter(file_path)
+    elif duration > 10*60*100:
+        return long_audio_segmenter(aft, duration)
 
     segmenter = default_segmenter()
-    segmenter.enable_captioning(
-        caption_threshold_ms=50, min_caption_len_ms=None)
-    seg_data, segments = segmenter.segment_audio(file_path)  # outputs "captioned" segments    
-    segs = seg_data['segments']
+    segmenter.enable_captioning(caption_threshold_ms=50, min_caption_len_ms=None)
+    stream = segmenter.segment_stream(file_path, output_audio=False)  # outputs "captioned" segments    
+    segs = [
+        {'start': seg[0]+offset,
+         'end': seg[1]+offset,
+         'duration': (seg[1]-seg[0])
+         } for seg, audio in stream]  # 
+
     logger.debug(segs)
 
     captioned_for_real = []
@@ -180,7 +237,7 @@ def create_and_return_transcription_segments(aft):
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(aft)
 
-    segments = wahi_korero_segmenter(tmp_file)
+    segments = wahi_korero_segmenter(tmp_file, aft)
 
     # segments = dummy_segme   nter(tmp_file)
 

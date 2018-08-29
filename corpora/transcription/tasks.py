@@ -44,7 +44,7 @@ logger_test = logging.getLogger('django.test')
 def launch_transcription_api():
     num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
 
-    logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
+    # logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
 
     '''
     Let's check jobs every minut, and maybe have a cooldown of 5 minutes
@@ -53,7 +53,7 @@ def launch_transcription_api():
     just take the servers down
     '''
 
-    logger.debug('LAUNCHING')
+    # logger.debug('LAUNCHING')
     return "DISABLED CHANGING OF AUTOSCALINGGROUP"
 
     import boto3
@@ -88,7 +88,7 @@ def launch_watcher():
         num_jobs = 0
 
     last_queue = cache.set('JOBS_PING', last_queue)
-    logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
+    # logger.debug('NUM_TRANSCRIPTION_JOBS: {0: <4f}'.format(num_jobs))
 
     if num_jobs <= 0:
         logger.debug('STOPPING')

@@ -109,11 +109,11 @@ class TranscriptionSegment(models.Model):
         help_text='We can create a transcription with a recording from a segment.')
 
     start = models.PositiveIntegerField(
-        help_text='Start time in ms for audio segment',
+        help_text='Start time in hundreths of a second for audio segment',
         editable=False)
 
     end = models.PositiveIntegerField(
-        help_text='End time in ms for audio segment',
+        help_text='End time in hundreths of a second for audio segment',
         editable=False)
 
     text = models.CharField(
