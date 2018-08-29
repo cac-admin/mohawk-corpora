@@ -63,14 +63,24 @@
     <div class="col">
 
       <div class="row  justify-content-end">
-        <div class="col-3 col-sm-2 col-xl-1">Actions</div>
-        <div class="col-9 col-sm-10 col-xl-5">Name</div>
-        <div class="col-9 col-sm-10 col-xl-6">Transcription</div>
+        <div class="col-2 col-sm-1 col-xl-1">
+          <!-- <div class="row">
+            <div class="col"></div>
+          </div> -->
+        </div>
+        
+        <div class="col-10 col-sm-11 col-xl-11">
+          <div class="row">
+            <div class="col-12 col-xl-6">Name</div>
+            <div class="col-12 col-xl-6">Transcription</div>
+          </div>
+        </div>
+
       </div>
       
       {% for object in transcriptions %}
       <div class="row justify-content-end" >
-        <div class="col-3 col-sm-2 col-xl-1">
+        <div class="col-2 col-sm-1 col-xl-1">
               
                   <a href="#"
                      class="btn btn-sm btn-dark"
@@ -128,18 +138,23 @@
             </div>            
           
             <!-- <th scope="row">{{ forloop.counter }}</th> -->
-            <div class="col-9 col-sm-10 col-xl-5"
-                x-data-model="audio_file_transcription"
-                x-data-id="{{object.pk}}"
-                x-data-field="name"
-                x-data-value="{{object.name}}">
-              <a href="{% url 'transcription:file_transcribe' object.pk %}" style="font-weight: 500;">{{object.name}}</a>
-            </div>                        
-            <div class="col-9 col-sm-10 col-xl-6">
-              <a href="{% url 'transcription:file_transcribe' object.pk %}">
-                <em>{{object.transcription|truncatechars:64}}</em>
-              </a>
+            <div class="col-10 col-sm-11 col-xl-11">
+              <div class="row">
+                <div class="col-12 col-xl-6"
+                    x-data-model="audio_file_transcription"
+                    x-data-id="{{object.pk}}"
+                    x-data-field="name"
+                    x-data-value="{{object.name}}">
+                  <a href="{% url 'transcription:file_transcribe' object.pk %}" style="font-weight: 500;">{{object.name}}</a>
+                </div>                        
+                <div class="col-12 col-xl-6">
+                  <a href="{% url 'transcription:file_transcribe' object.pk %}">
+                    <em>{{object.transcription|truncatechars:64}}</em>
+                  </a>
+                </div>
+              </div>
             </div>
+
 
 
             <!-- <td>{{object.uploaded_by}}</td> -->
