@@ -84,30 +84,38 @@ div.col.viewport div.viewport{
 
 
       div.row:nth-child(2n){
-        background-color: #f0f0f0;
+        background-color: rgba(0,0,0,.05);
       }
       div.row:hover{
-        background-color: #d9d9d9;
+        background-color: rgba(0,0,0,.075);
       }
 
       div.row{
         div[class*='col-']{
-          padding: 10px;
+          padding: 15px;
           // margin: 10px;
         }
 
-        @include media-breakpoint-down(md) {
-            div[class*='col-']:nth-child(3){
+        @include media-breakpoint-down(lg) {
+          div[class*='col-']:nth-child(3){
             padding-top: 0px;
             // margin: 10px;
           }
+          div[class*='col-']{
+            padding: 10px;
+            .btn-sm{
+              padding: .15rem .4rem
+            }
+          }
+          
         }
 
 
         font-size: 1.2em;
         white-space: nowrap;
         color: $brand_darkest;
-        border: 1px solid $brand_darkest;
+        // 1px solid #dee2e6
+        border: 1px solid #dee2e6;
         border-top: 0px;
         a[x-data-action]{
           // font-size: 1.1em;
@@ -118,21 +126,17 @@ div.col.viewport div.viewport{
           display: inline-block;
           a{
             color: $brand_darkest;
-
           }
         }
 
-        a[x-data-action]:hover{
-          // color: $brand_primary;
-        }
         @include media-breakpoint-down(md) {
-          font-size:1em;
+          font-size:1.2em;
         }
         @include media-breakpoint-down(sm) {
-          font-size:.9em;
+          font-size:1.2em;
         }
         @include media-breakpoint-down(xs) {
-          font-size:.85em;
+          font-size: 1.2em;
         }             
       }
 
@@ -140,6 +144,9 @@ div.col.viewport div.viewport{
         background-color: white;
         font-weight: 600;
         font-size: .9em;
+      }
+      div.row:last-of-type{
+        border-bottom: 0px;
       }
 
 
@@ -177,6 +184,7 @@ div.col.viewport div.viewport{
 
 .btn-dark{
   background-color: $brand_dark;
+  border-color: $brand_darker;
 }
 
 .btn-dark:hover{
@@ -189,8 +197,9 @@ div.col.viewport div.viewport{
 }
 
 .btn-light:hover{
-  background-color: $brand_dark;
+  background-color: rgba($brand_dark, 0.25);
   color: white;  
+  border-color: $brand_darker;
 }
 
 a{

@@ -64,14 +64,14 @@
 
       <div class="row  justify-content-end">
         <div class="col-3 col-sm-2 col-xl-1">Actions</div>
-        <div class="col-9 col-sm-10 col-xl-6">Name</div>
-        <div class="col-9 col-sm-10 col-xl-5">Preview</div>
+        <div class="col-9 col-sm-10 col-xl-5">Name</div>
+        <div class="col-9 col-sm-10 col-xl-6">Transcription</div>
       </div>
       
       {% for object in transcriptions %}
       <div class="row justify-content-end" >
         <div class="col-3 col-sm-2 col-xl-1">
-              <div>
+              
                   <a href="#"
                      class="btn btn-sm btn-dark"
                      role="button"
@@ -121,23 +121,23 @@
                     <i class="far fa-fw fa-trash-alt"></i> Delete
                   </a>
 
-                </div>
+                
               </div>
 
               </div>
             </div>            
           
             <!-- <th scope="row">{{ forloop.counter }}</th> -->
-            <div class="col-9 col-sm-10 col-xl-6"
+            <div class="col-9 col-sm-10 col-xl-5"
                 x-data-model="audio_file_transcription"
                 x-data-id="{{object.pk}}"
                 x-data-field="name"
                 x-data-value="{{object.name}}">
-              <a href="{% url 'transcription:file_transcribe' object.pk %}">{{object.name}}</a>
+              <a href="{% url 'transcription:file_transcribe' object.pk %}" style="font-weight: 500;">{{object.name}}</a>
             </div>                        
-            <div class="col-9 col-sm-10 col-xl-5">
+            <div class="col-9 col-sm-10 col-xl-6">
               <a href="{% url 'transcription:file_transcribe' object.pk %}">
-                {{object.transcription|truncatechars:32}}
+                <em>{{object.transcription|truncatechars:64}}</em>
               </a>
             </div>
 
