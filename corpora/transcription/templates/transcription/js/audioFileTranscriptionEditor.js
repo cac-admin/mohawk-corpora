@@ -171,9 +171,10 @@ class AudioFileTranscriptionEditor{
     var link = document.createElement("a");
     link.download = element.attributes['x-data-file-name'].value
     link.href = '/api/transcription/'+id+'.'+format;
-    link.click()
     if (this.isMobile){
       window.open(link.href, '_blank')
+    } else{
+      link.click()
     }
   }
 
