@@ -43,7 +43,7 @@ def clean_empty_person_models():
         .filter(user__isnull=True)\
         .filter(demographic__isnull=True)\
         .filter(known_languages__isnull=True)\
-        .filter(recordings__isnull=True)
+        .filter(recording__isnull=True)
         # .annotate(num_recordings=Count('recording'))\
         # .filter(num_recordings=0)
 
