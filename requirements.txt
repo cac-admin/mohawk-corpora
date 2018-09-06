@@ -5,6 +5,7 @@ boto
 boto3
 Pillow
 Celery
+django-celery-beat
 flower #used to monitor Celery
 django-compressor
 django-libsass
