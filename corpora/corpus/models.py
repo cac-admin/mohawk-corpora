@@ -93,8 +93,9 @@ class QualityControl(models.Model):
         'people.Person',
         null=True, blank=True,
         help_text="ID of person associated with this QualityControl object.\
-        For Token Authenticated API calls, passing 'self' instead of an \
-        Integer will associate the person of the Token with this QC object.")
+        For Token Authenticated API calls, passing the string 'self' instead\
+        of an Integer will associate the person of the Token with this QC \
+        object.")
 
     # Move to Recording QC
     # recording = models.ForeignKey('corpus.Recording', null=True)
