@@ -184,8 +184,8 @@ class RecordingFileView(RedirectView):
             if m.audio_file_aac:
                 audio_file = m.audio_file_aac
 
-        if person is not None:
-            uuid = person.uuid
+        if p is not None:
+            uuid = p.uuid
         else:
             uuid = 'None-Person-Object'
         key = '{0}:{1}:listen'.format(uuid, m.id)
