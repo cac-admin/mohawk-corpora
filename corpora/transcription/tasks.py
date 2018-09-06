@@ -112,7 +112,6 @@ def launch_watcher():
 def transcribe_recordings_without_reviews():
     MAX_LOOP = 3500
     recordings = Recording.objects\
-        .filter(quality_control__isnull=True)\
         .filter(transcription__isnull=True)\
         .distinct().order_by('created')
 
