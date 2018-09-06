@@ -529,10 +529,15 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         '''
 
         if 'random' in sort_by.lower():
-            query_cache_key = '{0}:listen-viewset'.format(person.uuid)
+            if person is not None:
+                uuid = person.uuid
+            else:
+                uuid = 'None-Person-Object'
+
+            query_cache_key = '{0}:listen-viewset'.format(uuid)
             pk = get_random_pk_from_queryset(queryset, query_cache_key)
 
-            key = '{0}:{1}:listen'.format(person.uuid, pk)
+            key = '{0}:{1}:listen'.format(uuid, pk)
             cache.set(key, True, 15)
 
             return [Recording.objects.get(pk=pk)]
@@ -563,13 +568,10 @@ def get_random_pk_from_queryset(queryset, cache_key):
         while len(queryset_cache) <= MAX_LIST_SIZE and len(pks) > 0:
             i = random.randint(0, len(pks) - 1)
             queryset_cache.append(pks.pop(i))
-      
 
     pk = queryset_cache.pop()
     cache.set(queryset_cache_key, queryset_cache, 60*5)
 
     return pk
-
-
 
 
