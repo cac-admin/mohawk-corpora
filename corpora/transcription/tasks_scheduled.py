@@ -11,7 +11,7 @@ CELERYBEAT_SCHEDULE = {
     # },
     'transcribe_recordings_without_reviews': {
         'task': 'transcription.tasks.transcribe_recordings_without_reviews',
-        'schedule': crontab(minute=42, hour=1, day_of_week='*'),
+        'schedule': crontab(minute='*/10', hour='*', day_of_week='*'),
         # 'options': {'task_id': 'xribe_rec_without_rev'},
     },
     # 'delete_transcriptions_for_approved_recordings': {
