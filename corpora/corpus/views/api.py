@@ -306,6 +306,22 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     `audio_file_url` provides an a link to an s3 object that will expire after
     a certain duration.
+
+    create:
+    You can post audio this API endpoint. If you have a Token, you can set
+    `person="self"` which will assign the person of the token to the posted
+    recording.
+
+    ### Custom Query Parameters
+    The following query parameters are implemented.
+
+    - `encoding`
+
+        Set the encoding of the posted file. CUrrently we only support
+        `?encoding=base64` which will allow you to base64 encode a file
+        and post as a normal string field for example when doing a json
+        type post.
+
     """
 
     queryset = Recording.objects.all()
@@ -322,11 +338,10 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         # when building docs.
         if self.request:
             if self.request.method == 'POST':
-                encoding = self.request.query_params.get('encoding', '')
-                if encoding == 'base64':
-                    pass
-                return RecordingSerializerPostBase64
-                # return RecordingSerializerPost
+                enc = self.request.query_params.get('encoding', '')
+                if enc == 'base64':
+                    return RecordingSerializerPostBase64
+                return RecordingSerializerPost
 
         return serializer_class
 
