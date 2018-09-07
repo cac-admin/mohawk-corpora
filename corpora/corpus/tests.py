@@ -95,6 +95,9 @@ class CorpusRecordingTestCase(TestCase):
         self.assertEqual(stats['star'], 0)
         self.assertEqual(stats['count'], 0)
 
+    def test_base64_audio_upload(self):
+        pass
+
 
 class CorpusTextTestCase(TestCase):
     def test_get_sentences(self):

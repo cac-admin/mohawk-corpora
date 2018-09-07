@@ -22,6 +22,7 @@ from corpus.serializers import QualityControlSerializer,\
                          SentenceSerializer, \
                          RecordingSerializer, \
                          RecordingSerializerPost, \
+                         RecordingSerializerPostBase64, \
                          ListenSerializer, \
                          SourceSerializer
 from rest_framework import generics, serializers
@@ -321,7 +322,11 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         # when building docs.
         if self.request:
             if self.request.method == 'POST':
-                serializer_class = RecordingSerializerPost
+                encoding = self.request.query_params.get('encoding', '')
+                if encoding == 'base64':
+                    pass
+                return RecordingSerializerPostBase64
+                # return RecordingSerializerPost
 
         return serializer_class
 

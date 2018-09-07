@@ -4,7 +4,16 @@ from people.helpers import get_person
 from rest_framework.response import Response
 from django.utils.timezone import localtime
 
+from django.core.files.base import ContentFile
+
 from corpus.aggregate import build_qualitycontrol_stat_dict
+
+from six import text_type
+import base64
+import uuid
+import logging
+
+logger = logging.getLogger('corpora')
 
 
 class SetPersonFromTokenWhenSelf(object):
@@ -145,6 +154,7 @@ class RecordingSerializerPost(
             'person', 'id', 'sentence')
 
     def create(self, validated_data):
+        # This sets a person even when you don't say person=self
         try:
             person = validated_data['person']
             if person is None:
@@ -163,6 +173,65 @@ class RecordingSerializerPost(
         # serializer = self.get_serializer(recording)
         # data = serializer.data
         # return Response(data)
+
+
+class Base64FieldMixin(object):
+
+    def _decode(self, data):
+        if isinstance(data, text_type) and data.startswith('data:'):
+            # base64 encoded file - decode
+            format, datastr = data.split(';base64,')    # format ~= data:image/X,
+            ext = format.split('/')[-1]    # guess file extension
+            if ext[:3] == 'svg':
+                ext = 'svg'
+            data = ContentFile(
+                base64.b64decode(datastr),
+                name='{}.{}'.format(uuid.uuid4(), ext)
+            )
+
+            logger.debug("Data as string?")
+            logger.debug(data[0:10])
+
+        elif isinstance(data, text_type) and data.startswith('http'):
+            logger.debug("FAIL")
+            raise SkipField()
+
+        elif isinstance(data, text_type):
+            logger.debug('WTF - last resort')
+            data = ContentFile(
+                base64.b64decode(data),
+                name='{}.{}'.format(uuid.uuid4(), 'm4a')
+            )
+
+        return data
+
+    def to_internal_value(self, data):
+        logger.debug("Data as send to to_internal_value")
+        logger.debug(data[0:10])
+        data = self._decode(data)
+
+        try:
+            logger.debug("Data as decoded")
+            logger.debug(data[0:10])
+        except:
+            pass
+
+        return super(Base64FieldMixin, self).to_internal_value(data)
+
+
+class Base64FileField(Base64FieldMixin, serializers.FileField):
+    pass
+
+
+class RecordingSerializerPostBase64(
+        SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
+    audio_file = Base64FileField()
+
+    class Meta:
+        model = Recording
+        fields = (
+            'sentence_text', 'user_agent', 'audio_file',
+            'person', 'id', 'sentence')
 
 
 class RecordingSerializer(serializers.ModelSerializer):
