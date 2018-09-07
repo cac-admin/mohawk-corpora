@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from corpora.mixins import EnsureCsrfCookieMixin
 from rest_framework.authtoken.models import Token
 from django.views.generic.base import TemplateView
@@ -26,8 +26,14 @@ class ProcessExpoRedirect(
                 'USER-LOGIN-FROM-EXPO-{0}'.format(
                     login_uuid))
 
+            location = "{0}?token={1}".format(redirect_url, token.key)
+            res = HttpResponse(location, status=302)
+            res['Location'] = location
+            return res
+
             return HttpResponseRedirect(
                 "{0}?token={1}".format(redirect_url, token.key)
             )
+
         else:
             return HttpResponseRedirect('/')

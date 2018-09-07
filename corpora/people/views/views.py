@@ -88,7 +88,7 @@ class ProfileDetail(
         expo_login = \
             cache.get(
                 'USER-LOGIN-FROM-EXPO-{0}'.format(
-                    login_uuid), False)
+                    login_uuid), None)
         if expo_login:
 
             return redirect('/expo-login/')
