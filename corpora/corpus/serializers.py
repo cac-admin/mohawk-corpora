@@ -206,8 +206,12 @@ class Base64FieldMixin(object):
         return data
 
     def to_internal_value(self, data):
-        logger.debug("Data as send to to_internal_value")
-        logger.debug(data[0:10])
+        try:
+            logger.debug("Data as send to to_internal_value")
+            logger.debug(data[0:10])
+        except:
+            pass
+
         data = self._decode(data)
 
         try:
