@@ -5,6 +5,11 @@
 {% block title %}{% trans "Sign In" %}{% endblock %}
 
 {% block account_content %}
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+@import 'people/scss/login';
+</style>
+{% endaddtoblock %}
 
 {% addtoblock 'css' %}
 <style type="text/x-scss">
@@ -69,14 +74,10 @@ label[for=id_remember]{
     {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-
-    <a class="secondaryAction" href="{% url 'account_reset_password' %}">
-      {% trans "Forgot Password?" %}<br>
-    </a>
     
-    <a class="btn btn-default btn-lg" href="javascript:{}" onclick="document.getElementById('login_form').submit();">
+    <button  href="javascript:{}" onclick="document.getElementById('login_form').submit();">
         {% trans "Sign In" %}
-    </a>
+    </button>
 
   </form>
 </div></div>
@@ -95,15 +96,17 @@ label[for=id_remember]{
   {% endaddtoblock %}
 
 <div class="row"><div class="col">
+
   {% if socialaccount_providers %}
   <br>
-  <h4 class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</h4>
+  <b class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</b>
 
   <div class="socialaccount_ballot">
     <ul class="socialaccount_providers">
       {% include "socialaccount/snippets/provider_list.html" with process="login" %}
     </ul>
   </div>
+
 
   <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
   {% endblocktrans %}</p>
@@ -112,8 +115,13 @@ label[for=id_remember]{
 
   {% else %}
   <p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+  <b><a href="{{ signup_url }}">sign up</a></b> first.{% endblocktrans %}</p>
   {% endif %}
+
+    <b><a class="secondaryAction" href="{% url 'account_reset_password' %}">
+      {% trans "Forgot Password?" %}<br>
+    </a></b>
+
 </div></div>
 
 {% addtoblock 'js-end' %}

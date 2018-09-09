@@ -1,0 +1,40 @@
+{% load socialaccount %}
+{% get_providers as socialaccount_providers %}
+
+
+
+<div class="row">
+<div class="col-12">
+{% for provider in socialaccount_providers %}
+
+{% if provider.id == "openid" %}
+{% for brand in provider.get_brands %}
+  <div class=""> 
+    <a title="{{brand.name}}" 
+       class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+       href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+       >{{brand.name}}</a>
+  </div>
+{% endfor %}
+{% endif %}
+    <div class="sociallogin">
+      {% if 'google' in provider.name|lower  %}
+      <a class="sign-in google" title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+             href="{{sociallogin_url_prepend}}{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}&socialkey={{sociallogin_url_socialkey}}">
+        <div class='google icon'><i class="fab fa-google"></i></div>
+        <div class="google text">Google</div>
+      </a>
+      {% elif 'facebook' in provider.name|lower %}
+      <a class="sign-in facebook" title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+             href="{{sociallogin_url_prepend}}{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}&socialkey={{sociallogin_url_socialkey}}">
+        <div class='facebook icon'><i class="fab fa-facebook-f"></i></div>
+        <div class="facebook text">Facebook</div>
+      </a>
+      {% else %}
+      <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+         href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+      {% endif %}
+    </div>
+{% endfor %}
+</div>
+</div>
