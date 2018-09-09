@@ -25,6 +25,8 @@ class SetPersonFromTokenWhenSelf(object):
                 person = get_person(self.context['request'])
                 if person is not None:
                     d2['person'] = person.id
+                else:
+                    d2['person'] = None
         if d2 is None:
             d2 = data
         return super(SetPersonFromTokenWhenSelf, self).run_validation(d2)
