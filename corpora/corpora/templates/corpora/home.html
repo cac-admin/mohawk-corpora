@@ -49,11 +49,12 @@
 
 
   <div class="row justify-content-center" style="text-align: center;">
-    <div class="col-12 col-md-4 col-lg-3" >
-      <p>
-      <a href="{% url 'corpus:record' %}" class="btn btn-default btn-lg start" >
-        <i class="fas fa-microphone-alt fa-fw"></i>&nbsp;{% trans "Start" %}&nbsp;</a>
-      </p>
+    <div class="col-12" >
+      <div>
+      <a href="{% url 'corpus:record' %}" class="start" >
+        <i class="fas fa-microphone-alt fa-fw"></i> {% trans "Start" %}
+      </a>
+      </div>
       <p>Hit the big whero button to start reading sentences.</p>
     </div>
   </div>
