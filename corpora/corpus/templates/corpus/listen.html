@@ -20,14 +20,12 @@ div.content{
   /*padding: 60px 0px 60px 0px;*/
 }
 
-
+@import 'corpus/scss/listen';
 </style>
 {% endaddtoblock %}
   
 
 {% include 'people/profile_header.html' %}
-
-
 
 <div class="container sentence">
 
@@ -43,7 +41,7 @@ div.content{
     </div>
     <!-- <div class="col-lg-7"></div> -->
     <div class="col-lg-12 actions">
-
+      <!--
       <div class="action-group">
       <a href="#" class="star disabled toggle-after-playback noborder" data-key="star"><i class="far fa-star fa-fw"></i></a>
       <a href="#" class="star disabled toggle-after-playback noborder" data-key="star"><i class="far fa-star fa-fw"></i></a>
@@ -51,12 +49,22 @@ div.content{
       <a href="#" class="star disabled toggle-after-playback noborder" data-key="star"><i class="far fa-star fa-fw"></i></a>
       <a href="#" class="star disabled toggle-after-playback noborder" data-key="star"><i class="far fa-star fa-fw"></i></a>
       </div>
-      <!--
+    -->
+      {% if user.can_approve %}
       <a href="#" class="follow-up disabled toggle-after-playback" data-key="follow_up">
         <i class="fas fa-reply fa-fw"></i><span>Follow Up</span></a>
       <a href="#" class="noise disabled toggle-after-playback" data-key="noise">
         <i class="fas fa-bullhorn fa-fw"></i><span>Noise</span></a>      
-      -->
+      <a href="#" class="delete disabled toggle-after-playback" data-key="delete"><i class="fas fa-trash fa-fw"></i></a> 
+
+       <a href="#" class="save disabled"
+        data-toggle="popover" 
+        data-trigger="hover" 
+        title="Save" 
+        data-content="{% trans 'Save changes.' %}"
+        ><i class="fas fa-save fa-fw"></i></a>
+        <br>
+      {% endif %}
 
       <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fas fa-play-circle fa-fw"></i></a>            
       {% if user.can_approve %}
@@ -71,21 +79,14 @@ div.content{
       <a href="#" class="good disabled toggle-after-playback"><i class="fas fa-check fa-fw"></i>&nbsp;Ka Pai</a>
       <a href="#" class="bad disabled toggle-after-playback"><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a>
 
-      {% if user.can_approve %}
-      <a href="#" class="delete disabled toggle-after-playback" data-key="delete"><i class="fas fa-trash fa-fw"></i></a> 
-      {% endif %}
-
-      {% if user.can_approve %}
-
-       <a href="#" class="save disabled"
-        data-toggle="popover" 
-        data-trigger="hover" 
-        title="Save" 
-        data-content="{% trans 'Save changes.' %}"
-        ><i class="fas fa-save fa-fw"></i></a>
-      {% endif %}
-
       <a href="javascript:void(0)" id="next disabled" class="next"><i class="fas fa-step-forward fw"></i>&nbsp;Skip</a>    
+
+      <br>  
+      <a href="javascript:void(0)" id="help" style="font-size: 16px; outline: none; margin-top: 8px;" 
+         class="help noborder " 
+         data-toggle="modal" data-target="#exampleModalCenter">
+        <i class="fas fa-question fw"></i> Help on Reviewing</a>
+
     </div>
 
     {% if user.can_approve %}
@@ -103,19 +104,75 @@ div.content{
     <div class="col-12 person-info" ></div>
     <div class="col-12 recording-info" ></div>    
     {% endif %}
+
+
+
   </div>
 
 </div>
 
 <audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-lg " disabled="modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          <span class="check"><i class="fas fa-check fa-fw"></i></span>
+          Reviewing Recordings
+        </h5>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the recording consist of audible speech?</li>
+          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the speaker read the words that were written?</li>
+          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the speech flow naturally?</li>
+          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Is the pronunciation good?</li>
+        </ul>
+
+        <p><span class="actions"><a href="#" class="good "><i class="fas fa-check fa-fw"></i>&nbsp;Ka Pai</a></span>
+          if you answered <b>yes</b> to all questions.</p>
+        <p><span class="actions"><a href="#" class="bad "><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a></span>
+        if you answered <b>no</b> to any questions.</p>
+
+      </div>
+      <!--
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          <span class="star"><i class="fas fa-star fa-fw"></i></span> Rate Recordings</h5>
+      </div>
+      <div class="modal-body">
+        You can optionally rate someone's reading based on how well they did. Give a star for each of the following,
+        <ul>
+          <li><span class="list-style"><i class="fal fa-star fa-fw"></i></span> The reader's speach flows naturally</li>
+          <li><span class="list-style"><i class="fal fa-star fa-fw"></i></span> The reader uses correct pronunciation</li>
+          <li><span class="list-style"><i class="fal fa-star fa-fw"></i></span> The reader uses correct inflection</li>
+          <li><span class="list-style"><i class="fal fa-star fa-fw"></i></span> The reader's diphthongs are clear and distinguishable</li>
+          <li><span class="list-style"><i class="fal fa-star fa-fw"></i></span> An extra discretionary star for you to give</li>
+        </ul>
+
+      </div>      
+      -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" style="margin-top: 0px;"
+          onclick="_didReadInstructions();">Ok</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript">{% include 'corpus/js/listen.js' %}</script>{% endaddtoblock %}
 {% addtoblock "js" %}<script type="text/javascript">{% include 'corpus/js/player.js' %}</script>{% endaddtoblock %}
-
-
 
 {% addtoblock "js-end" %}
 
@@ -131,6 +188,21 @@ player = new Player('.sentence-block');
 
 {% endaddtoblock %}
 
+{% addtoblock "js-end" %}
+<script type="text/javascript" >
+$(document).ready(function(){
+  var didReadInstructions = window.localStorage.getItem('listen:readInstructions')
+  if (didReadInstructions===null){
+    $('#exampleModalCenter').modal('show')
+  }
+})
+
+function _didReadInstructions(){
+  window.localStorage.setItem('listen:readInstructions', true)
+}
+
+</script>
+{% endaddtoblock %}
 
 {% if user.can_approve %}
 {% addtoblock "js" %}<script type="text/javascript">{% include 'people/js/profile.js' %}</script>{% endaddtoblock %}

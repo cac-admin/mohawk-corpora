@@ -73,7 +73,7 @@ span[class*=approvals]{
 }
 
 span[class*=upvotes]{
-  color: $brand_dark;
+  color: green;
 }
 
 span[class*=downvotes]{
@@ -96,23 +96,25 @@ div.row.stat{
           <span class="stat stat-heading">
           <span class="stat stat-value stat-total-overalltotal" data-value="">{{stats.qcs.count}}</span>
           {% trans 'total' %}</span>
-        </div>        
+        </div>
+        {% if request.user.is_staff and request.user.is_authenticated %}
         <div class="col-3">
           <span class="stat stat-value stat-total-approvals" data-value="">{{stats.qcs_today.approved}}</span>
           <span class="stat stat-icon stat-total-approvals"><i class="far fa-fw fa-check-circle"></i></span>
           <span class="stat stat-dimension stat-total-approvals"><br>{% trans 'approvals' %}</span>
         </div>
-        <div class="col-3">
+        {% endif %}
+        <div class="col-4">
           <span class="stat stat-value stat-total-upvotes" data-value="">{{stats.qcs_today.good}}</span>
-          <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-thumbs-up"></i></span>
+          <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-check"></i></span>
           <span class="stat stat-dimension stat-total-upvotes"><br>{% trans 'up votes' %}</span>
         </div>
-        <div class="col-3">
+        <div class="col-4">
           <span class="stat stat-value stat-total-downvotes" data-value="">{{stats.qcs_today.bad}}</span>
-          <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-thumbs-down"></i></span> 
+          <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-times"></i></span> 
           <span class="stat stat-dimension stat-total-downvotes"><br>{% trans 'down votes' %}</span>
         </div>        
-        <div class="col-3">
+        <div class="col-4">
           <span class="stat stat-value stat-total-total" data-value="">{{stats.qcs_today.count}}</span>
           <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'today' %}</span>
         </div>

@@ -90,7 +90,14 @@ class Player {
       self.hide_all_buttons();
       
       if ($('a.auto-play').hasClass('auto-play-on')){
-        self.audio.play();
+        self.audio.play().then().catch(function(){
+          // self.audio.pause()
+          self.hide_all_buttons();
+          $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
+          $(self.play_button).show()
+
+        });
+
       } else if (self.audio.src != null){
         $(self.play_button).show()
         self.logger('show play button')

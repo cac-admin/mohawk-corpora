@@ -103,6 +103,10 @@
 
     @include style-action-button($brand_primary, "auto-play")
 
+    @include style-action-button($blue, "help")
+
+
+
     .action-group{
       margin-bottom: 8px;
     }

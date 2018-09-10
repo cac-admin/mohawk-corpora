@@ -76,6 +76,9 @@ class Listen{
     $(self.sentence_block).find('.next').unbind().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
+
+        $(self.sentence_block).find('.actions a.help').removeClass('disabled')
+
         self.audio.pause()
         // self.audio.src=null
         self.next();
