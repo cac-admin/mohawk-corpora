@@ -89,10 +89,10 @@ a.sign-in.google   { @include a-sign-in-with-button($brand_primary); }
 a.facebook.sign-in > div.facebook.icon{ @include div-sign-in-with-icon('/static/accounts/img/FB-f-Logo__white_100.png', $brand_primary);  }
 a.google.sign-in > div.google.icon{ @include div-sign-in-with-icon('/static/accounts/img/google_logo.svg', #fff);  }
 
-$font: 'Roboto', 'Noto Sans', sans-serif;
+$font: 'Roboto', 'Raleway', sans-serif;
 
 a.sign-in.google > div.text.google{  @include div-sign-in-text(#fff,$font); }
-a.sign-in.facebook > div.text.facebook{  @include div-sign-in-text(#fff, "Noto Sans"); }
+a.sign-in.facebook > div.text.facebook{  @include div-sign-in-text(#fff, $font); }
 
 
 a.sign-in.facebook:hover { @include a-sign-in-hover(darken($brand_primary, 5%)); }

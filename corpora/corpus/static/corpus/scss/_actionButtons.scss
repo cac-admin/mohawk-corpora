@@ -44,9 +44,12 @@
 
       @include media-breakpoint-down(md) {
         font-size: 1.1em;
+        padding: 9px;
       }
       @include media-breakpoint-down(sm) {
-        font-size: 0.8em;
+        font-size: 1em;
+        padding: 6px;
+        margin: 2px;
       }
 
       -webkit-tap-highlight-color: rgba($brand_primary,.5);
@@ -93,13 +96,33 @@
     @include style-action-button($blue, "save")
     @include style-action-button($yellow, "star")
     @include style-action-button($brand_darker, "bad")
-    @include style-action-button($brand_dark, "good")
+    @include style-action-button($green, "good")
     @include style-action-button($brand_darkest, "delete")
     @include style-action-button($brand_primary, "noise")
     @include style-action-button($brand_primary, "follow-up")
 
     @include style-action-button($brand_primary, "auto-play")
 
-  
+    .action-group{
+      margin-bottom: 8px;
+    }
+
+    .noborder{
+      border: 0px;
+      padding: 6px 6px;
+      margin: 0;
+      font-size: 1.8em;
+      @include media-breakpoint-down(md) {
+        font-size: 1.6em;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: 1.3em;
+      }
+
+
+    }
+    .noborder.checked{
+      background: none;
+    }
 
   }

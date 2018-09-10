@@ -32,12 +32,30 @@ class Player {
       $('.foreground-circle.play').removeClass('clicked-circle').addClass('unclicked-circle');
     });
 
+    // Get the local storage stting for autoplay.
+    try{
+      var autoplay = window.localStorage.getItem('play:autoplay')
+      console.log(autoplay)
+      if (autoplay){
+        $('a.auto-play').addClass('auto-play-on')
+      }
+    } catch(e){
+
+    }
+
     $('a.auto-play').click(function(event){
       var obj = event.currentTarget
       self.logger('auto play clicked')
       if ($(obj).hasClass('auto-play-off')){
         $(obj).removeClass('auto-play-off')
         $(obj).addClass('auto-play-on')
+
+        try{
+          window.localStorage.setItem('play:autoplay', true)
+        } catch(e){
+          console.log('Could not set play:autoplay')
+        }
+
         self.audio.autoplay=true;
         if (self.audio.paused){
           self.audio.play()
@@ -46,6 +64,11 @@ class Player {
         self.audio.autoplay=false;
         $(obj).removeClass('auto-play-on')
         $(obj).addClass('auto-play-off')
+        try{
+          window.localStorage.setItem('play:autoplay', false)
+        } catch(e){
+          console.log('Could not set play:autoplay')
+        }
       }
 
     })

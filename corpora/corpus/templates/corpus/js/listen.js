@@ -56,7 +56,13 @@ class Listen{
       }
     })
 
-    $(self.sentence_block).find('.follow-up, .noise, .delete, .star').off().on('click', function(e){
+    $(self.sentence_block).find('.star').off().on('click', function(e){
+      if (!$(e.currentTarget).hasClass('disabled')){
+        self.star_rating(e.currentTarget);
+      }
+    })
+
+    $(self.sentence_block).find('.follow-up, .noise, .delete').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         if (!$(e.currentTarget).hasClass('checked')){
           $(e.currentTarget).addClass('checked')
@@ -168,6 +174,7 @@ class Listen{
 
       // Untoggle checks, and also reset their values to default which should be false
       $('.toggle-after-playback').removeClass('checked')
+      $('.toggle-after-playback').find('[data-icon=star]').attr('data-prefix', 'far');
       $('.toggle-after-playback').each(function(i,o){
         if (self.quality_control[$(o).attr('data-key')] != undefined){
           if ($(o).hasClass('star')){
@@ -425,6 +432,56 @@ class Listen{
     // this.quality_control.approved = false;
     this.logger(this.quality_control);
     this.post_put();
+  }
+
+  star_rating(object){
+    var self=this
+    var parent = $(object).parent()
+    var children = $(parent).children()
+    var index = $(object).index()
+    var clearall = false
+    self.quality_control['star'] = 0
+
+    try {
+      if (!$(children[index+1]).hasClass('checked') && $(object).hasClass('checked')){
+        clearall = true
+      }
+    } catch(e){ clearall=true }
+
+    if (clearall){
+      $(parent).children().each(function(i,e){
+        $(children[i]).removeClass('checked') 
+        $(children[i]).find('[data-icon=star]').attr('data-prefix', 'far');
+      })
+    } else if ($(object).hasClass('checked')){
+      for (var i=children.length; i >= 0; i--){
+        if (i <= $(object).index()){
+          $(children[i]).addClass('checked')
+          $(children[i]).find('[data-icon=star]').attr('data-prefix', 'fas');
+          self.quality_control['star'] += 1
+        } else {
+          $(children[i]).removeClass('checked') 
+          $(children[i]).find('[data-icon=star]').attr('data-prefix', 'far');
+        }
+      }
+
+    } else {
+      // Check all stars up to it.
+      $(parent).children().each(function(i,e){
+        if (i <= $(object).index()){ 
+          $(children[i]).addClass('checked')
+          $(children[i]).find('[data-icon=star]').attr('data-prefix', 'fas');
+          self.quality_control['star'] += 1
+        } else {
+          $(children[i]).removeClass('checked') 
+          $(children[i]).find('[data-icon=star]').attr('data-prefix', 'far');
+        }
+      })
+    }
+
+
+    console.log(self.quality_control['star'])
+
   }
 
   toggle_boolean(button_object){

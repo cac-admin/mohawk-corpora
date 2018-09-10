@@ -107,20 +107,19 @@ label[for=id_remember]{
     </ul>
   </div>
 
-
-  <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
-  {% endblocktrans %}</p>
-
   {% include "socialaccount/snippets/login_extra.html" %}
 
   {% else %}
-  <p>{% blocktrans %}If you have not created an account yet, then please
-  <b><a href="{{ signup_url }}">sign up</a></b> first.{% endblocktrans %}</p>
   {% endif %}
 
-    <b><a class="secondaryAction" href="{% url 'account_reset_password' %}">
-      {% trans "Forgot Password?" %}<br>
-    </a></b>
+ <!--  <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
+  {% endblocktrans %}</p>  -->
+
+  <p class="p-text-block">Need an account? <a id="signup" href="/accounts/signup/">Sign Up.</a></p>
+
+  <p><a class="secondaryAction" href="{% url 'account_reset_password' %}">
+      {% trans "Forgot Password?" %}
+    </a></p>
 
 </div></div>
 
@@ -129,6 +128,10 @@ label[for=id_remember]{
 $('#login_form').find('input').addClass('form-control');
 $('#login_form').find('select').addClass('form-control');
 $('#login_form input[type=submit').removeClass('form-control');
+
+
+$('#signup').get(0).href = '/accounts/signup/?' + window.location.href.split('?')[1]
+
 </script>
 {% endaddtoblock %}
 
