@@ -38,6 +38,7 @@ class PersonAdmin(admin.ModelAdmin):
         'score',
         'get_groups'
         )
+    raw_id_fields = ('user', )
     readonly_fields = ('profile_email',)
     inlines = [PersonRecordingsInline, PersonGroupInline]
     exclude = ('groups', )  # see PersonGroupInline
@@ -73,6 +74,7 @@ class KnownLanguageAdmin(admin.ModelAdmin):
 class MembershipInline(admin.TabularInline):
     extra = 0
     model = Person.groups.through
+    raw_id_fields = ('person', )
 
 
 @admin.register(Group)

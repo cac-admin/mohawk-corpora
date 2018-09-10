@@ -29,6 +29,7 @@ class QualityControlAdmin(admin.ModelAdmin):
                     'good', 'bad', 'calculate_score',
                     'approved', 'delete', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
+    raw_id_fields = ('person', 'approved_by')
 
     def text(self, obj):
         return obj.__unicode__()
@@ -105,6 +106,8 @@ class RecordingAdmin(admin.ModelAdmin):
         'updated',
         'created',
     )
+
+    raw_id_fields = ('person', 'sentence')
 
     search_fields = [
         'person__user__email',

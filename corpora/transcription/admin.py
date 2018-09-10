@@ -21,6 +21,7 @@ class TranscriptionAdmin(admin.ModelAdmin):
 @admin.register(AudioFileTranscription)
 class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
     actions = ('create_segments',)
+    raw_id_fields = ('uploaded_by',)
 
     def get_changeform_initial_data(self, request):
         person = get_person(request)
@@ -38,3 +39,4 @@ class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
 class TranscriptionSegmentAdmin(admin.ModelAdmin):
     readonly_fields = ('start', 'end')
     list_display = ('parent', 'text', 'start', 'end')
+    raw_id_fields = ('parent', 'edited_by', 'child',)
