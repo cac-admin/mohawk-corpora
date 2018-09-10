@@ -25,60 +25,7 @@
 
 {% addtoblock "css" %}
 <style type="text/x-scss">
-@import 'bower_components/bootstrap/scss/functions';
-@import 'bower_components/bootstrap/scss/mixins';
-@import 'bower_components/bootstrap/scss/variables';
-@import 'corpora/css/_colors';
-
-  .dropcase{
-    text-align: justify;
-  }
-  .actions{
-    text-align: center;
-    div[class*='col']{
-      margin-top: 15px;
-    }
-  }
-  .intro{
-    margin-top: 15px;
-  }
-  .start{
-    font-size: 2.8em;
-    margin: 30px 0px;
-  }
-
-  .video{
-    background-color: black;
-    .container{
-      .row > .col{
-        @include media-breakpoint-down(xs) {
-          padding: 0px;
-        }
-      } 
-    }
-  }
-  div.r16x9{
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    div{
-      position: absolute;
-      top: 0; bottom: 0; left: 0; right: 0;
-        iframe{
-        }
-    }
-  }
-
-  .ropu{
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 2px;
-    background-color: $brand_light;
-    color: white;
-    margin-right: 8px;
-    margin-top: 8px;
-  }
-
+@import 'corpora/scss/home';
 </style>
 {% endaddtoblock %}
 
@@ -103,30 +50,86 @@
 
   <div class="row justify-content-center" style="text-align: center;">
     <div class="col-12 col-md-4 col-lg-3" >
+      <p>
       <a href="{% url 'corpus:record' %}" class="btn btn-default btn-lg start" >
         <i class="fas fa-microphone-alt fa-fw"></i>&nbsp;{% trans "Start" %}&nbsp;</a>
+      </p>
+      <p>Hit the big whero button to start reading sentences.</p>
+    </div>
+  </div>
+
+
+
+  <div class="row ">
+    <div class="col" style="margin-top: 30px;">
+        
+  
+        <div class="row" >
+          <div class="col-6 col-lg-7 col-xl-8" style="padding-bottom: 30px;">
+
+            <div class="row" style="height: 100%;">
+              <div class="col-12">
+                <h2 style="font-weight: 900;">
+                  <a href="{% url 'competition' %}">{% trans "Kōrero Māori on your mobile" %}</a>
+                </h2>
+                <p>Download the Kōrero Māori app on your mobile! You can read sentences even while you're
+                offline. iOS App comming soon.</p>                
+              </div>
+              <div class="col-12" style="margin-top: auto; text-align: right;">
+                <p style="margin-bottom: 0px;">
+                  <a href='https://play.google.com/store/apps/details?id=com.waiinc.corpora&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+                    <img style="max-width: 200px; width: 100%;" 
+                         alt='Get it on Google Play' 
+                         src="{% static 'corpora/img/google-play-badge.png' %}"/>
+                  </a>   
+                </p>
+              </div>
+            </div>
+
+        
+
+          </div>
+
+
+          <div class="col-6 col-lg-5 col-xl-4" style="overflow: hidden; padding-bottom: 30px;">
+            <div class="imageWrapper">
+              <img class="mobileapp" src="{% static 'corpora/img/app.png' %}">
+            </div>
+          
+            
+
+          </div>
+        </div>
+   
+
     </div>
   </div>
 
 
   <div class="row ">
     <div class="col">
-        <h2 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Hopu Kōrero Māori Group Competition" %}</a></h2>
-        <h4 style="color: #444;">Finished on 25 March</h4>
-        <p>The Hopu Kōrero Māori competition is finished. The judges are finalising the scores, and winners will be
-        announced by 12pm 28 March 2018.</p>
-        {% comment %}
-        <p>Win cash 💰 your rōpū by reading sentences during the Hopu Kōrero Māori Group Competition. 
-          Your group needs at least 7 members, and your members need to 
-          <a href="{% url 'account_signup' %}">create an account</a> and
-          verify their email address. Join a group by adding your group to your 
-          <a href="{% url 'people:profile' %}">profile</a>. Don't forget to check out the 
-          <a href="{% url 'rules' %}">{% trans 'rules' %}</a></p>
-        {% endcomment %}
+        <h2 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Whakaronga Kōrero Māori Group Competition" %}</a></h2>
+        <h4 style="color: #444;">Starts on 11 September</h4>
+        <p>Help improve pronunciation by reviewing other people's recordings.</p>
+        
+        <p>Win cash 💰 by reviewing sentences during the Whakaronga Kōrero Māori Competition.
+          All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
+          <a href="{% url 'corpus:listen' %}">reviewing</a>.
+          Make sure you verify your email so we can contact you if you win.
+
+          Don't forget to check out the 
+          <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.
+        </p>
+
         
     </div>
   </div>
 
+  
+    <div style="text-align: center; width: 100%;">
+      <div class="divider"></div>
+    </div>
+  
 
   <div class="row intro">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left-card">
@@ -154,6 +157,12 @@
 
         <p>{% blocktrans %}Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.{% endblocktrans %}</p>
         
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="margin-top: 30px;">
+      <p><small>Google Play and the Google Play logo are trademarks of Google LLC.</small></p>
     </div>
   </div>
 
