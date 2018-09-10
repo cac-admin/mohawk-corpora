@@ -66,7 +66,8 @@ class QualityControl(models.Model):
         default=False,
         help_text='Approved indicates that the object is suitable for use.')
     approved_by = models.ForeignKey(
-        User, null=True,
+        User,
+        null=True,
         blank=True,
         on_delete=models.SET_NULL,
         help_text='User that approved the object. Should be a user ID.')
@@ -93,7 +94,9 @@ class QualityControl(models.Model):
     updated = models.DateTimeField(auto_now=True)
     person = models.ForeignKey(
         'people.Person',
-        null=True, blank=True,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
         help_text="ID of person associated with this QualityControl object.\
         For Token Authenticated API calls, passing the string 'self' instead\
         of an Integer will associate the person of the Token with this QC \
