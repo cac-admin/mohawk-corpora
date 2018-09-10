@@ -14,6 +14,7 @@
 </style>
 {% endaddtoblock %}
 
+{% cache 600 userleaderboard request.path request.GET.urlencode %}
 
 <div class="container">
   <div class="row">
@@ -33,6 +34,7 @@ Scores update approximately every 10 minutes.</small></p>
   </thead>
   <tbody>
 {% for person in people %}
+{% if person.leaderboard %}
 <tr>
   <th scope="row">{{ forloop.counter0|add:page_obj.start_index }}</th>
   <td>{{person|username}}</td>
@@ -40,6 +42,7 @@ Scores update approximately every 10 minutes.</small></p>
   <td>{{person.num_recordings}}</td>
   <td>{{person.score}}</td>
 </tr>
+{% endif %}
 {% endfor %}
 </tbody>
 </table></div>
@@ -70,7 +73,6 @@ Scores update approximately every 10 minutes.</small></p>
 
 
 </div>
-{% cache 600 userleaderboard request.path request.GET.urlencode %}
 
 {% endcache %}
 

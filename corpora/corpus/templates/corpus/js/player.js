@@ -9,7 +9,7 @@ class Player {
     this.loading_button = document.getElementById('loading-button')
     this.record_button = document.getElementById('record-button')
 
-    this.debug = false;
+    this.debug = true;
 
     $(this.play_button).on('mousedown', function(){
       $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
@@ -37,7 +37,10 @@ class Player {
       var autoplay = window.localStorage.getItem('play:autoplay')
       console.log(autoplay)
       if (autoplay){
-        $('a.auto-play').addClass('auto-play-on')
+        if (autoplay=='true'){
+          $('a.auto-play').addClass('auto-play-on')
+          $('a.auto-play').removeClass('auto-play-off')
+        }
       }
     } catch(e){
 
@@ -57,9 +60,7 @@ class Player {
         }
 
         self.audio.autoplay=true;
-        if (self.audio.paused){
-          self.audio.play()
-        }
+
       } else {
         self.audio.autoplay=false;
         $(obj).removeClass('auto-play-on')

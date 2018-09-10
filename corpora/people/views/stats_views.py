@@ -211,11 +211,11 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     def get_queryset(self):
         language = get_current_language(self.request)
         return Person.objects\
-            .filter(recording__sentence__language=language)\
-            .exclude(leaderboard=False)\
             .annotate(num_recordings=models.Count('recording', distinct=True))\
             .annotate(num_reviewed=models.Count('qualitycontrol', distinct=True))\
             .order_by('-num_reviewed')
+
+        # .filter(recording__sentence__language=language)\ => taking out for now
 
     def get_context_data(self, **kwargs):
         context = \
