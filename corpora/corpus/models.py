@@ -66,7 +66,9 @@ class QualityControl(models.Model):
         default=False,
         help_text='Approved indicates that the object is suitable for use.')
     approved_by = models.ForeignKey(
-        User, null=True, blank=True,
+        User, null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
         help_text='User that approved the object. Should be a user ID.')
     delete = models.BooleanField(
         default=False,
@@ -172,6 +174,7 @@ class QualityControl(models.Model):
 #         help_text='Approved indicates that the object is suitable for use.')
 #     approved_by = models.ForeignKey(
 #         User, null=True, blank=True,
+#         on_delete=models.SET_NULL,
 #         help_text='User that approved the object. Should be a user ID.')
 #     delete = models.BooleanField(
 #         default=False,
