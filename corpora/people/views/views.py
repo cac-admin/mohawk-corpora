@@ -392,6 +392,7 @@ class Competition(SiteInfoMixin, ListView):
         context['qualified'] = qualified
         context['need_more_members'] = need_more_members
         context['need_more_hours'] = need_more_hours
+        context['groups'] = groups
         # for group in groups:
 
         return context

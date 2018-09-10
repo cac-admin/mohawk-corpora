@@ -213,8 +213,9 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
         return Person.objects\
             .filter(recording__sentence__language=language)\
             .exclude(leaderboard=False)\
-            .annotate(num_recordings=models.Count('recording'))\
-            .order_by('-num_recordings')
+            .annotate(num_recordings=models.Count('recording', distinct=True))\
+            .annotate(num_reviewed=models.Count('qualitycontrol', distinct=True))\
+            .order_by('-num_reviewed')
 
     def get_context_data(self, **kwargs):
         context = \
@@ -222,20 +223,24 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 
         language = get_current_language(self.request)
 
-        people = context['people']
+        # people = context['people']
 
-        people = people.annotate(num_recordings=models.Count('recording'))
+        # people = people\
+        #     .annotate(num_recordings=models.Count('recording'))\
+        #     .annotate(num_reviewed=models.Count('qualitycontrol'))
 
-        for person in context['people']:
-            # recordings = Recording.objects\
-            #     .filter(person=person, sentence__language=language)
-            # score = 0
-            # for recording in recordings:
-            #     score = score + recording.calculate_score()
-            # person.score = int(score)
-            person.num_recordings = person.recording_set.count()
-            person.name = person.get_username()
+        # for person in people:
+        #     # recordings = Recording.objects\
+        #     #     .filter(person=person, sentence__language=language)
+        #     # score = 0
+        #     # for recording in recordings:
+        #     #     score = score + recording.calculate_score()
+        #     # person.score = int(score)
+        #     person.num_recordings = person.recording_set.count()
+        #     person.num_reviewed = person.qualitycontrol_set.count()
+        #     person.name = person.get_username()
 
+        # context['people'] = people
         return context
 
 

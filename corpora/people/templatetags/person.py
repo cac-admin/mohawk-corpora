@@ -17,3 +17,8 @@ def get_person(context):
         return p
     except:
         return None
+
+
+@register.filter()
+def username(model):
+    return model.get_username()

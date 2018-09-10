@@ -50,23 +50,30 @@ h3{
 
   <div class="row">
     <div class="col">
-      <h1>Hopu Kōrero Māori Competition</h1>
+      <h1>Whakaronga Kōrero Māori Competition</h1>
     </div>
   </div>
 
   <div class="row ">
     <div class="col">
-        <h3>Ended 25 March</h3>
-        <p>The Hopu Kōrero Māori competition is finished. The judges are finalising the scores, and winners will be
-        announced by 12pm 28 March 2018.</p>
-        <!-- <h3>Ended 6pm 25 March</h3>
-        <p>Win cash 💰 your rōpū by reading sentences during the Hopu Kōrero Māori Group Competition. It's not too late to
-          enter. You group needs to quality before the end of the competition to be eligible for pizes.
-          Your group needs at least 7 members, and your members need to 
-          <a href="{% url 'account_signup' %}">create an account</a> and
-          verify their email address. Join a group by adding your group to your 
-          <a href="{% url 'people:profile' %}">profile</a>. Don't forget to check out the 
-          <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p> -->
+        <h3>Starts 11 September</h3>
+        <p>The Whakaronga Kōrero Māori competition starts today!</p>
+        
+        <p>Win cash 💰 by reviewing sentences during the Whakaronga Kōrero Māori Competition.
+          All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
+          <a href="{% url 'corpus:listen' %}">reviewing</a>.
+          Make sure you verify your email so we can contact you if you win.
+
+          Don't forget to check out the 
+          <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p>
+
+
+        <h3 style="padding-top: 15px;">{{ qualified.count }} Rōpū</h3>
+        <p>You can still participate as a group, but entries are per person.</p>
+        <p>{% for g in groups %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
+        {% comment %}
 
         <h3 style="padding-top: 15px;">{{ qualified.count }} Groups Qualify for 💰 Prizes</h3>
         <p>You needed at least 7 people in your group and 4 hours of recordings to qualify for cash prizes.</p>
@@ -82,7 +89,7 @@ h3{
         <p>These groups needed more valid members.</p>
         <p>{% for g in need_more_members %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
 
-
+        {% endcomment %}
 
     </div>
   </div>
