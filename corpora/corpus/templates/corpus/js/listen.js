@@ -9,6 +9,7 @@ class Listen{
     this.recording = null
     this.sentence = null
     this.fetching = false
+    this.showing_next_recording = false
     if(admin){
       this.base_url = '/api/recordings/'
       this.base_recording_url = '/api/recordings/'
@@ -110,34 +111,34 @@ class Listen{
     if (self.fetching){ return; }
     self.fetching = true;
     $.ajax({
-        url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-          self.logger('ERROR fetching recordings')
-          
-        }
-        }).done(function(d){
-          self.objects = d.results
-          self.next_url = d.next
+      url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        self.logger('ERROR fetching recordings')
+        self.fetching = false;
+      }
+      }).done(function(d){
+        self.objects = d.results
+        self.next_url = d.next
 
-          if (self.objects.length == 0 || self.error_loop>3){
-            self.logger('No more recordings')
-            self.all_done()
-          }
-          else{
-            self.logger('Got recordings')
-            self.logger(self.objects[0])
-            self.next()
-          }
-          self.fetching = false;
-        }).fail(function(){
-          self.logger('Failed to fetch recordings, will try again...')
-          window.setTimeout( function(){
-            self.next_url=null
-            self.get_recordings()
-            self.hide_loading()
-          }, 1500 )
-          self.fetching = false;
-        });
+        if (self.objects.length == 0 || self.error_loop>3){
+          self.logger('No more recordings')
+          self.all_done()
+        }
+        else{
+          self.logger('Got recordings')
+          self.logger(self.objects[0])
+          self.next()
+        }
+        self.fetching = false;
+      }).fail(function(){
+        self.logger('Failed to fetch recordings, will try again...')
+        window.setTimeout( function(){
+          self.next_url=null
+          self.get_recordings()
+          self.hide_loading()
+        }, 1500 )
+        self.fetching = false;
+      });
   }
 
   reload(){
@@ -210,7 +211,11 @@ class Listen{
     this.logger('Show next recording')
     self.show_loading();
 
+    if (this.showing_next_recording){ return ;}
+
     if (this.sentence){
+      this.showing_next_recording = true
+
       $(self.sentence_block).removeClass('disabled')
       $(self.sentence_block).find('.sentence .text-area').remove()
 
@@ -273,12 +278,13 @@ class Listen{
           document.dispatchEvent(self.recording_loaded_event);
         }
         self.audio.load()
-
+        this.showing_next_recording = false
       }).fail(function(){
         console.error('FAILED TO GET RECORDING FILE')
         window.setTimeout(function(){
           self.next()
         }, 1500)
+        this.showing_next_recording = false
       })
 
 
@@ -290,11 +296,11 @@ class Listen{
         self.check_sentence_changed(event)
       })
 
-
       $(self.audio).bind('error', function(){
         window.setTimeout(function(){
           self.next()
         }, 1500);
+        this.showing_next_recording = false
       })
     }
   }
