@@ -480,7 +480,25 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         person = get_person(self.request)
 
         # we should treat all anonymous usesrs as the same so we dont' overload shit!
+        awhi = self.request.query_params.get('awhi', False)
+        if awhi:
+            # Awhi takes a sentence id and returns an approved recording with that sentence.
+            try:
+                pk = int(awhi)
+            except:
+                raise ValueError('You must pass an integer to the awhi field')
 
+            recordings = Recording.objects\
+                .filter(sentence__pk=int(awhi))\
+                .filter(quality_control__approved=True)\
+                .first()
+
+            # if len(recordings) > 0:
+            #     query_cache_key = '{0}:listen-awhi'.format(pk)
+            #     cpk = get_random_pk_from_queryset(recordings, query_cache_key)
+            #     return [Recording.objects.get(pk=cpk)]
+
+            return recordings
 
         # ctm = ContentTypeManager()
         queryset = Recording.objects\

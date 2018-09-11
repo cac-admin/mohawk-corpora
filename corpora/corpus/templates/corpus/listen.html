@@ -126,18 +126,7 @@ div.content{
         </h5>
       </div>
       <div class="modal-body">
-        <ul>
-          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the recording consist of audible speech?</li>
-          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the speaker read the words that were written?</li>
-          <!-- <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Does the speech flow naturally?</li> -->
-          <li><span class="list-style"><i class="fal fa-check-square fa-fw"></i></span> Is the pronunciation good?</li>
-        </ul>
-
-        <p><span class="actions"><a href="#" class="good "><i class="fas fa-check fa-fw"></i>&nbsp;Ka Tika</a></span>
-          if you answered <b>yes</b> to all questions.</p>
-        <p><span class="actions"><a href="#" class="bad "><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a></span>
-        if you answered <b>no</b> to any questions.</p>
-
+        {% include 'corpus/instructions/listen_instructions.html' %}
       </div>
       <!--
       <div class="modal-header">

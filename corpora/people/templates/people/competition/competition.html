@@ -9,8 +9,38 @@
 @import 'bower_components/bootstrap/scss/functions';
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
+@import 'corpora/css/colors';
+@import 'corpora/css/text';
 
+@mixin style-action-button($color, $class_name){
 
+    a.#{$class_name}{
+      color: white;
+      background-color: $color;
+      -webkit-tap-highlight-color: rgba($color, .5);
+    }
+    a.#{$class_name}.checked{
+      background-color: $color;
+      color: lighten($color,100%);
+    }     
+    a.#{$class_name}:active{
+      background-color: darken($color, 6%);      
+      color: white;
+    }
+}
+
+@include style-action-button($brand_primary, "start")
+.start{
+  font-size: 2.3em;
+  border-radius: 4px;
+  padding: 15px 30px;
+  margin: 30px 0px 20px 0px;
+  display: inline-block;
+}
+
+.jumbotron{
+  margin: 0px;
+}
 div.col.table{
   overflow-x: auto;
 }
@@ -44,22 +74,35 @@ h3{
 </style>
 {% endaddtoblock %}
 
-{% cache 600 competition %}
 
 <div class="container">
 
   <div class="row">
     <div class="col">
-      <h1>Whakarongo Ki Te Reo Māori Competition</h1>
+      <h1>Rongorongo Competition</h1>
     </div>
   </div>
 
   <div class="row ">
     <div class="col">
-        <h3>Starts 11 September</h3>
-        <p>The Whakarongo Whakarongo Ki Te Reo Māori Competition starts today!</p>
+
+
+
+  <div class="row justify-content-center timata" style="text-align: center;">
+    <div class="col-12" >
+      <div>
+      <a href="{% url 'corpus:record' %}" class="start" >
+        <i class="fas fa-volume-up fa-fw"></i> {% trans "Listen" %}
+      </a>
+      </div>
+      <p>Hit the big whero button to start reviewing recordings.</p>
+    </div>
+  </div>
+
+
+        <h3>Starts 12 September</h3>
         
-        <p>Win one of 5 new Huawei Nova 3i mobiles by reviewing sentences during the Competition.
+        <p>Win one of 5 new Huawei Nova 3i mobiles by reviewing sentences during the Rongorongo Competition.
           All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
           <a href="{% url 'corpus:listen' %}">reviewing</a>.
           Make sure you verify your email so we can contact you if you win.
@@ -68,6 +111,9 @@ h3{
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p>
 
 
+
+
+        {% cache 600 competition %}
         <h3 style="padding-top: 15px;">{{ qualified.count }} Rōpū</h3>
         <p>You can still participate as a group, but entries are per person.</p>
         <p>{% for g in groups %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
@@ -90,12 +136,12 @@ h3{
         <p>{% for g in need_more_members %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
 
         {% endcomment %}
+        {% endcache %}
+
 
     </div>
   </div>
 
 </div>
-
-{% endcache %}
 
 {% endblock %}
