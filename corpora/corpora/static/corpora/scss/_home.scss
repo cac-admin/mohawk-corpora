@@ -183,6 +183,32 @@ div.divider{
   width: 50%;
   background-color: rgba(#000, .25);
   height: 1px;
-  margin: 30px 0px;
+  margin: 60px 0px;
   padding: 0;
+}
+
+div.row.section{
+  margin-top: 60px;
+
+  h1{
+    @include media-breakpoint-down(sm) {
+      font-size: 2em;
+    }
+    @include media-breakpoint-up(md) {
+      font-size: 3em;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    margin-top: 30px;
+  }
+
+}
+
+div.timata{
+  padding-top: 30px;
+  @include media-breakpoint-down(sm){
+    padding-top: 30px;
+
+  }
 }

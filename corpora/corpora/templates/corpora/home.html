@@ -48,7 +48,7 @@
 
 
 
-  <div class="row justify-content-center" style="text-align: center;">
+  <div class="row justify-content-center timata" style="text-align: center;">
     <div class="col-12" >
       <div>
       <a href="{% url 'corpus:record' %}" class="start" >
@@ -61,7 +61,7 @@
 
 
 
-  <div class="row ">
+  <div class="row section">
     <div class="col" style="margin-top: 30px;">
         
   
@@ -70,9 +70,9 @@
 
             <div class="row" style="height: 100%;">
               <div class="col-12">
-                <h2 style="font-weight: 900;">
+                <h1 style="font-weight: 900;">
                   <a href="{% url 'competition' %}">{% trans "Kōrero Māori on your mobile" %}</a>
-                </h2>
+                </h1>
                 <p>Download the Kōrero Māori app on your mobile! You can read sentences even while you're
                 offline. iOS App comming soon.</p>                
               </div>
@@ -107,20 +107,40 @@
   </div>
 
 
-  <div class="row ">
+  <div class="row section">
     <div class="col">
-        <h2 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Whakarongo Kōrero Māori Group Competition" %}</a></h2>
+        <h1 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Whakarongo Ki Te Reo Māori Competition" %}</a></h1>
+
+      <div class="row">
+        <div class="col-12 col-md-6">
+          
         <h4 style="color: #444;">Starts on 11 September</h4>
         <p>Help improve pronunciation by reviewing other people's recordings.</p>
         
-        <p>Win cash 💰 by reviewing sentences during the Whakarongo Kōrero Māori Competition.
+        <p><b>Win one of 5 new Huawei Nova 3i mobiles</b> by reviewing sentences during the Competition.
           All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
           <a href="{% url 'corpus:listen' %}">reviewing</a>.
-          Make sure you verify your email so we can contact you if you win.
+          Make sure you verify your email so we can contact you if you win.</p>
 
+
+        <p>
           Don't forget to check out the 
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.
         </p>
+
+
+        </div>
+        <div class="col-12 col-md-6" style="text-align: right;">
+          
+        <p><img src="{% static 'people/images/competition/nova_3i.jpg' %}" style="width: 100%; max-width: 400px;" /></p>
+
+
+        </div>
+      </div>
+
+
+
+
 
         
     </div>
