@@ -267,6 +267,7 @@ class Listen{
           self.logger(textStatus.responseText)
           self.logger(XMLHttpRequest)
           self.logger(errorThrown)
+          self.showing_next_recording = false
         }
       }).done(function(){
 
