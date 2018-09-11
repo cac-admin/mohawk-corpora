@@ -445,9 +445,14 @@ class ListenPermissions(permissions.BasePermission):
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
             person = get_person(request)
-            key = '{0}:{1}:listen'.format(person.uuid, obj.id)
+            if person is not None:
+                uuid = person.uuid
+            else:
+                uuid = 'None-Person-Object'
+            key = '{0}:{1}:listen'.format(uuid, obj.id)
             cache.set(key, True, 15)
             # logger.debug('  CACHE KEY: {0}'.format(key))
+
             return True
         else:
             self.message = _("{0} not allowed with this API\
