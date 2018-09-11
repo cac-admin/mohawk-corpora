@@ -278,13 +278,13 @@ class Listen{
           document.dispatchEvent(self.recording_loaded_event);
         }
         self.audio.load()
-        this.showing_next_recording = false
+        self.showing_next_recording = false
       }).fail(function(){
         console.error('FAILED TO GET RECORDING FILE')
         window.setTimeout(function(){
           self.next()
         }, 1500)
-        this.showing_next_recording = false
+        self.showing_next_recording = false
       })
 
 
@@ -300,14 +300,13 @@ class Listen{
         window.setTimeout(function(){
           self.next()
         }, 1500);
-        this.showing_next_recording = false
+        self.showing_next_recording = false
       })
 
       $(self.audio).bind('emptied', function(){
         self.logger('audio source emptied')
-        this.showing_next_recording = false
+        self.showing_next_recording = false
       });
-      this.showing_next_recording = false
     }
   }
 
