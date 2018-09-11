@@ -8,6 +8,7 @@ class Listen{
     this.objects = null
     this.recording = null
     this.sentence = null
+    this.fetching = false
     if(admin){
       this.base_url = '/api/recordings/'
       this.base_recording_url = '/api/recordings/'
@@ -106,6 +107,8 @@ class Listen{
     var self = this;
     self.logger('Fetching more recordings')
     self.show_loading()
+    if (self.fetching){ return; }
+    self.fetching = true;
     $.ajax({
         url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
         error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -125,6 +128,7 @@ class Listen{
             self.logger(self.objects[0])
             self.next()
           }
+          self.fetching = false;
         }).fail(function(){
           self.logger('Failed to fetch recordings, will try again...')
           window.setTimeout( function(){
@@ -132,7 +136,7 @@ class Listen{
             self.get_recordings()
             self.hide_loading()
           }, 1500 )
-
+          self.fetching = false;
         });
   }
 
