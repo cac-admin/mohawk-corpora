@@ -92,7 +92,7 @@ h3{
     <div class="col-12" >
       <div>
       <a href="{% url 'corpus:record' %}" class="start" >
-        <i class="fas fa-volume-up fa-fw"></i> {% trans "Listen" %}
+        <i class="fas fa-star fa-fw"></i><SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "TĪMATA" %}&nbsp;&nbsp;</SPAN><i class="fas fa-star fa-fw"></i> 
       </a>
       </div>
       <p>Hit the big whero button to start reviewing recordings.</p>
@@ -111,6 +111,9 @@ h3{
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p>
 
 
+        <div style="width: 100%; text-align: center;">
+          <iframe src="https://tehiku.nz/embed/6813" style="padding:0px; margin:0px; border:0px;" width="640" height="360" frameborder="0" allowfullscreen ></iframe>
+        </div>
 
 
         {% cache 600 competition %}
