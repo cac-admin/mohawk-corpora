@@ -1,7 +1,7 @@
 class Listen{
   constructor(person_pk, target_element_selector, content_type, admin=false, user_id=null){
     var self = this;
-    this.debug = false
+    this.debug = true
     this.sentence_block = $(target_element_selector)
     this.admin = admin
     this.user_id = user_id
