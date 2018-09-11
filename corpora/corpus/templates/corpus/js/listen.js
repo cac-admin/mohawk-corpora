@@ -208,21 +208,21 @@ class Listen{
   show_next_recording(){
     var self = this;
 
-    this.logger('Show next recording')
+    self.logger('Show next recording')
     self.show_loading();
 
-    if (this.showing_next_recording){ return ;}
+    if (self.showing_next_recording){ return ;}
 
-    if (this.sentence){
-      this.showing_next_recording = true
+    if (self.sentence){
+      self.showing_next_recording = true
 
       $(self.sentence_block).removeClass('disabled')
       $(self.sentence_block).find('.sentence .text-area').remove()
 
 
-      var display_text = this.recording.sentence_text
+      var display_text = self.recording.sentence_text
 
-      if (this.admin){
+      if (self.admin){
         var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
         $(input_elm).val(display_text);
         $(this.sentence_block).find('.sentence').append(input_elm)
