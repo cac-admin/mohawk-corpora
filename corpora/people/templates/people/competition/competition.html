@@ -70,6 +70,30 @@ h3{
   font-weight: 700;
   color: $brand_darkest;
 }
+.video{
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 800px;
+  background-color: black;
+  .container{
+    .row > .col{
+      @include media-breakpoint-down(xs) {
+        padding: 0px;
+      }
+    } 
+  }
+}
+div.r16x9{
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  div{
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+      iframe{
+      }
+  }
+}
 
 </style>
 {% endaddtoblock %}
@@ -111,14 +135,19 @@ h3{
           <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p>
 
 
-        <div style="width: 100%; text-align: center;">
-          <iframe src="https://tehiku.nz/embed/6813" style="padding:0px; margin:0px; border:0px;" width="640" height="360" frameborder="0" allowfullscreen ></iframe>
+      <div class="video">
+        <div class="r16x9">
+          <div>
+            <iframe src="https://tehiku.nz/embed/6813" style="padding:0px; margin:0px; border:0px;" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+          </div>
         </div>
+      </div>
+
 
 
         {% cache 600 competition %}
         <h3 style="padding-top: 15px;">{{ qualified.count }} Rōpū</h3>
-        <p>You can still participate as a group, but entries are per person.</p>
+        <p>You can still participate as a group, but entries for the Rongorongo Competition are per person.</p>
         <p>{% for g in groups %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
 
 
