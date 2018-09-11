@@ -22,7 +22,17 @@
   text-align: center;
   color: $brand_primary;
 }
-
+.stat.wrapper{
+  font-size: 1em;
+  display: inline-block;
+  margin-left: 15px;
+}
+.stat.wrapper:first{
+  margin-left: 0px;
+}
+.stat.wrapper:last{
+  margin-right: 15px;
+}
 .stat.stat-heading{ 
   line-height: 1.5em;
   font-size: 1em;
@@ -42,9 +52,7 @@
 
 .stat.stat-icon {
   font-size: 1.5em;
-  /*line-height: 20px;*/
   white-space: pre;
-  
 }
 
 span.stat.stat-icon::before {
@@ -53,10 +61,10 @@ span.stat.stat-icon::before {
 }
 
 .stat.stat-dimension{
-  font-size: .8em;
-  line-height: 0px;
+  font-size: 1em;
   color: $brand_dark;
   display: none;
+
 }
 
 .stat-value-animate-up{
@@ -80,11 +88,7 @@ span[class*=downvotes]{
   color: $brand_darker;
 }
 
-div.row.stat{
-  div[class*='col']{
-    padding: 0px 2px !important;
-  }
-}
+
 </style>
 {% endaddtoblock %}
 
@@ -97,27 +101,34 @@ div.row.stat{
           <span class="stat stat-value stat-total-overalltotal" data-value="">{{stats.qcs.count}}</span>
           {% trans 'total' %}</span>
         </div>
+        <div class="col-12" style="text-align: right;">
+
         {% if request.user.is_staff and request.user.is_authenticated %}
-        <div class="col-3">
+        <div class="stat wrapper">
           <span class="stat stat-value stat-total-approvals" data-value="">{{stats.qcs_today.approved}}</span>
           <span class="stat stat-icon stat-total-approvals"><i class="far fa-fw fa-check-circle"></i></span>
           <span class="stat stat-dimension stat-total-approvals"><br>{% trans 'approvals' %}</span>
         </div>
         {% endif %}
-        <div class="col-4">
+        <div class="stat wrapper">
           <span class="stat stat-value stat-total-upvotes" data-value="">{{stats.qcs_today.good}}</span>
           <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-check"></i></span>
           <span class="stat stat-dimension stat-total-upvotes"><br>{% trans 'up votes' %}</span>
         </div>
-        <div class="col-4">
+        <div class="stat wrapper">
           <span class="stat stat-value stat-total-downvotes" data-value="">{{stats.qcs_today.bad}}</span>
           <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-times"></i></span> 
           <span class="stat stat-dimension stat-total-downvotes"><br>{% trans 'down votes' %}</span>
         </div>        
-        <div class="col-4">
-          <span class="stat stat-value stat-total-total" data-value="">{{stats.qcs_today.count}}</span>
+        <div class="stat wrapper">
+          <span class="stat stat-value stat-total-total" data-value="" style="margin-bottom: 7px;">{{stats.qcs_today.count}}</span>
           <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'today' %}</span>
         </div>
+
+
+
+        </div>
+        
       </div>
     </div>
   </div>
