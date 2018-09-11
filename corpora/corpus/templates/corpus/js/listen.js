@@ -302,6 +302,12 @@ class Listen{
         }, 1500);
         this.showing_next_recording = false
       })
+
+      $(self.audio).bind('emptied', function(){
+        self.logger('audio source emptied')
+        this.showing_next_recording = false
+      });
+      this.showing_next_recording = false
     }
   }
 
