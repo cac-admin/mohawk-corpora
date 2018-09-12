@@ -346,6 +346,7 @@ class Listen{
     }).fail(function(){
       self.logger('Failed.')
       self.hide_loading()
+      self.next()
     })
     return true;    
   }
@@ -368,6 +369,7 @@ class Listen{
     }).fail(function(){
       self.logger('Failed.')
       self.hide_loading()
+      self.next()
     })
     return true;    
   }
