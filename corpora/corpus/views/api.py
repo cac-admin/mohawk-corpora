@@ -560,7 +560,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             else:
                 queryset = queryset\
                     .annotate(num_qc=Count('quality_control'))\
-                    .filter(num_qc__lte=2)
+                    .filter(num_qc__lte=4)
 
         sort_by = self.request.query_params.get('sort_by', '')
 
