@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 
-from corpus.models import Recording
+from corpus.models import Recording, QualityControl
 from people.helpers import get_current_language
 
 import datetime
@@ -41,6 +41,9 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
         language = get_current_language(self.request)
 
         recordings = Recording.objects.all().order_by('-created')
+        reviews = QualityControl.objects\
+            .filter(content_type__model__icontains='recording')\
+            .order_by('-updated')
 
         start_date = recordings.last().created
         end_date = recordings.first().created
@@ -59,7 +62,12 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
         timezone_shift = datetime.timedelta(hours=0)
         day_offset = datetime.timedelta(days=day_counter)
         next_day = start_day - day_offset
-        data = {'recordings': {}, 'growth_rate': {}}
+        data = {
+            'recordings': {},
+            'growth_rate': {},
+            'reviews': {},
+            'reviews_growth': {}
+        }
 
         data = {
             'recordings': {
@@ -70,9 +78,18 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
                 'labels': [],
                 'values': [],
             },
+            'reviews': {
+                'labels': [],
+                'values': [],
+            },
+            'reviews_growth': {
+                'labels': [],
+                'values': [],
+            },
         }
 
         total_recordings = 0
+        total_reviews = 0
         counter = 0
         tomorrow = next_day + day_offset
         # next_day = next_day
@@ -104,6 +121,25 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
                     total_recordings - data['recordings']['values'][counter-1])
             except IndexError:
                 data['growth_rate']['values'].append(total_recordings)
+
+            qc = reviews.filter(
+                updated__gte=next_day+timezone_shift,
+                updated__lt=tomorrow+timezone_shift)
+            num_reviews = qc.count()
+            total_reviews = total_reviews + num_reviews
+
+            data['reviews']['labels'].append(
+                (next_day).strftime('%d-%m-%y'))
+            data['reviews']['values'].append(total_reviews)
+
+            try:
+                data['reviews_growth']['labels'].append(
+                    (next_day).strftime('%d-%m-%y'))
+                data['reviews_growth']['values'].append(
+                    total_reviews - data['reviews']['values'][counter-1])
+            except IndexError:
+                data['reviews_growth']['values'].append(total_reviews)
+
 
             # try:
             #     next_day = timezone.make_aware(

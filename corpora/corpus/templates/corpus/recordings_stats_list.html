@@ -38,6 +38,13 @@ div.content{
 <canvas id="growthrate"></canvas>
 
 
+      <h1>{% trans "Reviews" %}</h1>
+
+
+<canvas id="reviews"></canvas>
+
+<canvas id="reviews_growth"></canvas>
+
 {% addtoblock 'js-end' %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 {% endaddtoblock %}
@@ -116,6 +123,70 @@ var border = ''
   });
 
 
+  // REVIEWS ///////////////
+
+  var ctx3 = document.getElementById('reviews').getContext('2d');
+  var chart3 = new Chart(ctx3, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.reviews.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Reviews' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.reviews.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: '# of Reviews'
+          }
+        }]
+      }
+    },
+
+  });
+
+  var ctx4 = document.getElementById('reviews_growth').getContext('2d');
+  var chart4 = new Chart(ctx4, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.reviews_growth.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Growth Rate' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.reviews_growth.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Number / Day'
+          }
+        }]
+      }
+    },
+
+  });  
+
 </script>
 {% endaddtoblock %}
 
@@ -129,6 +200,9 @@ $(document).ready(function(){
 
       recordings = data.data.recordings
       growth_rate = data.data.growth_rate
+
+      // reviews = data.data.reviews
+      // reviews_growth = data.data.reviews_growth
 
       chart.data.labels = recordings.labels 
 
