@@ -12,7 +12,7 @@ from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 
 from people.helpers import get_person
 from people.competition import \
-    filter_recordings_for_competition, \
+    filter_qs_for_competition, \
     filter_recordings_to_top_ten, \
     filter_recordings_distribute_reviews
 from corpus.helpers import get_next_sentence
@@ -365,7 +365,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
             # Disable this for now
             # if sort_by not in 'recent':
-            #    queryset = filter_recordings_for_competition(queryset)
+            #    queryset = filter_qs_for_competition(queryset)
 
             # Could this be faster?
             queryset = queryset\

@@ -80,13 +80,19 @@ def get_valid_group_members(group, queryset=None):
     return queryset
 
 
-def filter_recordings_for_competition(queryset):
-    '''Takes a recording queryset and returns only recordings to be used during the
-    competition.'''
-    start = parse_datetime("2018-03-15 13:00:00")
+def get_start_end_for_competition():
+    start = parse_datetime("2018-09-12 12:00:00")
     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
-    end = parse_datetime("2018-03-25 18:00:00")
+    end = parse_datetime("2018-09-19 12:00:00")
     end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+
+    return start, end
+
+
+def filter_qs_for_competition(queryset):
+    '''Takes a recording or QC queryset and returns only recordings to be used
+    during the competition.'''
+    start, end = get_start_end_for_competition()
 
     # if timezone.now() < start:
     #     return queryset
@@ -95,8 +101,8 @@ def filter_recordings_for_competition(queryset):
     # else:
 
     queryset = queryset\
-        .filter(created__lte=end)\
-        .filter(created__gte=start)
+        .filter(updated__lte=end)\
+        .filter(updated__gte=start)
 
     return queryset
 

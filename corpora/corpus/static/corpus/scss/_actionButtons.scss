@@ -46,10 +46,10 @@
         padding: 9px;
       }
       @include media-breakpoint-down(sm) {
-        font-size: 1em;
+        font-size: 0.9em;
         padding: 6px;
         margin: 2px;
-      }
+      }    
 
       -webkit-tap-highlight-color: rgba($brand_primary,.5);
 

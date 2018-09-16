@@ -212,3 +212,11 @@ div.timata{
 
   }
 }
+
+div.row.app-store{
+  @include media-breakpoint-down(md){
+      img:first-of-type{
+        margin-bottom: 15px;
+      }
+  }
+}

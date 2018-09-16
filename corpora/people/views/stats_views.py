@@ -58,8 +58,9 @@ from people.competition import \
     get_valid_group_members,\
     get_invalid_group_members,\
     get_competition_person_score, \
-    filter_recordings_for_competition, \
-    mahi_tahi
+    filter_qs_for_competition, \
+    mahi_tahi, \
+    get_start_end_for_competition
 
 from people.forms import \
     ResendEmailVerificationForm
@@ -210,9 +211,25 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         language = get_current_language(self.request)
+        start, end = get_start_end_for_competition()
         return Person.objects\
-            .annotate(num_recordings=models.Count('recording', distinct=True))\
-            .annotate(num_reviewed=models.Count('qualitycontrol', distinct=True))\
+            .annotate(
+                num_reviewed=models.Sum(
+                    Case(
+                        When(qualitycontrol__updated__gte=start,
+                             qualitycontrol__updated__lte=end,
+                             qualitycontrol__content_type__model__icontains='recording',
+                             then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
+            .annotate(
+                num_recordings=models.Sum(
+                    Case(
+                        When(recording__updated__gte=start,
+                             recording__updated__lte=end,
+                             then=Value(1)),
+                        default=Value(0),
+                        output_field=IntegerField())))\
             .order_by('-num_reviewed')
 
         # .filter(recording__sentence__language=language)\ => taking out for now
@@ -412,7 +429,7 @@ to our project.")
 
         # for group in groups:
         #     # members = get_valid_group_members(group)
-        #     # recordings = filter_recordings_for_competition(
+        #     # recordings = filter_qs_for_competition(
         #     #     Recording.objects.filter(person__in=members))
         #     group.duration_hours = group.duration/60/60
 
@@ -444,7 +461,7 @@ class Top20(GroupsStatsView):
             super(Top20, self).get_context_data(**kwargs)
 
         recordings = Recording.objects.all()
-        recordings = filter_recordings_for_competition(recordings)
+        recordings = filter_qs_for_competition(recordings)
         total_recordings = recordings.count()
 
         total_duration = recordings.aggregate(total_duration=Sum('duration'))
@@ -551,7 +568,7 @@ class GroupStatsView(
         num_recordings = 0
         if valid_members:
             for member in valid_members:
-                recordings = filter_recordings_for_competition(
+                recordings = filter_qs_for_competition(
                     Recording.objects.filter(person=member))
                 member.num_recordings = recordings.count()
 
@@ -560,7 +577,7 @@ class GroupStatsView(
                 .annotate(num_groups=Count('groups', distinct=True))
 
             for member in invalid_members:
-                recordings = filter_recordings_for_competition(
+                recordings = filter_qs_for_competition(
                     Recording.objects.filter(person=member))
                 member.num_recordings = recordings.count()
                 member.verified = email_verified(member)
