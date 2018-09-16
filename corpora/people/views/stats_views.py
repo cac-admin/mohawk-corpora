@@ -230,6 +230,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
                              then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
+            .distinct()\
             .order_by('-num_reviewed')
 
         return people

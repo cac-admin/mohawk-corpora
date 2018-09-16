@@ -43,6 +43,7 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
         recordings = Recording.objects.all().order_by('-created')
         reviews = QualityControl.objects\
             .filter(content_type__model__icontains='recording')\
+            .distinct()\
             .order_by('-updated')
 
         start_date = recordings.last().created
