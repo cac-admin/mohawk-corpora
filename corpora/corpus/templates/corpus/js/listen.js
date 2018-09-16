@@ -33,6 +33,7 @@ class Listen{
     $(self.sentence_block).find('.approve').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
+        $(self.sentence_block).find('.actions a.help').removeClass('disabled')
         self.approve();
       }
     })
@@ -40,6 +41,7 @@ class Listen{
     $(self.sentence_block).find('.good').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
+        $(self.sentence_block).find('.actions a.help').removeClass('disabled')
         self.up_vote();
       }
     })   
@@ -47,6 +49,7 @@ class Listen{
     $(self.sentence_block).find('.bad').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
+        $(self.sentence_block).find('.actions a.help').removeClass('disabled')
         self.down_vote();
       }
     })
@@ -54,6 +57,7 @@ class Listen{
     $(self.sentence_block).find('.bad').off().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
+        $(self.sentence_block).find('.actions a.help').removeClass('disabled')
         self.down_vote();
       }
     })
@@ -78,9 +82,7 @@ class Listen{
     $(self.sentence_block).find('.next').unbind().on('click', function(e){
       if (!$(e.currentTarget).hasClass('disabled')){
         $(self.sentence_block).find('.actions a').addClass('disabled')
-
         $(self.sentence_block).find('.actions a.help').removeClass('disabled')
-
         self.audio.pause()
         // self.audio.src=null
         self.next();
