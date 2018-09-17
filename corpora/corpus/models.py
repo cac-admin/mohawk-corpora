@@ -342,6 +342,7 @@ class Recording(models.Model):
     person = models.ForeignKey(
         'people.Person',
         null=True,
+        blank=True,
         on_delete=models.SET_NULL
         )
 
