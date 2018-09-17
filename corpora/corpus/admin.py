@@ -15,12 +15,14 @@ class QualityControlInline(GenericTabularInline):
     extra = 0
     can_delete = False
     model = QualityControl
+    raw_id_fields = ('person', 'approved_by')
 
 
 class RecordingsInline(admin.TabularInline):
     extra = 0
     can_delete = False
     model = Recording
+    raw_id_fields = ('person',)
 
 
 @admin.register(QualityControl)
