@@ -295,7 +295,7 @@ BOWER_INSTALLED_APPS = {
     'jquery',
     'jquery-ui',
     'bootstrap',
-    'opus-recorderjs#v4.1.4',
+    'opus-recorderjs#v5.0.0',
     'js-cookie',
     'popper.js',
     'chart.js',
