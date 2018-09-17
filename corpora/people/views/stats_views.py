@@ -39,7 +39,7 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q, FloatField
+from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q, FloatField, F, CharField
 from django.db.models.functions import Cast
 
 from django.core.cache import cache
@@ -214,23 +214,20 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
         start, end = get_start_end_for_competition()
         people = Person.objects.all()\
             .annotate(
-                num_reviewed=models.Sum(
+                num_reviewed=models.Count(
                     Case(
-                        When(qualitycontrol__updated__gte=start,
-                             qualitycontrol__updated__lte=end,
-                             qualitycontrol__content_type__model__icontains='recording',
-                             then=Value(1)),
-                        default=Value(0),
-                        output_field=IntegerField())))\
+                        When(Q(qualitycontrol__updated__gte=start) &
+                             Q(qualitycontrol__updated__lte=end) &
+                             Q(qualitycontrol__content_type__id=8),
+                             then=F('qualitycontrol')),
+                        output_field=CharField()), distinct=True))\
             .annotate(
-                num_recordings=models.Sum(
+                num_recordings=models.Count(
                     Case(
-                        When(recording__updated__gte=start,
-                             recording__updated__lte=end,
-                             then=Value(1)),
-                        default=Value(0),
-                        output_field=IntegerField())))\
-            .distinct()\
+                        When(Q(recording__created__gte=start) &
+                             Q(recording__created__lte=end),
+                             then=F('recording')),
+                        output_field=CharField()), distinct=True))\
             .order_by('-num_reviewed')
 
         return people
