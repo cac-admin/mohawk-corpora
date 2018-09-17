@@ -22,7 +22,6 @@ class RecordingsInline(admin.TabularInline):
     extra = 0
     can_delete = False
     model = Recording
-    # fields = ('sentence_text', 'duration', 'user_agent')
     raw_id_fields = ('person', 'source')
 
     def has_add_permission(self, request, obj=None):
@@ -30,6 +29,7 @@ class RecordingsInline(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
 
 @admin.register(QualityControl)
 class QualityControlAdmin(admin.ModelAdmin):
