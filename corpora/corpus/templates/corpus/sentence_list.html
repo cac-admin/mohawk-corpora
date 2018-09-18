@@ -1,5 +1,5 @@
 {% extends 'corpus/base.html' %}
-{% load static sekizai_tags compress sass_tags i18n %}
+{% load static sekizai_tags compress i18n %}
 
 
 {% block content %}
@@ -15,7 +15,7 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 div.content{
-  padding: 60px 0px 60px 0px;
+  /*padding: 60px 0px 60px 0px;*/
 }
 
 
@@ -36,23 +36,25 @@ div.content{
         data-trigger="hover" 
         title="Save" 
         data-content="{% trans 'Save changes.' %}"
-        ><i class="fa fa-save fa-fw"></i></a>
+        ><i class="fas fa-save fa-fw"></i></a>
       <a href="#" class="approve"
         data-toggle="popover" 
         data-trigger="hover" 
         title="Approve" 
         data-content="{% trans 'Approve for recording?' %}"
-        ><i class="fa fa-check-circle-o fa-fw"></i></a>
+        ><i class="fas fa-check-circle fa-fw"></i></a>
       <a href="#" class="delete"
         data-toggle="modal" 
         data-target="#askDelete" 
         title="Delete" 
-        ><i class="fa fa-trash fa-fw"></i></a>
+        ><i class="fas fa-trash fa-fw"></i></a>
       {% else %}
       {% endif %}
-      <a href="#" class="good"><i class="fa fa-thumbs-o-up fa-fw"></i></a>
-      <a href="#" class="bad"><i class="fa fa-thumbs-o-down fa-fw"></i></a>      
-
+      <a href="#" class="good"><i class="fas fa-thumbs-up fa-fw"></i></a>
+      <a href="#" class="bad"><i class="fas fa-thumbs-down fa-fw"></i></a>      
+      <a href="javascript:void(0)" id="skip-button" class="next">
+            <i class="fas fa-step-forward fa-fw"></i> {% trans "Skip" %}
+      </a>
     </div>
   </div>
 
@@ -82,10 +84,14 @@ div.content{
 
 
 {% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
+
 
 {% addtoblock "js-end" %}
+
 <script type="text/javascript">
+{% include 'corpus/js/sentence.js' %}
 
 $('a.approve').popover({})
 

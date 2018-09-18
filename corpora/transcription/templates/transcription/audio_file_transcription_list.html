@@ -1,0 +1,225 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/transcriptions.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+
+</style>
+{% endaddtoblock %}
+  
+<div class="viewport-header container-fluid">
+  <div class="row">
+    <div class="col ">
+      <h1>Transcriptions</h1>
+    </div>
+  </div>
+</div>
+
+<div class="viewport-title container-fluid">
+  <div class="row">
+    <div class="col">
+
+<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+
+<!--   <div class="input-group">
+    <div class="input-group-prepend">
+      <div class="input-group-text" id="btnGroupAddon"><i class="fal fa-plus fa-search" ></i></div>
+    </div>
+    <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="btnGroupAddon">
+  </div> -->
+
+  <div class="btn-group " role="group" aria-label="First group">
+
+     <a href="#"
+         class="btn btn-light" role="button"
+         x-data-model="audio_file_transcription"
+         x-data-action="create">
+        <i class="fal fa-plus fa-fw" ></i> Upload Audio
+      </a>
+
+  </div>
+
+
+
+</div>
+
+     
+
+    </div>
+  </div>
+</div>
+
+
+<div class="viewport-body container-fluid">
+  <div class="row">
+    <div class="col">
+
+      <div class="row  justify-content-end">
+        <div class="col-2 col-sm-1 col-xl-1">
+          <!-- <div class="row">
+            <div class="col"></div>
+          </div> -->
+        </div>
+        
+        <div class="col-10 col-sm-11 col-xl-11">
+          <div class="row">
+            <div class="col-12 col-xl-6">Name</div>
+            <div class="col-12 col-xl-6">Transcription</div>
+          </div>
+        </div>
+
+      </div>
+      
+      {% for object in transcriptions %}
+      <div class="row justify-content-end" >
+        <div class="col-2 col-sm-1 col-xl-1">
+              
+                  <a href="#"
+                     class="btn btn-sm btn-dark"
+                     role="button"
+                     x-data-action="edit"
+                     x-data-url="{% url 'transcription:file_transcribe' object.pk %}"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     title="Edit Transcription">
+                    <i class="fas fa-fw fa-edit"></i>
+                  </a>
+
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-dark " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-caret-down fa-fw"></i>
+                  </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+
+
+                  <a href="#"
+                     class="dropdown-item"
+                     x-data-action="download"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     x-data-file-name="{{object.name}}.txt"
+                     title="Download text file">
+                    <i class="far fa-fw fa-file-download"></i> Text
+                  </a>
+
+                  <a href="#"
+                     class="dropdown-item"
+                     x-data-action="download"
+                     x-data-format="vtt"
+                     x-data-model="audio_file_transcription"
+                     x-data-id="{{object.pk}}"
+                     x-data-file-name="{{object.name}}.vtt"
+                     title="Download caption file">
+                    <i class="far fa-fw fa-file-download"></i> Captions
+                  </a>
+
+                  <a href="#"
+                   class="dropdown-item"
+                   x-data-action="delete"
+                   x-data-model="audio_file_transcription"
+                   x-data-id="{{object.pk}}"
+                   title="Delete Transcription">
+                    <i class="far fa-fw fa-trash-alt"></i> Delete
+                  </a>
+
+                
+              </div>
+
+              </div>
+            </div>            
+          
+            <!-- <th scope="row">{{ forloop.counter }}</th> -->
+            <div class="col-10 col-sm-11 col-xl-11">
+              <div class="row">
+                <div class="col-12 col-xl-6"
+                    x-data-model="audio_file_transcription"
+                    x-data-id="{{object.pk}}"
+                    x-data-field="name"
+                    x-data-value="{{object.name}}">
+                  <a href="{% url 'transcription:file_transcribe' object.pk %}" style="font-weight: 500;">{{object.name}}</a>
+                </div>                        
+                <div class="col-12 col-xl-6">
+                  <a href="{% url 'transcription:file_transcribe' object.pk %}">
+                    <em>{{object.transcription|truncatechars:64}}</em>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- <td>{{object.uploaded_by}}</td> -->
+            <!-- <td>{% if object.audio_file %}<a href="{{object.audio_file.url}}"><i class="fas fa-file-audio fa-fw"></i></a>{% endif %}</td> -->
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<div class="viewport-footer container-fluid">
+  <div class="row">
+    <div class="col">
+        <nav aria-label="Page navigation ">
+          <ul class="pagination justify-content-end">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{%endif%}">
+              <a class="page-link" href="{% if not page_obj.has_previous %}#{%else%}?page={{ page_obj.previous_page_number }}{%endif%}" tabindex="-1">
+                <i class="far fa-angle-left"></i></a>
+            </li>
+
+            {% with 2 as page_space %}{% with -2 as page_space_neg%}
+            {% for page in page_obj.paginator.page_range %}
+            {% if page <= page_space %}
+
+              <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% elif page > page_obj.paginator.num_pages|add:page_space_neg %}
+              <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% elif page > page_space and page <= page_obj.paginator.num_pages|add:page_space_neg %}
+              {% if page > page_obj.number|add:page_space_neg and page < page_obj.number|add:page_space %}
+               <li class="page-item {% if page == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+              {% elif page == page_obj.number|add:page_space_neg or page == page_obj.number|add:page_space  %}
+                <li class="page-item "><a class="page-link" href="#">...</a></li>
+            {% else %}{% endif %}{% else %}{% endif %}
+            {% endfor %}{% endwith %}{% endwith %}
+
+            <li class="page-item {% if not page_obj.has_next %}disabled{%endif%}">
+              <a class="page-link " href="{% if not page_obj.has_next %}#{%else%}?page={{ page_obj.next_page_number }}{%endif%}">
+                <i class="far fa-angle-right"></i></a>
+            </li>
+          </ul>
+        </nav>
+    </div>
+  </div>
+</div>
+  
+
+
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+
+
+
+{% include 'transcription/js/audioFileTranscriptionEditor.js' %}
+var aftEditor = new AudioFileTranscriptionEditor()
+
+
+
+</script>
+{% endaddtoblock %}
+
+
+{% endblock %}

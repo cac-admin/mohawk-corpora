@@ -1,0 +1,29 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters file_access %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/dashboard.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+
+</style>
+{% endaddtoblock %}
+  
+
+
+<div class="container-fluid">
+
+
+<iframe src="/docs" width="100%" height="100%"></iframe>
+
+
+ 
+
+</div>
+
+{% endblock %}

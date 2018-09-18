@@ -1,0 +1,78 @@
+{% extends 'people/stats/base.html' %}
+{% load static sekizai_tags compress i18n cache %}
+
+{% block title %}{{x_title}}{%endblock%}
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+<h1 style="text-align: center; font-weight: 900;">Reviewer Leaderboard</h1>
+<p><small>This leaderboard shows the number of reviews done by each reviewer.</small></p>
+<div class="table"><table class="table" id='stats-table'>
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{% trans 'Username' %}</th>
+      <th scope="col">{% trans '# Reviewed' %}</th>
+      <th scope="col">{% trans '# Approved' %}</th>
+      <th scope="col">{% trans '# Good Votes' %}</th>
+      <th scope="col">{% trans '# Bad Votes' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for person in people %}
+<tr>
+  <th scope="row">{{ forloop.counter0|add:page_obj.start_index }}</th>
+  <td>{{person.username}}</td>
+  <td>{{person.num_reviewed}}</td>
+  <td>{{person.num_approved}}</td>
+  <td>{{person.num_good}}</td>
+  <td>{{person.num_bad}}</td>  
+</tr>
+{% endfor %}
+</tbody>
+</table></div>
+    </div>
+  </div>
+
+<div class="row">
+  <div class="col">
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+
+  </div>
+</div>
+
+
+</div>
+
+{% cache 600 personreviewstats request.path request.GET.urlencode %}
+{% endcache %}
+
+{% endblock %}

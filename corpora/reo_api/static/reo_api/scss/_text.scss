@@ -1,0 +1,30 @@
+@import '_colors';
+@import 'https://fonts.googleapis.com/css?family=Raleway|Noto+Sans&amp;subset=latin-ext'; // This may not work on all browsers and doesn't appear to work properly with compressor.
+
+$title-font: 'Raleway', sans-serif;
+$header-font: 'Raleway', sans-serif;
+$body-font: 'Raleway', sans-serif;
+
+
+/* These should be moved to main.scss */
+
+h1 {
+	color: $darkest;
+	font-family: $title-font;
+}
+
+h2 {
+	color: $darkest;
+	font-family: $header-font;
+}
+
+h3 {
+	color: $darker;
+	font-family: $body-font;
+}
+
+
+body {
+	color: $darker;
+	font-family: $body-font;
+}

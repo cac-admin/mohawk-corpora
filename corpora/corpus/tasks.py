@@ -2,11 +2,17 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from django.conf import settings
-
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from corpus.models import Recording
-
+from corpus.models import Recording, QualityControl, Source
+from django.contrib.contenttypes.models import ContentType
+from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
+
+from corpus.models import get_md5_hexdigest_of_file
+from people.models import Person
+from django.utils import timezone
+import datetime
 
 from django.core.files import File
 import wave
@@ -15,9 +21,13 @@ import os
 import stat
 import commands
 import ast
+import sys
+
+from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
+logger_test = logging.getLogger('django.test')
 
 
 @shared_task
@@ -51,63 +61,219 @@ def set_all_recording_durations():
 
 
 @shared_task
+def set_all_recording_md5():
+    '''This method shouldn't live around too long because it's
+   here to help with "migration". Once migration is done
+   we could just run a task to ensure these fields are
+   created. So this method is not very efficient and
+   succient because we're gocusing on getting it done
+   and then wil;l just delete it.
+    '''
+    recordings = Recording.objects\
+        .filter(audio_file_md5=None)\
+        .exclude(quality_control__delete=True)\
+        .distinct()
+    count = 0
+    total = recordings.count()
+    file_field = 'audio_file'
+
+    start = timezone.now()
+
+    if total == 0:
+        recordings = Recording.objects\
+            .filter(audio_file_wav_md5=None)\
+            .exclude(quality_control__delete=True)\
+            .distinct()
+
+        count = 0
+        total = recordings.count()
+        file_field = 'audio_file_wav'
+
+    logger_test.debug('Found {0} recordings to work on.'.format(total))
+    source, created = Source.objects.get_or_create(
+        source_name='Scheduled Task',
+        source_type='M',
+        author='Keoni Mahelona',
+        source_url='/',
+        description='Source for automated quality control stuff.'
+    )
+    person, created = Person.objects.get_or_create(
+        uuid=settings.MACHINE_PERSON_UUID,
+        full_name="Machine Person for Automated Tasks")
+    if recordings:
+        recording_ct = ContentType.objects.get_for_model(recordings.first())
+    error = 0
+    new_qc = 0
+    for recording in recordings:
+        count = count + 1
+        if file_field == 'audio_file':
+            audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file)
+            recording.audio_file_md5 = audio_file_md5
+        elif file_field == 'audio_file_wav':
+            audio_file_md5 = \
+                get_md5_hexdigest_of_file(recording.audio_file_wav)
+            recording.audio_file_wav_md5 = audio_file_md5
+        else:
+            continue
+
+        if audio_file_md5 is not None:
+            recording.save()
+            logger_test.debug('{0} done.'.format(recording.pk))
+        else:
+            error = error + 1
+            logger_test.debug(
+                '{1: 6}/{2} Recording {0}: File does not exist.'.format(
+                    recording.pk, count, total))
+            qc, created = QualityControl.objects.get_or_create(
+                delete=True,
+                content_type=recording_ct,
+                object_id=recording.pk,
+                notes='File does not exist.',
+                machine=True,
+                source=source,
+                person=person)
+            if created:
+                new_qc = new_qc + 1
+            elif not qc:
+                return "FATAL: WHY DON'T WE GET A QC!"
+        if count >= 5000:
+            # Terminate and respawn later.
+            # minutes = 60*1
+            # set_all_recording_md5.apply_async(
+            #     countdown=minutes,
+            # )
+            time = timezone.now()-start
+            return "Churned through {0} of {2} recordings with {3} errors. \
+                    Created {1} QCs. Took {4}s".format(
+                        count, new_qc, total, error, time.total_seconds())
+
+    time = timezone.now()-start
+    return "Churned through {0} of {2} recordings with {3} errors. \
+            Created {1} QCs. Took {4}s".format(
+            count, new_qc, total, error, time.total_seconds())
+
+
+@shared_task
 def transcode_audio(recording_pk):
     try:
         recording = Recording.objects.get(pk=recording_pk)
     except ObjectDoesNotExist:
         logger.warning('Tried to get recording that doesn\'t exist')
 
-    if not recording.audio_file_aac:
-        return encode_audio(recording)
-    else:
-        return "Already encoded"
+    key = u"xtrans-{0}-{1}".format(
+        recording.pk, recording.audio_file.name)
+
+    is_running = cache.get(key)
+
+    result = ''
+    if is_running is None:
+        if not recording.audio_file_aac:
+            is_running = cache.set(key, True, 60*5)
+            result = encode_audio(recording)
+            cache.set(key, False, 60)
+        if not recording.audio_file_wav:
+            is_running = cache.set(key, True, 60*5)
+            result = result + encode_audio(recording, codec='wav')
+            cache.set(key, False, 60)
+        return result
+
+    elif is_running:
+        return u"Encoding in progress..."
+
+    return u"Already encoded."
 
 
 @shared_task
 def transcode_all_audio():
-    recordings = Recording.objects.filter(audio_file_aac__isnull=True)
+    recordings = Recording.objects.filter(
+        Q(audio_file_aac='') | Q(audio_file_aac=None))
+    logger.debug('Found {0} recordings to encode.'.format(len(recordings)))
+    count = 0
+    message = []
+
+    if settings.DEBUG:
+        # We're in a dev env so no point transcoding old stuff
+        t = timezone.now() - datetime.timedelta(days=1)
+        recordings = recordings.filter(created__gte=t)
+
     for recording in recordings:
-        transcode_audio(recording.pk)
+        logger.debug('Encoding {0}.'.format(recording))
+        try:
+            result = encode_audio(recording)
+            message.append(result)
+            count = count+1
+        except:
+            logger.error(sys.exc_info()[0])
+            continue
+
+    recordings = Recording.objects.filter(
+        Q(audio_file_wav='') | Q(audio_file_wav=None))
+    logger.debug(
+        'Found {0} recordings to encode into wav.'.format(len(recordings)))
+    count = 0
+    for recording in recordings:
+        logger.debug('Encoding {0}.'.format(recording))
+        try:
+            result = encode_audio(recording, codec='wav')
+            message.append(result)
+            count = count+1
+        except:
+            logger.error(sys.exc_info()[0])
+            continue
+
+    return u"Encoded {0}. {1}".format(count, ", ".join([i for i in message]))
 
 
-def prepare_temporary_environment(recording, test=False):
+def prepare_temporary_environment(model, test=False):
     # This method gets strings for necessary media urls/directories and create
     # tmp folders/files
     # NOTE: we use "media" that should be changed.
 
-    file = recording.audio_file
+    file = model.audio_file
 
     if 'http' in file.url:
         file_path = file.url
     else:
         file_path = settings.MEDIA_ROOT + file.name
 
-    tmp_stor_dir = settings.MEDIA_ROOT+'tmp/'+str(recording.pk)
+    tmp_stor_dir = \
+        '/tmp/' + settings.PROJECT_NAME + '/files/' + str(model.__class__.__name__) + \
+        str(model.pk)
 
     if not os.path.exists(tmp_stor_dir):
         os.makedirs(tmp_stor_dir)
         os.chmod(tmp_stor_dir, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH)
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH |
+                 stat.S_IXOTH)
         logger.debug('Created: ' + os.path.abspath(tmp_stor_dir))
     else:
         logger.debug('Exists: ' + os.path.abspath(tmp_stor_dir))
 
     tmp_file = tmp_stor_dir+'/'+file.name.split('/')[-1].replace(' ', '')
-    if not os.path.exists(tmp_file):
-        if 'http' in file_path:
-            code = 'wget '+file_path+' -O ' + tmp_file
-        else:
-            code = "cp '%s' '%s'" % (file_path, tmp_file)
-        logger.debug(code)
-        result = commands.getstatusoutput(code)
-        logger.debug(result[0])
-        if not os.path.exists(tmp_file):
-            logger.debug('ERROR GETTING: ' + tmp_file)
-            raise ValueError
-        else:
-            logger.debug('Downloaded: ' + os.path.abspath(tmp_file))
+
+    # Will just replace file since we only doing one encode.
+    if 'http' in file_path:
+        r = RecordingFileView()
+        url = r.get_redirect_url(filepath=file.name)
+        code = 'wget "'+url+'" -O ' + tmp_file
     else:
-        logger.debug('Exists: ' + os.path.abspath(tmp_file))
+        code = "cp '%s' '%s'" % (file_path, tmp_file)
+    logger.debug(code)
+    result = commands.getstatusoutput(code)
+    logger.debug(result[0])
+
+    try:
+        logger.debug(result[1])
+        result = ' '.join([str(i) for i in result])
+    except:
+        logger.debug(result)
+
+    if not os.path.exists(tmp_file) or 'ERROR 404' in result:
+        logger.debug('ERROR GETTING: ' + tmp_file)
+        raise ValueError
+    else:
+        logger.debug('Downloaded: ' + os.path.abspath(tmp_file))
 
     absolute_directory = ''
 
@@ -123,9 +289,9 @@ def encode_audio(recording, test=False, codec='aac'):
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
-        'aac': ['libfdk_aac', 'm4a']
+        'aac': ['libfdk_aac', 'm4a'],
+        'wav': ['pcm_s16le', 'wav', 16000, 1]
     }
-
 
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(recording)
@@ -142,11 +308,17 @@ def encode_audio(recording, test=False, codec='aac'):
             audio = True
 
     if audio:
-        file_name = recording.get_recording_file_name()
+        file_name = recording.get_recording_file_name() + '_16kHz'
         extension = codecs[codec][1]
 
-        code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
-            tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+        if codec in 'wav':
+            code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
+                tmp_file,
+                codecs[codec][0], codecs[codec][2], codecs[codec][3],
+                tmp_stor_dir, file_name, extension)
+        else:
+            code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
+                tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
 
         logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)
@@ -155,19 +327,72 @@ def encode_audio(recording, test=False, codec='aac'):
         logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
         if file_name is None:
             file_name = 'audio'
-        recording.audio_file_aac.save(
-            file_name+'.'+extension,
-            File(open(tmp_stor_dir+'/{0}.{1}'.format(file_name, extension))))
+
+        if 'aac' in codec:
+            recording.audio_file_aac.save(
+                file_name+'.'+extension,
+                File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                    file_name, extension))))
+        elif 'wav' in codec:
+            recording.audio_file_wav.save(
+                file_name+'.'+extension,
+                File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                    file_name, extension))))
 
         code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
         logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)
         logger.debug(data[1])
 
-    data = commands.getstatusoutput('rm ' + tmp_file)
-    logger.debug('Removed tmp file %s' % (tmp_file))
     if not audio:
-        logger.debug('No audio stream in video.')
+        logger.debug('No audio stream found.')
         return False
 
-    return True
+    data = commands.getstatusoutput('rm ' + tmp_file)
+    logger.debug('Removed tmp file %s' % (tmp_file))
+
+    data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
+    logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
+
+    set_s3_content_deposition(recording)
+
+    return "Encoded {0}".format(recording)
+
+
+@shared_task
+def set_s3_content_deposition(recording):
+    import mimetypes
+
+    if 's3boto' in settings.DEFAULT_FILE_STORAGE.lower():
+
+        from boto.s3.connection import S3Connection
+        c = S3Connection(
+            settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        b = c.get_bucket(settings.AWS_STORAGE_BUCKET_NAME)  # , validate=False)
+
+        attrs = ['audio_file', 'audio_file_aac']
+        for attr in attrs:
+            file = getattr(recording, attr)
+            if file:
+
+                k = file.name
+                key = b.get_key(k)  # validate=False)
+
+                if key is None:
+                    return "Error: key {0} doesn't exist in S3.".format(key)
+                else:
+                    metadata = key.metadata
+                    metadata['Content-Disposition'] = \
+                        "attachment; filename={0}".format(
+                            file.name.split('/')[-1])
+                    metadata['Content-Type'] = \
+                        mimetypes.guess_type(file.url)[0]
+                    key.copy(
+                        key.bucket,
+                        key.name,
+                        preserve_acl=True,
+                        metadata=metadata)
+        return metadata
+
+    else:
+        return 'Non s3 storage - not setting s3 content deposition.'

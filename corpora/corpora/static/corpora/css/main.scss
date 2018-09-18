@@ -22,7 +22,7 @@ a:hover {
 
 div.content{
 	background-color: $background_light;
-	padding: 30px 0px 30px 0px;
+	// padding: 30px 0px 30px 0px;
 }
 
 
@@ -92,6 +92,7 @@ div.content{
 .error-message, .errorlist {
 	animation: error-flash .5s ease-in;
 	color: $light;
+	margin: 0px;
 }
 
 @keyframes error-flash {
@@ -101,6 +102,9 @@ div.content{
 
 
 // Input forms
+
+/*
+
 input[type="text"], input[type="password"], input[type="email"] {
 	margin: 0;
 	appearance: none;
@@ -138,12 +142,13 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 ::-webkit-input-placeholder {
 	@include placeholder();
 }
-
-:-moz-placeholder { /* Firefox 18- */
+*/
+/*
+:-moz-placeholder { 
 	@include placeholder();
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder {  
 	@include placeholder(); 
 }
 
@@ -217,3 +222,5 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 @keyframes moveFromRight {
 	from { -webkit-transform: translateX(100%); transform: translateX(100%); }
 }
+
+*/

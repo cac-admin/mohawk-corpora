@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import render, redirect
 from django.template.context import RequestContext
 from django.forms import modelform_factory
@@ -11,9 +14,9 @@ from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
 from corpus.models import Recording, Sentence, QualityControl
-from people.models import Person
+from people.models import Person, KnownLanguage
 from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person, get_person
+from people.helpers import get_or_create_person, get_person, get_current_language
 from django.conf import settings
 
 from django import http
@@ -22,15 +25,25 @@ from django.views.generic import RedirectView
 
 from boto.s3.connection import S3Connection
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, When, Value, Case, IntegerField, Q
 from django.core.cache import cache
+
+from corpus.aggregate import get_num_approved, get_net_votes
+
+from corpora.mixins import SiteInfoMixin
+
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+import json
 
 import logging
 logger = logging.getLogger('corpora')
 
 
-class SentenceListView(ListView):
+class SentenceListView(SiteInfoMixin, ListView):
     model = Sentence
+    x_description = _('Approve sentences to use when gathering recordings.')
+    x_title = _('Sentences')
 
     def get(self, request, *args, **kwargs):
         self.request = request
@@ -57,6 +70,11 @@ def failed_submit(request):
     return render(request, 'corpus/failed_submit.html')
 
 
+def record_redirect(request):
+    return redirect(reverse('corpus:record'))
+
+
+@ensure_csrf_cookie
 def record(request):
     # Get the person object from the user
 
@@ -65,13 +83,13 @@ def record(request):
 
     person = get_or_create_person(request)
 
-    if request.method == 'GET':
-        if request.GET.get('sentence', None):
-            sentence = Sentence.objects.get(pk=request.GET.get('sentence'))
-        else:
-            sentence = get_next_sentence(request)
-            if sentence is None:
-                return redirect('people:profile')
+    # if request.method == 'GET':
+    #     if request.GET.get('sentence', None):
+    #         sentence = Sentence.objects.get(pk=request.GET.get('sentence'))
+    #     else:
+    #         sentence = get_next_sentence(request)
+    #         if sentence is None:
+    #             return redirect('people:profile')
 
     # Generate a form model from the Recording model
     RecordingFormAJAX = modelform_factory(Recording, fields='__all__')
@@ -123,10 +141,14 @@ def record(request):
 
     context = {'request': request,
                'person': person,
-               'sentence': sentence,
+               # 'sentence': sentence,
                'content_type': ct.id,
                'user': request.user,
-               'uuid': request.get_signed_cookie('uuid', 'none')}
+               'uuid': request.get_signed_cookie('uuid', 'none'),
+               'show_stats': True,
+               'x_title': _('Record'),
+               'x_description': _('Help us teach computers the sounds of a language by reading sentences.'),
+               }
 
     response = render(request, 'corpus/record.html', context)
     response.set_signed_cookie('uuid', person.uuid, max_age=60*60*24*365)
@@ -149,14 +171,28 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        p = get_person(request)
+        p = get_or_create_person(request)
 
+        rType = request.GET.get('json', False)
         audio_file = m.audio_file
-        if m.audio_file_aac:
-            audio_file = m.audio_file_aac
 
-        access = cache.get('{0}:{0}:listen'.format(p.uuid, m.id))
+        f = request.GET.get('format', 'aac')
+        if f in 'wav':
+            if m.audio_file_wav:
+                audio_file = m.audio_file_wav
+        else:
+            if m.audio_file_aac:
+                audio_file = m.audio_file_aac
 
+        if p is not None:
+            uuid = p.uuid
+        else:
+            uuid = 'None-Person-Object'
+        key = '{0}:{1}:listen'.format(uuid, m.id)
+        access = cache.get(key)
+        # logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
+
+        url = ''
         if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
             try:
                 url = audio_file.path
@@ -168,6 +204,11 @@ class RecordingFileView(RedirectView):
                     url = audio_file.url
 
             if url:
+                if rType:
+                    return http.HttpResponse(
+                        json.dumps({'url': url}),
+                        content_type="application/json")
+
                 if self.permanent:
                     return http.HttpResponsePermanentRedirect(url)
                 else:
@@ -180,48 +221,107 @@ class RecordingFileView(RedirectView):
                                })
                 return http.HttpResponseGone()
         else:
+            if rType:
+                return http.HttpResponse(
+                        json.dumps({'error': 'Access denied.'}),
+                        content_type="application/json")
             raise http.Http404
 
 
-class StatsView(ListView):
+class StatsView(SiteInfoMixin, ListView):
     model = QualityControl
+    x_title = _('Stats')
+    x_description = _('Statistics for all data.')
 
     def get_context_data(self, **kwargs):
         context = super(StatsView, self).get_context_data(**kwargs)
         user = self.request.user
 
+        language = get_current_language(self.request)
+
         # qc = self.get_queryset()
         # qc_s = qc.filter(content_type='sentence')
         # qc_r = qc.filter(content_type='recording')
 
-        sentences = Sentence.objects.all()
-        recordings = Recording.objects.all()
+        sentences = Sentence.objects.filter(language=language)
+        recordings = Recording.objects.filter(sentence__language=language)
+        people = Person.objects.all()
 
         length = Recording.objects.aggregate(Sum('duration'))
 
         approved_sentences = sentences.filter(quality_control__approved=True)
+        approved_recordings = recordings.filter(quality_control__approved=True)
 
         seconds = float(length['duration__sum'])
         hours = int(seconds/(60.0*60))
         minutes = int((seconds - (60*60.0)*hours)/60.0)
         seconds = int(seconds - (60*60.0)*hours - 60.0*minutes)
 
+        recording_votes = get_net_votes(recordings)
+        sentence_votes = get_net_votes(sentences)
+
+        stats = {'recordings': {
+                    'total': recordings.count(),
+                    'num_approved': get_num_approved(recordings),
+                    'up_votes': recording_votes[0],
+                    'down_votes': recording_votes[1],
+                    'duration': "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds),
+                    },
+                 'sentences': {
+                    'total': sentences.count(),
+                    'num_approved': get_num_approved(sentences),
+                    'up_votes': sentence_votes[0],
+                    'down_votes': sentence_votes[1],
+                    },
+                 }
+
+        stats_by_proficiency = {}
+        for level in KnownLanguage.PROFICIENCIES:
+            query = recordings\
+                .filter(person__known_languages__language=language)\
+                .filter(person__known_languages__level_of_proficiency=level[0])
+            recording_votes = get_net_votes(query)
+            length = query.aggregate(Sum('duration'))
+            if length['duration__sum'] is None:
+                seconds = 0
+            else:
+                seconds = float(length['duration__sum'])
+            hours = int(seconds/(60.0*60))
+            minutes = int((seconds - (60*60.0)*hours)/60.0)
+            seconds = int(seconds - (60*60.0)*hours - 60.0*minutes)
+            stats_by_proficiency[level[0]] = {
+                'language_level': str(level[1]),
+                'total': query.count(),
+                'num_approved': get_num_approved(query),
+                'up_votes': recording_votes[0],
+                'down_votes': recording_votes[1],
+                'duration': "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds)
+            }
+
         context['user'] = user
         context['num_recordings'] = recordings.count()
+        context['stats'] = stats
         context['num_sentences'] = sentences.count()
         context['approved_sentences'] = approved_sentences.count()
-        context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format( hours, minutes, seconds)
-
+        context['total_duration'] = "{:02d}:{:02d}:{:02d} ".format(hours, minutes, seconds)
+        context['recordings_by_proficiency'] = stats_by_proficiency
         return context
 
 
-class ListenView(TemplateView):
+def listen_redirect(request):
+    return redirect(reverse('corpus:listen'))
+
+
+class ListenView(SiteInfoMixin, TemplateView):
     template_name = "corpus/listen.html"
+    x_title = _('Listen')
+    x_description = _('Listen to and vote on recordings. This helps us improve\
+the quality of recordings we use.')
 
     def get_context_data(self, **kwargs):
         context = super(ListenView, self).get_context_data(**kwargs)
         user = self.request.user
-        person = get_person(self.request)
+        person = get_or_create_person(self.request)
 
         # Don't fech recordings the person already listened to
         recordings = Recording.objects\
@@ -232,9 +332,14 @@ class ListenView(TemplateView):
         ct = ContentType.objects.get(model='recording')
         user.can_approve = user.is_staff and user.is_authenticated()
 
+        if user.can_approve:
+            kl = KnownLanguage()
+            level_of_proficiency_display = kl.PROFICIENCIES
+            context['proficiency_display'] = level_of_proficiency_display
         context['content_type'] = ct.id
         context['user'] = user
         context['person'] = person
         context['recordings'] = recordings
+        context['show_qc_stats'] = True
 
         return context

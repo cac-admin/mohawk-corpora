@@ -2,26 +2,43 @@
 from django.contrib.auth.models import User
 from django.utils import translation
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+
+from corpus.base_settings import \
+    LANGUAGES
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import Person, KnownLanguage
+
+from allauth.account.models import EmailAddress
+from rest_framework.authentication import TokenAuthentication
+
 import logging
 logger = logging.getLogger('corpora')
 
 
 def get_or_create_person(request):
     user = request.user
+
+    if user is None or user.is_anonymous:
+        try:
+            token_auth = TokenAuthentication()
+            user, token = token_auth.authenticate(request)
+        except:
+            pass
+
     if user.is_anonymous:
         # Check if a session cookie exists
         uuid = request.get_signed_cookie('uuid', None)
+
         if uuid is not None:
             # get person from uuid
             person, created = Person.objects.get_or_create(uuid=uuid)
-            logger.info("Created new person, {0}".format(person))
+            if created:
+                logger.info("Created new person, {0}".format(person))
         else:
             # Create person and set uuid
             person = Person.objects.create()
         request.session['uuid'] = person.uuid
-        return person
     else:
         try:
             person = Person.objects.get(user=user)
@@ -44,14 +61,31 @@ def get_or_create_person(request):
                 full_name = user.username
             else:
                 full_name = '{0} {1}'.format(first, last)
-            person.full_name = full_name
+            if not person.full_name:
+                person.full_name = full_name
             person.save()
         request.session['uuid'] = person.uuid
-        return person
+
+    if person:
+        try:
+            person.last_user_agent = request.META['HTTP_USER_AGENT']
+            person.save()
+        except:
+            pass
+
+    return person
 
 
 def get_person(request):
     user = request.user
+
+    if user is None or user.is_anonymous:
+        try:
+            token_auth = TokenAuthentication()
+            user, token = token_auth.authenticate(request)
+        except:
+            pass
+
     if user.is_anonymous:
         # Check if a session cookie exists
         uuid = request.get_signed_cookie('uuid', None)
@@ -63,7 +97,6 @@ def get_person(request):
                 return None
         else:
             return None
-        return person
     else:
         try:
             person = Person.objects.get(user=user)
@@ -75,69 +108,167 @@ def get_person(request):
             else:
                 return None
             person.save()
-        return person
+
+    if person:
+        try:
+            person.last_user_agent = request.META['HTTP_USER_AGENT']
+            person.save()
+        except:
+            pass
+
+    return person
 
 
 def set_language_cookie(response, language):
     response.set_cookie(
         settings.LANGUAGE_COOKIE_NAME,
         language,
-        max_age=2*365 * 24 * 60 * 60, 
-        domain=settings.SESSION_COOKIE_DOMAIN, 
+        max_age=2*365 * 24 * 60 * 60,
+        domain=settings.SESSION_COOKIE_DOMAIN,
         secure=settings.SESSION_COOKIE_SECURE or None
     )
     return response
 
-def set_current_language_for_person(person, language):    
-    kl = KnownLanguage.objects.get(person=person, language=language)
-    kl.active = True
-    kl.save()
+
+def set_current_language_for_person(person, language):
+    try:
+        kl = KnownLanguage.objects.get(person=person, language=language)
+        kl.active = True
+        kl.save()
+    except ObjectDoesNotExist:
+        kl = KnownLanguage.objects.create(person=person, language=language)
+        kl.active = True
+        kl.save()
     translation.activate(language)
 
+
 def get_current_language(request):
+    language = translation.get_language()
     if request.user.is_authenticated():
         person = get_or_create_person(request)
         try:
-            active_language = KnownLanguage.objects.get(person=person, active=True)
+            active_language = \
+                KnownLanguage.objects.get(person=person, active=True)
+            return active_language.language
+
         except ObjectDoesNotExist:
-            return None
-        return active_language.language # are we returning tuple or ang code??
+            return language
     else:
-        return translation.get_language()
+        return language
+
+
+def get_current_known_language_for_person(person):
+    try:
+        active_language = \
+            KnownLanguage.objects.get(person=person, active=True)
+        return active_language
+
+    except ObjectDoesNotExist:
+        return None
 
 
 def get_num_supported_languages():
-    return len(settings.LANGUAGES)
+    return len(LANGUAGES)
 
 
 def get_known_languages(person):
-    if not isinstance(person,Person):
+    if not isinstance(person, Person):
         try:
             person = Person.objects.get(user=person)
         except:
             return None
     ''' Returns a list of language codes known by person '''
-    known_languages = [i.language for i in KnownLanguage.objects.filter(person=person) ]
+    known_languages = \
+        [i.language for i in KnownLanguage.objects.filter(person=person)]
     return known_languages
 
 
 def get_unknown_languages(person):
-    if isinstance(person,User):
+    if isinstance(person, User):
         try:
             person = Person.objects.get(user=person)
         except:
             person = None
     else:
         person = None
-        
+
     if person is None:
         known_languages = []
     else:
         ''' Returns a list of language codes not known by person '''
-        known_languages = [i.language for i in KnownLanguage.objects.filter(person=person) ]
+        known_languages = \
+            [i.language for i in KnownLanguage.objects.filter(person=person)]
 
     alter_choices = []
-    for i in range(len(settings.LANGUAGES)):
-        if settings.LANGUAGES[i][0] not in known_languages:
-            alter_choices.append(settings.LANGUAGES[i][0])
+    for i in range(len(LANGUAGES)):
+        if LANGUAGES[i][0] not in known_languages:
+            alter_choices.append(LANGUAGES[i][0])
     return alter_choices
+
+
+def get_email(person):
+    '''This method looks for and returns a verified email. If no verified email
+    exists, then the next available email is returned.'''
+
+    if person.user:
+        try:
+            email = EmailAddress.objects.get(user=person.user, verified=True)
+            return email.email
+        except ObjectDoesNotExist:
+            try:
+                email = EmailAddress.objects.get(user=person.user)
+                return email.email
+            except MultipleObjectsReturned:
+                email = EmailAddress.objects.filter(user=person.user)
+                if email.exists():
+                    return email.email.first()
+            except ObjectDoesNotExist:
+                if person.user.email:
+                    return person.user.email
+
+    if person.profile_email:
+        return person.profile_email
+    else:
+        return None
+
+
+def get_email_object(person):
+    try:
+        user_object = person.user
+    except:
+        return None
+
+    try:
+        email_object, email_created = EmailAddress.objects.get_or_create(
+                    user=user_object)
+    except MultipleObjectsReturned:
+        email_objects = EmailAddress.objects.filter(user=user_object)
+        if email_objects.filter(verified=True).count() == 1:
+            email_object = email_objects.get(verified=True)
+        else:
+            email_object = email_objects.first()
+            for em in email_objects:
+                if em != email_object:
+                    em.delete()
+        email_created = False
+
+    return email_object, email_created
+
+
+def email_verified(person):
+    '''This method looks for a verified email and returns True if and only if
+    1 verified email exists.'''
+
+    if person.user:
+        try:
+            email = EmailAddress.objects.get(user=person.user, verified=True)
+            return email.verified
+        except ObjectDoesNotExist:
+            try:
+                email = EmailAddress.objects.get(user=person.user)
+                return email.verified
+            except MultipleObjectsReturned:
+                return False
+            except ObjectDoesNotExist:
+                return False
+    return False

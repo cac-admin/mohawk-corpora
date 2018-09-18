@@ -1,0 +1,17 @@
+{% extends 'message/email/base_email.html' %}
+{% load static sekizai_tags i18n compress %}
+{% block subject %}{{subject}}{% endblock %}
+
+
+{% block heading %}
+{% endblock %}
+
+
+
+{% block main %}
+{{content|safe}}
+{% endblock %}
+
+
+{% block footer  %}
+{% endblock %}

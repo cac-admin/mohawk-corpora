@@ -1,0 +1,180 @@
+{% extends 'people/competition/base.html' %}
+{% load i18n static sekizai_tags compress cache %}
+
+{% block content %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+div.col.table{
+  overflow-x: auto;
+}
+
+div.label{
+    text-align: center;
+    margin-top: -15px;
+    color: $brand;
+    margin-bottom: 15px;
+  }
+
+div.score{
+  text-align: center;
+  color: $brand;
+
+  .value{
+    font-size: 3em;
+    font-weight: 400;
+    font-family: 'Roboto', 'Raleway', sans-serif;
+  }
+}
+
+.invalid{
+  color: #999;
+  border-color: #999;
+}
+
+form{
+  display: inline-block;
+  input{
+    display: inline-block;
+    display: none;
+  }
+  button{
+    display: inline-block;
+  }
+}
+.stats{
+  width: 100%;
+  text-align: center;
+  color: $brand;
+  .value{
+    font-weight: 700;  
+    font-size: 1.5em;
+  }
+  font-family: 'Roboto', 'Raleway', sans-serif;
+}
+</style>
+{% endaddtoblock %}
+
+
+{% cache 600 groupleaderboard request.path request.GET.urlencode request.person %}
+
+<div class="container">
+  <div class="row">
+    <div class="col ">
+
+<div class="score">
+  <span class="value">{{score|floatformat:0}}</span>
+</div>
+<div class="label">
+  <span class=" ">{% trans 'Score' %}</span>
+</div>
+
+<div class="stats">
+  <span class="value">{{group.duration_hours|floatformat:1}}</span> {% trans 'hours' %} 
+  &nbsp;&nbsp;
+  <span class="value">{{group.num_recordings}}</span> {% trans 'recordings' %}
+</div>
+
+
+<h1>{{group.name}} Leaderboard</h1>
+<p><small>Points will accrue from 1pm 15 March 2018 to 6pm 25 March 2018, New Zealand Time. <span  class="text-decoration: underline;">Data updated
+approximately every 10 minutes</span>.</small> </p>
+{% if valid_members %}
+<div class="table"><table class="table" id='stats-table'>
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{% trans 'Username' %}</th>
+      <th scope="col">{% trans 'Recordings' %}</th>
+      <th scope="col">{% trans 'Score' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+
+
+{% for p in valid_members %}
+<tr>
+  <th scope="row">{{ forloop.counter }}</th>
+  <td>
+
+      {% if p.leaderboard %}
+        {% if p.username in '' %}
+          Anonymous Peruperu
+        {% else %}{{p.username}}
+        {% endif %}
+      {% else %}
+        Anonymous Peruperu
+      {% endif %}
+  </td>
+
+  </td>
+  <td>{{p.num_recordings}}</td>
+  <td>{{p.score_comp|floatformat:1}}</td>
+</tr>
+{% endfor %}
+
+</tbody>
+</table></div>
+{% else %}
+<p>No valid members in this group.</p>
+{% endif %}
+
+{% endcache %}
+
+
+{% if invalid_members %}
+<h1 class="invalid">Invalid Members</h1>
+<p><small>The following members need to verify their email addresses or they belong to more than one group. 
+<b><em>These user's scores will not contribute to {{group}} scores.</em></b></small></p>
+<div class="table"><table class="table " id='stats-table' >
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{% trans 'Username' %}</th>
+      <th scope="col">{% trans '# Groups' %}</th>
+      <th scope="col">{% trans 'Email Verified?' %}</th>
+      <th scope="col">{% trans 'Score' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for p in invalid_members %}
+<tr>
+  <th scope="row">{{ forloop.counter }}</th>
+  <td>
+      {% if p.leaderboard %}
+        {% if p.username in '' %}
+          Anonymous Peruperu
+        {% else %}{{p.username}}
+        {% endif %}
+      {% else %}
+        Anonymous Peruperu
+      {% endif %}
+  </td>
+  <td>{{p.num_groups}} </td>
+  <td>{{p.verified}}  
+    {% if not p.verified and p == person  %}<form method="POST" action="{{request.path}}" id="resend-form">
+    {% csrf_token %}
+    <input type="checkbox" name="resend" value="true" checked>
+    <a href="#" onclick="document.getElementById('resend-form').submit();">Resend Verification Email</a>
+    </form>{% endif %}
+  </td>
+  <td>{{p.score_comp|floatformat:1}}</td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table></div>
+{% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

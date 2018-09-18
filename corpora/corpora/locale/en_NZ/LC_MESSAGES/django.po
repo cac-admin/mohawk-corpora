@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-09 03:28+0000\n"
+"POT-Creation-Date: 2018-06-26 09:43+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,83 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpora/settings.py:254
-msgid "Maori"
+#: corpora/mixins.py:13
+msgid "Description for a particular view"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:15
+#: corpora/mixins.py:14
+msgid "Title for your view"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:39
+msgid "Sign In"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:39
+msgid "Sign Up"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:41
+#: corpora/templates/corpora/logged_in_nav_buttons.html:165
+msgid "Log Out"
+msgstr "Takiputa"
+
+#: corpora/templates/corpora/footer.html:45
+msgid "Record"
+msgstr "Rekoata"
+
+#: corpora/templates/corpora/footer.html:46
+#: corpora/templates/corpora/logged_in_nav_buttons.html:53
+msgid "Listen"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:49
+msgid "Get Involved"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:51
+msgid "Translate"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:52
+msgid "Wānanga"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:54
+msgid "Supporters"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:61
+msgid "Powered by"
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:69
+#, python-format
+msgid ""
+"Copyright &copy; 2017 - %(current_year)s Te Reo Irirangi o Te Hiku o Te Ika."
+"<br>All content collected at %(site)s falls under the %(license)s License."
+msgstr ""
+
+#: corpora/templates/corpora/footer.html:72 corpora/views/views.py:55
+msgid "Privacy Policy"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:14
+#: corpora/templates/corpora/privacy.html:14
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:57
+#: corpora/templates/corpora/home.html:107
+msgid "Start"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:114
+msgid "Hopu Kōrero Māori Group Competition"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:134
 msgid ""
-"Corpora.io is an opensource app designed to collect spoken \n"
+" is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
 "understand \n"
 "      spoken languages through machine learning. This project started in an "
@@ -41,59 +107,155 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:66
+#: corpora/templates/corpora/home.html:147
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:67
-msgid "Translations for corpora.io are provided in the following langauges:"
+#: corpora/templates/corpora/home.html:148
+msgid "Translations for "
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:29
-#: corpora/templates/corpora/logged_in_nav_buttons.html:118
-msgid "Speak"
+#: corpora/templates/corpora/home.html:148
+msgid " are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:36
-#: corpora/templates/corpora/logged_in_nav_buttons.html:125
-msgid "Listen"
+#: corpora/templates/corpora/home.html:156
+msgid ""
+"Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
+"tree/translate\">translating</a> this app."
 msgstr ""
 
 #: corpora/templates/corpora/logged_in_nav_buttons.html:45
+msgid "Speak"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:61
+msgid "Competition"
+msgstr ""
+
+#: corpora/templates/corpora/logged_in_nav_buttons.html:75
 msgid "Sentences"
 msgstr "Ngā Rerenga Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:52
+#: corpora/templates/corpora/logged_in_nav_buttons.html:83
 msgid "Stats"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:59
+#: corpora/templates/corpora/logged_in_nav_buttons.html:91
 msgid "Admin"
 msgstr "Whakahaere"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:67
-msgid "Profile"
-msgstr "Whakaritenga"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:75
-msgid "Edit Info"
-msgstr "Whakarerekē"
-
-#: corpora/templates/corpora/logged_in_nav_buttons.html:87
+#: corpora/templates/corpora/logged_in_nav_buttons.html:104
+#: corpora/templates/corpora/logged_in_nav_buttons.html:133
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:109
-msgid "Log Out"
-msgstr "Takiputa"
+#: corpora/templates/corpora/logged_in_nav_buttons.html:156
+msgid "Profile"
+msgstr "Whakaritenga"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:132
+#: corpora/templates/corpora/logged_in_nav_buttons.html:174
 msgid "Log In"
 msgstr "Takiuru"
 
-#: corpora/urls.py:26
+#: corpora/urls.py:57
 msgid "^people/"
 msgstr "tangata"
 
-#~ msgid "Record"
-#~ msgstr "Rekoata"
+#: corpora/urls.py:66
+msgid "^competition/rules"
+msgstr ""
+
+#: corpora/urls.py:70
+msgid "^competition/help"
+msgstr ""
+
+#: corpora/urls.py:74
+msgid "^competition/user_leaderboard"
+msgstr ""
+
+#: corpora/urls.py:78
+msgid "^competition/group/(?P<pk>\\d+)"
+msgstr ""
+
+#: corpora/urls.py:82
+msgid "^competition/top20$"
+msgstr ""
+
+#: corpora/urls.py:86
+msgid "^competition/mahitahi$"
+msgstr ""
+
+#: corpora/urls.py:90
+msgid "^competition"
+msgstr ""
+
+#: corpora/urls.py:94
+msgid "^stats/person"
+msgstr ""
+
+#: corpora/urls.py:98
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/person_qc"
+msgstr "tangata"
+
+#: corpora/urls.py:102
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/people$"
+msgstr "tangata"
+
+#: corpora/urls.py:106
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/reviewers"
+msgstr "tangata"
+
+#: corpora/urls.py:110
+msgid "^stats/groups$"
+msgstr ""
+
+#: corpora/urls.py:114
+msgid "^stats/recordings"
+msgstr ""
+
+#: corpora/urls.py:118
+#, fuzzy
+#| msgid "^people/"
+msgid "^stats/$"
+msgstr "tangata"
+
+#: corpora/views/api.py:18
+msgid "Only staff can view this information."
+msgstr ""
+
+#: corpora/views/api.py:23 corpora/views/api.py:44 corpora/views/api.py:46
+msgid "You're not allowed to view this information."
+msgstr ""
+
+#: corpora/views/api.py:41
+msgid "You must sign in to edit your info."
+msgstr ""
+
+#: corpora/views/views.py:40
+msgid ""
+"Kōrero Māori is teaching computers indigenous languages.                "
+"We've created an open sourced web app to help indigenous                "
+"communities strealine their work in language revitalisation."
+msgstr ""
+
+#: corpora/views/views.py:56
+msgid "Privacy policy for this website."
+msgstr ""
+
+#: corpora/views/views.py:78
+msgid "Rules"
+msgstr ""
+
+#: corpora/views/views.py:79
+msgid "Rules for our competitions."
+msgstr ""
+
+#~ msgid "Edit Info"
+#~ msgstr "Whakarerekē"

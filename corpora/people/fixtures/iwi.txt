@@ -1,0 +1,104 @@
+# DO NOT CHANGE THE ORDER IN THIS TEXT FILE
+# This file is used to create a fixture for tribes in django; therefore,
+# the order will dictate the primary key for the model object. All new
+# tribes should be added to the bottom of the list.
+Te Aupōuri
+Ngāti Kahu
+Ngāti Kurī
+Ngāpuhi
+Ngāpuhi ki Whaingaroa-Ngāti Kahu ki Whaingaroa
+Te Rarawa
+Ngāi Takoto
+Ngāti Wai
+Ngāti Whātua
+Te Kawerau
+Te Uri-o-Hau
+Te Roroa
+Ngāti Hako
+Ngāti Hei
+Ngāti Maru (Hauraki)
+Ngāti Paoa
+Patukirikiri
+Ngāti Porou ki Harataunga ki Mataora
+Ngāti Pūkenga ki Waiau
+Ngāti Rāhiri Tumutumu
+Ngāi Tai (Hauraki)
+Ngāti Tamaterā
+Ngāti Tara Tokanui
+Ngāti Whanaunga
+Ngāti Haua (Waikato)
+Ngāti Maniapoto
+Ngāti Raukawa (Waikato)
+Waikato
+Ngāti Pikiao (Te Arawa)
+Ngāti Rangiteaorere (Te Arawa)
+Ngāti Rangitihi (Te Arawa)
+Ngāti Rangiwewehi (Te Arawa)
+Tapuika (Te Arawa)
+Tarāwhai (Te Arawa)
+Tūhourangi (Te Arawa)
+Uenuku-Kōpako (Te Arawa)
+Waitaha (Te Arawa)
+Ngāti Whakaue (Te Arawa)
+Ngāti Tūwharetoa
+Ngāti Tahu-Ngāti Whaoa (Te Arawa)
+Ngāti Pūkenga
+Ngaiterangi
+Ngāti Ranginui
+Ngāti Awa
+Ngāti Manawa
+Ngāi Tai (Tauranga Moana/Mātaatua)
+Tūhoe
+Whakatōhea
+Te Whānau-a-Apanui
+Ngāti Whare
+Ngāti Porou
+Te Aitanga-a-Māhaki
+Rongowhakaata
+Ngāi Tāmanuhiri
+Rongomaiwahine (Te Māhia)
+Ngāti Kahungunu ki Te Wairoa
+Ngāti Kahungunu ki Heretaunga
+Ngāti Kahungunu ki Wairarapa
+Rangitāne (Te Matau-a-Māui/Hawke
+Ngāti Kahungunu ki Te Whanganui-a-Orotu
+Ngāti Kahungunu ki Tamatea
+Ngāti Kahungunu ki Tamakinui a Rua
+Ngāti Pāhauwera
+Ngāti Rākaipaaka
+Te Atiawa (Taranaki)
+Ngāti Maru (Taranaki)
+Ngāti Mutunga (Taranaki)
+Ngā Rauru
+Ngā Ruahine
+Ngāti Ruanui
+Ngāti Tama (Taranaki)
+Taranaki
+Tangāhoe
+Pakakohi
+Ngāti Apa (Rangitīkei)
+Te Ati Haunui-a-Pāpārangi
+Ngāti Haua (Taumarunui)
+Ngāti Hauiti
+Te Atiawa (Te Whanganui-a-Tara/Wellington)
+Muaūpoko
+Rangitāne (Manawatū)
+Ngāti Raukawa (Horowhenua/Manawatū)
+Ngāti Toarangatira (Te Whanganui-a-Tara/Wellington)
+Te Atiawa ki Whakarongotai
+Ngāti Tama ki Te Upoko o Te Ika (Te Whanganui-a-Tara/Wellington)
+Ngāti Kauwhata
+Te Atiawa (Te Waipounamu/South Island)
+Ngāti Koata
+Ngāti Kuia
+Kāti Māmoe
+Moriori
+Ngāti Mutunga (Wharekauri/Chatham Islands)
+Rangitāne (Te Waipounamu/South Island)
+Ngāti Rārua
+Ngāi Tahu / Kāi Tahu
+Ngāti Tama (Te Waipounamu/South Island)
+Ngāti Toarangatira (Te Waipounamu/South Island)
+Waitaha (Te Waipounamu/South Island)
+Ngāti Apa ki Te Rā Tō
+Ngāti Hine

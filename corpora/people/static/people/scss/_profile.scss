@@ -1,0 +1,48 @@
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+.profile{
+
+
+  margin-top: 15px;
+
+
+  div{
+    font-weight: 300;
+    label{
+      font-weight: 700;
+    }
+  }
+
+
+
+}
+
+.col-form-label{
+	font-weight: 700;
+}
+
+
+.invalid,
+.invalid + span.select2 span.selection span.select2-selection{
+	border: 1px solid darken($red, 10%) !important;
+  background-color: lighten($red, 40%) !important;
+}
+
+.valid,
+.valid + span.select2 span.selection span.select2-selection{
+  border: 1px solid darken($blue, 10%) !important;
+  background-color: lighten($blue, 40%) !important;
+}
+
+.success,
+.success + span.select2 > span.selection > span.select2-selection{
+  border: 1px solid darken($green, 10%) !important;
+  background-color: lighten($green, 40%) !important;
+}
+
+// input:focus:invalid {
+//   outline: none;
+// }

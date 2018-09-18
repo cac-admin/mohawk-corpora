@@ -1,0 +1,495 @@
+
+- model: people.tribe
+  pk: 1
+  fields:
+    name: Te Aupōuri
+
+- model: people.tribe
+  pk: 2
+  fields:
+    name: Ngāti Kahu
+
+- model: people.tribe
+  pk: 3
+  fields:
+    name: Ngāti Kurī
+
+- model: people.tribe
+  pk: 4
+  fields:
+    name: Ngāpuhi
+
+- model: people.tribe
+  pk: 5
+  fields:
+    name: Ngāpuhi ki Whaingaroa-Ngāti Kahu ki Whaingaroa
+
+- model: people.tribe
+  pk: 6
+  fields:
+    name: Te Rarawa
+
+- model: people.tribe
+  pk: 7
+  fields:
+    name: Ngāi Takoto
+
+- model: people.tribe
+  pk: 8
+  fields:
+    name: Ngāti Wai
+
+- model: people.tribe
+  pk: 9
+  fields:
+    name: Ngāti Whātua
+
+- model: people.tribe
+  pk: 10
+  fields:
+    name: Te Kawerau
+
+- model: people.tribe
+  pk: 11
+  fields:
+    name: Te Uri-o-Hau
+
+- model: people.tribe
+  pk: 12
+  fields:
+    name: Te Roroa
+
+- model: people.tribe
+  pk: 13
+  fields:
+    name: Ngāti Hako
+
+- model: people.tribe
+  pk: 14
+  fields:
+    name: Ngāti Hei
+
+- model: people.tribe
+  pk: 15
+  fields:
+    name: Ngāti Maru (Hauraki)
+
+- model: people.tribe
+  pk: 16
+  fields:
+    name: Ngāti Paoa
+
+- model: people.tribe
+  pk: 17
+  fields:
+    name: Patukirikiri
+
+- model: people.tribe
+  pk: 18
+  fields:
+    name: Ngāti Porou ki Harataunga ki Mataora
+
+- model: people.tribe
+  pk: 19
+  fields:
+    name: Ngāti Pūkenga ki Waiau
+
+- model: people.tribe
+  pk: 20
+  fields:
+    name: Ngāti Rāhiri Tumutumu
+
+- model: people.tribe
+  pk: 21
+  fields:
+    name: Ngāi Tai (Hauraki)
+
+- model: people.tribe
+  pk: 22
+  fields:
+    name: Ngāti Tamaterā
+
+- model: people.tribe
+  pk: 23
+  fields:
+    name: Ngāti Tara Tokanui
+
+- model: people.tribe
+  pk: 24
+  fields:
+    name: Ngāti Whanaunga
+
+- model: people.tribe
+  pk: 25
+  fields:
+    name: Ngāti Haua (Waikato)
+
+- model: people.tribe
+  pk: 26
+  fields:
+    name: Ngāti Maniapoto
+
+- model: people.tribe
+  pk: 27
+  fields:
+    name: Ngāti Raukawa (Waikato)
+
+- model: people.tribe
+  pk: 28
+  fields:
+    name: Waikato
+
+- model: people.tribe
+  pk: 29
+  fields:
+    name: Ngāti Pikiao (Te Arawa)
+
+- model: people.tribe
+  pk: 30
+  fields:
+    name: Ngāti Rangiteaorere (Te Arawa)
+
+- model: people.tribe
+  pk: 31
+  fields:
+    name: Ngāti Rangitihi (Te Arawa)
+
+- model: people.tribe
+  pk: 32
+  fields:
+    name: Ngāti Rangiwewehi (Te Arawa)
+
+- model: people.tribe
+  pk: 33
+  fields:
+    name: Tapuika (Te Arawa)
+
+- model: people.tribe
+  pk: 34
+  fields:
+    name: Tarāwhai (Te Arawa)
+
+- model: people.tribe
+  pk: 35
+  fields:
+    name: Tūhourangi (Te Arawa)
+
+- model: people.tribe
+  pk: 36
+  fields:
+    name: Uenuku-Kōpako (Te Arawa)
+
+- model: people.tribe
+  pk: 37
+  fields:
+    name: Waitaha (Te Arawa)
+
+- model: people.tribe
+  pk: 38
+  fields:
+    name: Ngāti Whakaue (Te Arawa)
+
+- model: people.tribe
+  pk: 39
+  fields:
+    name: Ngāti Tūwharetoa
+
+- model: people.tribe
+  pk: 40
+  fields:
+    name: Ngāti Tahu-Ngāti Whaoa (Te Arawa)
+
+- model: people.tribe
+  pk: 41
+  fields:
+    name: Ngāti Pūkenga
+
+- model: people.tribe
+  pk: 42
+  fields:
+    name: Ngaiterangi
+
+- model: people.tribe
+  pk: 43
+  fields:
+    name: Ngāti Ranginui
+
+- model: people.tribe
+  pk: 44
+  fields:
+    name: Ngāti Awa
+
+- model: people.tribe
+  pk: 45
+  fields:
+    name: Ngāti Manawa
+
+- model: people.tribe
+  pk: 46
+  fields:
+    name: Ngāi Tai (Tauranga Moana/Mātaatua)
+
+- model: people.tribe
+  pk: 47
+  fields:
+    name: Tūhoe
+
+- model: people.tribe
+  pk: 48
+  fields:
+    name: Whakatōhea
+
+- model: people.tribe
+  pk: 49
+  fields:
+    name: Te Whānau-a-Apanui
+
+- model: people.tribe
+  pk: 50
+  fields:
+    name: Ngāti Whare
+
+- model: people.tribe
+  pk: 51
+  fields:
+    name: Ngāti Porou
+
+- model: people.tribe
+  pk: 52
+  fields:
+    name: Te Aitanga-a-Māhaki
+
+- model: people.tribe
+  pk: 53
+  fields:
+    name: Rongowhakaata
+
+- model: people.tribe
+  pk: 54
+  fields:
+    name: Ngāi Tāmanuhiri
+
+- model: people.tribe
+  pk: 55
+  fields:
+    name: Rongomaiwahine (Te Māhia)
+
+- model: people.tribe
+  pk: 56
+  fields:
+    name: Ngāti Kahungunu ki Te Wairoa
+
+- model: people.tribe
+  pk: 57
+  fields:
+    name: Ngāti Kahungunu ki Heretaunga
+
+- model: people.tribe
+  pk: 58
+  fields:
+    name: Ngāti Kahungunu ki Wairarapa
+
+- model: people.tribe
+  pk: 59
+  fields:
+    name: Rangitāne (Te Matau-a-Māui/Hawke
+
+- model: people.tribe
+  pk: 60
+  fields:
+    name: Ngāti Kahungunu ki Te Whanganui-a-Orotu
+
+- model: people.tribe
+  pk: 61
+  fields:
+    name: Ngāti Kahungunu ki Tamatea
+
+- model: people.tribe
+  pk: 62
+  fields:
+    name: Ngāti Kahungunu ki Tamakinui a Rua
+
+- model: people.tribe
+  pk: 63
+  fields:
+    name: Ngāti Pāhauwera
+
+- model: people.tribe
+  pk: 64
+  fields:
+    name: Ngāti Rākaipaaka
+
+- model: people.tribe
+  pk: 65
+  fields:
+    name: Te Atiawa (Taranaki)
+
+- model: people.tribe
+  pk: 66
+  fields:
+    name: Ngāti Maru (Taranaki)
+
+- model: people.tribe
+  pk: 67
+  fields:
+    name: Ngāti Mutunga (Taranaki)
+
+- model: people.tribe
+  pk: 68
+  fields:
+    name: Ngā Rauru
+
+- model: people.tribe
+  pk: 69
+  fields:
+    name: Ngā Ruahine
+
+- model: people.tribe
+  pk: 70
+  fields:
+    name: Ngāti Ruanui
+
+- model: people.tribe
+  pk: 71
+  fields:
+    name: Ngāti Tama (Taranaki)
+
+- model: people.tribe
+  pk: 72
+  fields:
+    name: Taranaki
+
+- model: people.tribe
+  pk: 73
+  fields:
+    name: Tangāhoe
+
+- model: people.tribe
+  pk: 74
+  fields:
+    name: Pakakohi
+
+- model: people.tribe
+  pk: 75
+  fields:
+    name: Ngāti Apa (Rangitīkei)
+
+- model: people.tribe
+  pk: 76
+  fields:
+    name: Te Ati Haunui-a-Pāpārangi
+
+- model: people.tribe
+  pk: 77
+  fields:
+    name: Ngāti Haua (Taumarunui)
+
+- model: people.tribe
+  pk: 78
+  fields:
+    name: Ngāti Hauiti
+
+- model: people.tribe
+  pk: 79
+  fields:
+    name: Te Atiawa (Te Whanganui-a-Tara/Wellington)
+
+- model: people.tribe
+  pk: 80
+  fields:
+    name: Muaūpoko
+
+- model: people.tribe
+  pk: 81
+  fields:
+    name: Rangitāne (Manawatū)
+
+- model: people.tribe
+  pk: 82
+  fields:
+    name: Ngāti Raukawa (Horowhenua/Manawatū)
+
+- model: people.tribe
+  pk: 83
+  fields:
+    name: Ngāti Toarangatira (Te Whanganui-a-Tara/Wellington)
+
+- model: people.tribe
+  pk: 84
+  fields:
+    name: Te Atiawa ki Whakarongotai
+
+- model: people.tribe
+  pk: 85
+  fields:
+    name: Ngāti Tama ki Te Upoko o Te Ika (Te Whanganui-a-Tara/Wellington)
+
+- model: people.tribe
+  pk: 86
+  fields:
+    name: Ngāti Kauwhata
+
+- model: people.tribe
+  pk: 87
+  fields:
+    name: Te Atiawa (Te Waipounamu/South Island)
+
+- model: people.tribe
+  pk: 88
+  fields:
+    name: Ngāti Koata
+
+- model: people.tribe
+  pk: 89
+  fields:
+    name: Ngāti Kuia
+
+- model: people.tribe
+  pk: 90
+  fields:
+    name: Kāti Māmoe
+
+- model: people.tribe
+  pk: 91
+  fields:
+    name: Moriori
+
+- model: people.tribe
+  pk: 92
+  fields:
+    name: Ngāti Mutunga (Wharekauri/Chatham Islands)
+
+- model: people.tribe
+  pk: 93
+  fields:
+    name: Rangitāne (Te Waipounamu/South Island)
+
+- model: people.tribe
+  pk: 94
+  fields:
+    name: Ngāti Rārua
+
+- model: people.tribe
+  pk: 95
+  fields:
+    name: Ngāi Tahu / Kāi Tahu
+
+- model: people.tribe
+  pk: 96
+  fields:
+    name: Ngāti Tama (Te Waipounamu/South Island)
+
+- model: people.tribe
+  pk: 97
+  fields:
+    name: Ngāti Toarangatira (Te Waipounamu/South Island)
+
+- model: people.tribe
+  pk: 98
+  fields:
+    name: Waitaha (Te Waipounamu/South Island)
+
+- model: people.tribe
+  pk: 99
+  fields:
+    name: Ngāti Apa ki Te Rā Tō

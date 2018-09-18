@@ -1,0 +1,222 @@
+@import 'corpora/css/_colors';
+@import 'corpora/css/_text';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+div.dashboard > div.row > div.col{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+div.col.panel{
+  	z-index: 1000;
+    -ms-flex: 0 0 200px;
+    flex: 0 0 200px;
+    @include media-breakpoint-down(md) {
+	    -ms-flex: 0 0 200px;
+	    flex: 0 0 200px;
+    }
+    @include media-breakpoint-down(sm) {
+	    -ms-flex: 0 0 150px;
+	    flex: 0 0 150px;
+    }
+    @include media-breakpoint-down(xs) {
+	    -ms-flex: 0 0 50px;
+	    flex: 0 0 60px;
+	    width: 0%;
+
+    }
+    div.panel{
+		height: 100vh;
+		background-color: $brand_darker;
+		border-right: 1px solid $brand_darkest;
+		box-shadow: 0px 0px 1px 0px rgba(black, .5);
+	}
+}
+
+
+div.col.panel{
+  > div.collapse-button{
+    display: none;
+  }
+  @include media-breakpoint-down(sm) {
+    position: relative;
+    transition: margin ease-out 0.15s;
+    > div.collapse-button{
+      display: block;
+      // height: 51px;
+      padding: 5px 5px 5px 5px;
+      border-radius: 4px;
+      background-color: white;
+      color: $brand_darkest;      
+
+      border: 1px solid $brand_darkest;
+      box-shadow: 1px 1px 4px 0px rgba($brand_darkest, .2);
+      position: absolute;
+      top: 0px;
+      left: 32px;
+      margin: 10px 0px 10px 7px;
+      z-index: -1;      
+      // display: flex;
+
+      display: flex;
+      .fa-bars{
+        display: none;
+      }
+      .fa-chevron-left{
+        display: inherit;
+      }
+
+    }
+    >div.collapse-button.active{
+      // left: 32px;
+      display: flex;
+      background-color: $brand_darker;
+      color: white;
+      .fa-bars{
+        display: inherit;
+      }
+      .fa-chevron-left{
+        display: none;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    margin-left: -150px;
+    > div.collapse-button{
+      left: 135px;
+    }
+    >div.collapse-button.active{
+      left: 155px;
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    margin-left: -60px;
+    > div.collapse-button{
+      left: 45px;
+    }
+    >div.collapse-button.active{
+      left: 65px;
+    }
+  }
+
+}
+
+
+div.col.panel.active{
+      @include media-breakpoint-down(sm) {
+      margin-left: 0px;
+    }
+}
+
+
+
+div.col.viewport{
+	width: 100px;
+	div.viewport{
+		height: 100vh;
+		background-color: white;
+		overflow-y: hidden;
+		overflow-x: scroll;
+
+    .title{
+      border-bottom: 2px solid black;
+      text-align: center;
+      h1{
+        font-weight: 700;
+      }
+    }
+
+
+	}
+
+}
+
+.nav{
+    a{
+    	color: $brand_lightest;
+    }
+    a:hover{
+    	color: $brand_lightest;
+    }	
+
+    ul{
+      width: 100%;
+    }
+    ul.bottom{
+      bottom: 0;
+      position: absolute;
+    }
+
+    .nav-brand{
+      font-size: 1.0em;
+      width: 100%;
+      padding: 15px 10px;
+      border-bottom: 1px solid $brand_darkest;
+      text-align: center;
+      background-color: $brand_darker;
+      box-shadow: -3px -2px 4px 1px black;
+      color: white;
+      @include media-breakpoint-down(sm) {
+        font-size: .85em;
+      }
+      @include media-breakpoint-down(xs) {
+        div{
+        	display: none;
+        }
+      }      
+      
+    }
+	a.nav-brand:hover{
+    	// color: $brand_primary;
+	  }
+
+    // background-color: $brand_primary;
+	.nav-item:hover, .nav-brand:hover{
+		background-color: darken($brand_darker, 10%);
+	}
+	.nav-item.active, .nav-brand.active{
+		background-color: $brand_dark;
+		// border-right: 3px solid white;
+		a{
+			color: white !important;
+		}
+	}
+
+
+
+  .nav-item > .nav-link{
+    text-align: left;
+    font-size: 1em;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding: 15px 15px;
+    border-bottom: 1px solid $brand_darkest;
+    @include media-breakpoint-down(xs) {
+      text-align: center;
+      padding: 10px 10px;
+    }
+
+    @include media-breakpoint-down(sm) {
+        font-size: .75em;
+    } 
+
+    i{
+      display: inline-block;
+    }
+
+    div{
+      display: inline-block;
+      font-size: 1em;
+      margin-left: 8px;
+      @include media-breakpoint-down(xs) {
+        display: none;
+      }      
+    }
+  }
+
+}

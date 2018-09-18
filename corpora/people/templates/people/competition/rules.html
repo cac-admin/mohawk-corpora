@@ -1,0 +1,154 @@
+{% extends 'people/competition/base.html' %}
+
+{% load static %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load i18n %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/home.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+  .actions{
+    text-align: center;
+    div[class*='col']{
+      margin-top: 15px;
+    }
+  }
+
+  .jumbotron a{
+    color: $brand_lightest;
+  }
+  h2{
+    padding-bottom: 30px;
+  }
+  h4{
+    padding-bottom: 10px;
+    padding-top: 15px;
+  }
+  h3{
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: $brand_darkest;
+  }
+
+</style>
+{% endaddtoblock %}
+
+
+
+
+<div class="container">
+  <div class="row ">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+
+
+
+
+<div><h1>Rongorongo Competition Rules</h1></div>
+
+<h3>Who may enter</h3>
+
+<ul>
+  <li>
+  <p>Anyone may enter the competition unless you fall under the &quot;Who may not enter&quot; details below.</p>
+  </li>
+</ul>
+
+<h3>Who may not enter</h3>
+
+<ul>
+  <li>
+  <p>All persons or groups affiliated with Te Reo Irirangi o Te Hiku o Te Ika are not eligible for prizes. This includes current staff, volunteers, and contractors as well as previous staff and contractors who were a part of the Kōrero Māori project.</p>
+  </li>
+</ul>
+
+<h3>How to enter &amp; win</h3>
+
+<ul>
+  <li>
+  <p>Members must create an account at <a href="http://koreromaori.com/signup">koreromaori.com/signup</a> and verify their email address in order to compete.</p>
+  </li>
+  <li>
+  <p>Each individual may only set up one account</p>
+  </li>
+  <li>
+  <p>You may enter at any time - e.g. a person may join mid way through the competition.</p>
+  </li>
+  <li>
+  <p>Anyone with an existing profile on Kōrero Māori may participate - however, their existing recordings , reviews, and points will not transfer to the Whakarongo ki te reo Māori competition.</p>
+  </li>
+</ul>
+
+<ul>
+  <li>
+  <p>You gain entry to the competition by listening to and reviewing at least 10 recorded sentences and approving (clicking Ka Tika) or disapproving (clicking Kia Kaha) during the competition period (from 12pm on the 12th of September to 12pm on the 19th of September - New Zealand time).</p>
+  </li>
+  <li>
+  <p>For every 10 sentences you listen to and review, you gain one entry to the competition.</p>
+  </li>
+  <li>
+  <p>The more sentences you listen to and review, the more entries you gain.</p>
+  </li>
+  <li>
+  <p>There is no limit to the number of competition entries an individual may have.</p>
+  </li>
+</ul>
+
+<ul>
+  <li>
+  <p>The winners will be drawn then announced by Friday the 21st of September at 12pm on the Kōrero Māori and Te Hiku Media Facebook pages. The winners will also be contacted by email.</p>
+  </li>
+</ul>
+
+<h3>Prizes</h3>
+
+<ul>
+  <li>
+  <p>The prizes are five new Huawei Nova 3i mobile phones.</p>
+  </li>
+  <li>
+  <p>An individual may only win one of the five available prizes.</p>
+  </li>
+  <li>
+  <p>The prizes awarded to eligible winner(s) are not transferable, redeemable for cash or exchangeable for any other prizes.</p>
+  </li>
+</ul>
+
+<h3>Terms &amp; Conditions</h3>
+
+<ul>
+  <li>
+  <p>These rules are subject to change without notice. If we do make any changes, we will publish those on our Facebook page, <a href="https://facebook.com/koreromaori1840/">https://facebook.com/koreromaori1840/</a>.</p>
+  </li>
+</ul>
+
+<h3>Privacy</h3>
+
+<ul>
+  <li>
+  <p>A copy of our privacy policy is available at <a href="https://koreromaori.com/privacy">https://koreromaori.com/privacy</a>.</p>
+  </li>
+</ul>
+
+
+    </div>
+
+  </div>
+</div>
+
+{% addtoblock "js" %}
+{% endaddtoblock %}
+{% endblock %}
+
+{% block footer %}
+{% include 'corpora/footer.html' %}
+{% endblock %}

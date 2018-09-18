@@ -1,0 +1,160 @@
+{% load static sekizai_tags compress i18n %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+</style>
+{% endaddtoblock %}
+
+{% addtoblock "head" %}<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,900" rel="stylesheet">{% endaddtoblock %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+
+.stat{
+  font-family: 'Roboto', sans-serif;
+  font-size: .7em;
+  line-height: .85em;
+  text-align: center;
+  color: $brand_primary;
+}
+.stat.wrapper{
+  font-size: 1em;
+  display: inline-block;
+  margin-left: 15px;
+}
+.stat.wrapper:first{
+  margin-left: 0px;
+}
+.stat.wrapper:last{
+  margin-right: 15px;
+}
+.stat.stat-heading{ 
+  line-height: 1.5em;
+  font-size: 1em;
+  color: $brand_dark;
+}
+
+.stat.stat-value{
+  font-size: 2.25em;
+  font-weight: 100;
+  line-height: 1.0em;
+  display: inline-block;
+}
+
+.stat-total-overalltotal{
+  font-size: 1.5em !important;
+}
+
+.stat.stat-icon {
+  font-size: 1.5em;
+  white-space: pre;
+}
+
+span.stat.stat-icon::before {
+  content: "\A";
+  white-space: pre;
+}
+
+.stat.stat-dimension{
+  font-size: 1em;
+  color: $brand_dark;
+  display: none;
+
+}
+
+.stat-value-animate-up{
+  transform: scale(2);
+  transition: transform 100ms ease-in-out;
+}
+.stat-value-animate-down{
+  transform: scale(1);
+  transition: transform 100ms ease-in-out;
+}
+
+span[class*=approvals]{
+  color: green;
+}
+
+span[class*=upvotes]{
+  color: green;
+}
+
+span[class*=downvotes]{
+  color: $brand_darker;
+}
+
+
+</style>
+{% endaddtoblock %}
+
+
+  <div class="row justify-content-end">
+    <div class="col-12">
+      <div class="row stat">
+        <div class="col-12" style="text-align: right; padding: 0px 15px !important;">
+          <span class="stat stat-heading">
+          <span class="stat stat-value stat-total-overalltotal" data-value="">{{stats.qcs.count}}</span>
+          {% trans 'total' %}</span>
+        </div>
+        <div class="col-12" style="text-align: right;">
+
+        {% if request.user.is_staff and request.user.is_authenticated %}
+        <div class="stat wrapper">
+          <span class="stat stat-value stat-total-approvals" data-value="">{{stats.qcs_today.approved}}</span>
+          <span class="stat stat-icon stat-total-approvals"><i class="far fa-fw fa-check-circle"></i></span>
+          <span class="stat stat-dimension stat-total-approvals"><br>{% trans 'approvals' %}</span>
+        </div>
+        {% endif %}
+        <div class="stat wrapper">
+          <span class="stat stat-value stat-total-upvotes" data-value="">{{stats.qcs_today.good}}</span>
+          <span class="stat stat-icon stat-total-upvotes"><i class="far fa-fw fa-check"></i></span>
+          <span class="stat stat-dimension stat-total-upvotes"><br>{% trans 'up votes' %}</span>
+        </div>
+        <div class="stat wrapper">
+          <span class="stat stat-value stat-total-downvotes" data-value="">{{stats.qcs_today.bad}}</span>
+          <span class="stat stat-icon stat-total-downvotes"><i class="far fa-fw fa-times"></i></span> 
+          <span class="stat stat-dimension stat-total-downvotes"><br>{% trans 'down votes' %}</span>
+        </div>        
+        <div class="stat wrapper">
+          <span class="stat stat-value stat-total-total" data-value="" style="margin-bottom: 7px;">{{stats.qcs_today.count}}</span>
+          <span class="stat stat-dimension stat-total-total" style="display: initial;"><br>{% trans 'today' %}</span>
+        </div>
+
+
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+{% addtoblock "js-end" %}<script type="text/javascript">{% include 'people/js/stats_qc.js' %}</script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  stats = new Stats('div.stat', "{% url 'stats_person_qc' %}?format=json")
+
+  
+  document.addEventListener('listen.recording.loaded', function(){
+    window.setTimeout(function(){
+      stats.get_stats()
+    }, 1000);
+  })
+
+
+  window.setTimeout(function(){stats.get_stats()}, 10)
+
+})
+
+</script>
+{% endaddtoblock %}
+

@@ -1,0 +1,254 @@
+{% extends 'people/competition/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block title %}{{x_title}}{%endblock%}
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+@import 'corpus/scss/actionButtons';
+
+.video{
+  background-color: black;
+  .container{
+    .row > .col{
+      @include media-breakpoint-down(xs) {
+        padding: 0px;
+      }
+    } 
+  }
+}
+div.r16x9{
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  div{
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+      iframe{
+      }
+  }
+}
+
+.video-row{
+  h4{
+    font-weight: 700;
+    color: $brand_darkest;
+    padding: 10px 0px 5px 0px;
+  }
+}
+
+a.ropu{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 2px;
+  background-color: $brand_light;
+  color: white;
+  margin-right: 8px;
+  margin-top: 8px;
+  color: white;
+}
+.ropu:hover{
+  background-color: $brand;
+}
+.ropu:active{
+  background-color: $brand_dark;
+}
+.fa-layers-text{
+  color: $brand_light;
+   font-weight: 500;
+}
+  h3{
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: $brand_darkest;
+  }
+
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+      <h1>Help</h1>
+    </div>
+  </div>
+
+  <div class="row video-row align-items-start">
+
+
+    <div class="col-sm-12 col-md-6">
+      <div class="video">
+        <div class="r16x9">
+          <div>
+            <iframe src="https://tehiku.nz/embed/5353" style="padding:0px; margin:0px; border:0px;" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+          </div>
+        </div>
+      </div>
+            <h4>How to sign up and join a group.</h4>
+
+      <p>You can sign up <a href="{% url 'account_signup' %}">here</a>.</p>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+      <div class="video">
+        <div class="r16x9">
+          <div>
+            <iframe src="https://tehiku.nz/embed/5354" style="padding:0px; margin:0px; border:0px;" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+          </div>
+        </div>
+      </div>
+            <h4>How to join a group.</h4>
+
+      <p>You can edit your profile <a href="{% url 'people:profile' %}">here</a>.</p>
+    </div>
+
+
+    <div class="col-12">
+
+
+
+<h3>Why have I only got X approvals but did 10X recordings?</h3>
+
+<p><strong>1. You&#39;re reading faster than we can review</strong></p>
+
+<p>We&#39;ve collected tens of thousands of recordings in the last 24 hours and our reviewers are working as fast as they can to keep up. This means while you may have done 200 recordings, we might have only been able to listen to 20 so far. We understand that this daily metric can be disappointing. What we&#39;ll do is we&#39;ll provide an approval rate. For example, you might have an approval rate of 90% if 18 of the 20 recordings we listened to thus far were approved. We hope this will give a better indication of the quality of recordings you&#39;re providing</p>
+
+<p><strong>2. We only approve sentences that are intelligible, use correct pronunciation, and are exactly what is written.</strong></p>
+
+<p>If you speak with a particular dialect and you&#39;ve noted this dialect in your &quot;Dialect&quot; options on your profile page, you can still get an approval. If your inflection (e.g. stressing the wrong vowel) isn&#39;t correct but everything else is, then you can earn a 
+Ka Tika check which gives you more points for your recording</p>
+
+<h3 id="reviews">How do I get an approval?</h3>
+
+<ul>
+  <li>Read <strong>EXACTLY</strong> what is written.</li>
+  <li>Make sure you can hear what you read.
+  <ul>
+    <li>Did you read exactly what is written? If no, record again.</li>
+    <li>Was the beginning cut off? If yes, record again.</li>
+    <li>Was the end cut off? If yes, record again.</li>
+    <li>Was there background noise such that you can&#39;t hear what you said? If yes, record again.</li>
+    <li>Is the sound a bit distorted?
+    <ul>
+      <li>Try refreshing your browser.</li>
+      <li>Try restarting your browser.</li>
+      <li>If these don&#39;t work, you should use a newer device or a computer. See below for more tips.</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+</ul>
+
+<p>The purpose of koreromaori.com to is to teach machines the sounds (phonemes) of the language. So approvals are about about <strong><em>language quality</em></strong>. If there&#39;s background noise but the language quality (pronunciation, inflection) is correct, you read what&#39;s there, and we can hear what you read then background noise is fine.</p>
+
+<h3>What do Ka Tika and Kia Kaha mean?</h3>
+
+<h4><span class="actions"><a href="javascript:void(0)" class="good "><i class="fas fa-check fa-fw"></i>&nbsp;Ka Tika</a></span></h4>
+<p>You get a Ka Tika when,
+<ul>
+  <li>Your recording is intelligible</li>
+  <li>You read exactly what is written</li>
+  <li>Your pronunciation is correct</li>
+  <li>You DID NOT inflect properly, e.g. a short vowel where there was meant to be a long vowel or vice versa. </li>
+</ul>
+</p>
+
+<h4><span class="actions"><a href="javascript:void(0)" class="bad "><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a></span></h4>
+
+<p>You get Kia Kaha if,
+
+<ul>
+
+  <li>Your recording is unintelligible
+    <ul>
+      <li>We can't hear what you're saying</li>
+      <li>Background noise prevents us from understanding you</li>
+      <li>Part of your recording is cut off (TIP: try pausing for a moment after you hit record and before you start reading, and hit stop just a moment after you've stopped reading).</li>
+      <li> Your recording was distorted - unfortunately distortion may occur on older mobile devices as they do not fully support by the latest web technologies.</li>
+    </ul>
+  </li>
+  <li>You speak too slowly (TIP: look for shorter sentences by pressing "haere tonu" or try practicing the sentence before recording)</li>
+  <li>You didn't read EXACTLY what was written</li>
+  <li>If you've self identified as matatau level, then reviewers expect you to say everything correctly and may be less likely to give you a Ka Tika if your inflection is incorrect.
+  </li>
+</ul>
+</p>
+
+
+
+<h3>Why are there a lot of Te Taitokerau sentences?</h3>
+
+<p>We started building koreromaori.com in September and we initially used written text for&nbsp;which we had access and permission to use. That&#39;s why initially much of the sentences we put into the system are unique to our region. We&#39;ve since been able to collect a broader range of text, so we&#39;ll prioritise adding more sentences from other regions over the next couple of days. We&#39;re also going to add shorter sentences to help those who are still learning te reo.</p>
+
+<h3>Why isn&#39;t there a mobile app?</h3>
+
+<p>
+  There is! We're still waiting on approval for our iOS App, but you can download the Adroid App now!
+</p>
+
+  <p style="margin-bottom: 0px;">
+    <a href='https://play.google.com/store/apps/details?id=com.waiinc.corpora&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+      <img style="max-width: 200px; width: 100%;" 
+           alt='Get it on Google Play' 
+           src="{% static 'corpora/img/google-play-badge.png' %}"/>
+    </a>   
+  </p>
+  <p><small>Google Play and the Google Play logo are trademarks of Google LLC.</small></p>
+
+</p>
+
+<h3>Technical Tips</h3>
+
+<h4>Sound cutting off (end or beginning)</h4>
+
+<p>Wait a moment before you start reading. Different devices and browsers may have a lag between when you hit record and when it starts recording. Hit record, pause briefly (no longer than a second) then start reading. When you&#39;re done reading, pause briefly (no longer than a second) then hit stop.</p>
+
+<h4>Sound is distorted</h4>
+
+<p>This can be caused by a number of reasons</p>
+
+<h5>Speaking too loudly</h5>
+
+<p>Try moving your mobile device further from your mouth, or try speaking with a lower volume.</p>
+
+<h5>Using an older or slower device</h5>
+
+<p>Unfortunately there&#39;s not much we can do here. We recommend using a computer or newer and more powerful mobile devices.</p>
+
+<h5>Doing heaps of recordings in a single session</h5>
+
+<p>We&#39;ve noticed that sometimes when recording on Android in Chrome after a while the recordings will start to speed up or sound distorted. One way to fix this is to refresh or restart your browser.</p>
+
+<h5>Microphones</h5>
+
+<p>We&#39;ve found that USB mics are great on computers. Headphones with mics are good on mobile devices, but most new-ish mobile phones have great mics. Bluetooth mics on mobile devices don&#39;t appear to work.</p>
+      
+
+
+    </div>
+
+
+  </div>
+
+</div>
+
+{% addtoblock "js-end" %}
+<!-- <script defer type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+-->
+{% endaddtoblock %} 
+{% addtoblock "js-end" %}
+<!-- <script type="text/javascript">
+$(document).ready(function() {
+  // $('#stats-table').DataTable();
+} );
+</script> -->
+{% endaddtoblock %}
+
+{% endblock %}

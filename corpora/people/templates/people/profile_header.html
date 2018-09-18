@@ -1,4 +1,4 @@
-{% load static sekizai_tags sass_tags i18n %}
+{% load static sekizai_tags i18n %}
 
 {% addtoblock 'css' %}
 <style type="text/x-scss">
@@ -8,11 +8,15 @@
 @import 'bower_components/bootstrap/scss/variables';
 
 .container.name{
-  margin-top: -40px;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  padding-top: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
   border-bottom: 1px solid rgba(gray, .5);
-
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 10px;
+    font-size: .9em;
+    padding-top: 10px;
+  }
   h4{
     @include media-breakpoint-down(md) {
       font-size: 1.2em;
@@ -25,19 +29,59 @@
       font-size: .7em;
     }
   }
+  .name{
+    padding-right: 0px;
+  }
+  .stats{
+    padding-left: 0px;
+  }
 }
+
+.alert-area .alert{
+  position: absolute;
+  right: 0px;
+  font-size: .7em;
+  margin-right: 15px;
+}
+
+
+
 </style>
 {% endaddtoblock %}
 
 <div class="container name" >
-  <div class="row">
-    <div class="col" >
-      <h4>{{person.full_name}}</h4><small>Not you?
+  <div class="row justify-content-end">
+    <div class="col-7 col-sm-7 col-md-8 col-lg-9 name" >
+      {% if person.full_name %}
+        <h4>{{person.full_name}}</h4><small>Not you?
         {% if user.is_authenticated %}
           <a href="{% url 'account_logout' %}">Logout</a>
         {% else %}
           <a href="{% url 'account_login' %}">Login</a>
+          {% if person.user is not None %}
+          {% else %}
+           or help us further by
+          <a href="{% url 'account_signup' %}">signing up</a>.{% endif %}
         {% endif %}</small>
+      {% else %}
+        <h4>Anonymous Kumara</h4><small>
+        {% if user.is_authenticated %}
+          Edit your profile
+          <a href="{% url 'account_logout' %}">Profile</a>
+        {% else %}
+          Help us further by <a href="{% url 'people:profile' %}">editing</a> your profile or
+          <a href="{% url 'account_signup' %}">signing up</a>.
+        {% endif %}</small>
+      {% endif %}
     </div>
+    <div class="col-5 col-sm-5 col-md-4 col-lg-3 stats">
+      {% if show_stats %}
+      {% include 'people/stats/person_recording_stats_view_detail.html' %}
+      {% elif show_qc_stats %}
+      {% include 'people/stats/person_qc_stats_view_detail.html' %}
+      {% endif %}
+    </div>
+    <div class="col-12"><div class="alert-area"></div></div>    
   </div>
 </div>
+  

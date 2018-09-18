@@ -5,7 +5,7 @@
 {% load sekizai_tags %}
 {% load static %}
 {% load language %}
-
+{% block title %}{{x_title}}{%endblock%}
 {% block navbuttons %}
 {% include 'corpora/logged_in_nav_buttons.html' %}
 {% endblock %}

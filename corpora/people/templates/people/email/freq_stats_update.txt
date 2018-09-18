@@ -1,0 +1,51 @@
+{% extends 'people/email/base_email.txt' %}
+{% load static i18n %}
+
+{% block heading %}
+{% blocktrans with frequency|capfirst as frequency %}{{frequency}} Progress{% endblocktrans %}
+{% endblock %}
+
+{% block main    %}
+{% trans 'Hello'%} {{person}},
+
+{% blocktrans %}Here's your progress for {{period_of_time}}:{% endblocktrans %}
+  - {{this_period_stats.total}} {% trans 'recordings' %}
+  - {{this_period_stats.duration_string}} {{this_period_stats.dimension_string}}
+
+{% blocktrans with previous_period_of_time|capfirst as previous_period_of_time %}{{previous_period_of_time}} you did:{% endblocktrans %}
+  - {{last_period_stats.total}} {% trans 'recordings' %}
+  - {{last_period_stats.duration_string}} {{last_period_stats.dimension_string}}
+
+{% trans "And here's your total progress to date:" %}
+  - {{stats.total}} {% trans 'recordings' %}
+  - {{stats.duration_string}} {{stats.dimension_string}}
+
+
+{% if person.receive_feedback %}
+So far we've been able to review {{stats.num_reviewed}} of your recordings. You got,
+  - {{stats.num_approved}} {% trans 'approved recordings' %}
+  - {{stats.up_votes}} {% trans 'thumbs up' %}
+  - {{stats.down_votes}} {% trans 'thumbs down' %}
+Learn more about what approved, thumbs up, and thumbs down mean: {{url_append}}{% url 'competition_help' %}#reviews
+{% endif %}
+
+{% if person.receive_feedback %}
+
+{% endif %}
+{% endblock %}
+
+{% block footer  %}
+You've helped us collect more than *{{total_duration}} hours* of recordings. Help us reach our goal of *400* hours by reading only 10 sentences each day.
+
+{% trans 'Record Sentences' %} => {{url_append}}{% url 'corpus:record' %}
+
+--------------
+You are receiving this email because you've opted in to {{frequency}} updates. Visit
+your profile page ({{url_append}}{% url 'people:profile' %}) to update your preferences.
+
+Te Reo Irirangi o Te Hiku o Te Ika
+1 Melba Street<br>
+Level 2
+Kaitaia 0410
+New Zealand
+{% endblock %}

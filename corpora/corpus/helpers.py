@@ -19,31 +19,43 @@ def get_sentences(request,
     if current_language is None:
         current_language = get_current_language(request)
 
-    sentences = Sentence.objects.filter(language=current_language)\
-        .annotate(sum_approved=Sum(
-            Case(
-                When(
-                    quality_control__approved=True,
-                    then=Value(1)),
-                When(
-                    quality_control__approved=False,
-                    then=Value(0)),
-                default=Value(0),
-                output_field=IntegerField())))\
-        .filter(sum_approved__gte=1)
+    # Only get approved sentences
+    # sentences = Sentence.objects.filter(language=current_language)\
+    #     .annotate(sum_approved=Sum(
+    #         Case(
+    #             When(
+    #                 quality_control__approved=True,
+    #                 then=Value(1)),
+    #             When(
+    #                 quality_control__approved=False,
+    #                 then=Value(0)),
+    #             default=Value(0),
+    #             output_field=IntegerField())))\
+    #     .filter(sum_approved__gte=1)
 
-    sentences = sentences\
-        .annotate(person_no_more_recording=Sum(
-            Case(
-                When(
-                    recording__isnull=True,
-                    then=Value(0)),
-                When(
-                    recording__person=person,
-                    then=Value(-1)),
-                default=Value(0),
-                output_field=IntegerField())))\
-        .filter(person_no_more_recording=0)
+    # This appears to fail.
+    # Only return sentences which the person hasn't recorded
+    # sentences = sentences\
+    #     .annotate(person_no_more_recording=Sum(
+    #         Case(
+    #             When(
+    #                 recording__isnull=True,
+    #                 then=Value(0)),
+    #             When(
+    #                 recording__person=person,
+    #                 then=Value(-1)),
+    #             default=Value(0),
+    #             output_field=IntegerField())))\
+    #     .filter(person_no_more_recording=0)
+
+    # sentences = sentences\
+    #     .exclude(recording__person=person)
+    #     # .exclude(~Q(recordings=None))
+
+    sentences = Sentence.objects.filter(language=current_language)\
+        .exclude(quality_control=None)\
+        .filter(quality_control__approved=True)\
+        .exclude(recording__person=person)
 
     return sentences
 
@@ -61,7 +73,8 @@ def get_next_sentence(request, recordings=None):
 
 def get_sentences_annonymous(request):
     current_language = get_current_language(request)
-    sentences_without_recordings = Sentence.objects.filter(language=current_language, recording__isnull=True)
+    sentences_without_recordings = Sentence.objects\
+        .filter(language=current_language, recording__isnull=True)
     return sentences_without_recordings
 
 

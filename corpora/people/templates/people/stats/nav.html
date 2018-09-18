@@ -1,0 +1,86 @@
+{% load account i18n socialaccount sekizai_tags static language %}
+{% addtoblock "css" %}
+<link href="{% static 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'people/scss/nav';
+
+
+.dropdown-toggle::after{
+  display: none !important;
+}
+</style>
+{% endaddtoblock %}
+<nav class="sub navbar navbar-expand ">
+  <div class="container ">
+  
+  {% get_available_languages as available_languages %}
+
+  <ul class="navbar-nav ">
+    {% url 'user_leaderboard' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
+      <a href="{{ path }}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-user-alt"></i>
+        <div >{% trans 'User Leaderboard' %}</div>
+      </a>
+    </li>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+
+    {% url 'stats_groups' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
+      <a class="nav-link" href="{{path}}" >
+        <i class="fas fa-lg fa-fw fa-users"></i>
+        <div >{% trans 'Group Leaderboard' %}</div>
+      </a>
+    </li>
+
+    {% url 'stats' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="far fa-lg fa-fw fa-chart-bar"></i>
+        <div >{% trans 'Overall Statistics' %}</div>
+      </a>
+    </li>      
+
+    {% url 'stats_recordings' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
+      <a class="nav-link" href="{{path}}" >
+        <i class="far fa-lg fa-fw fa-chart-line"></i>
+        <div >{% trans 'Growth Rate' %}</div>
+      </a>
+    </li>
+
+    {% url 'stats_reviewers' as path %}
+    <li class="nav-item {% if request.get_full_path == path %}active{% endif %}" >
+      <a class="nav-link" href="{{path}}" >
+        <i class="far fa-lg fa-fw fa-chart-bar"></i>
+        <div >{% trans 'Reviewer Stats' %}</div>
+      </a>
+    </li>    
+
+    {% endif %}
+
+  </ul>
+  
+
+  <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
+      
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+      
+  </form>
+  <form class="hidden" action="{% url 'people:set_language' %}" method="post" id="language_selector_form" >
+      
+          {% csrf_token %}
+          <input name="language" type="hidden" value="{{current_language}}" />
+      
+  </form>
+
+
+
+</div>
+</nav>

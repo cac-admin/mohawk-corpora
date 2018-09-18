@@ -1,0 +1,39 @@
+@import 'corpora/css/colors';
+@import 'corpus/css/record';
+@import 'corpus/scss/actionButtons';
+@import 'corpus/scss/sentences';
+@import 'people/scss/profile';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+
+div.col.viewport div.viewport{
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	-ms-overflow-style: -ms-autohiding-scrollbar; 	
+}
+
+div[class*='col-']{
+  margin-top: 30px;
+}
+
+.main{
+  color: $brand_darkest;
+h1{
+  font-weight: 700;
+  @include media-breakpoint-down(sm) {
+  }
+}
+h4{
+  font-weight: 600;
+}
+
+
+
+
+
+
+}
+

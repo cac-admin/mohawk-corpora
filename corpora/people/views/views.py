@@ -6,65 +6,151 @@ from django.conf import settings
 from django.urls import reverse, resolve
 from django.utils.translation import ugettext as _
 from django.urls import reverse
+from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from django.core.exceptions import ObjectDoesNotExist
 
-from people.helpers import get_current_language, get_num_supported_languages, get_or_create_person, get_unknown_languages, set_current_language_for_person, set_language_cookie
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.db.models import Count, Q
+
+from people.helpers import get_current_language,\
+    get_num_supported_languages,\
+    get_or_create_person,\
+    get_unknown_languages,\
+    set_current_language_for_person,\
+    set_language_cookie
+
 from corpus.helpers import get_next_sentence, get_sentences
 
-from people.models import Person, KnownLanguage, Demographic
+from people.models import Person, KnownLanguage, Demographic, Group
+from people.serializers import PersonSerializer
 from corpus.models import Recording, Sentence
 
 from django.forms import inlineformset_factory
-from people.forms import KnownLanguageFormWithPerson, DemographicForm
+from people.forms import \
+    KnownLanguageFormWithPerson,\
+    DemographicForm,\
+    PersonForm, GroupsForm
+
+from corpora.mixins import SiteInfoMixin, EnsureCsrfCookieMixin
+
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.views import APIView
+
+from people.competition import get_valid_group_members
+
+from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
 # sudo cat /webapp/logs/django.log
 
 
-def profile(request):
+class ProfileDetail(
+        EnsureCsrfCookieMixin, SiteInfoMixin, APIView, TemplateView):
+    template_name = "people/profile_detail.html"
+    renderer_classes = [TemplateHTMLRenderer]
+    x_title = _('Profile')
+    x_description = _('Edit your profile to help us enhance our corpus.')
 
-    if request.user.is_authenticated():
-        sentence = get_next_sentence(request)
-        current_language = get_current_language(request)
-        person = Person.objects.get(user=request.user)
+    def get(self, request, *args, **kwargs):
+        person = get_or_create_person(self.request)
+        demographic, created = Demographic.objects.get_or_create(person=person)
+        if created:
+            demographic.save()
+
         known_languages = KnownLanguage.objects.filter(person=person)
-        unknown_languages = get_unknown_languages(person)
 
-        if not current_language:
-            if len(known_languages)==0:
-                url = reverse('people:choose_language') + '?next=people:profile'
+        if len(known_languages) == 0:
+            url = reverse('people:choose_language') + '?next=people:profile'
+            return redirect(url)
+        elif len(known_languages) >= 1:
+
+            # TODO: SUPPORT MULTIPLE LANGUAGES
+            set_current_language_for_person(
+                person, known_languages[0].language)
+            current_language = known_languages[0]
+
+            if current_language.level_of_proficiency is None:
+                url = \
+                    reverse('people:choose_language') + '?next=people:profile'
                 return redirect(url)
-            elif len(known_languages)>=1:
-                set_current_language_for_person(person, known_languages[0].language)
-                current_language = known_languages[0].language
+
+        num_recordings = Recording.objects.filter(person=person).count()
+
+        # Disabling this for now as we're not onboarding.
+        # Also there seems to be a bug someone people
+        # if num_recordings == 0 and person.just_signed_up:
+        #     url = reverse('corpus:record')  # onboard?
+        #     return redirect(url)
+
+        login_uuid = request.get_signed_cookie('uuid-expo-login', None)
+        expo_login = \
+            cache.get(
+                'USER-LOGIN-FROM-EXPO-{0}'.format(
+                    login_uuid), None)
+        if expo_login:
+
+            return redirect('/expo-login/')
+
+        return super(ProfileDetail, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+
+        person = get_or_create_person(self.request)
+        serializer = PersonSerializer(person)
+        context['person'] = person
+        context['serializer'] = serializer
+
+        context['demographic_form'] = DemographicForm(
+            instance=person.demographic)
+        email = None
+        username = None
+
+        if person.user:
+            if person.user.email:
+                email = person.user.email
+            username = person.user.username
+        else:
+            if person.profile_email:
+                email = person.profile_email
             else:
-                logger.error('PROFILE VIEW: We need to handle this situation - NO CURRENT LANGUAGE but len know languages is YUGE')
-                raise Http404("Something went wrong. We're working on this...")
+                email = ''
+            if person.username:
+                username = person.username
+            else:
+                username = ''
 
+        context['person_form'] = PersonForm(
+            instance=person,
+            initial={'email': email, 'username': username})
 
-        recordings = Recording.objects\
-            .filter(
-                person__user=request.user,
-                sentence__language=current_language)\
-            .order_by('-updated')
+        context['groups_form'] = GroupsForm(instance=person,
+                                            request=self.request)
 
-        sentences = get_sentences(request, recordings)
-        known_languages = [i.language for i in known_languages]
+        known_languages = KnownLanguage.objects.filter(person=person).count()
+        if known_languages > 0:
+            extra = known_languages
+        else:
+            extra = 1
 
-        return render(request, 'people/profile.html',
-            {'request': request,
-             'user': request.user,
-             'sentence': sentence,
-             'current_language': current_language,
-             'person': person,
-             'recordings': recordings,
-             'sentences': sentences,
-             'known_languages': known_languages
-             })
-    else:
-        # We should enable someone to provide recordings without loging in - and we can show their recordings - user coockies to track
-        # BUt for now we'll redirect to login
-        return redirect(reverse('account_login'))
+        KnownLanguageFormset = inlineformset_factory(
+            Person,
+            KnownLanguage,
+            form=KnownLanguageFormWithPerson,
+            fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
+            max_num=get_num_supported_languages(), extra=extra)
+
+        kl_formset = KnownLanguageFormset(
+            instance=person,
+            form_kwargs={'person': person})
+
+        context['known_language_form'] = kl_formset
+        context['known_languages'] = known_languages
+        context['show_stats'] = True
+
+        return context
 
 
 def person(request, uuid):
@@ -97,19 +183,38 @@ def choose_language(request):
         extra = known_languages
     else:
         extra = 1
+
     unknown = get_unknown_languages(person)
-    
-    KnownLanguageFormset = inlineformset_factory(Person, KnownLanguage, form=KnownLanguageFormWithPerson, fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra= extra )
+    KnownLanguageFormset = inlineformset_factory(
+        Person,
+        KnownLanguage,
+        form=KnownLanguageFormWithPerson,
+        fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
+        max_num=get_num_supported_languages(), extra=extra,)
     # formset  = KnownLanguageFormset(form_kwargs={'person':person})
     # KnownLanguageFormsetWithPerson = inlineformset_factory(Person, KnownLanguage, form=form,  fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra=known_languages+1)
-    
+
+    formset = KnownLanguageFormset(
+            instance=person,
+            form_kwargs={'person': person, 'require_proficiency': True})
+
     if request.method == 'POST':
-        formset = KnownLanguageFormset(request.POST, request.FILES, instance=person, form_kwargs={'person':person})
+
+        # Upon first post to the person choosing their language
+        # We can ensure that the user just signed up
+        person.just_signed_up = False
+        person.save()
+
+        formset = KnownLanguageFormset(
+                    request.POST, request.FILES,
+                    instance=person,
+                    form_kwargs={
+                        'person': person,
+                        'require_proficiency': True})
         if formset.has_changed():
             if formset.is_valid():
                 instances = formset.save()
 
-                
                 current_language = get_current_language(request)
                 if not current_language:
                     for instance in instances:
@@ -117,45 +222,48 @@ def choose_language(request):
                             current_language = obj.language
                 if not current_language:
                     current_language = translation.get_language()
-                
+
                 try:
                     set_current_language_for_person(person, current_language)
                 except:
-
                     logger.debug("We may be trying to set a language when knownlanguage doens't exist")              
 
-                    
                 if next_page:
                     response = redirect(reverse(next_page))
                 else:
-                    response  = redirect(reverse('people:choose_language'))
+                    response = redirect(reverse('people:choose_language'))
 
                 response = set_language_cookie(response, current_language)
 
                 return response
 
-
         else:
-            if next_page:
-                return redirect(reverse(next_page))
-            else:
-                return redirect(reverse('people:choose_language'))
-            # formset = KnownLanguageFormsetWithPerson(instance=person)    
-            
-    else:
+            if formset.is_valid():
+                if next_page:
+                    return redirect(reverse(next_page))
+                # else:
+                #     return redirect(reverse('people:choose_language'))
+            # formset = KnownLanguageFormsetWithPerson(instance=person)
 
-        formset = KnownLanguageFormset(instance=person, form_kwargs={'person':person})
-
-        # for form in formset:
-    response = render(request, 'people/choose_language.html', {'formset':formset, 'known_languages':known_languages, 'unknown_languages':unknown})
+    response = render(
+        request,
+        'people/choose_language.html',
+        {
+            'known_language_form': formset,
+            'known_languages': known_languages,
+            'unknown_languages': unknown,
+            'just_signup_track': person.just_signed_up,
+        }
+    )
 
     current_language = get_current_language(request)
     if current_language:
-        set_current_language_for_person(person, current_language)    
-        response = set_language_cookie(response, current_language)     
+        set_current_language_for_person(person, current_language)
+        response = set_language_cookie(response, current_language)
     else:
         logger.debug('no current language')
     return response
+
 
 def set_language(request):
     logger.debug('SET LANGAUGE')
@@ -168,16 +276,16 @@ def set_language(request):
     else:
         url = 'people:choose_language'
 
-    if request.method=='POST':
+    if request.method == 'POST':
 
-        if request.POST.get('language','') != '':
-            user_language = request.POST.get('language','')
+        if request.POST.get('language', '') != '':
+            user_language = request.POST.get('language', '')
             person = get_or_create_person(request)
             set_current_language_for_person(person, user_language)
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
 
-            response =  redirect(reverse(url)) #render(request,  'people/set_language.html')
+            response = redirect(reverse(url))  # render(request,  'people/set_language.html')
             response = set_language_cookie(response, user_language)
             logger.debug('RESPONSE: {0}'.format(response))
             return response
@@ -187,21 +295,135 @@ def set_language(request):
 
 
 def create_demographics(request):
+    """
+    THIS VIEW SHOULD NO LONGER BE USED AS THE PROFILE VIEW HANDLES
+    AJAX EDITING OF DEMOGRAPHIC DATA
+    """
+    person = get_or_create_person(request)
+
     if request.method == "POST":
         form = DemographicForm(request.POST)
-        person = get_or_create_person(request)
 
         if form.is_valid():
+            #  Chek if demographic data already there if so then replace.
             demographic = form.save(commit=False)
-            demographic.person = person
-            demographic.save()
+            instance, created = Demographic.objects.get_or_create(person=person)
+            if created:
+                demographic.person = person
+                demographic.save()
+            else:
+                instance.sex = demographic.sex
+                instance.age = demographic.age
+                for tribe in instance.tribe.all():
+                    instance.tribe.remove(tribe)
+                demographic.pk = instance.pk
+
+                for tribe in demographic.tribe.all():
+                    instance.tribe.add(tribe)
+                instance.save()
 
             return redirect(reverse('people:profile'))
 
     else:
-        form = DemographicForm()
+        try:
+            instance = Demographic.objects.get(person=person)
+            if instance.sex is None or instance.age is None:
+                form = DemographicForm(instance=instance)
+            else:
+                return redirect(reverse('people:profile'))
+        except ObjectDoesNotExist:
+            form = DemographicForm()
 
     return render(request, 'people/demographics.html', {'form': form})
 
+
 def create_user(request):
     return render(request, 'people/create_account.html')
+
+
+class Competition(SiteInfoMixin, ListView):
+    model = Group
+    template_name = 'people/competition/competition.html'
+    paginate_by = 50
+    context_object_name = 'groups'
+    x_title = _('Competition')
+    x_description = \
+        _("Compete with groups and others to win amaing prizes.")
+    x_image = \
+        static('people/images/competition/competition-80.jpg')
+
+    def get_queryset(self):
+        return Group.objects.all().order_by('name')\
+            .annotate(size=Count("person"))
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(Competition, self).get_context_data(**kwargs)
+
+        # language = get_current_language(self.request)
+
+        groups = Group.objects.all().order_by('name').annotate(
+            size=Count('person'))
+
+        larger_groups = groups.filter(size__gte=7)
+
+        key = 'competition-home'
+        qualified_pk = cache.get(key)
+        if qualified_pk is None:
+            qualified_pk = []
+            for group in larger_groups:
+                members = get_valid_group_members(group)
+                if members.count() >= 7:
+                    qualified_pk.append(group.pk)
+
+            cache.set(key, qualified_pk, 60*10)
+
+        qualified = larger_groups \
+            .filter(pk__in=qualified_pk) \
+            .filter(duration__gte=3.95*60*60)
+
+        need_more_hours = larger_groups \
+            .filter(pk__in=qualified_pk) \
+            .filter(duration__lt=3.95*60*60)
+
+        need_more_members = groups \
+            .exclude(pk__in=qualified_pk)
+
+        context['qualified'] = qualified
+        context['need_more_members'] = need_more_members
+        context['need_more_hours'] = need_more_hours
+        context['groups'] = groups
+        # for group in groups:
+
+        return context
+
+
+class Help(SiteInfoMixin, ListView):
+    model = Group
+    template_name = 'people/competition/help.html'
+    paginate_by = 50
+    context_object_name = 'groups'
+    x_title = _('Help')
+    x_description = \
+        _("Support and documentation for competitions.")
+
+    def get_queryset(self):
+        return Group.objects.all().order_by('name')\
+            .annotate(size=Count("person"))
+
+    def get_context_data(self, **kwargs):
+        context = \
+            super(Help, self).get_context_data(**kwargs)
+
+        # language = get_current_language(self.request)
+
+        groups = Group.objects.all().order_by('name').annotate(
+            size=Count('person'))
+        qualified = groups.filter(size__gte=7)
+        not_qualified = groups.exclude(size__gte=7)
+
+        context['qualified'] = qualified
+        context['not_qualified'] = not_qualified
+        # for group in groups:
+
+        return context

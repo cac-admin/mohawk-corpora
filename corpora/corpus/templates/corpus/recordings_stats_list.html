@@ -1,0 +1,240 @@
+{% extends 'people/stats/base.html' %}
+{% load static sekizai_tags compress i18n %}
+
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+
+
+  .styling{
+    background-color: $brand_lighter;
+    border-color: $brand;
+  }
+
+</style>
+{% endaddtoblock %}
+  
+<div class="container">
+  <div class="row">
+    <div class="col">
+      
+      <h1>{% trans "Recordings" %}</h1>
+
+<!-- {{start_day}}
+{{start_date}}
+{{end_day}}
+{{end_date}} -->
+
+<canvas id="recordings"></canvas>
+
+<canvas id="growthrate"></canvas>
+
+
+      <h1>{% trans "Reviews" %}</h1>
+
+
+<canvas id="reviews"></canvas>
+
+<canvas id="reviews_growth"></canvas>
+
+{% addtoblock 'js-end' %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+{% endaddtoblock %}
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+var bg = ''
+var border = ''
+
+    var $p = $("<p class='styling'></p>").hide().appendTo("body");
+    bg = $p.css("backgroundColor");
+    border = $p.css("borderColor");
+    $p.remove();
+
+
+  var ctx = document.getElementById('recordings').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.recordings.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Recordings' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.recordings.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Minutes of Recordings'
+          }
+        }]
+      }
+    },
+
+  });
+
+  var ctx2 = document.getElementById('growthrate').getContext('2d');
+  var chart2 = new Chart(ctx2, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.growth_rate.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Growth Rate' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.growth_rate.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Minutes / Day'
+          }
+        }]
+      }
+    },
+
+  });
+
+
+  // REVIEWS ///////////////
+
+  var ctx3 = document.getElementById('reviews').getContext('2d');
+  var chart3 = new Chart(ctx3, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.reviews.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Reviews' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.reviews.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: '# of Reviews'
+          }
+        }]
+      }
+    },
+
+  });
+
+  var ctx4 = document.getElementById('reviews_growth').getContext('2d');
+  var chart4 = new Chart(ctx4, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ data.reviews_growth.labels|safe }},
+        datasets: [{
+            label: "{% trans 'Growth Rate' %}",
+            backgroundColor: bg,
+            borderColor: border,
+            lineTension: .2,
+            data: [{% for i in data.reviews_growth.values %}{{i|floatformat:2}},{% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Number / Day'
+          }
+        }]
+      }
+    },
+
+  });  
+
+</script>
+{% endaddtoblock %}
+
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$(document).ready(function(){
+  window.setInterval(function(){
+    $.ajax({url: "?format=json"}).done(function(data){
+
+      recordings = data.data.recordings
+      growth_rate = data.data.growth_rate
+
+      // reviews = data.data.reviews
+      // reviews_growth = data.data.reviews_growth
+
+      chart.data.labels = recordings.labels 
+
+      data = []
+      for (var i = 0; i<recordings.values.length; i++){
+        data[i]=parseFloat(Math.round(recordings.values[i] * 100) / 100)
+      }
+
+      chart.data.datasets[0].data=data
+      chart.update()
+
+
+      data = []
+      for (var i = 0; i<growth_rate.values.length; i++){
+        data[i]=parseFloat(Math.round(growth_rate.values[i] * 100) / 100)
+      }
+
+      chart2.data.labels = growth_rate.labels 
+      chart2.data.datasets[0].data=data
+      chart2.update()
+    })  
+  }, 10000);
+})
+
+
+
+</script>
+{% endaddtoblock %}
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

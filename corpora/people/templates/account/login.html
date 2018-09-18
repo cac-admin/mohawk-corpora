@@ -1,33 +1,86 @@
 {% extends "account/base.html" %}
-{% load i18n account socialaccount static sekizai_tags compress sass_tags %}
+{% load i18n account socialaccount static sekizai_tags compress  %}
 
 
 {% block title %}{% trans "Sign In" %}{% endblock %}
 
 {% block account_content %}
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+@import 'people/scss/login';
+</style>
+{% endaddtoblock %}
 
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+  body{
+  color: black;
+}
+.btn{
+  /*margin-top: 0px;*/
+}
+.socialaccount_providers{
+  font-size: 1.2em;
+  li{
+    padding-top: 15px;
+  }
+}
+
+input[type=checkbox]{
+  display: inline-block;
+  width: 20px;
+  height: 15px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+label[for=id_remember]{
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1em;
+  margin: 0px;
+}
+</style>
+{% endaddtoblock %}
+
+<div class="row"><div class="col">
   <h1>{% trans 'Sign In' %}</h1>
+  <p>
+  <small>You can use your same credentials for koreromaori.com and koreromaori.io.</small></p>
+</div></div>
 
   {% get_providers as socialaccount_providers %}
 
+<div class="row"><div class="col">
   <form class="login" method="POST" action="{% url 'account_login' %}" style="text-align: center;" id="login_form">
     {% csrf_token %}
 
-    {{form.as_p}}
+    {{form.non_field_errors}}
+    {% for field in form %}
+    <div class="form-group row justify-content-end">
+        <div class="col-12">{{ field.label_tag }}{{ field }} </div>
+        {% if field.help_text %}
+        <div class="col-12">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+        
+        <div class="col-12">
+        {{ field.errors }}
+        </div>
+        
+    </div>
+    {% endfor %}
 
     {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'people:profile' %}" />
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-
-    <a class="secondaryAction" href="{% url 'account_reset_password' %}">
-      {% trans "Forgot Password?" %}<br>
-    </a>
     
-    <a class="btn btn-default btn-lg" href="javascript:{}" onclick="document.getElementById('login_form').submit();">
+    <button  href="javascript:{}" onclick="document.getElementById('login_form').submit();">
         {% trans "Sign In" %}
-    </a>
+    </button>
 
   </form>
+</div></div>
 
   {% addtoblock 'js-end' %}
   <script type="text/javascript">
@@ -42,25 +95,45 @@
   </script>
   {% endaddtoblock %}
 
+<div class="row"><div class="col">
+
   {% if socialaccount_providers %}
-  <p class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</p>
+  <br>
+  <b class="p-text-block">{% blocktrans %}You can also sign in with: {% endblocktrans %}</b>
 
   <div class="socialaccount_ballot">
-
     <ul class="socialaccount_providers">
       {% include "socialaccount/snippets/provider_list.html" with process="login" %}
     </ul>
-
   </div>
-
-  <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
-  {% endblocktrans %}</p>
 
   {% include "socialaccount/snippets/login_extra.html" %}
 
   {% else %}
-  <p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
   {% endif %}
+
+ <!--  <p class="p-text-block">{% blocktrans with site.name as site_name %}Don't have an account?<br><a href="{{ signup_url }}">Sign Up</a>
+  {% endblocktrans %}</p>  -->
+
+  <p class="p-text-block">Need an account? <a id="signup" href="/accounts/signup/">Sign Up.</a></p>
+
+  <p><a class="secondaryAction" href="{% url 'account_reset_password' %}">
+      {% trans "Forgot Password?" %}
+    </a></p>
+
+</div></div>
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+$('#login_form').find('input').addClass('form-control');
+$('#login_form').find('select').addClass('form-control');
+$('#login_form input[type=submit').removeClass('form-control');
+
+
+$('#signup').get(0).href = '/accounts/signup/?' + window.location.href.split('?')[1]
+
+</script>
+{% endaddtoblock %}
+
 
 {% endblock account_content %}

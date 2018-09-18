@@ -9,13 +9,14 @@ logger = logging.getLogger('corpora')
 
 register = template.Library()
 
+
 @register.simple_tag()
 def get_current_language(request):
     l = get_cur_lang(request)
     return l
 
+
 @register.simple_tag()
 def get_known_languages(request):
     kl = get_known_lang(request.user)
     return kl
-

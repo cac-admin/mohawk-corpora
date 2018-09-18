@@ -9,114 +9,146 @@ $sm-bg-circle-size: 110px;
 $sm-fg-circle-inset: 12px;
 
 .circle {
-	border-radius: 50%;
+    border-radius: 50%;
 }
 
 .background-circle {
-	width: $lg-bg-circle-size;
-	height: $lg-bg-circle-size;
-	background: $dark;
-	position: relative;
-	display: inline-block;
-	
+    width: $lg-bg-circle-size;
+    height: $lg-bg-circle-size;
+    background: $dark;
+    position: relative;
+    display: inline-block;
+    
 }
 
 .foreground-circle {
-	background: $default;
-	position: absolute;
-	right: $lg-fg-circle-inset;
-	left: $lg-fg-circle-inset;
-	top: $lg-fg-circle-inset;
-	bottom: $lg-fg-circle-inset;
+    background: $default;
+    position: absolute;
+    right: $lg-fg-circle-inset;
+    left: $lg-fg-circle-inset;
+    top: $lg-fg-circle-inset;
+    bottom: $lg-fg-circle-inset;
 }
 
 .unclicked-circle {
-	box-shadow: 0 0 10px black;
-	transition: all 0.1s ease-in-out;
+    box-shadow: 0 0 10px black;
+    transition: all 0.1s ease-in-out;
 }
 
 .unclicked-circle:hover {
-	// transform: scale(1.05, 1.05);
-	box-shadow: 0 0 15px black;
+    // transform: scale(1.05, 1.05);
+    box-shadow: 0 0 15px black;
 }
 
 .clicked-circle {
-	box-shadow: inset 0 0 20px black;
+    box-shadow: inset 0 0 20px black;
 }
 
 .circle-text {
-	color: $darker;
-	font-size: 45px;
+    color: $darker;
+    font-size: 45px;
 
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 100%;
-	text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
 }
 
 .circle-button-container {
-	text-align: center;
+    text-align: center;
 }
 
 .stop-square {
-	background-color: $darker;
-	width: 50%;
-	height: 50%;
+    background-color: $darker;
+    width: 50%;
+    height: 50%;
 
-	display: none;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .play-triangle {
-	width: 0;
-	height: 0;
-	margin-top: 50%;
-	margin-left: 50%;
-	transform: translate(-35%, -50%);
+    width: 0;
+    height: 0;
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-35%, -50%);
 
-	border-top: $lg-bg-circle-size/4 solid transparent;
-	border-left: $lg-bg-circle-size/3 solid $darker;
-	border-bottom: $lg-bg-circle-size/4 solid transparent;
+    border-top: $lg-bg-circle-size/4 solid transparent;
+    border-left: $lg-bg-circle-size/3 solid $darker;
+    border-bottom: $lg-bg-circle-size/4 solid transparent;
+}
+
+.play-loading {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    div{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        color: $darker;
+        font-size: 75px;
+        line-height: 0;
+    }
 }
 
 #play-button {
-	display: none;
+    // display: none;
 }
 
 #record-button,#play-button{
-	border: 0px;
+    border: 0px;
 }
 
 #record-button:active,#play-button:active{
-	border: 0px;
-	background: none;
+    border: 0px;
+    background: none;
 }
 
 // Small device css settings
 @media(max-width: 768px) {
-	.background-circle {
-		width: $sm-bg-circle-size;
-		height: $sm-bg-circle-size;
-	}
+    .background-circle {
+        width: $sm-bg-circle-size;
+        height: $sm-bg-circle-size;
+    }
 
-	.foreground-circle {
-		right: $sm-fg-circle-inset;
-		left: $sm-fg-circle-inset;
-		top: $sm-fg-circle-inset;
-		bottom: $sm-fg-circle-inset;
-	}
+    .foreground-circle {
+        right: $sm-fg-circle-inset;
+        left: $sm-fg-circle-inset;
+        top: $sm-fg-circle-inset;
+        bottom: $sm-fg-circle-inset;
+    }
 
-	.circle-text {
-		font-size: 30px;
-	}
+    .circle-text {
+        font-size: 30px;
+    }
 
-	.play-triangle {
-		border-top: $sm-bg-circle-size/4 solid transparent;
-		border-left: $sm-bg-circle-size/3 solid $darker;
-		border-bottom: $sm-bg-circle-size/4 solid transparent;
-	}
+    .play-triangle {
+        border-top: $sm-bg-circle-size/4 solid transparent;
+        border-left: $sm-bg-circle-size/3 solid $darker;
+        border-bottom: $sm-bg-circle-size/4 solid transparent;
+    }
+
+    .play-loading {
+        width: 55px;
+        height: 55px;
+        div{
+            color: $darker;
+            font-size: 55px;
+            line-height: 0;
+        }
+    }
+
+    .circle-button-container{
+        margin-top: 10px;
+    }
+
 }

@@ -1,0 +1,179 @@
+{% extends 'people/competition/base.html' %}
+{% load static sekizai_tags compress i18n cache %}
+
+{% block title %}{{x_title}}{%endblock%}
+{% block content %}
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+@import 'corpora/css/colors';
+@import 'corpora/css/text';
+
+@mixin style-action-button($color, $class_name){
+
+    a.#{$class_name}{
+      color: white;
+      background-color: $color;
+      -webkit-tap-highlight-color: rgba($color, .5);
+    }
+    a.#{$class_name}.checked{
+      background-color: $color;
+      color: lighten($color,100%);
+    }     
+    a.#{$class_name}:active{
+      background-color: darken($color, 6%);      
+      color: white;
+    }
+}
+
+@include style-action-button($brand_primary, "start")
+.start{
+  font-size: 2.3em;
+  border-radius: 4px;
+  padding: 15px 30px;
+  margin: 30px 0px 20px 0px;
+  display: inline-block;
+}
+
+.jumbotron{
+  margin: 0px;
+}
+div.col.table{
+  overflow-x: auto;
+}
+
+a.ropu{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 2px;
+  background-color: $brand_light;
+  color: white;
+  margin-right: 8px;
+  margin-top: 8px;
+  color: white;
+}
+.ropu:hover{
+  background-color: $brand;
+}
+.ropu:active{
+  background-color: $brand_dark;
+}
+.fa-layers-text{
+  color: $brand_light;
+   font-weight: 500;
+}
+h3{
+  margin-top: 15px;
+  font-weight: 700;
+  color: $brand_darkest;
+}
+.video{
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 800px;
+  background-color: black;
+  .container{
+    .row > .col{
+      @include media-breakpoint-down(xs) {
+        padding: 0px;
+      }
+    } 
+  }
+}
+div.r16x9{
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  div{
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+      iframe{
+      }
+  }
+}
+
+</style>
+{% endaddtoblock %}
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+      <h1>Rongorongo Competition</h1>
+    </div>
+  </div>
+
+  <div class="row ">
+    <div class="col">
+
+
+
+  <div class="row justify-content-center timata" style="text-align: center;">
+    <div class="col-12" >
+      <div>
+      <a href="{% url 'corpus:record' %}" class="start" >
+        <i class="fas fa-star fa-fw"></i><SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "TĪMATA" %}&nbsp;&nbsp;</SPAN><i class="fas fa-star fa-fw"></i> 
+      </a>
+      </div>
+      <p>Hit the big whero button to start reviewing recordings.</p>
+    </div>
+  </div>
+
+
+        <h3>Starts 12pm September 12th</h3>
+        
+        <p>Win one of 5 new Huawei Nova 3i mobiles by reviewing sentences during the Rongorongo Competition.
+          All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
+          <a href="{% url 'corpus:listen' %}">reviewing</a>.
+          Make sure you verify your email so we can contact you if you win.
+
+          Don't forget to check out the 
+          <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.</p>
+
+
+      <div class="video">
+        <div class="r16x9">
+          <div>
+            <iframe src="https://tehiku.nz/embed/6813" style="padding:0px; margin:0px; border:0px;" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+          </div>
+        </div>
+      </div>
+
+
+
+        {% cache 600 competition %}
+        <h3 style="padding-top: 15px;">{{ qualified.count }} Rōpū</h3>
+        <p>You can still participate as a group, but entries for the Rongorongo Competition are per person.</p>
+        <p>{% for g in groups %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
+        {% comment %}
+
+        <h3 style="padding-top: 15px;">{{ qualified.count }} Groups Qualify for 💰 Prizes</h3>
+        <p>You needed at least 7 people in your group and 4 hours of recordings to qualify for cash prizes.</p>
+        <p>{% for g in qualified %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
+        <h3 style="padding-top: 15px;">{{need_more_hours.count}} Groups Need More Hours</h3>
+        <p>These groups have 7 valid members but needed more hours.</p>
+        <p>{% for g in need_more_hours %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+
+        <h3 style="padding-top: 15px;">{{need_more_members.count}} Groups Need More Members</h3>
+        <p>These groups needed more valid members.</p>
+        <p>{% for g in need_more_members %}<a class="ropu" href="{% url 'competition_group' g.pk %}">{{g}}</a>{% endfor %}</p>
+
+        {% endcomment %}
+        {% endcache %}
+
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

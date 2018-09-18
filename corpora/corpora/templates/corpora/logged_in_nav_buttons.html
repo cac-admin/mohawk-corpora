@@ -1,11 +1,21 @@
-{% load account i18n socialaccount sekizai_tags static language %}
+{% load account i18n socialaccount sekizai_tags static language cache %}
 {% addtoblock "css" %}
 <link href="{% static 'corpora/css/nav.scss' %}" rel="stylesheet" type="text/x-scss" />
 {% endaddtoblock %}
 {% addtoblock "css" %}
 <style type="text/x-scss">
-    
+
 .navbar{
+  ul{
+    flex-wrap: unset !important;
+    overflow: auto;
+    li{
+      display: inline-block;
+    }
+    li.active{
+      border-bottom: 2px solid white;
+    }
+  }
     a{
         color: white;
     }
@@ -15,73 +25,79 @@
 }
 </style>
 {% endaddtoblock %}
+
+
 <nav class="navbar navbar-expand">
   <div class="container">
-  <a class="navbar-brand" href="/">corpora.io</a>
+  {% cache 500 navbar request.user.is_staff request.user_isauthenticated request.path %}
+
+  <a class="navbar-brand" href="/">{{request.site.name}}</a>
   
+  {% get_available_languages as available_languages %}
+
   <ul class="navbar-nav ml-auto ">
-    {% if request.user.is_authenticated %}
 
-
-    <li class="nav-item">
-      <a href="{% url 'corpus:record' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-microphone"></i>
+    {% url 'corpus:record' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-microphone-alt"></i>
         <div >{% trans 'Speak' %}</div>
       </a>
     </li>
 
-    <li class="nav-item">
-      <a href="{% url 'corpus:listen' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-volume-up"></i>
+    {% url 'corpus:listen' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-volume-up"></i>
         <div >{% trans 'Listen' %}</div>
       </a>
     </li>  
 
-    {% if request.user.is_staff %}
+    {% url 'competition' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-fw fa-trophy"></i>
+        <div >{% trans 'Competition' %}</div>
+      </a>
+    </li>      
 
-    <li class="nav-item">
-      <a href="{% url 'corpus:sentence-list' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-font"></i>
+
+
+    
+{% if request.user.is_authenticated %}
+  
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    {% url 'corpus:sentence-list' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="far fa-lg fa-fw fa-font"></i>
         <div >{% trans 'Sentences' %}</div>
       </a>
     </li>      
 
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'corpus:stats' %}" >
-        <i class="fa fa-lg fa-fw fa-bar-chart"></i>
+    {% url 'stats' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
+        <i class="far fa-lg fa-fw fa-chart-bar"></i>
         <div >{% trans 'Stats' %}</div>
       </a>
     </li>
     
+    
     <li class="nav-item">
       <a class="nav-link" href="/admin" >
-        <i class="fa fa-lg fa-fw fa-cogs"></i>
+        <i class="fas fa-lg fa-fw fa-cog"></i>
         <div>{% trans 'Admin' %}</div>
       </a>
     </li>
     {% endif %}
 
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'people:profile' %}" >
-        <i class="fa fa-lg fa-fw fa-user"></i>
-        <div >{% trans 'Profile' %}</div>
-      </a>
-    </li>
-
-
-<!-- <div>
-<a href="#" class="">
-    <i class="fa fa-fw fa-lg fa-edit"></i>
-    <div >{% trans 'Edit Info' %}</div>
-</a>
-</div> -->
-
-
+    {% if available_languages|length > 1 %}
     <li class="dropdown nav-item">
     {% get_current_language request as current_language %}
     {% get_known_languages request as known_languages %}
-    {% if known_languages %}
-    <!-- <div class="btn-group"> -->
+    {% if not known_languages %}
+    {% get_available_languages as known_languages %} {% endif %}    <!-- <div class="btn-group"> -->
       <a href="#" role="button" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-fw fa-lg fa-language"></i>
         <div>{% get_language_info for current_language as lang %}{% trans 'Language' %} <i class="fa fa-caret-down"></i></div>
@@ -97,14 +113,52 @@
         {% endfor %}
             <li><a href="{% url 'people:choose_language' %}?next=people:profile">Add/Edit Language</a></li>
       </ul>
-
-    {% endif %}
     </li>
-    
+    {% endif %}
+
+{% else %}
+
+
+    {% if available_languages|length > 1 %}
+    <li class="dropdown nav-item">
+    {% get_current_language request as current_language %}
+    {% get_known_languages request as known_languages %}
+    {% if not known_languages %}
+    {% get_available_languages as known_languages %} {% endif %}
+    <!-- <div class="btn-group"> -->
+      <a href="#" role="button" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-fw fa-lg fa-language"></i>
+        <div>{% get_language_info for current_language as lang %}{% trans 'Language' %} <i class="fa fa-caret-down"></i></div>
+      </a>
+
+      <ul class="dropdown-menu">
+        {% comment %}Instead we'll want to get the KnownLanguages for the Person {% endcomment %}
+        {% get_language_info_list for known_languages as languages %}
+        {% for lang in languages %}
+            <li><a href="#" onclick="$('form[id=language_selector_form] input[name=language]').val('{{lang.code}}');$('form[id=language_selector_form]').submit();">
+            {% if lang.code == current_language %}<i class="fa fa-fw fa-check"></i>{% endif %}
+            {{ lang.name_translated }}</a></li>
+        {% endfor %}
+            <li><a href="{% url 'people:choose_language' %}?next=people:profile">Add/Edit Language</a></li>
+      </ul>    
+    </li>
+    {% endif %}
+
+{% endif %}
+
+    {% url 'people:profile' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
+        <i class="fa fa-lg fa-fw fa-user-circle"></i>
+        <div >{% trans 'Profile' %}</div>
+      </a>
+    </li>
+
+{% if request.user.is_authenticated %}
 
     <li class="nav-item">
       <a class="nav-link" href="#" onclick="$('form[id=logout]').submit();">
-        <i class="fa fa-fw fa-lg fa-sign-out"></i>
+        <i class="fas fa-fw fa-lg fa-sign-out"></i>
         <div>{% trans 'Log Out' %}</div>
       </a>        
     </li>
@@ -112,30 +166,16 @@
 {% else %}
 
     <li class="nav-item">
-      <a href="{% url 'corpus:record' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-microphone"></i>
-        <div >{% trans 'Speak' %}</div>
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a href="{% url 'corpus:listen' %}" class="nav-link" >
-        <i class="fa fa-lg fa-fw fa-volume-up"></i>
-        <div >{% trans 'Listen' %}</div>
-      </a>
-    </li>  
-
-    <li class="nav-item">
       <a class="nav-link" href="{% url 'account_login' %}?next={{request.path}}" >
-        <i class="fa fa-fw fa-lg fa-sign-in"></i>
+        <i class="fas fa-fw fa-lg fa-sign-in"></i>
         <div>{% trans 'Log In' %}</div>
       </a>        
     </li>
 {% endif %}
 
-  </ul>
-  
 
+  </ul>
+  {% endcache %}
   <form method="post" action="{% url 'account_logout' %}" style="display: inline-block;" id="logout" class="hidden" >
       
           {% csrf_token %}
@@ -150,8 +190,6 @@
           <input name="language" type="hidden" value="{{current_language}}" />
       
   </form>
-
-
-
 </div>
 </nav>
+

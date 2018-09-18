@@ -1,0 +1,59 @@
+{% extends "reo_api/base_dashboard.html" %}
+{% load account %}
+{% load i18n %}
+{% load socialaccount %}
+{% load sekizai_tags %}
+{% load static %}
+{% load language %}
+{% block title %}{{x_title}}{%endblock%}
+{% block navbuttons %}
+{% include 'reo_api/logged_in_nav_buttons.html' %}
+
+
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+
+
+var DEV_WIDTH = null;
+var DEV_HEIGHT = null;
+function calcVH() {
+	if (DEV_HEIGHT==null){
+		DEV_HEIGHT = $(this).innerHeight();
+	}
+
+	if (DEV_WIDTH==null){
+		DEV_WIDTH = $(this).innerWidth();
+	}
+
+  	// window.setTimeout(function(){
+    if (this.orientation==90 || this.orientation==-90){
+	    $('div.panel div.panel').innerHeight( DEV_WIDTH );
+	    $('div.viewport div.viewport').innerHeight( DEV_WIDTH );
+    } else{
+	    $('div.panel div.panel').innerHeight(DEV_HEIGHT);
+	    $('div.viewport div.viewport').innerHeight( DEV_HEIGHT );
+    }
+
+    // }, 1000)
+}
+
+$(window).ready(function(){
+  window.setTimeout(function(){console.log(window.orientation!==undefined)}, 1000)
+  if (window.orientation!==undefined){
+      calcVH();
+  }
+  $(window).on('orientationchange ', function(event) {
+    calcVH();
+  });
+
+
+});
+
+
+</script>
+{% endaddtoblock %}
+
+
+
+{% endblock %}

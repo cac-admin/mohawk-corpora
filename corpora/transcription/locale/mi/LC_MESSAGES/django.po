@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-26 09:42+1200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: transcription/templates/transcription/transcribe_demo.html:109
+msgid "Redo"
+msgstr ""
+
+#: transcription/templates/transcription/transcribe_demo.html:118
+msgid "Transcribe"
+msgstr ""
+
+#: transcription/templates/transcription/transcribe_demo.html:122
+msgid "Save"
+msgstr ""
+
+#: transcription/urls.py:11
+msgid "^transcriptions/(?P<pk>[0-9]+)"
+msgstr ""
+
+#: transcription/urls.py:16
+msgid "^transcriptions/"
+msgstr ""
+
+#: transcription/urls.py:21
+msgid "^transcribe/"
+msgstr ""
+
+#: transcription/views/api.py:29 transcription/views/api.py:91
+msgid "Only staff can read transcription lists."
+msgstr ""
+
+#: transcription/views/api.py:35 transcription/views/api.py:97
+msgid "Reading transcription lists not allowed."
+msgstr ""
+
+#: transcription/views/api.py:42
+msgid "Only staff can read transcriptions."
+msgstr ""
+
+#: transcription/views/api.py:57
+msgid "You're not allowed to edit this transcription."
+msgstr ""
+
+#: transcription/views/api.py:59
+msgid "Reading transcriptions is not allowed."
+msgstr ""
+
+#: transcription/views/views.py:57
+msgid "Tryout our new transcription demo!"
+msgstr ""
+
+#: transcription/views/views.py:58
+msgid "Transcribe Demo"
+msgstr ""

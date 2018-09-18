@@ -1,0 +1,142 @@
+{% extends 'corpus/base.html' %}
+{% load static sekizai_tags compress i18n rest_framework %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<style type="text/x-scss">
+@import 'corpora/css/colors';
+@import 'corpus/scss/actionButtons';
+@import 'people/scss/profile';
+
+@import 'bower_components/bootstrap/scss/functions';
+@import 'bower_components/bootstrap/scss/mixins';
+@import 'bower_components/bootstrap/scss/variables';
+
+div.content{
+  /*padding: 60px 0px 60px 0px;*/
+}
+
+span.select2.select2-container{
+    width: 100% !important;
+    min-width: 50px;
+}
+span.select2-container{
+    min-width: 50px;
+}
+small.form-text-error{
+    color: $brand_dark;
+    font-weight: bold;
+    display: none;
+}
+
+input[type=checkbox]{
+    max-width: 100px;
+}
+
+</style>
+{% endaddtoblock %}
+  
+
+{% include 'people/profile_header.html' %}
+<div class="container">
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    
+    <div class="profile" id="profile-div">
+
+
+
+    <form action="" method="post" id="person_form">
+    {% csrf_token %}
+    {% for field in person_form %}
+    <div class="form-group row justify-content-end">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
+        
+        <div class="col-sm-12 col-md-12">
+        {% if field.help_text %}
+        <small class="form-text text-muted {{field.name}}">{{ field.help_text|safe }}</small>
+        {% endif %}
+        <small class="form-text-error error-{{field.name}}"></small>
+        </div>
+        
+    </div>
+    {% endfor %}
+    
+    {% for field in groups_form %}
+    <div class="form-group row justify-content-end">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
+        {% if field.help_text %}
+        <div class="col-sm-12 col-md-12">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </form>
+
+
+    <form action="" method="post" id="demographic_form">
+    {% csrf_token %}
+    {% for field in demographic_form %}
+    <div class="form-group row justify-content-end">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        <div class="col-sm-12 col-md-12">{{ field }}</div>
+        {% if field.help_text %}
+        <div class="col-sm-12 col-md-12">
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </form>
+
+    <hr>
+    
+
+    {% include 'people/choose_language_form.html' %}
+
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpora/js/django.ajax.form.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}{{ demographic_form.media }}{% endaddtoblock %}
+
+{% addtoblock "js" %}<script type="text/javascript">{% include 'people/js/profile.js' %}</script>{% endaddtoblock %}
+
+{% addtoblock 'js-end' %}
+<script type="text/javascript">
+  
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('label').addClass('col-form-label col-sm-12 col-md-12');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('input').addClass('form-control');
+$('#demographic_form, #person_form, #known_language_form, #choose_language_form').find('select').addClass('form-control');
+
+$('input[type=checkbox]').each(function(index,target){
+    $(target.parentNode.parentNode).find('label').removeAttr('for')
+});
+
+$('#submit_choose_language_form').hide();
+
+</script>
+{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+  p = new Profile({{person.pk}}, '#profile-div', '.alert-area');
+  p.load()
+</script>
+{% endaddtoblock %}
+
+
+{% endblock %}

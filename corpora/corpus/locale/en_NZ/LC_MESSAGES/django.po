@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-09 03:28+0000\n"
+"POT-Creation-Date: 2018-06-26 09:43+1200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,59 +17,175 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: corpus/admin.py:68 corpus/models.py:188 corpus/models.py:194
+#: corpus/admin.py:77 corpus/admin.py:150 corpus/models.py:281
 msgid "None"
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:64
-#: corpus/templates/corpus/sentence_list.html:38
-msgid "Save changes."
+#: corpus/aggregate.py:79
+msgid "seconds"
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:71
+#: corpus/aggregate.py:79
+msgid "minutes"
+msgstr ""
+
+#: corpus/base_settings.py:36
+msgid "Maori"
+msgstr ""
+
+#: corpus/base_settings.py:51 corpus/base_settings.py:65
+msgid "Te Tai Tokerau"
+msgstr ""
+
+#: corpus/base_settings.py:52
+msgid "Tainui"
+msgstr ""
+
+#: corpus/base_settings.py:53
+msgid "Te Tai Rawhiti"
+msgstr ""
+
+#: corpus/base_settings.py:54
+msgid "Te Tai Hauauru"
+msgstr ""
+
+#: corpus/base_settings.py:55
+msgid "Mataatua"
+msgstr ""
+
+#: corpus/base_settings.py:56
+msgid "Te Puku o te Ika"
+msgstr ""
+
+#: corpus/base_settings.py:57
+msgid "Te Waipounamu"
+msgstr ""
+
+#: corpus/base_settings.py:66
+msgid "Te Tai Rāwhiti"
+msgstr ""
+
+#: corpus/base_settings.py:67
+msgid "Te Tai Hauāuru"
+msgstr ""
+
+#: corpus/base_settings.py:68
+msgid "Te Tai Tonga"
+msgstr ""
+
+#: corpus/base_settings.py:85
+msgid "Australian"
+msgstr ""
+
+#: corpus/base_settings.py:86
+msgid "New Zealand"
+msgstr ""
+
+#: corpus/base_settings.py:87
+msgid "American"
+msgstr ""
+
+#: corpus/models.py:206 corpus/models.py:302
+msgid "language"
+msgstr ""
+
+#: corpus/models.py:219
+msgid "dialect"
+msgstr ""
+
+#: corpus/models.py:312
+msgid "updated"
+msgstr ""
+
+#: corpus/models.py:313
+msgid "source"
+msgstr ""
+
+#: corpus/models.py:314
+msgid "uploaded file"
+msgstr ""
+
+#: corpus/models.py:316
+msgid ".txt format"
+msgstr ""
+
+#: corpus/models.py:319
+msgid "text"
+msgstr ""
+
+#: corpus/models.py:320
+msgid "texts"
+msgstr ""
+
+#: corpus/templates/corpus/listen.html:60
 #: corpus/templates/corpus/sentence_list.html:44
 msgid "Approve for recording?"
 msgstr ""
 
-#: corpus/templates/corpus/listen.html:226
-msgid "All done."
+#: corpus/templates/corpus/listen.html:80
+#: corpus/templates/corpus/sentence_list.html:38
+msgid "Save changes."
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:18
-msgid "Stats"
+#: corpus/templates/corpus/listen.html:85
+#: corpus/templates/corpus/record.html:121
+msgid "Skip"
 msgstr ""
 
 #: corpus/templates/corpus/qualitycontrol_list.html:24
+#: corpus/views/views.py:216
+msgid "Stats"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:30
+#: corpus/templates/corpus/recordings_stats_list.html:29
+#: corpus/templates/corpus/recordings_stats_list.html:65
 msgid "Recordings"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:26
-#: corpus/templates/corpus/qualitycontrol_list.html:31
+#: corpus/templates/corpus/qualitycontrol_list.html:32
+#: corpus/templates/corpus/qualitycontrol_list.html:42
 msgid "Number"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:27
+#: corpus/templates/corpus/qualitycontrol_list.html:33
 msgid "Duration"
 msgstr ""
 
-#: corpus/templates/corpus/qualitycontrol_list.html:29
-msgid "Sentences"
-msgstr ""
-
-#: corpus/templates/corpus/qualitycontrol_list.html:32
+#: corpus/templates/corpus/qualitycontrol_list.html:34
+#: corpus/templates/corpus/qualitycontrol_list.html:43
 msgid "Approved"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:107
+#: corpus/templates/corpus/qualitycontrol_list.html:35
+#: corpus/templates/corpus/qualitycontrol_list.html:44
+msgid "Good"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:36
+#: corpus/templates/corpus/qualitycontrol_list.html:45
+msgid "Bad"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:40
+#: corpus/views/views.py:44
+msgid "Sentences"
+msgstr ""
+
+#: corpus/templates/corpus/qualitycontrol_list.html:53
+msgid "Recordings by Language Proficiency"
+msgstr ""
+
+#: corpus/templates/corpus/record.html:109
 msgid "Redo"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:111
+#: corpus/templates/corpus/record.html:118
 msgid "Save"
 msgstr ""
 
-#: corpus/templates/corpus/record.html:114
-msgid "Skip"
+#: corpus/templates/corpus/recordings_stats_list.html:96
+msgid "Growth Rate"
 msgstr ""
 
 #: corpus/templates/corpus/sentence_list.html:67
@@ -88,57 +204,87 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: corpus/urls.py:8
+#: corpus/urls.py:7
 msgid "^record/"
 msgstr ""
 
-#: corpus/urls.py:9
+#: corpus/urls.py:10
 msgid "^listen/"
 msgstr ""
 
-#: corpus/urls.py:15
+#: corpus/urls.py:17
 msgid "^sentences/"
 msgstr ""
 
-#: corpus/urls.py:17
-msgid "^stats/"
-msgstr ""
-
-#: corpus/views/api.py:24
+#: corpus/views/api.py:44
 #, python-brace-format
 msgid "Only staff can {0}."
 msgstr ""
 
-#: corpus/views/api.py:31
+#: corpus/views/api.py:52
 #, python-brace-format
 msgid "PONIES Method {0} not allowed."
 msgstr ""
 
-#: corpus/views/api.py:83
+#: corpus/views/api.py:100
 msgid "Only staff can post/put sentences."
 msgstr ""
 
-#: corpus/views/api.py:151
+#: corpus/views/api.py:167
 msgid "Only staff can read recording lists."
 msgstr ""
 
-#: corpus/views/api.py:157
+#: corpus/views/api.py:173
 msgid "Reading recording lists not allowed."
 msgstr ""
 
-#: corpus/views/api.py:162
+#: corpus/views/api.py:180
 msgid "Only staff can read recordings."
 msgstr ""
 
-#: corpus/views/api.py:170
+#: corpus/views/api.py:193
 msgid "You're not allowed to edit this recording."
 msgstr ""
 
-#: corpus/views/api.py:172
+#: corpus/views/api.py:195
 msgid "Reading recording is not allowed."
 msgstr ""
 
-#: corpus/views/api.py:208 corpus/views/api.py:221
+#: corpus/views/api.py:324 corpus/views/api.py:339
 #, python-brace-format
 msgid "{0} not allowed with this API                             endpoint."
+msgstr ""
+
+#: corpus/views/stats_views.py:26
+msgid "Recording Growth Rate."
+msgstr ""
+
+#: corpus/views/stats_views.py:27
+msgid "Graph of recording growth over the last month."
+msgstr ""
+
+#: corpus/views/views.py:43
+msgid "Approve sentences to use when gathering recordings."
+msgstr ""
+
+#: corpus/views/views.py:147
+msgid "Record"
+msgstr ""
+
+#: corpus/views/views.py:148
+msgid "Help us teach computers the sounds of a language by reading sentences."
+msgstr ""
+
+#: corpus/views/views.py:217
+msgid "Statistics for all data."
+msgstr ""
+
+#: corpus/views/views.py:300
+msgid "Listen"
+msgstr ""
+
+#: corpus/views/views.py:301
+msgid ""
+"Listen to and vote on recordings. This helps us improvethe quality of "
+"recordings we use."
 msgstr ""

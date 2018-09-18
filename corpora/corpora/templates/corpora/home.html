@@ -3,7 +3,6 @@
 {% load static %}
 {% load sekizai_tags %}
 {% load compress %}
-{% load sass_tags %}
 {% load i18n %}
 
 
@@ -11,7 +10,7 @@
 <div class="jumbotron">
   <div class="container"><div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h1>corpora.io</h1>
+      <h1>{{request.site.name}}</h1>
       <h3 class="sub-header-text">{% blocktrans %}teaching computers indigenous languages{% endblocktrans %}</h3>
     </div>
   </div></div>
@@ -21,50 +20,191 @@
 {% block content %}
 
 {% addtoblock "css" %}
-<link href="{% sass_src 'corpora/css/home.scss' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'corpora/css/home.scss' %}" rel="stylesheet" type="text/x-scss" />
 {% endaddtoblock %}
 
 {% addtoblock "css" %}
 <style type="text/x-scss">
-  .actions{
-    text-align: center;
-    div[class*='col']{
-      margin-top: 15px;
-    }
-  }
-  .intro{
-    margin-top: 15px;
-  }
-
+@import 'corpora/scss/home';
 </style>
 {% endaddtoblock %}
+
+{% comment %}
+<div class="video">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <div class="r16x9">
+          <div>
+            <iframe src="https://tehiku.nz/embed/5340" style="padding:0px; margin:0px; border:0px;" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>
+{% endcomment %}
 <div class="container">
 
-  <div class="row justify-content-center actions"> 
-    <div class="col-12 col-md-4 col-lg-3" >
-      <a href="/record" class="btn btn-default btn-lg " >
-        <i class="fa fa-comment fa-fw"></i>Share You Voice</a>
-    </div>
 
-    <div class="col-12 col-md-4 col-lg-3">
-      <a href="/listen" class="btn btn-default btn-lg " >
-        <i class="fa fa-check fa-fw"></i>Listen to Recordings</a>           
+
+  <div class="row justify-content-center timata" style="text-align: center;">
+    <div class="col-12" >
+      <div>
+      <a href="{% url 'corpus:listen' %}" class="start" >
+        
+<i class="fas fa-star fa-fw"></i><SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "TĪMATA" %}&nbsp;&nbsp;</SPAN><i class="fas fa-star fa-fw"></i>
+
+      </a>
+      </div>
+      <p>Hit the big whero button to start reviewing recordings.</p>
     </div>
-  </div> 
+  </div>
+
+
+
+  <div class="row section">
+    <div class="col" style="margin-top: 30px;">
+        
+  
+        <div class="row" >
+          <div class="col-6 col-lg-7 col-xl-8" style="padding-bottom: 30px;">
+
+            <div class="row" style="height: 100%;">
+              <div class="col-12">
+                <h1 style="font-weight: 900; color: #dc2250;">
+                  {% trans "Kōrero Māori on your mobile" %}
+                </h1>
+                <p>Download the Kōrero Māori app on your mobile! You can read sentences even while you're
+                offline.</p>                
+              </div>
+              <div class="col-12" style="margin-top: auto; text-align: right;">
+
+                <div class="row app-store">
+                  <div class="col-12">
+
+                  </div>
+                  <div class="col-12" style="text-align: right;">
+                    <a href='https://itunes.apple.com/nz/app/k%C5%8Drero-m%C4%81ori/id1435414585?mt=8'>
+                      <img style="width: 100%; max-width: 180px;" 
+                         alt='Download on the App Store' 
+                         src="{% static 'corpora/img/app_store.svg' %}"/>
+                    </a>                    
+                    <a href='https://play.google.com/store/apps/details?id=com.waiinc.corpora&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+                      <img style="width: 100%; max-width: 180px; " 
+                           alt='Get it on Google Play' 
+                           src="{% static 'corpora/img/google-play-badge.png' %}"/>
+                    </a> 
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        
+
+          </div>
+
+
+          <div class="col-6 col-lg-5 col-xl-4" style="overflow: hidden; padding-bottom: 30px;">
+            <div class="imageWrapper">
+              <img class="mobileapp" src="{% static 'corpora/img/app.png' %}">
+            </div>
+          
+            
+
+          </div>
+        </div>
+   
+
+    </div>
+  </div>
+
+
+  <div class="row section">
+    <div class="col">
+        <h1 style="font-weight: 900;"><a href="{% url 'competition' %}">{% trans "Rongorongo Competition" %}</a></h1>
+
+      <div class="row">
+        <div class="col-12 col-md-6">
+          
+        <h4 style="color: #444;">Starts on 12pm September 12th</h4>
+        <p>Help improve pronunciation by reviewing other people's recordings in the <b><a href="{% url 'competition' %}">Rongorongo Competition</a></b>.</p>
+        
+        <p><b>Win one of 5 new Huawei Nova 3i mobiles</b> by reviewing sentences during the Competition.
+          All you have to do is <a href="{% url 'account_signup' %}">create an account</a> and start 
+          <a href="{% url 'corpus:listen' %}">reviewing</a>.
+          Make sure you verify your email so we can contact you if you win.</p>
+
+
+        <p>
+          Don't forget to check out the 
+          <a href="{% url 'rules' %}">{% trans 'rules' %}</a>.
+        </p>
+
+
+        </div>
+        <div class="col-12 col-md-6" style="text-align: right;">
+          
+        <p><img src="{% static 'people/images/competition/nova_3i.jpg' %}" style="width: 100%; max-width: 400px;" /></p>
+
+
+        </div>
+      </div>
+
+
+
+
+
+        
+    </div>
+  </div>
+  <div class="row section">
+    <div class="col">
+        <h1 style="font-weight: 900; color: #dc2250;">Whakapapa</h1>
+
+        <p>
+        Kōrero Māori is a sister site of <a href="https://tehiku.nz">tehiku.nz</a> and <a href="https://koreromaori.io">koreromaori.io</a>. The haukāinga based charity, 
+        Te Reo Irirangi o Te Hiku o Te Ika (Te Hiku Media) was formed in 1991, and is the innovative 
+        media hub affiliated to the iwi of Ngāti Kuri, Te Aupōuri, Ngāi Takoto, Ngāti Kahu and Te 
+        Rārawa. By virtue of its whakapapa, Te Hiku Media is an organisation committed to the 
+        revitalisation of tikanga Māori and te reo Māori. The 1989 report of the Waitangi Tribunal 
+        on Wai 11, the Te Reo Māori claim, and the outcome of the 1994 Privy Council case regarding 
+        the sale of state-owned broadcasting assets had far reaching consequences for Māori language 
+        in broadcasting. Borne of struggle against colonialism, assimilation and systemic bias, Te Reo 
+        Irirangi o Te Hiku o Te Ika serves as a monument to the demonstrated courage of our kuia, 
+        kaumātua and haukāinga leaders during the critical Māori rights recognition period (1970 to 
+          1990). The tribal based organisation has been collecting Māori language data, creating 
+        content and broadcasting for almost 30 years. Te Hiku Media are kaitiaki of an extensive 
+        Māori language audio and film archive, and seek to make a significant contribution to the 
+        promotion and growth of te reo Māori and tikanga Māori. 
+        </p>
+    </div>
+  </div>
+
+  
+    <div style="text-align: center; width: 100%;">
+      <div class="divider"></div>
+    </div>
+  
 
   <div class="row intro">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left-card">
-      <p class="dropcase">{% blocktrans %}Corpora.io is an opensource app designed to collect spoken 
+      <p class="dropcase">{{request.site.name}} {% blocktrans %} is an opensource app designed to collect spoken 
       corpora&mdash;vocal recordings&mdash;to train computers to understand 
       spoken languages through machine learning. This project started in an effort
       to automate the transcription of thousands of hours of te reo Māori archives
       available at <a href="https://tehiku.nz">tehiku.nz</a> and to enhance access 
       to Māori media. We also wanted to bring te reo Māori, and other indigenous languages,
       to voice operated digital assistants like Siri.{% endblocktrans %}</p>
+    </div>
+  </div>
 
-      <div>
-        <h2>{% trans "Available Languages" %}</h2>
-        <p>{% blocktrans %}Translations for corpora.io are provided in the following langauges:{% endblocktrans %}</p>
+
+  <div class="row ">
+    <div class="col">
+        <h4>{% trans "Available Languages" %}</h4>
+        <p>{% blocktrans %}Translations for {% endblocktrans %}{{request.site.name}}{% blocktrans %} are provided in the following langauges:{% endblocktrans %}</p>
         <ul>
         {% for lang_code in languages %}
         {% get_language_info for lang_code as lang %}
@@ -72,19 +212,17 @@
         {% endfor %}
         </ul>
 
-        <p>Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.</p>
-        </div>
-
+        <p>{% blocktrans %}Add another language by <a href="https://github.com/TeHikuMedia/corpora/tree/translate">translating</a> this app.{% endblocktrans %}</p>
+        
     </div>
-
-
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 right-card">
-      <span></span>
-      <p></p>
-    </div>
-
-
   </div>
+
+  <div class="row">
+    <div class="col" style="margin-top: 30px;">
+      <p><small>Google Play and the Google Play logo are trademarks of Google LLC.</small></p>
+    </div>
+  </div>
+
 </div>
 
 {% addtoblock "js" %}

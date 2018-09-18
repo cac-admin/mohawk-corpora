@@ -1,0 +1,28 @@
+{% extends "people/base.html" %}
+{% load account i18n socialaccount sekizai_tags static language %}
+{% block navbuttons %}
+{% addtoblock 'css' %}
+<style type="text/x-scss">
+@import 'corpora/scss/stats';	
+
+div.content{
+  padding: 15px 0px 15px 0px;
+}
+
+div.table{
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;   
+}
+
+</style>
+{% endaddtoblock %}
+{% include 'corpora/logged_in_nav_buttons.html' %}
+{% include 'people/competition/nav.html' %}
+{% endblock %}
+
+{% block footer %}
+{% include 'corpora/footer.html' %}
+{% endblock %}

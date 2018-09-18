@@ -5,10 +5,17 @@ from .models import Sentence, Recording, QualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
+from people.tasks import update_person_score
+from people.models import KnownLanguage
 
+from corpora.celery import app
+
+from django.core.cache import cache
 
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
+
+
 def create_quality_control_instance_when_object_created(
         sender, instance, **kwargs):
     qc, created = QualityControl.objects.get_or_create(
@@ -35,9 +42,10 @@ def clear_quality_control_instance_when_object_modified(
                     object_id=instance.pk,
                     content_type=ContentType.objects.get_for_model(instance)
                     )
-                for qc in qcs:
-                    print "Clearing quality control"
-                    qc.delete()
+                qcs.delete()
+                # for qc in qcs:
+                #     print "Clearing quality control"
+                #     qc.delete()
 
         except ObjectDoesNotExist:
             pass
@@ -83,15 +91,134 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
 def set_sentence_text_when_recording_created(
         sender, instance, created, **kwargs):
     if created:
-        instance.sentence_text = instance.sentence.text
-        instance.save()
+        if instance.sentence:
+            instance.sentence_text = instance.sentence.text
+            instance.save()
+
+
+@receiver(models.signals.post_save, sender=Recording)
+def set_language_when_recording_created(
+        sender, instance, created, **kwargs):
+    if created:
+        if instance.person:
+            # Get current language for person
+            try:
+                known_language = KnownLanguage.objects.get(
+                    person=instance.person, active=True)
+                instance.language = known_language.language
+                instance.dialect = known_language.dialect
+                instance.save()
+            except ObjectDoesNotExist:
+                pass
+
+# @receiver(models.signals.post_save, sender=Recording)
+# def set_upadted_when_recording_saved(
+#         sender, instance, created, **kwargs):
+#     instance.updated = timezone.now()
+#     instance.save()
 
 
 @receiver(models.signals.post_save, sender=Recording)
 def set_recording_length_on_save(sender, instance, created, **kwargs):
+    if not instance.person:
+        p_pk = 0
+    else:
+        p_pk = instance.person.pk
+
     if instance.audio_file:
         if instance.duration <= 0:
-            set_recording_length.apply_async(args=[instance.pk], countdown=3)
+            set_recording_length.apply_async(
+                args=[instance.pk],
+                task_id='set_recording_length-{0}-{1}-{2}'.format(
+                    p_pk,
+                    instance.pk,
+                    instance.__class__.__name__))
 
         if not instance.audio_file_aac:
-            transcode_audio.apply_async(args=[instance.pk], countdown=3)
+
+            key = u"xtrans-{0}-{1}".format(
+                instance.pk, instance.audio_file.name)
+
+            is_running = cache.get(key)
+
+            if is_running is None:
+                time = timezone.now()
+                transcode_audio.apply_async(
+                    args=[instance.pk],
+                    task_id='transcode_audio-{0}-{1}-{2}'.format(
+                        p_pk,
+                        instance.pk,
+                        time.strftime('%d%m%y%H%M%S')))
+
+
+# This isn't correct - we want the person of the recording object of quality
+# control to get a new score not the person who done the QC.
+# Will need to update this later. for nwo it's ok
+
+@receiver(models.signals.post_save, sender=QualityControl)
+@receiver(models.signals.post_save, sender=Recording)
+def update_person_score_when_model_saved(sender, instance, created, **kwargs):
+
+    if not instance.person:
+        return False
+
+    if isinstance(instance, Recording):
+        # Check if we actually need to update the score!
+        # Really we should only update the score if the
+        # recording is CREATED!
+        if not created:
+            return
+
+    key = 'update_person_score-{0}'.format(
+        instance.person.pk)
+
+    now = timezone.now()
+    cc = "{0}".format(now.strftime('%H%M'))
+
+    task_id = 'update_person_score-{0}-{1}'.format(
+        instance.person.pk, cc)
+
+    old_task_id = cache.get(key)
+    # First signal call
+    if old_task_id is None:
+
+        if isinstance(instance, Recording):
+
+            update_person_score.apply_async(
+                args=[instance.person.pk],
+                task_id=task_id,
+                countdown=60*4)
+
+        elif isinstance(instance, QualityControl):
+            if isinstance(instance.content_object, Recording):
+                recording = instance.content_object
+
+                update_person_score.apply_async(
+                    args=[instance.person.pk],
+                    task_id=task_id,
+                    countdown=60*4)
+
+        cache.set(key, task_id, 60*4)
+
+    else:
+
+        if old_task_id != task_id:
+            app.control.revoke(old_task_id)
+
+            if isinstance(instance, Recording):
+
+                update_person_score.apply_async(
+                    args=[instance.person.pk],
+                    task_id=task_id,
+                    countdown=60*4)
+
+            elif isinstance(instance, QualityControl):
+                if isinstance(instance.content_object, Recording):
+                    recording = instance.content_object
+
+                    update_person_score.apply_async(
+                        args=[instance.person.pk],
+                        task_id=task_id,
+                        countdown=60*4)
+        else:
+            pass

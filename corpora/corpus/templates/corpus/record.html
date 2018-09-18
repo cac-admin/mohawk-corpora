@@ -1,6 +1,5 @@
 {% extends 'corpus/base.html' %}
-
-{% load static sekizai_tags  compress  sass_tags i18n %}
+{% load static sekizai_tags  compress  i18n %}
 
 
 {% block content %}
@@ -16,10 +15,10 @@
 @import 'bower_components/bootstrap/scss/mixins';
 @import 'bower_components/bootstrap/scss/variables';
 div.content{
-  padding: 60px 0px 60px 0px;
+  /*padding: 60px 0px 60px 0px;*/
 }
 .container.record{
-  min-height: 500px;  
+  min-height: 450px;  
 }
 
 .vis-container{
@@ -36,25 +35,41 @@ div.content{
   }
   height: 80px;
   border-radius: 4px;
-  background-color: white;
+  background-color: #333;
   border:0px solid $brand_primary;
 }
 .sentence{
-  font-size: 2em !important;
+  font-size: 2em ;
 }
 a.btn{
   display: inline-block;
 }
 
+.sentence-block{
+  .sentence{
+    min-width: 0px !important;
+    @include media-breakpoint-up(md){
+      padding-bottom: 15px;
+      height: 60%;
+    }
+  }
+}
+
 
 .circle-button-container{
-    padding-bottom: 30px;
+    /*padding-bottom: 30px;*/
 
   @include media-breakpoint-down(lg){
 /*    padding-top: 15px;
 */  }
 
 }
+
+.popover-header{
+  background-color: $blue;
+  color: white;
+}
+
 </style>
 {% endaddtoblock %}
 
@@ -74,44 +89,36 @@ a.btn{
          
         </div>
         <div class="col-12 vis-container">
-          <canvas class="visualizer " style=""></canvas>
+          <canvas class="visualizer " style="" id="vis-area"></canvas>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-md-5 col-lg-4 actions"> 
+    <div class="col-12 col-md-5 col-lg-4 "> 
 
       <div class="row ">
 
         <div class="col-12">
-          <div class="circle-button-container">
-            <div class="circle background-circle">
-                <a href="javascript:void(0)" id="record-button">
-                    <div class="circle foreground-circle unclicked-circle record">
-                        <div class="circle-text record">REC</div>
-                        <div class="stop-square"></div>
-                    </div>
-                </a>
 
-                <a href="javascript:void(0)" id="play-button">
-                    <div class="circle foreground-circle unclicked-circle play">
-                        <div class="play-triangle"></div>
-                    </div>
-                </a>
-            </div>
-          </div>
+          {% include 'corpus/_player.button.html' %}
+
         </div>
 
-        <div class="col-12 " style="text-align: center;" >
+        <div class="col-12 actions" style="text-align: center;" >
           <a href="javascript:void(0)" id="redo" class=" disabled redo">
-            <i class="fa fa-undo fw"></i> {% trans "Redo" %}
+            <i class="fas fa-undo-alt fa-fw"></i> {% trans "Redo" %}
           </a>
 
-          <a href="javascript:void(0)" id="save" class=" disabled save">
-            <i class="fa fa-save fw"></i> {% trans "Save" %}
+          <a tabindex="0" href="javascript:void(0)" id="save" class=" disabled save"
+             data-toggle="popover" 
+             data-content="You must listen to your recording before you can save it."
+             data-trigger="focus"
+             data-placement="auto"
+             title="Save">
+            <i class="fas fa-save fa-fw"></i> {% trans "Save" %}
           </a>
-          <a href="javascript:void(0)" id="next" class=" next">
-            <i class="fa fa-step-forward fw"></i> {% trans "Skip" %}
+          <a href="javascript:void(0)" id="skip-button" class="next">
+            <i class="fas fa-step-forward fa-fw"></i> Skip
           </a>
         </div>
 
@@ -122,34 +129,34 @@ a.btn{
 
 
 </div>
+    
+    
+<audio id="play-audio" style="display: none; width: 0px; height: 0px" preload="auto"> </audio>
 
+{% include 'license/license_modal.html' %}
 
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorder/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
 
 {% comment %}
-<small> Does this recording sound accurate? If so, press Next. If not, go back and fix it with Back.</small>
-<a href="{% url 'corpus:submit_recording' %}">
-    <div class="button submit-audio">
-        Submit
-    </div>
-</a>
-
-
-
+{% addtoblock "js-include" %}<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>{% endaddtoblock %}
 {% endcomment %}
-    
-    
-<audio id="play-audio" style="display: none; width: 0px; height: 0px"></audio>
 
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/js-cookie/src/js.cookie.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorderjs/dist/waveWorker.min.js' %}"></script>{% endaddtoblock %}
-
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/record.js' %}"></script>{% endaddtoblock %}
-{% addtoblock "js-end" %}<script type="text/javascript" src="{% static 'corpus/js/sentence.js' %}"></script>{% endaddtoblock %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+
+{% include 'corpus/js/sentence.js' %}
+{% include 'corpus/js/player.js' %}
+{% include 'corpus/js/visualize.js' %}
+{% include 'corpus/js/record.3.js' %}
+
+var visRecorder;
+
+
+  var player = new Player('#play-audio');
   var person_pk = "{{person.pk}}";
   var sentence_pk = "{{sentence.pk}}";
 
@@ -159,24 +166,57 @@ a.btn{
     '?recording=True')
   sentences.next()
 
-  $('a.next').on('click', function(){
-    audio.pause()
-    $('#play-button').hide();
-    $('#record-button').show();
-    $('.stop-square').hide();
-    $('.save').addClass('disabled');
 
-    $('.foreground-circle.record').removeClass('clicked-circle').addClass('unclicked-circle');
-    $('.circle-text.record').show();
-    $('.stop-square').hide();
-    $('.redo').addClass('disabled');
-    recording=false;
-    recorder.clearStream()
-    // recorder.AudioContext.close()
+  var my_recorder = new MyRecorder('.actions', 'play-audio', '{{person.pk}}');
+
+  
+  sentences.sentence_block.addEventListener('sentence.ready', function(){
+    $(document.getElementById('play-button')).hide()
+    $(document.getElementById('record-button')).show()
+    my_recorder.skipped = false
+    // $('#save').popover('enable')
   })
+
+
+  $(document).ready(function(){
+    $(document.getElementById('stop-button')).hide()
+    $(document.getElementById('play-button')).hide()
+    $(document.getElementById('record-button')).show()
+    $(document.getElementById('loading-button')).hide()    
+    $('.foreground-circle.stop').addClass('clicked-circle').removeClass('unclicked-circle');
+  })
+
+  // ios Safari permission shit see: https://gist.github.com/laziel/7aefabe99ee57b16081c
+  if (typeof webkitAudioContext !== 'undefined'){
+    var resume = function () {
+      my_recorder['audioContext'].resume();
+      setTimeout(function () {
+        if (my_recorder['audioContext'].state === 'running') {
+          document.body.removeEventListener('touchend', resume, false);
+        }
+      }, 0);
+    };
+  }
+
+
+  document.body.addEventListener('touchend', resume, false);
+  var vis;
+
+  $(player.audio).on('play',function(){
+      vis = new Visualize('vis-area', my_recorder.sourceNode, my_recorder.audioContext);
+      vis.start()
+  })
+    
+  $(player.audio).on('ended paused',function(){
+    vis.stop()
+    delete vis;
+  })
+
+
 
 </script>
 {% endaddtoblock %}
 
 
 {% endblock %}
+
