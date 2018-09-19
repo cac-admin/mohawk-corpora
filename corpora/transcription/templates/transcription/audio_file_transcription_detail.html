@@ -348,10 +348,13 @@ class TranscriptionPlayer{
           event.preventDefault();
           if (self.keyMap[16]){ //SHIFT
             // PLAY FROM BEGINING OF SEGMENT
+            self.currentIndex = self.segments.index(window.getSelection().getRangeAt(0).startContainer.parentNode.parentNode)
             self.seek(self.segments[self.currentIndex]);
           } else {
-            // PLAY NEAR THE CURRENT TEXT USING LINEAR ALG
-            self.getTimeFromCursorPosition()
+            // PLAY NEAR THE CURRENT TEXT USING LINEAR APPROX
+            var focusedSegment = event.currentTarget.parentElement;
+            self.logger(focusedSegment)
+            self.playAtCursorPosition(focusedSegment)
           }
           self.logger(`Current segment index: ${self.currentIndex}`)
           
@@ -458,16 +461,25 @@ class TranscriptionPlayer{
 
   } // contructor
 
-  getTimeFromCursorPosition(){
+  playAtCursorPosition(segment){
+    
     var sel = window.getSelection()
+    var segment = sel.getRangeAt(0).startContainer.parentNode.parentNode
+    // var segment = $(parent).find('.time').get(0)
+    console.log(segment)
+    this.currentIndex = this.segments.index(segment)
+    console.log(this.currentIndex)
     var pos = parseFloat(sel.anchorOffset)/parseFloat(sel.anchorNode.length)
+    pos = (pos==0) ? 0.001 : pos
     var start = parseInt($(this.segments[this.currentIndex]).find('.time').attr('x-data-start'));
     var end = parseInt($(this.segments[this.currentIndex]).find('.time').attr('x-data-end'));
     var time = start + (end-start)*pos
     this.logger(`Percent offset: ${pos}`)
+    this.logger(`Start time: ${start}`)
+    this.logger(`End time: ${end}`)
     this.logger(`Seeking to time: ${time}`)
     this.audioElm.currentTime = time/100;
-    
+    this.audioElm.play()
   }
 
   focusActive(){
