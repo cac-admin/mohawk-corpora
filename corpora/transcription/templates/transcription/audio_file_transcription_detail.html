@@ -72,7 +72,7 @@
         <div class="position"></div>
       </div>
       <div class="duration"><span>00:00</span></div>
-      <div class="link"><i class="fas fa-link fa-fw " data-fa-transform="rotate-45"></i></div>
+      <div class="link active"><i class="fas fa-link fa-fw " data-fa-transform="rotate-45"></i></div>
         <!-- <div class="next">0.5x</div> -->
     </div>
 
@@ -104,10 +104,16 @@ class CaptionPlayer{
     var self=this;
     this.audioElm = $('.audio audio')[0];  
     this.player = $('div.player');
-
+    this.debug = true
 
     $(self.player).find('.play, .pause').on('click', function(event){
       self.toggle_play()
+    })
+
+    self.init_linkPlay();
+
+    $(self.player).find('.link').on('click', function(event){
+      self.toggle_link()
     })
 
     $(self.player).find('.progress').on('click', function(event){
@@ -172,7 +178,40 @@ class CaptionPlayer{
     } else{
       self.audioElm.pause()
     }
+  }
 
+  init_linkPlay(){
+    try{
+      var link_play = eval(window.localStorage.getItem('CaptionPlayer:linkPlay'))
+      this.logger(`Link play? ${link_play}`)
+      if (link_play){
+        this.audioElm.link_play = false
+        this.toggle_link()
+      } else {
+        this.audioElm.link_play = true
+        this.toggle_link()
+      }
+    } catch(e){
+    }
+  }
+
+  toggle_link(){
+    var self=this;
+    this.audioElm.link_play = this.audioElm.link_play ? false : true
+    if (this.audioElm.link_play){
+      this.logger('Linking segments...')
+      $(this.player).find('.link').addClass('active')
+      $(this.player).find('.link i, .link svg').removeClass('fa-unlink')
+      $(this.player).find('.link i, .link svg').addClass('fa-link')
+    } else {
+      this.logger('Unlinking segments...')
+      $(this.player).find('.link').removeClass('active')
+      $(this.player).find('.link i, .link svg').addClass('fa-unlink')
+      $(this.player).find('.link i, .link svg').removeClass('fa-link')
+    }
+    try {
+      window.localStorage.setItem('CaptionPlayer:linkPlay', this.audioElm.link_play)
+    } catch(e){}    
   }
 
   update_progress(){
@@ -181,7 +220,11 @@ class CaptionPlayer{
     $(self.player).find('.progress .position').css('width', `${prog}%`)
   }
 
-
+  logger(s){
+    if (this.debug) {
+      console.log(s)
+    }
+  }
 }
 
 var capPlayer = new CaptionPlayer();
@@ -260,14 +303,61 @@ class TranscriptionPlayer{
     this.audioElm = $('.audio audio')[0];  
     this.offset 
     this.fixed_offset = -300;
-    this.link_play = true;
+    this.debug = true
+    this.keyMap = {16: false}
     var self = this
 
+    // TODO
+    // ADD SUPPORT FOR MULTI KEY PRESS E.G. SHIFT TAB
+    document.addEventListener('keyup', function(event) {
+      if (event.keyCode in self.keyMap){
+        self.logger(`Key mapping off ${event.keyCode}`)
+        self.keyMap[event.keyCode] = false
+      }  
+    })
+
     document.addEventListener('keydown', function(event) {
+
+      if (event.keyCode in self.keyMap){
+        self.logger(`Key mapping ${event.keyCode}`)
+        self.keyMap[event.keyCode] = true
+      }
+
       if (event.keyCode == 27){
         console.log('escpe')
         document.activeElement.blur();
       }
+
+      if (event.keyCode == 9){ // tab
+        event.preventDefault();
+        self.logger(`Value of keymap: ${self.keyMap[16]}`) //SHIFT
+        self.currentIndex += self.keyMap[16] ? -1 : 1;
+        self.focusActive()
+      }
+
+      if (event.keyCode == 32){ // SPACE
+        
+        if (self.keyMap[16]){ //SHIFT
+          event.preventDefault();
+          self.toggle_play()
+        }
+      }
+
+      if (event.target.className.search('text')>=0){
+        if (event.keyCode == 13){ // ENTER
+          event.preventDefault();
+          if (self.keyMap[16]){ //SHIFT
+            // PLAY FROM BEGINING OF SEGMENT
+            self.seek(self.segments[self.currentIndex]);
+          } else {
+            // PLAY NEAR THE CURRENT TEXT USING LINEAR ALG
+            self.getTimeFromCursorPosition()
+          }
+          self.logger(`Current segment index: ${self.currentIndex}`)
+          
+        }
+      }
+
       if (event.target == document.body || 
           event.target.parentElement.className.search('time')>=0){
         if (event.keyCode == 32) {
@@ -277,11 +367,11 @@ class TranscriptionPlayer{
           } else{
             self.audioElm.pause()
           }
-        } else if (event.keyCode == 37){
+        } else if (event.keyCode == 37){ // LEFT ARROW
           self.currentIndex -= 1;
           if (self.currentIndex<0){self.currentIndex=0}
           self.seek(self.segments[self.currentIndex]);
-        } else if (event.keyCode == 39){
+        } else if (event.keyCode == 39){ // RIGHT ARROW
           self.currentIndex += 1;
           if (self.currentIndex>=self.segments.length){self.currentIndex=self.segments.length-1}
           self.seek(self.segments[self.currentIndex]);
@@ -291,12 +381,16 @@ class TranscriptionPlayer{
 
     $.each(self.segments,function(index,value){
       $(value).find('.time a').on('click', function(event){
-
         var clickedSeg = event.currentTarget.parentElement.parentElement;
         self.seek(clickedSeg)
+        self.focusActive()
+      })
+    });
 
-
-
+    $.each(self.segments,function(index,value){
+      $(value).find('.text').on('focus', function(event){
+        var clickedSeg = event.currentTarget.parentElement;
+        self.seek(clickedSeg, false)
       })
     });
 
@@ -305,11 +399,12 @@ class TranscriptionPlayer{
       else if (self.currentIndex >= self.segments.length){ self.currentIndex = self.segments.length-1}
       var time = self.audioElm.currentTime*100 // Convert to ms
       if (time > parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'))){
-        if (self.link_play){
+        if (self.audioElm.link_play){
           self.currentIndex = self.currentIndex + 1;
           self.scroll()
         } else {
           self.audioElm.pause()
+          self.seek(self.segments[self.currentIndex], false)
         }
       }
     })
@@ -328,10 +423,9 @@ class TranscriptionPlayer{
 
     $(self.audioElm).bind('seeked', function(e){
 
-
-      var time = self.audioElm.currentTime*100 // Convert to ms
-      var start = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-start'));
-      var end = parseFloat($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'));
+      var time = parseInt(self.audioElm.currentTime*100) // Convert to ms
+      var start = parseInt($(self.segments[self.currentIndex]).find('.time').attr('x-data-start'));
+      var end = parseInt($(self.segments[self.currentIndex]).find('.time').attr('x-data-end'));
       
       if (time > end){
         while (time > start){
@@ -353,9 +447,9 @@ class TranscriptionPlayer{
       $.each(self.segments,function(index,value){
         $(value).removeClass('active')});
 
-      console.log(start)
-      console.log(time)
-      console.log(end)
+      self.logger(`Start: ${start}`)
+      self.logger(`Time: ${time}`)
+      self.logger(`End: ${end}`)
 
       $(self.segments[self.currentIndex]).addClass('active')      
 
@@ -363,6 +457,25 @@ class TranscriptionPlayer{
 
 
   } // contructor
+
+  getTimeFromCursorPosition(){
+    var sel = window.getSelection()
+    var pos = parseFloat(sel.anchorOffset)/parseFloat(sel.anchorNode.length)
+    var start = parseInt($(this.segments[this.currentIndex]).find('.time').attr('x-data-start'));
+    var end = parseInt($(this.segments[this.currentIndex]).find('.time').attr('x-data-end'));
+    var time = start + (end-start)*pos
+    this.logger(`Percent offset: ${pos}`)
+    this.logger(`Seeking to time: ${time}`)
+    this.audioElm.currentTime = time/100;
+    
+  }
+
+  focusActive(){
+    var self=this
+    self.logger(`Next segment index: ${self.currentIndex}`)
+    var elm = $(self.segments[self.currentIndex]).find('.text').get(0)
+    window.setTimeout(function(){elm.focus()}, 0);
+  }
 
   scroll(options={'animate': true, 'offset': null}){
     var self=this;
@@ -387,17 +500,32 @@ class TranscriptionPlayer{
   }
 
 
-  seek(segmentElm){
+  seek(segmentElm, play=true){
     var self=this;
-
+    
     self.currentIndex = self.segments.index(segmentElm)
-    self.scroll()
-    var start = parseFloat(segmentElm.children[0].attributes['x-data-start'].value)/100;
-    console.log(start)
+    self.logger(`Seeking to ${self.currentIndex}`)
+
+    
+    var start = parseFloat(segmentElm.children[0].attributes['x-data-start'].value)/100+.005;
+    self.logger(`Starting audio at ${start}.`)
     self.audioElm.currentTime = start
-    self.audioElm.play()
+    self.scroll()
+    if (play) { self.audioElm.play() }
   }
 
+  toggle_play(){
+    var self=this;
+    if (self.audioElm.paused){
+      self.audioElm.play()
+    } else{
+      self.audioElm.pause()
+    }
+  }
+
+  logger(s){
+    if (this.debug){ console.log(s)}
+  }
 
 }
 

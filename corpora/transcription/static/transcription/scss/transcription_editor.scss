@@ -97,8 +97,9 @@ div.audio{
   padding-bottom: 80px;
   padding-top: 80px;
   .segment{
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
     font-family: monospace;
     color: #333;
     font-size: 1.8em;
@@ -131,7 +132,9 @@ div.audio{
     transition: background-color .25s ease-in-out;
     -moz-transition: background-color .25s ease-in-out;
     -webkit-transition: background-color .25s ease-in-out;
-
+    border: 1px solid $brand_darkest;
+    border-left: 0px;
+    border-right: 0px;
   }
 
 
