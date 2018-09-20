@@ -343,8 +343,8 @@ class TranscriptionPlayer{
         }
       }
 
-      if (event.target.className.search('text')>=0){
-        if (event.keyCode == 13){ // ENTER
+      if (event.keyCode == 13){ // ENTER
+        if (event.target.className.search('text')>=0){
           event.preventDefault();
           if (self.keyMap[16]){ //SHIFT
             // PLAY FROM BEGINING OF SEGMENT
@@ -357,8 +357,11 @@ class TranscriptionPlayer{
             self.playAtCursorPosition(focusedSegment)
           }
           self.logger(`Current segment index: ${self.currentIndex}`)
-          
         }
+
+        // Just play if paused an an element is active?
+        self.audioElm.play()
+
       }
 
       if (event.target == document.body || 
