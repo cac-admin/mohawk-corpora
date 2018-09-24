@@ -2,6 +2,7 @@
 from django import template
 
 from people.helpers import get_person as get_person_helper
+from people.helpers import get_email
 
 import logging
 logger = logging.getLogger('corpora')
@@ -22,3 +23,8 @@ def get_person(context):
 @register.filter()
 def username(model):
     return model.get_username()
+
+
+@register.filter()
+def email(model):
+    return get_email(model)
