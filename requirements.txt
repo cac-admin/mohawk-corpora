@@ -54,7 +54,7 @@ djangorestframework
 # API Docs
 django-coreapi
 pygments
-markdown
+markdown==2.6.11 # set to this version until DRF supports 3.0
 
 # Autocomplete
 django-autocomplete-light==3.2.10
