@@ -212,23 +212,36 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
     def get_queryset(self):
         # language = get_current_language(self.request)
         start, end = get_start_end_for_competition()
-        people = Person.objects.all()\
-            .annotate(
-                num_reviewed=models.Count(
-                    Case(
-                        When(Q(qualitycontrol__updated__gte=start) &
-                             Q(qualitycontrol__updated__lte=end) &
-                             Q(qualitycontrol__content_type__id=8),
-                             then=F('qualitycontrol')),
-                        output_field=CharField()), distinct=True))\
-            .annotate(
-                num_recordings=models.Count(
-                    Case(
-                        When(Q(recording__created__gte=start) &
-                             Q(recording__created__lte=end),
-                             then=F('recording')),
-                        output_field=CharField()), distinct=True))\
-            .order_by('-num_reviewed')
+        if start is not None:
+            people = Person.objects.all()\
+                .annotate(
+                    num_reviewed=models.Count(
+                        Case(
+                            When(Q(qualitycontrol__updated__gte=start) &
+                                 Q(qualitycontrol__updated__lte=end) &
+                                 Q(qualitycontrol__content_type__id=8),
+                                 then=F('qualitycontrol')),
+                            output_field=CharField()), distinct=True))\
+                .annotate(
+                    num_recordings=models.Count(
+                        Case(
+                            When(Q(recording__created__gte=start) &
+                                 Q(recording__created__lte=end),
+                                 then=F('recording')),
+                            output_field=CharField()), distinct=True))\
+                .order_by('-num_reviewed')
+
+        else:
+            people = Person.objects.all()\
+                .annotate(
+                    num_reviewed=models.Count(
+                        Case(
+                            When(Q(qualitycontrol__content_type__id=8),
+                                 then=F('qualitycontrol')),
+                            output_field=CharField()), distinct=True))\
+                .annotate(
+                    num_recordings=models.Count('recording', distinct=True))\
+                .order_by('-num_reviewed')
 
         return people
 
