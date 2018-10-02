@@ -22,6 +22,9 @@ We are always looking for more support either financially or through in kind con
 - Dragonfly Data Science - https://www.dragonfly.co.nz/
 - Te Pūnaha Matatini - http://www.tepunahamatatini.ac.nz/
 
+# Contact
+Make an issue or send an email to koreromaori@tehiku.nz.
+
 # License: Kaitiakitanga 
 Corpora (the code in this repository) is copyrighted by Te Reo Irirangi o Te Hiku o Te Ika (Te Hiku Media) under our Kaitiakitanga License. Kaitiaki is a Māori word  without specific English translation, but its meaning is similar to the words guardian, protector, and custodian . In this context we protect the code in this repository and will provide access to the code as we deem fit through our tikanga (Māori customs and protocols).
 
