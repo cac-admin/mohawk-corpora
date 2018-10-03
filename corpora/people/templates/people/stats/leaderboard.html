@@ -14,7 +14,7 @@
 </style>
 {% endaddtoblock %}
 
-{% cache 600 request.user.is_staff request.user.is_authenticated userleaderboard request.path request.GET.urlencode %}
+{% cache 1 request.user.is_staff request.user.is_authenticated userleaderboard request.path request.GET.urlencode %}
 
 <div class="container">
   <div class="row">
@@ -29,8 +29,8 @@ Data are update approximately every 10 minutes.</small></p>
       <th scope="col">{% trans 'Username' %}</th>
       {% if request.user.is_staff and request.user.is_authenticated %}<th scope="col">{% trans 'UUID' %}</th>{% endif %}
       {% if request.user.is_staff and request.user.is_authenticated %}<th scope="col">{% trans 'EMAIL' %}</th>{% endif %}
-      <th scope="col">{% trans 'Reviews' %}</th>
       <th scope="col">{% trans 'Recordings' %}</th>
+      <th scope="col">{% trans 'Reviews' %}</th>
       <th scope="col">{% trans 'Score' %} <small>[beta]</small></th>
     </tr>
   </thead>
@@ -42,8 +42,8 @@ Data are update approximately every 10 minutes.</small></p>
   <td>{{person|username}}</td>
   {% if request.user.is_staff and request.user.is_authenticated %}<td>{{person.uuid}}</td>{% endif %}
   {% if request.user.is_staff and request.user.is_authenticated %}<td>{{person|email}}</td>{% endif %}
-  <td>{{person.num_reviewed}}</td>
   <td>{{person.num_recordings}}</td>
+  <td>{{person.num_reviewed}}</td>
   <td>{{person.score}}</td>
 </tr>
 {% endif %}
