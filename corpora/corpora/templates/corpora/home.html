@@ -51,13 +51,21 @@
   <div class="row justify-content-center timata" style="text-align: center;">
     <div class="col-12" >
       <div>
-      <a href="{% url 'corpus:record' %}" class="start" >
-        
-<i class="fas fa-star fa-fw"></i><SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "TĪMATA" %}&nbsp;&nbsp;</SPAN><i class="fas fa-star fa-fw"></i>
 
-      </a>
+        <a href="{% url 'corpus:record' %}" class="start" >
+          <!-- <i class="fas fa-microphone fa-fw"></i> -->
+          <SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "SPEAK" %}&nbsp;&nbsp;</SPAN>
+          <!-- <i class="fas fa-microphone fa-fw"></i> -->
+        </a>
+
+        <a href="{% url 'corpus:listen' %}" class="start" >
+          <!-- <i class="fas fa-volume-up fa-fw"></i> -->
+          <SPAN style="font-weight: 900;">&nbsp;&nbsp;{% trans "LISTEN" %}&nbsp;&nbsp;</SPAN>
+          <!-- <i class="fas fa-volume-up fa-fw"></i> -->
+        </a>
+
       </div>
-      <p>Hit the big whero button to start reading sentences.</p>
+      <!-- <p>Hit the big whero button to start reading sentences.</p> -->
     </div>
   </div>
 
