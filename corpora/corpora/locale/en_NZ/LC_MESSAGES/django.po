@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-26 09:43+1200\n"
+"POT-Creation-Date: 2018-10-03 14:39+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: corpora/templates/corpora/footer.html:41
-#: corpora/templates/corpora/logged_in_nav_buttons.html:165
+#: corpora/templates/corpora/logged_in_nav_buttons.html:164
 msgid "Log Out"
 msgstr "Takiputa"
 
@@ -43,7 +43,7 @@ msgid "Record"
 msgstr "Rekoata"
 
 #: corpora/templates/corpora/footer.html:46
-#: corpora/templates/corpora/logged_in_nav_buttons.html:53
+#: corpora/templates/corpora/logged_in_nav_buttons.html:52
 msgid "Listen"
 msgstr ""
 
@@ -83,15 +83,23 @@ msgstr ""
 msgid "teaching computers indigenous languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:107
-msgid "Start"
+#: corpora/templates/corpora/home.html:57
+msgid "SPEAK"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:114
-msgid "Hopu Kōrero Māori Group Competition"
+#: corpora/templates/corpora/home.html:63
+msgid "LISTEN"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:84
+msgid "Kōrero Māori on your mobile"
 msgstr ""
 
 #: corpora/templates/corpora/home.html:134
+msgid "Rongorongo Competition"
+msgstr ""
+
+#: corpora/templates/corpora/home.html:193
 msgid ""
 " is an opensource app designed to collect spoken \n"
 "      corpora&mdash;vocal recordings&mdash;to train computers to "
@@ -107,120 +115,120 @@ msgid ""
 "      to voice operated digital assistants like Siri."
 msgstr ""
 
-#: corpora/templates/corpora/home.html:147
+#: corpora/templates/corpora/home.html:206
 msgid "Available Languages"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:148
+#: corpora/templates/corpora/home.html:207
 msgid "Translations for "
 msgstr ""
 
-#: corpora/templates/corpora/home.html:148
+#: corpora/templates/corpora/home.html:207
 msgid " are provided in the following langauges:"
 msgstr ""
 
-#: corpora/templates/corpora/home.html:156
+#: corpora/templates/corpora/home.html:215
 msgid ""
 "Add another language by <a href=\"https://github.com/TeHikuMedia/corpora/"
 "tree/translate\">translating</a> this app."
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:45
+#: corpora/templates/corpora/logged_in_nav_buttons.html:44
 msgid "Speak"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:61
+#: corpora/templates/corpora/logged_in_nav_buttons.html:60
 msgid "Competition"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:75
+#: corpora/templates/corpora/logged_in_nav_buttons.html:74
 msgid "Sentences"
 msgstr "Ngā Rerenga Kōrero"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:83
+#: corpora/templates/corpora/logged_in_nav_buttons.html:82
 msgid "Stats"
 msgstr ""
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:91
+#: corpora/templates/corpora/logged_in_nav_buttons.html:90
 msgid "Admin"
 msgstr "Whakahaere"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:104
-#: corpora/templates/corpora/logged_in_nav_buttons.html:133
+#: corpora/templates/corpora/logged_in_nav_buttons.html:103
+#: corpora/templates/corpora/logged_in_nav_buttons.html:132
 msgid "Language"
 msgstr "Reo"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:156
+#: corpora/templates/corpora/logged_in_nav_buttons.html:155
 msgid "Profile"
 msgstr "Whakaritenga"
 
-#: corpora/templates/corpora/logged_in_nav_buttons.html:174
+#: corpora/templates/corpora/logged_in_nav_buttons.html:173
 msgid "Log In"
 msgstr "Takiuru"
 
-#: corpora/urls.py:57
+#: corpora/urls.py:60
 msgid "^people/"
 msgstr "tangata"
 
-#: corpora/urls.py:66
+#: corpora/urls.py:69
 msgid "^competition/rules"
 msgstr ""
 
-#: corpora/urls.py:70
+#: corpora/urls.py:73
 msgid "^competition/help"
 msgstr ""
 
-#: corpora/urls.py:74
+#: corpora/urls.py:77
 msgid "^competition/user_leaderboard"
 msgstr ""
 
-#: corpora/urls.py:78
+#: corpora/urls.py:81
 msgid "^competition/group/(?P<pk>\\d+)"
 msgstr ""
 
-#: corpora/urls.py:82
+#: corpora/urls.py:85
 msgid "^competition/top20$"
 msgstr ""
 
-#: corpora/urls.py:86
+#: corpora/urls.py:89
 msgid "^competition/mahitahi$"
 msgstr ""
 
-#: corpora/urls.py:90
+#: corpora/urls.py:93
 msgid "^competition"
 msgstr ""
 
-#: corpora/urls.py:94
+#: corpora/urls.py:97
 msgid "^stats/person"
 msgstr ""
 
-#: corpora/urls.py:98
+#: corpora/urls.py:101
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/person_qc"
 msgstr "tangata"
 
-#: corpora/urls.py:102
+#: corpora/urls.py:105
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/people$"
 msgstr "tangata"
 
-#: corpora/urls.py:106
+#: corpora/urls.py:109
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/reviewers"
 msgstr "tangata"
 
-#: corpora/urls.py:110
+#: corpora/urls.py:113
 msgid "^stats/groups$"
 msgstr ""
 
-#: corpora/urls.py:114
+#: corpora/urls.py:117
 msgid "^stats/recordings"
 msgstr ""
 
-#: corpora/urls.py:118
+#: corpora/urls.py:121
 #, fuzzy
 #| msgid "^people/"
 msgid "^stats/$"
@@ -240,9 +248,9 @@ msgstr ""
 
 #: corpora/views/views.py:40
 msgid ""
-"Kōrero Māori is teaching computers indigenous languages.                "
-"We've created an open sourced web app to help indigenous                "
-"communities strealine their work in language revitalisation."
+"Kōrero Māori is teaching computers indigenous languages.            We've "
+"created an open sourced web app to help indigenous            communities "
+"strealine their work in language revitalisation."
 msgstr ""
 
 #: corpora/views/views.py:56
