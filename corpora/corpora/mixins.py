@@ -7,12 +7,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from people.helpers import get_or_create_person
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 
 class SiteInfoMixin(object):
     x_description = _('Description for a particular view')
     x_title = _('Title for your view')
-    x_image = ""
+    x_image = static('corpora/img/icon.png')
+    x_icon = static('corpora/img/icon.png')
 
     def get_context_data(self, **kwargs):
         context = super(SiteInfoMixin, self).get_context_data(**kwargs)
