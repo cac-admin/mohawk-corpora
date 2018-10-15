@@ -82,11 +82,11 @@ def get_valid_group_members(group, queryset=None):
 
 def get_start_end_for_competition():
 
-    return None, None  # Competition done.
+    # return None, None  # Competition done.
 
-    start = parse_datetime("2018-09-12 12:00:00")
+    start = parse_datetime("2018-10-15 12:00:00")
     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
-    end = parse_datetime("2018-09-19 12:00:00")
+    end = parse_datetime("2018-10-22 12:00:00")
     end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
 
     return start, end
