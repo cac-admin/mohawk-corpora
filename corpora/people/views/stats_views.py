@@ -229,7 +229,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
                                  Q(recording__created__lte=end),
                                  then=F('recording')),
                             output_field=CharField()), distinct=True))\
-                .order_by('-num_reviewed')
+                .order_by('-num_recordings')
 
         else:
             people = Person.objects.all()\

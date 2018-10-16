@@ -97,11 +97,10 @@ def filter_qs_for_competition(queryset):
     during the competition.'''
     start, end = get_start_end_for_competition()
 
-    # if timezone.now() < start:
-    #     return queryset
-    # elif timezone.now() > end:
-    #     return queryset
-    # else:
+    # Only do this when comp hasn't started. If comp ended, still show just the
+    # comp data.
+    if timezone.now() < start:
+        return queryset
 
     queryset = queryset\
         .filter(updated__lte=end)\
