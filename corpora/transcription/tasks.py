@@ -211,3 +211,21 @@ def delete_transcriptions_for_approved_recordings():
     transcriptions = Transcription.objects\
         .filter(recording__quality_control__approved=True)
     transcriptions.delete()
+
+
+@shared_task
+def check_and_transcribe_blank_segments():
+
+    segments = TranscriptionSegment.objects.filter(text__is_null=True)
+
+    for segment in segments:
+        key = u"xtransseg-{0}".format(ts.pk)
+
+        status = cache.get(key)
+
+        if status == 'transcoding':
+            # Pass
+            pass
+        else if status is None:
+            # Need to transcode
+            pass

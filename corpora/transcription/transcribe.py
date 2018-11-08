@@ -220,7 +220,12 @@ def transcribe_audio_quick(file_object):
 def transcribe_segment_async(ts_id):
     ts = TranscriptionSegment.objects.get(pk=ts_id)
     try:
-        result = transcribe_segment(ts)
+        key = u"xtransseg-{0}".format(ts.pk)
+        if not ts.text:
+            cache.set(key, 'transcribing', 60)
+            result = transcribe_segment(ts)
+        else:
+            return "Segment already has text."
     except Exception as e:
         return "{0}".format(e)
 
