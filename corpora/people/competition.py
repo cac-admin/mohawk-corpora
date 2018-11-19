@@ -82,7 +82,7 @@ def get_valid_group_members(group, queryset=None):
 
 def get_start_end_for_competition():
 
-    # return None, None  # Competition done.
+    return None, None  # Competition done.
 
     start = parse_datetime("2018-10-15 12:00:00")
     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
@@ -96,6 +96,9 @@ def filter_qs_for_competition(queryset):
     '''Takes a recording or QC queryset and returns only recordings to be used
     during the competition.'''
     start, end = get_start_end_for_competition()
+
+    if start is None:
+        return queryset
 
     # Only do this when comp hasn't started. If comp ended, still show just the
     # comp data.
