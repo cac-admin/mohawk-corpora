@@ -285,7 +285,13 @@ def transcribe_aft_async(pk):
         return "ERROR: NO SEGMENTS CREATED"
 
     results = []
+    errors = 0
     for segment in segments:
-        transcribe_segment(segment)
+        try:
+            transcribe_segment(segment)
+        except:
+            errors = errors + 1
+            logger.error(
+                "Failed to transcribe segment {0}.".format(segment.pk))
 
-    return "WINNING!"
+    return "Transcribed {0} with {1} errors".format(aft, errors)
