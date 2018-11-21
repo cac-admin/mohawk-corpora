@@ -227,6 +227,8 @@ def transcribe_segment_async(ts_id):
         else:
             return "Segment already has text."
     except Exception as e:
+        logger.error("Failed to transcribe segment {0}.".format(ts.pk))
+        logger.error(e)
         return "{0}".format(e)
 
     return result
