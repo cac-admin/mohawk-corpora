@@ -15,7 +15,9 @@ from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
 
-from transcription.transcribe import transcribe_audio_sphinx
+from transcription.transcribe import \
+    transcribe_audio_sphinx, transcribe_segment_async
+
 from django.utils import timezone
 from django.core.files import File
 import wave
@@ -219,13 +221,7 @@ def check_and_transcribe_blank_segments():
     segments = TranscriptionSegment.objects.filter(text__is_null=True)
 
     for segment in segments:
-        key = u"xtransseg-{0}".format(ts.pk)
 
-        status = cache.get(key)
-
-        if status == 'transcoding':
-            # Pass
-            pass
-        else if status is None:
-            # Need to transcode
-            pass
+        transcribe_segment_async.apply_async(
+            args=[segment.pk],
+            task_id='transcribe_segment-{0}'.format(segment.pk))
