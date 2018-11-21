@@ -97,10 +97,19 @@ def transcribe_audio_sphinx(
         result = json.loads(response.text)
 
     except requests.exceptions.ConnectTimeout:
-
         result = {
             'success': False,
-            'transcription': 'Could not get a transcription.'
+            'transcription': 'Could not get a transcription. ConnectTimeout'
+        }
+    except requests.exceptions.ReadTimeout:
+        result = {
+            'success': False,
+            'transcription': 'Could not get a transcription. ReadTimeout'
+        }
+    except Exception as e:
+        result = {
+            'success': False,
+            'transcription': 'Unhandled exception. {0}'.format(e)
         }
 
     result['API_URL'] = API_URL
