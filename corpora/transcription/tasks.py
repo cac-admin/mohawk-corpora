@@ -218,7 +218,7 @@ def delete_transcriptions_for_approved_recordings():
 @shared_task
 def check_and_transcribe_blank_segments():
 
-    segments = TranscriptionSegment.objects.filter(text__is_null=True)
+    segments = TranscriptionSegment.objects.filter(text__isnull=True)
 
     for segment in segments:
 
