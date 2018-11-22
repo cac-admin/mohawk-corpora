@@ -15,7 +15,7 @@ CELERYBEAT_SCHEDULE = {
         # 'options': {'task_id': 'xribe_rec_without_rev'},
     },
     'check_for_and_transcribe_blank_segments': {
-        'tasks': 'transcription.tasks.check_and_transcribe_blank_segments',
+        'task': 'transcription.tasks.check_and_transcribe_blank_segments',
         'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
     }
     # 'delete_transcriptions_for_approved_recordings': {
