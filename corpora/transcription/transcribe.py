@@ -287,6 +287,8 @@ def transcribe_segment(ts):
         ts.transcriber_log = result
         ts.save()
 
+    return result
+
 
 @shared_task
 def transcribe_aft_async(pk):
