@@ -231,7 +231,6 @@ def check_and_transcribe_blank_segments():
 def check_and_transcribe_blank_audiofiletranscriptions():
 
     afts = AudioFileTranscription.objects\
-        .filter(uploaded_by=person)\
         .annotate(num_segments=Count('transcriptionsegment'))\
         .filter(num_segments=0)
 
