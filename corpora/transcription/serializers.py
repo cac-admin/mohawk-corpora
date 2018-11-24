@@ -77,8 +77,8 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         query = TranscriptionSegment.objects.filter(parent=obj)
-        total = query.count()
-        completed = query.filter(text__isnull=False).count()
+        total = float(query.count())
+        completed = float(query.filter(text__isnull=False).count())
 
         if total == 0:
             return {'status': 'waiting to transcribe', 'percent': 0}
