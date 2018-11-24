@@ -1,4 +1,5 @@
 class AudioFileTranscriptionEditor{
+
   constructor(){
     this.aft_list = []
     this.currentRequest = null
@@ -27,6 +28,13 @@ class AudioFileTranscriptionEditor{
         self.download(event.delegateTarget)
       })
     })    
+
+    // Set status for files being transcribed
+    $('[x-data-model="audio_file_transcription"][x-data-field="transcription"]').each(function(index,element){
+      if ($(element).attr('x-data-value') == ''){
+        self.get_status(element)
+      }
+    }) 
 
     $('[x-data-model="audio_file_transcription"][x-data-field]').each(function(index,element){
       $(element).on('blur', function(event){
@@ -125,7 +133,7 @@ class AudioFileTranscriptionEditor{
         },         
     }).done(function(){
       self.currentRequest=null
-      window.location = '/transcriptions/'
+      window.setTimeout(function(){window.location = '/transcriptions/'}, 1000)
     });
   
   }
@@ -159,6 +167,41 @@ class AudioFileTranscriptionEditor{
     }).done(function(){
       self.currentRequest=null
       location.reload()
+    })    
+  }
+
+  get_status(element){
+    var self = this
+    var id = element.attributes['x-data-id'].value
+    var url = '/api/transcription/'+id+'/'
+    this.currentRequest = $.ajax({
+      url: url,
+      type: "GET",     
+    }).done(function(response){
+      var percentComplete = (response.status.percent == 0) ? 1 : response.status.percent
+      $(element).empty()
+
+      if (percentComplete<100){
+        var progress_bar = `
+          <div class="progress" style="margin-top: 15px;">
+            <div class="progress-bar-${$(element).attr('x-data-id')} progress-bar progress-bar-striped progress-bar-animated bg-danger"
+            role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+          </div>`
+
+        
+        $(element).append(progress_bar)
+        $(`.progress-bar-${$(element).attr('x-data-id')}`).attr({
+                    'aria-valuenow': percentComplete,
+                    style: "width: "+percentComplete+"%",});
+
+        window.setTimeout(function(){
+          self.get_status(element)
+        }, 1500)
+
+      } else if (percentComplete == 100){
+        $(element).append(`<em>${response.transcription.slice(0,64)}</em>`)
+      }
+
     })    
   }
 
