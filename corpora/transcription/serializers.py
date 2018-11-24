@@ -61,18 +61,29 @@ class TranscriptionSegmentSerializer(serializers.ModelSerializer):
 
 class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
     segments = serializers.SerializerMethodField(read_only=True)
+    status = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = AudioFileTranscription
         fields = (
             'uploaded_by', 'audio_file', 'pk', 'name',
-            'transcription', 'segments')
+            'transcription', 'segments', 'status')
         read_only_fields = ('uploaded_by',)
 
     def get_segments(self, obj):
         return TranscriptionSegment.objects\
             .filter(parent=obj)\
             .values_list('pk', flat=True).order_by('pk')
+
+    def get_status(self, obj):
+        query = TranscriptionSegment.objects.filter(parent=obj)
+        total = query.count()
+        completed = query.filter(text__isnull=False).count()
+        status = {}
+        if total == completed:
+            return {'status': 'complete'}
+        else:
+            return {'status': 'transcribing', 'percent': int(completed/total)}
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
