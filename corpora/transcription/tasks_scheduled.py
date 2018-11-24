@@ -17,6 +17,10 @@ CELERYBEAT_SCHEDULE = {
     'check_for_and_transcribe_blank_segments': {
         'task': 'transcription.tasks.check_and_transcribe_blank_segments',
         'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
+    },
+    'check_for_and_transcribe_blank_audiofiletranscriptions': {
+        'task': 'transcription.tasks.check_and_transcribe_blank_audiofiletranscriptions',
+        'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
     }
     # 'delete_transcriptions_for_approved_recordings': {
     #     'task': 'transcription.tasks.delete_transcriptions_for_approved_recordings',
