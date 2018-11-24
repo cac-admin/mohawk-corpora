@@ -102,7 +102,7 @@ class AudioFileTranscriptionEditor{
     var self=this;
     var progress_bar = `
         <div class="progress" style="margin-top: 15px;">
-          <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+          <div class="progress-bar-upload progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
         </div>
 `
     $('.modal-body').append(progress_bar)
@@ -121,7 +121,7 @@ class AudioFileTranscriptionEditor{
                 var percentComplete = parseInt(evt.loaded / evt.total * 100);
                 //Do something with upload progress here
                 console.log(percentComplete)
-                $('.progress-bar').attr({
+                $('.progress-bar-upload').attr({
                   'aria-valuenow': percentComplete,
                   style: "width: "+percentComplete+"%",});
 
@@ -174,7 +174,10 @@ class AudioFileTranscriptionEditor{
     var self = this
     var id = element.attributes['x-data-id'].value
     var url = '/api/transcription/'+id+'/'
-    this.currentRequest = $.ajax({
+    
+    // We don't use this.current request here
+
+    $.ajax({
       url: url,
       type: "GET",     
     }).done(function(response){
