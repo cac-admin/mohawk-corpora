@@ -87,7 +87,7 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         else:
             return {
                 'status': 'transcribing',
-                'percent': int(completed/total*100)}
+                'percent': int(round(completed/total*100))}
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
