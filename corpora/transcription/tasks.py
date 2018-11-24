@@ -217,19 +217,22 @@ def delete_transcriptions_for_approved_recordings():
 
 @shared_task
 def check_and_transcribe_blank_segments():
-
+    '''
+    We look for segments with null text and attempt to
+    transcribe then. We don't do this async because it might
+    clog up our queue.
+    '''
     segments = TranscriptionSegment.objects.filter(text__isnull=True)
-
     for segment in segments:
-
-        transcribe_segment_async.apply_async(
-            args=[segment.pk],
-            task_id='transcribe_segment-{0}'.format(segment.pk))
+        transcribe_segment_async(segment.pk)
 
 
 @shared_task
 def check_and_transcribe_blank_audiofiletranscriptions():
-
+    '''
+    We look for AFTs with null segments and attempt to
+    create and transcribe then.
+    '''
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
         .filter(num_segments=0)
