@@ -31,9 +31,9 @@ class AudioFileTranscriptionEditor{
 
     // Set status for files being transcribed
     $('[x-data-model="audio_file_transcription"][x-data-field="transcription"]').each(function(index,element){
-      if ($(element).attr('x-data-value') == ''){
-        self.get_status(element)
-      }
+      // if ($(element).attr('x-data-value') == ''){
+      self.get_status(element)
+      // }
     }) 
 
     $('[x-data-model="audio_file_transcription"][x-data-field]').each(function(index,element){
