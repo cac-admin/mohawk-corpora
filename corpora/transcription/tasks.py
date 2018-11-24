@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from corpus.models import Recording, Sentence, Source
 from transcription.models import \
