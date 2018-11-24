@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext_lazy as _
+
 from celery import shared_task
 
 from corpora.utils.tmp_files import prepare_temporary_environment
@@ -252,7 +254,8 @@ def create_and_return_transcription_segments(aft):
         ts, created = TranscriptionSegment.objects.get_or_create(
             start=start,
             end=end,
-            parent=aft)
+            parent=aft,
+            transcriber_log=json.loads({'status': _('Waiting')}))
 
         ts_segments.append(ts)
     return ts_segments
