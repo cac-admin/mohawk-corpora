@@ -13,6 +13,7 @@ from subprocess import Popen, PIPE
 
 from wahi_korero import default_segmenter
 import ast
+import json
 from django.core.files import File
 
 from django.core.files.base import ContentFile
@@ -255,7 +256,8 @@ def create_and_return_transcription_segments(aft):
             start=start,
             end=end,
             parent=aft,
-            transcriber_log=json.loads({'status': _('Waiting')}))
+            transcriber_log=json.dumps(
+                {'status': unicode(_('Waiting'))}))
 
         ts_segments.append(ts)
     return ts_segments
