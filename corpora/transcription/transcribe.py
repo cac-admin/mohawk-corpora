@@ -1,4 +1,6 @@
 from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext_lazy as _
+
 from celery import shared_task
 
 from django.conf import settings
@@ -272,6 +274,7 @@ def transcribe_segment(ts):
 
         # ts.text = parse_sphinx_transcription(result['transcription'])
         ts.text = result['transcription'].strip()
+        result['status'] = _('Done')
         ts.transcriber_log = result
         # Get or create a source for the API
         source, created = Source.objects.get_or_create(
@@ -284,6 +287,7 @@ def transcribe_segment(ts):
 
         ts.save()
     else:
+        result['status'] = _('Error')
         ts.transcriber_log = result
         ts.save()
 
