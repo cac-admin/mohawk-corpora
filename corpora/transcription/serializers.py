@@ -83,7 +83,7 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         if total == 0:
             return {'status': 'waiting to transcribe', 'percent': 0}
         elif total == completed:
-            return {'status': 'complete', 'percent': 1}
+            return {'status': 'complete', 'percent': 100}
         else:
             return {
                 'status': 'transcribing',
