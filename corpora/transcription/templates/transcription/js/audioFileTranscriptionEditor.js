@@ -205,6 +205,11 @@ class AudioFileTranscriptionEditor{
         $(element).append(`<em>${response.transcription.slice(0,64)}</em>`)
       }
 
+    }).fail(function(error){
+      console.log(error)
+      window.setTimeout(function(){
+          self.get_status(element)
+        }, 1500)
     })    
   }
 
