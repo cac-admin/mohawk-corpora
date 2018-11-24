@@ -199,7 +199,7 @@ class AudioFileTranscriptionEditor{
 
         window.setTimeout(function(){
           self.get_status(element)
-        }, 1500)
+        }, 5000)
 
       } else if (percentComplete == 100){
         $(element).append(`<em>${response.transcription.slice(0,64)}</em>`)
@@ -209,7 +209,7 @@ class AudioFileTranscriptionEditor{
       console.log(error)
       window.setTimeout(function(){
           self.get_status(element)
-        }, 1500)
+        }, 10000)
     })    
   }
 
