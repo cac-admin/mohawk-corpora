@@ -16,7 +16,7 @@ from people.helpers import get_current_known_language_for_person
 from transcription.utils import create_and_return_transcription_segments
 
 from transcription.transcribe import \
-    transcribe_audio_sphinx, transcribe_segment_async
+    transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async
 
 from django.utils import timezone
 from django.core.files import File
