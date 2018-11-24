@@ -79,13 +79,15 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         query = TranscriptionSegment.objects.filter(parent=obj)
         total = query.count()
         completed = query.filter(text__isnull=False).count()
-        status = {}
+
         if total == 0:
             return {'status': 'waiting to transcribe', 'percent': 0}
         elif total == completed:
-            return {'status': 'complete'}
+            return {'status': 'complete', 'percent': 1}
         else:
-            return {'status': 'transcribing', 'percent': int(completed/total)}
+            return {
+                'status': 'transcribing',
+                'percent': int(completed/total*100)}
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
