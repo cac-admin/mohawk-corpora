@@ -80,10 +80,10 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         total = query.count()
         completed = query.filter(text__isnull=False).count()
         status = {}
-        if total == completed:
-            return {'status': 'complete'}
-        elif total == 0:
+        if total == 0:
             return {'status': 'waiting to transcribe', 'percent': 0}
+        elif total == completed:
+            return {'status': 'complete'}
         else:
             return {'status': 'transcribing', 'percent': int(completed/total)}
 
