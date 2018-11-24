@@ -225,3 +225,17 @@ def check_and_transcribe_blank_segments():
         transcribe_segment_async.apply_async(
             args=[segment.pk],
             task_id='transcribe_segment-{0}'.format(segment.pk))
+
+
+@shared_task
+def check_and_transcribe_blank_audiofiletranscriptions():
+
+    afts = AudioFileTranscription.objects\
+        .filter(uploaded_by=person)\
+        .annotate(num_segments=Count('transcriptionsegment'))\
+        .filter(num_segments=0)
+
+    for aft in afts:
+        transcribe_aft_async.apply_async(
+            args=[aft.pk],
+            task_id='transcribe_aft-{0}'.format(aft.pk))
