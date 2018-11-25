@@ -222,11 +222,15 @@ def check_and_transcribe_blank_segments():
     transcribe then. We don't do this async because it might
     clog up our queue.
     '''
-    segments = TranscriptionSegment.objects.filter(text__isnull=True)
+
+    segments = TranscriptionSegment.objects\
+        .filter(text__isnull=True)\
+        .filter(edited_by__isnull=True)
     count = 0
     for segment in segments:
-        if count > 1000:
-            return "Reached max loop for checking segments."
+        if count > 600:
+            return "Checked 600 segments. \
+                    Reached max loop."
         transcribe_segment_async(segment.pk)
         count = count = 1
     return "Checked {0} segments.".format(count)
