@@ -246,7 +246,9 @@ def check_and_transcribe_blank_audiofiletranscriptions():
         .annotate(num_segments=Count('transcriptionsegment'))\
         .filter(num_segments=0)
 
+    count = 0
     for aft in afts:
-        transcribe_aft_async.apply_async(
-            args=[aft.pk],
-            task_id='transcribe_aft-{0}'.format(aft.pk))
+        transcribe_aft_async(aft.pk)
+        count = count + 1
+
+    return "Processed {0} AFTs.".format(count)
