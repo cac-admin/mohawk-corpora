@@ -409,7 +409,7 @@ class Recording(models.Model):
         verbose_name_plural = 'Recordings'
         unique_together = (("person", "sentence"),)
         indexes = [
-            BrinIndex(fields=['created']),
+            # BrinIndex(fields=['created']),
             models.Index(fields=['-updated']),
             # models.Index(fields=['quality_control'])
         ]
