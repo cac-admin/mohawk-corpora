@@ -72,13 +72,20 @@
         <div class="position"></div>
       </div>
       <div class="duration"><span>00:00</span></div>
-      <div class="speed"><a class='slider'><i class="fas fa-sliders-h"></i></a></div>
+      <div id="speed" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0,50">
+        <i class="fas fa-sliders-h"></i>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+            <button class="dropdown-item playback-speed" id='1.5x' >1.5x</button>
+            <button class="dropdown-item playback-speed" id='1.0x' >1.0x</button>
+            <button class="dropdown-item playback-speed" id='0.5x' >0.5x</button>
+          </div>
+      </div>
       <div class="link active"><i class="fas fa-link fa-fw " data-fa-transform="rotate-45"></i></div>
         <!-- <div class="next">0.5x</div> -->
     </div>
+ 
 
-
-    <audio controls="">
+    <audio id='myaudio' controls>
       {% if aft.audio_file_aac %}<source src="{{aft.audio_file_aac|access_url}}"  />{% endif %}
       <source src="{{aft.audio_file|access_url}}" />
     </audio>
@@ -115,6 +122,12 @@ class CaptionPlayer{
 
     $(self.player).find('.link').on('click', function(event){
       self.toggle_link()
+    })
+
+    //playback event listener 
+
+    $(self.player).find('.playback-speed').on('click', function(event){
+      self.toggle_speed(event.target.id)
     })
 
     $(self.player).find('.progress').on('click', function(event){
@@ -181,6 +194,23 @@ class CaptionPlayer{
     }
   }
 
+//playback speed function
+  toggle_speed(id){
+    console.log('clicked')
+    console.log(id)
+    switch (id) {
+      case '1.5x':
+        document.getElementById("myaudio").playbackRate = 1.5
+        break
+      case '1.0x':
+        document.getElementById("myaudio").playbackRate = 1.0
+        break
+      case '0.5x':
+        document.getElementById("myaudio").playbackRate = 0.5
+        break
+    }
+  }
+
   init_linkPlay(){
     try{
       var link_play = eval(window.localStorage.getItem('CaptionPlayer:linkPlay'))
@@ -195,6 +225,7 @@ class CaptionPlayer{
     } catch(e){
     }
   }
+
 
   toggle_link(){
     var self=this;
