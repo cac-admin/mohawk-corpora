@@ -35,7 +35,9 @@ def transcode_audio(app, model, pk):
     try:
         obj = model_class.get_object_for_this_type(pk=pk)
     except ObjectDoesNotExist:
-        logger.warning('Tried to get an object doesn\'t exist')
+        msg = 'Tried to get an object that doesn\'t exist'
+        logger.warning(msg)
+        return msg
 
     key = u"xtrans-{0}-{1}".format(pk, "{0}-{1}".format(app, model))
 
