@@ -247,8 +247,16 @@ def check_and_transcribe_blank_audiofiletranscriptions():
         .filter(num_segments=0)
 
     count = 0
+    errors = 0
+    error_msg = []
     for aft in afts:
-        transcribe_aft_async(aft.pk)
+        try:
+            transcribe_aft_async(aft.pk)
+        except Exception as e:
+            logger.error(e)
+            error = error + 1
+            error_msg.append(e)
         count = count + 1
 
-    return "Processed {0} AFTs.".format(count)
+    return "Processed {0} AFTs. Had {1} errors. {2}".format(
+        count, errors, error_msg)
