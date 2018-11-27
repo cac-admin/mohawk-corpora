@@ -41,16 +41,20 @@ def set_recording_length(recording_pk):
         recording = Recording.objects.get(pk=recording_pk)
     except ObjectDoesNotExist:
         logger.warning('Tried to get recording that doesn\'t exist')
+        return 'Tried to get recording that doesn\'t exist'
 
-    with contextlib.closing(wave.open(recording.audio_file, 'r')) as f:
-        frames = f.getnframes()
-        rate = f.getframerate()
-        length = frames / float(rate)
+    file_path, tmp_stor_dir, tmp_file, absolute_directory = \
+        prepare_temporary_environment(recording)
 
-    recording.duration = length
+    code = \
+        "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
+            file_path)
+
+    data = commands.getstatusoutput(code)
+    recording.duration = float(data[1])
     recording.save()
 
-    return 'Recording duration saved'
+    return 'Recording {0} duration set to {1}'.format(recording.pk, data[1])
 
 
 @shared_task
