@@ -255,7 +255,7 @@ def check_and_transcribe_blank_audiofiletranscriptions():
             transcribe_aft_async(aft.pk)
         except Exception as e:
             logger.error(e)
-            error = error + 1
+            errors = errors + 1
             error_msg.append(e)
         count = count + 1
 
