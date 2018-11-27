@@ -29,7 +29,7 @@ from django.core.cache import cache
 from corpora.celery import app
 
 import datetime
-
+import time
 import logging
 logger = logging.getLogger('corpora')
 
@@ -255,12 +255,8 @@ def send_person_emails(frequency='weekly'):
             if email:
                 try:
                     logger.debug("Sending email to {0}".format(person))
-                    result = send_status_email.apply_async(
-                        args=[person.pk, frequency],
-                        countdown=counter*2,
-                        task_id='send_{1}_email-{0}-{2}'.format(
-                            person.pk, frequency, timezone.now().strftime("%y%m%d-%H%M%S"))
-                        )
+                    result = send_status_email(person.pk, frequency)
+                    time.sleep(.33)
                     logger.debug(result)
                     counter = counter + 1
                 except:
