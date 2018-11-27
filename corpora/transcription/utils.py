@@ -232,6 +232,7 @@ def convert_audio_file_if_necessary(aft):
 def create_and_return_transcription_segments(aft):
     '''
     Creates the transcription segments from an AudioFileTranscription model.
+    If there's an error this returns an empty list.
     '''
     convert_audio_file_if_necessary(aft)
     # We should delete all segments if we're going to create more!
@@ -240,9 +241,11 @@ def create_and_return_transcription_segments(aft):
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(aft)
 
+    # This sometimes fails. Not hadnling exceptions here so that
+    # we can get debug info in the celery flower task UI.
     segments = wahi_korero_segmenter(tmp_file, aft)
 
-    # segments = dummy_segme   nter(tmp_file)
+    # segments = dummy_segmenter(tmp_file)
 
     logger.debug(segments)
 
