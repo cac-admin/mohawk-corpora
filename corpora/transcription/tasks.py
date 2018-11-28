@@ -245,14 +245,20 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     '''
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
-        .filter(num_segments=0)
+        .filter(num_segments=0) \
+        .order_by('?')  # This is taxing but fine for this case.
 
     count = 0
     errors = 0
     error_msg = []
     for aft in afts:
         try:
-            transcribe_aft_async(aft.pk)
+            # First check if segments exist?!
+            # Isn't this redundant?
+            # This could help if another process started creating segments.
+            segs = TranscriptionSegment.objects.filter(parent=afts)
+            if segs.count() == 0:
+                transcribe_aft_async(aft.pk)
         except Exception as e:
             logger.error(e)
             errors = errors + 1
