@@ -256,7 +256,7 @@ def check_and_transcribe_blank_audiofiletranscriptions():
             # First check if segments exist?!
             # Isn't this redundant?
             # This could help if another process started creating segments.
-            segs = TranscriptionSegment.objects.filter(parent=afts)
+            segs = TranscriptionSegment.objects.filter(parent=aft)
             if segs.count() == 0:
                 transcribe_aft_async(aft.pk)
         except Exception as e:
