@@ -11,6 +11,8 @@ from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
 from corpora.utils.tmp_files import prepare_temporary_environment
+from corpora.utils.task_management import \
+    check_and_set_task_running, clear_running_tasks
 from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
@@ -222,6 +224,9 @@ def check_and_transcribe_blank_segments():
     transcribe then. We don't do this async because it might
     clog up our queue.
     '''
+    task_key = 'check_and_transcribe_blank_segs'
+    if check_and_set_task_running(task_key):
+        return "Task already running. Skipping this instance."
 
     segments = TranscriptionSegment.objects\
         .filter(text__isnull=True)\
@@ -234,6 +239,8 @@ def check_and_transcribe_blank_segments():
                     Reached max loop."
         transcribe_segment_async(segment.pk)
         count = count = 1
+
+    clear_running_tasks(task_key)
     return "Checked {0} segments.".format(count)
 
 
@@ -243,6 +250,10 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     We look for AFTs with null segments and attempt to
     create and transcribe then.
     '''
+    task_key = 'check_and_transcribe_blank_aft'
+    if check_and_set_task_running(task_key):
+        return "Task already running. Skipping this instance."
+
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
         .filter(num_segments=0) \
@@ -264,6 +275,8 @@ def check_and_transcribe_blank_audiofiletranscriptions():
             errors = errors + 1
             error_msg.append(e)
         count = count + 1
+
+    clear_running_tasks(task_key)
 
     return "Processed {0} AFTs. Had {1} errors. {2}".format(
         count, errors, error_msg)
