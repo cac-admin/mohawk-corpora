@@ -13,6 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from corpora.utils.tmp_files import prepare_temporary_environment
 from corpora.utils.task_management import \
     check_and_set_task_running, clear_running_tasks
+from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
@@ -35,7 +36,6 @@ import json
 import uuid
 from subprocess import Popen, PIPE
 import time
-
 
 from django.core.cache import cache
 
