@@ -25,7 +25,7 @@ from django.conf.urls import include, url
 urlpatterns = [
 
     url(r'^$',
-        views.home,
+        views.HomeView.as_view(),
         name='home'),
 
     url(r'^privacy',
