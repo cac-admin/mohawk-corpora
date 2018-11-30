@@ -201,12 +201,22 @@ class CaptionPlayer{
     switch (id) {
       case '1.25x':
         document.getElementById("myaudio").playbackRate = 1.25
+        document.getElementById('1.25x').style.backgroundColor = "rgba(22, 3, 8, 0.7)"
+        document.getElementById('1.0x').style.backgroundColor = "rgba(255, 255, 255)"
+        document.getElementById('0.75x').style.backgroundColor = "rgba(255, 255, 255)"
+        
         break
       case '1.0x':
         document.getElementById("myaudio").playbackRate = 1.0
+        document.getElementById('1.0x').style.backgroundColor = "rgba(22, 3, 8, 0.7)"
+        document.getElementById('1.25x').style.backgroundColor = "rgba(255, 255, 255)"
+        document.getElementById('0.75x').style.backgroundColor = "rgba(255, 255, 255)"
         break
       case '0.75x':
         document.getElementById("myaudio").playbackRate = 0.75
+        document.getElementById('0.75x').style.backgroundColor = "rgba(22, 3, 8, 0.7)"
+        document.getElementById('1.25x').style.backgroundColor = "rgba(255, 255, 255)"
+        document.getElementById('1.0x').style.backgroundColor = "rgba(255, 255, 255)"
         break
     }
     
