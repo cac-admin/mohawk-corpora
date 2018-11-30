@@ -48,7 +48,7 @@ def set_recording_length(recording_pk):
 
     code = \
         "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
-            file_path)
+            tmp_file)
 
     data = commands.getstatusoutput(code)
     recording.duration = float(data[1])
