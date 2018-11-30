@@ -177,8 +177,8 @@ class AudioFileTranscriptionListView(
         qs = AudioFileTranscription.objects\
             .filter(uploaded_by=person)\
             .annotate(num_segments=Count('transcriptionsegment'))\
-            .filter(num_segments__gte=1)\
             .order_by('-updated')
+        # .filter(num_segments__gte=1)\ => prevents us from showing fresh aft
         return qs
 
     def test_func(self):

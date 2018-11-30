@@ -61,8 +61,13 @@ def prepare_temporary_environment(model, test=False):
 
     if os.path.exists(tmp_file):
         # Ensure permissions are correct.
-        os.chmod(tmp_file, stat.S_IRUSR | stat.S_IWUSR |
-                 stat.S_IRGRP | stat.S_IROTH)
+        try:
+            os.chmod(tmp_file, stat.S_IRUSR | stat.S_IWUSR |
+                     stat.S_IRGRP | stat.S_IROTH)
+        except:
+            logger.debug(
+                "File exists, cant modify its permissions,\
+                lets hope this is okay")
         return file_path, tmp_stor_dir, tmp_file, absolute_directory
 
     # Will just replace file since we only doing one encode.

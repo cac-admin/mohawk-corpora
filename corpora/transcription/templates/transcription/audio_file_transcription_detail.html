@@ -74,10 +74,10 @@
       <div class="duration"><span>00:00</span></div>
       <div id="speed" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0,50">
         <i class="fas fa-sliders-h"></i>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-            <button class="dropdown-item playback-speed" id='1.5x' >1.5x</button>
+        <div class="dropdown-menu" id="speedDropdown" aria-labelledby="dropdownMenuOffset">
+            <button class="dropdown-item playback-speed" id='1.25x' >1.25x</button>
             <button class="dropdown-item playback-speed" id='1.0x' >1.0x</button>
-            <button class="dropdown-item playback-speed" id='0.5x' >0.5x</button>
+            <button class="dropdown-item playback-speed" id='0.75x' >0.75x</button>
           </div>
       </div>
       <div class="link active"><i class="fas fa-link fa-fw " data-fa-transform="rotate-45"></i></div>
@@ -199,16 +199,17 @@ class CaptionPlayer{
     console.log('clicked')
     console.log(id)
     switch (id) {
-      case '1.5x':
-        document.getElementById("myaudio").playbackRate = 1.5
+      case '1.25x':
+        document.getElementById("myaudio").playbackRate = 1.25
         break
       case '1.0x':
         document.getElementById("myaudio").playbackRate = 1.0
         break
-      case '0.5x':
-        document.getElementById("myaudio").playbackRate = 0.5
+      case '0.75x':
+        document.getElementById("myaudio").playbackRate = 0.75
         break
     }
+    
   }
 
   init_linkPlay(){

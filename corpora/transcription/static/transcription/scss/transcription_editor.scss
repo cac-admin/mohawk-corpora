@@ -141,3 +141,15 @@ div.audio{
 
 
 }
+
+.dropdown-item.playback-speed{
+  text-align: center;
+  &:active {
+    background-color: rgba(22, 3, 8, 0.7); 
+  }
+}
+
+#speedDropdown{
+  height: fit-content;
+  padding: 0;
+}

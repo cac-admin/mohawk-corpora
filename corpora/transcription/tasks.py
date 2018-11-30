@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from corpus.models import Recording, Sentence, Source
 from transcription.models import \
@@ -16,7 +16,7 @@ from people.helpers import get_current_known_language_for_person
 from transcription.utils import create_and_return_transcription_segments
 
 from transcription.transcribe import \
-    transcribe_audio_sphinx, transcribe_segment_async
+    transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async
 
 from django.utils import timezone
 from django.core.files import File
@@ -217,11 +217,38 @@ def delete_transcriptions_for_approved_recordings():
 
 @shared_task
 def check_and_transcribe_blank_segments():
+    '''
+    We look for segments with null text and attempt to
+    transcribe then. We don't do this async because it might
+    clog up our queue.
+    '''
 
-    segments = TranscriptionSegment.objects.filter(text__isnull=True)
-
+    segments = TranscriptionSegment.objects\
+        .filter(text__isnull=True)\
+        .filter(edited_by__isnull=True)
+    count = 0
     for segment in segments:
+        if count > 600:
+            return "Checked 600 segments. \
+                    Reached max loop."
+        transcribe_segment_async(segment.pk)
+        count = count = 1
+    return "Checked {0} segments.".format(count)
 
-        transcribe_segment_async.apply_async(
-            args=[segment.pk],
-            task_id='transcribe_segment-{0}'.format(segment.pk))
+
+@shared_task
+def check_and_transcribe_blank_audiofiletranscriptions():
+    '''
+    We look for AFTs with null segments and attempt to
+    create and transcribe then.
+    '''
+    afts = AudioFileTranscription.objects\
+        .annotate(num_segments=Count('transcriptionsegment'))\
+        .filter(num_segments=0)
+
+    count = 0
+    for aft in afts:
+        transcribe_aft_async(aft.pk)
+        count = count + 1
+
+    return "Processed {0} AFTs.".format(count)

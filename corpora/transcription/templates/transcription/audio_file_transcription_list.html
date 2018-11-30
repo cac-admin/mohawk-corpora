@@ -147,7 +147,11 @@
                     x-data-value="{{object.name}}">
                   <a href="{% url 'transcription:file_transcribe' object.pk %}" style="font-weight: 500;">{{object.name}}</a>
                 </div>                        
-                <div class="col-12 col-xl-6">
+                <div class="col-12 col-xl-6"
+                    x-data-model="audio_file_transcription"
+                    x-data-id="{{object.pk}}"
+                    x-data-field="transcription"
+                    x-data-value="{{object.transcription}}">
                   <a href="{% url 'transcription:file_transcribe' object.pk %}">
                     <em>{{object.transcription|truncatechars:64}}</em>
                   </a>
