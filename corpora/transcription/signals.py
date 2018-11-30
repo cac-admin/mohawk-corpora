@@ -140,7 +140,7 @@ def compile_parent_transcription(
             countdown=5)
 
 
-@receiver(models.signals.post_save, sender=AudioFileTranscription)
+@receiver(signals.post_save, sender=AudioFileTranscription)
 def set_file_duration_on_save(sender, instance, created, **kwargs):
     if instance.audio_file:
         if instance.duration <= 0:
