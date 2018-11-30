@@ -13,6 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from corpora.utils.tmp_files import prepare_temporary_environment
 from corpora.utils.task_management import \
     check_and_set_task_running, clear_running_tasks
+from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
@@ -36,12 +37,25 @@ import uuid
 from subprocess import Popen, PIPE
 import time
 
-
 from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
 logger_test = logging.getLogger('django.test')
+
+
+@shared_task
+def set_audiofile_duration(aft_pk):
+    try:
+        aft = AudioFileTranscription.objects.get(pk=aft_pk)
+    except ObjectDoesNotExist:
+        logger.warning('Tried to get AFT that doesn\'t exist')
+        return 'Tried to get recording that doesn\'t exist'
+
+    aft.duration = get_media_duration(aft)
+    aft.save()
+
+    return 'AFT {0} duration set to {1}'.format(aft.pk, aft.duration)
 
 
 @shared_task

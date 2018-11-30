@@ -17,7 +17,8 @@ from corpora.celery import app
 
 from django.core.cache import cache
 
-from transcription.tasks import launch_transcription_api
+from transcription.tasks import \
+    launch_transcription_api, set_audiofile_duration
 
 import logging
 logger = logging.getLogger('corpora')
@@ -137,6 +138,17 @@ def compile_parent_transcription(
             args=[instance.parent.pk],
             task_id=key,
             countdown=5)
+
+
+@receiver(signals.post_save, sender=AudioFileTranscription)
+def set_file_duration_on_save(sender, instance, created, **kwargs):
+    if instance.audio_file:
+        if instance.duration <= 0:
+            set_audiofile_duration.apply_async(
+                args=[instance.pk],
+                task_id='set_aft_duration-{0}-{1}'.format(
+                    instance.pk,
+                    instance.__class__.__name__))
 
 
 # ### SERIOUS ISSUE ###

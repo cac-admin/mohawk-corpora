@@ -9,6 +9,8 @@ from django.contrib.contenttypes.models import ContentType
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
+from corpora.utils.media_functions import get_media_duration
+
 from corpus.models import get_md5_hexdigest_of_file
 from people.models import Person
 from django.utils import timezone
@@ -43,18 +45,11 @@ def set_recording_length(recording_pk):
         logger.warning('Tried to get recording that doesn\'t exist')
         return 'Tried to get recording that doesn\'t exist'
 
-    file_path, tmp_stor_dir, tmp_file, absolute_directory = \
-        prepare_temporary_environment(recording)
-
-    code = \
-        "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
-            tmp_file)
-
-    data = commands.getstatusoutput(code)
-    recording.duration = float(data[1])
+    recording.duration = get_media_duration(recording)
     recording.save()
 
-    return 'Recording {0} duration set to {1}'.format(recording.pk, data[1])
+    return 'Recording {0} duration set to {1}'.format(
+        recording.pk, recording.duration)
 
 
 @shared_task
