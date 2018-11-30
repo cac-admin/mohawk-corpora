@@ -45,6 +45,20 @@ logger_test = logging.getLogger('django.test')
 
 
 @shared_task
+def set_audiofile_duration(aft_pk):
+    try:
+        aft = AudioFileTranscription.objects.get(pk=aft_pk)
+    except ObjectDoesNotExist:
+        logger.warning('Tried to get AFT that doesn\'t exist')
+        return 'Tried to get recording that doesn\'t exist'
+
+    aft.duration = get_media_duration(aft)
+    aft.save()
+
+    return 'AFT {0} duration set to {1}'.format(aft.pk, aft.duration)
+
+
+@shared_task
 def launch_transcription_api():
     num_jobs = cache.get('TRANSCRIPTION_JOBS', 0)
 
