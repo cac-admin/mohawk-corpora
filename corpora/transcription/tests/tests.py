@@ -23,7 +23,7 @@ class TestTranscribeMethods(TestCase):
     def setUp(self):
         # test_short_audio_file = open('test.aac')
         AudioFileTranscription.objects.create(
-            name="Test Audio 1", file='test.aac')
+            name="Test Audio 1", file='../../corpora/tests/test.aac')
 
     def test_parse_spinx_transcription(self):
         result = parse_sphinx_transcription(sample_1)
