@@ -8,6 +8,8 @@ from django.core.files import File
 from transcription.transcribe import parse_sphinx_transcription
 from transcription.utils import create_and_return_transcription_segments
 from transcription.models import AudioFileTranscription
+
+from people.models import Person
 # Create your tests here.
 
 
@@ -21,9 +23,17 @@ sample_4 = ["aihe", "<s> 0.000 0.020 0.999900", "aihe 0.030 0.400 0.006329", "</
 
 class TestTranscribeMethods(TestCase):
     def setUp(self):
-        # test_short_audio_file = open('test.aac')
-        AudioFileTranscription.objects.create(
-            name="Test Audio 1", file='test.aac')
+        p = Person.objects.create(
+            full_name="Test Person")
+
+        aft = AudioFileTranscription.objects.create(
+            name="Test Audio 1",
+            uploaded_by=p)
+
+        file = open('corpora/tests/test.aac', 'rb')
+        aft.audio_file.save('test.m4a', File(file))
+        file.close()
+        aft.save()
 
     def test_parse_spinx_transcription(self):
         result = parse_sphinx_transcription(sample_1)
