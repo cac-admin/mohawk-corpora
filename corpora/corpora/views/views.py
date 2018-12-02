@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django import http
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
 
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseRedirect
@@ -24,6 +25,25 @@ from people.helpers import get_or_create_person
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.views.decorators.cache import cache_page
+
+from corpora.mixins import SiteInfoMixin
+
+
+class HomeView(SiteInfoMixin, TemplateView):
+    template_name = "corpora/home.html"
+    x_title = _('Kōrero Māori')
+    x_description = _("Kōrero Māori is teaching computers indigenous languages.\
+        We've created an open sourced web app to help indigenous\
+        communities strealine their work in language revitalisation.")
+    x_image = "/static/corpora/img/icon.png"
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            HomeView, self).get_context_data(**kwargs)
+        groups = Group.objects.all().order_by('name')
+        context['groups'] = groups
+        context['languages'] = get_unknown_languages(None)
+        return context
 
 
 def home(request):

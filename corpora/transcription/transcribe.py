@@ -296,10 +296,14 @@ def transcribe_segment(ts):
 
 @shared_task
 def transcribe_aft_async(pk):
-    aft = AudioFileTranscription.objects.get(pk=pk)
+    try:
+        aft = AudioFileTranscription.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return "Not AFT with ID {0} exists.".format(pk)
+
     segments = create_and_return_transcription_segments(aft)
     if len(segments) == 0:
-        return "ERROR: NO SEGMENTS CREATED"
+        return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
 
     results = []
     errors = 0

@@ -182,6 +182,8 @@ class AudioFileTranscription(models.Model):
             HE-AAC encoded version of audio_file\
             for low bitrate playback.'))
 
+    duration = models.FloatField(default=0, blank=True)
+
     transcription = models.TextField(
         blank=True)
 

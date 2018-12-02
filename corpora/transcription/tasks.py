@@ -11,6 +11,9 @@ from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
 from corpora.utils.tmp_files import prepare_temporary_environment
+from corpora.utils.task_management import \
+    check_and_set_task_running, clear_running_tasks
+from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
@@ -34,12 +37,25 @@ import uuid
 from subprocess import Popen, PIPE
 import time
 
-
 from django.core.cache import cache
 
 import logging
 logger = logging.getLogger('corpora')
 logger_test = logging.getLogger('django.test')
+
+
+@shared_task
+def set_audiofile_duration(aft_pk):
+    try:
+        aft = AudioFileTranscription.objects.get(pk=aft_pk)
+    except ObjectDoesNotExist:
+        logger.warning('Tried to get AFT that doesn\'t exist')
+        return 'Tried to get recording that doesn\'t exist'
+
+    aft.duration = get_media_duration(aft)
+    aft.save()
+
+    return 'AFT {0} duration set to {1}'.format(aft.pk, aft.duration)
 
 
 @shared_task
@@ -222,10 +238,14 @@ def check_and_transcribe_blank_segments():
     transcribe then. We don't do this async because it might
     clog up our queue.
     '''
+    task_key = 'check_and_transcribe_blank_segs'
+    if check_and_set_task_running(task_key):
+        return "Task already running. Skipping this instance."
 
     segments = TranscriptionSegment.objects\
         .filter(text__isnull=True)\
-        .filter(edited_by__isnull=True)
+        .filter(edited_by__isnull=True)\
+        .order_by('?')  # Expensive but okay for this context.
     count = 0
     for segment in segments:
         if count > 600:
@@ -233,6 +253,8 @@ def check_and_transcribe_blank_segments():
                     Reached max loop."
         transcribe_segment_async(segment.pk)
         count = count = 1
+
+    clear_running_tasks(task_key)
     return "Checked {0} segments.".format(count)
 
 
@@ -242,13 +264,33 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     We look for AFTs with null segments and attempt to
     create and transcribe then.
     '''
+    task_key = 'check_and_transcribe_blank_aft'
+    if check_and_set_task_running(task_key):
+        return "Task already running. Skipping this instance."
+
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
-        .filter(num_segments=0)
+        .filter(num_segments=0) \
+        .order_by('?')  # This is taxing but fine for this case.
 
     count = 0
+    errors = 0
+    error_msg = []
     for aft in afts:
-        transcribe_aft_async(aft.pk)
+        try:
+            # First check if segments exist?!
+            # Isn't this redundant?
+            # This could help if another process started creating segments.
+            segs = TranscriptionSegment.objects.filter(parent=aft)
+            if segs.count() == 0:
+                transcribe_aft_async(aft.pk)
+        except Exception as e:
+            logger.error(e)
+            errors = errors + 1
+            error_msg.append(e)
         count = count + 1
 
-    return "Processed {0} AFTs.".format(count)
+    clear_running_tasks(task_key)
+
+    return "Processed {0} AFTs. Had {1} errors. {2}".format(
+        count, errors, error_msg)
