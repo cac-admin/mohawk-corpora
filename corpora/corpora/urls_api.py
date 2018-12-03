@@ -17,6 +17,8 @@ router.register(r'sentences', corpus_api.SentenceViewSet)
 router.register(r'listen', corpus_api.ListenViewSet, 'listen')
 router.register(r'recordings', corpus_api.RecordingViewSet, 'recording')
 router.register(r'sources', corpus_api.SourceViewSet)
+router.register(r'text', corpus_api.TextViewSet)
+
 
 router.register(r'tribes', people_api.TribeViewSet)
 router.register(r'demographics', people_api.DemographicViewSet)
