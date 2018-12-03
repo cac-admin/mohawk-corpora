@@ -506,9 +506,11 @@ class Text(models.Model):
         blank=True)
     updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
     source = models.ForeignKey('Source', verbose_name=_('source'))
-    uploaded_file = models.FileField(verbose_name=_('uploaded file'),
-                                     upload_to='%Y/%m/%d/%H/%M',
-                                     help_text=_('.txt format'))
+    uploaded_file = models.FileField(
+        verbose_name=_('File'),
+        upload_to='%Y/%m/%d/%H/%M',
+        help_text=_('This can be any binary file.')
+        )
 
     class Meta:
         verbose_name = _('text')
