@@ -31,11 +31,16 @@ LANGUAGE_COOKIE_NAME = 'corpora-language'
 #     os.path.join(BASE_DIR, 'locale'),
 # )
 
+# We need to start using the 3 character names
+# https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
 LANGUAGES = (
 
     ('mi',    _('Maori')),
+    ('haw',    _('Hawaiian')),
+    ('sao',    _('Samoan')),
+    ('rar',    _('Cook Island Maori')),
     # ('en',    _('English')),
-    # ('en_NZ', _('New Zealand English')),
+    ('en_NZ', _('New Zealand English')),
 )
 
 DIALECTS = (
