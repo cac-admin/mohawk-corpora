@@ -3,6 +3,7 @@
 import django.conf.locale
 from django.utils.translation import ugettext_lazy as _
 
+# This is required for languages that aren't in Django by default
 EXTRA_LANG_INFO = {
     'mi': {
         'bidi': False,  # right-to-left
@@ -15,6 +16,24 @@ EXTRA_LANG_INFO = {
         'code': 'en_NZ',
         'name': 'New Zealand English',
         'name_local': u'New Zealand English',
+    },
+    'haw': {
+        'bidi': False,  # right-to-left
+        'code': 'haw',
+        'name': 'Hawaiian',
+        'name_local': u'ʻŌlelo Hawaiʻi',
+    },
+    'smo': {
+        'bidi': False,  # right-to-left
+        'code': 'smo',
+        'name': 'Samoan',
+        'name_local': u'Gagana faʻa Sāmoa',
+    },
+    'rar': {
+        'bidi': False,  # right-to-left
+        'code': 'rar',
+        'name': 'Cook Islands Maori',
+        'name_local': u'Māori Kūki ʻĀirani',
     },
 }
 
@@ -37,7 +56,7 @@ LANGUAGES = (
 
     ('mi',    _('Maori')),
     ('haw',    _('Hawaiian')),
-    ('sao',    _('Samoan')),
+    ('smo',    _('Samoan')),
     ('rar',    _('Cook Island Maori')),
     # ('en',    _('English')),
     ('en_NZ', _('New Zealand English')),
