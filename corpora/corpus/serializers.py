@@ -1,4 +1,4 @@
-from .models import QualityControl, Sentence, Recording, Source
+from .models import QualityControl, Sentence, Recording, Source, Text
 from rest_framework import serializers
 from people.helpers import get_person
 from rest_framework.response import Response
@@ -308,3 +308,18 @@ class ListenSerializer(serializers.ModelSerializer):
             'sentence', 'audio_file_url', 'id', 'sentence_text',
             # 'quality_control'
             )
+
+
+class TextSerializer(serializers.ModelSerializer):
+    source = SourceSerializer(partial=True, required=False)
+
+    class Meta:
+        model = Text
+        fields = (
+            'id',
+            'primary_language', 'secondary_language', 'dialect',
+            'copyright', 'description', 'notes',
+            'original_file', 'original_file_md5',
+            'cleaned_file', 'cleaned_file_md5',
+            'source', 'updated',
+        )
