@@ -1,10 +1,13 @@
-from .models import QualityControl, Sentence, Recording, Source
+from .models import QualityControl, Sentence, Recording, Source, Text
 from rest_framework import serializers
 from people.helpers import get_person
 from rest_framework.response import Response
 from django.utils.timezone import localtime
 
 from django.core.files.base import ContentFile
+
+from django.conf import settings
+from boto.s3.connection import S3Connection
 
 from corpus.aggregate import build_qualitycontrol_stat_dict
 
@@ -308,3 +311,46 @@ class ListenSerializer(serializers.ModelSerializer):
             'sentence', 'audio_file_url', 'id', 'sentence_text',
             # 'quality_control'
             )
+
+
+class TextSerializer(serializers.ModelSerializer):
+    source = SourceSerializer(partial=True, required=False)
+    original_file = serializers.SerializerMethodField()
+    cleaned_file = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Text
+        fields = (
+            'id',
+            'primary_language', 'secondary_language', 'dialect',
+            'copyright', 'description', 'notes',
+            'config',
+            'original_file', 'original_file_md5',
+            'cleaned_file', 'cleaned_file_md5',
+            'source', 'updated',
+        )
+
+    def get_redirect_url(self, **kwargs):
+        if settings.ENVIRONMENT_TYPE == 'local':
+            return kwargs['filepath']
+        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
+                          settings.AWS_SECRET_ACCESS_KEY_S3,
+                          is_secure=True)
+        # Create a URL valid for 60 seconds.
+        return s3.generate_url(60, 'GET',
+                               bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                               key=kwargs['filepath'])
+
+    def get_original_file(self, obj):
+        user = self.context['request'].user
+        if user.is_staff:
+            return self.get_redirect_url(filepath=obj.original_file.name)
+        else:
+            return obj.original_file.name
+
+    def get_cleaned_file(self, obj):
+        user = self.context['request'].user
+        if user.is_staff:
+            return self.get_redirect_url(filepath=obj.original_file.name)
+        else:
+            return obj.cleaned_file.name

@@ -92,7 +92,9 @@
     </li>
     {% endif %}
 
-    {% if available_languages|length > 1 %}
+    
+    {% comment %}TURN OFF LANGUAGE SELECT FOR NOW{% endcomment %}
+    {% if available_languages|length > 999999999999 %}
     <li class="dropdown nav-item">
     {% get_current_language request as current_language %}
     {% get_known_languages request as known_languages %}
@@ -115,7 +117,7 @@
       </ul>
     </li>
     {% endif %}
-
+    
 {% else %}
 
 

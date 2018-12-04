@@ -369,7 +369,8 @@ There are a set of settings that allow us to use CloudFront for s3 hosted
 files. We also use a separate bucket for static files, because Corpora
 needs protected s3 files (e.g. recordings).
 '''
-if os.environ['ENVIRONMENT_TYPE'] != 'local':
+ENVIRONMENT_TYPE = os.environ['ENVIRONMENT_TYPE']
+if ENVIRONMENT_TYPE != 'local':
     AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
     AWS_STATIC_DEFAULT_ACL = 'public-read'
     COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
@@ -380,7 +381,6 @@ if os.environ['ENVIRONMENT_TYPE'] != 'local':
     # AWS_IS_GZIPPED = True
     CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + \
         (os.environ['AWS_CLOUDFRONT_DOMAIN'],)
-
 
 LOGGING = {
     'version': 1,
