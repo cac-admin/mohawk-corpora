@@ -140,7 +140,7 @@ class ProfileDetail(
             KnownLanguage,
             form=KnownLanguageFormWithPerson,
             fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
-            max_num=get_num_supported_languages(), extra=extra)
+            max_num=1, extra=extra) # get_num_supported_languages()
 
         kl_formset = KnownLanguageFormset(
             instance=person,
@@ -174,12 +174,12 @@ def choose_language(request):
 
     current_language = get_current_language(request)
     if current_language:
-        set_current_language_for_person(person, current_language)    
+        set_current_language_for_person(person, current_language)
 
-    next_page = request.GET.get('next',None)
+    next_page = request.GET.get('next', None)
 
     known_languages = KnownLanguage.objects.filter(person=person).count()
-    if known_languages >0:
+    if known_languages > 0:
         extra = known_languages
     else:
         extra = 1
@@ -190,7 +190,7 @@ def choose_language(request):
         KnownLanguage,
         form=KnownLanguageFormWithPerson,
         fields=('language', 'level_of_proficiency', 'person', 'accent', 'dialect'),
-        max_num=get_num_supported_languages(), extra=extra,)
+        max_num=1, extra=extra,) # get_num_supported_languages()
     # formset  = KnownLanguageFormset(form_kwargs={'person':person})
     # KnownLanguageFormsetWithPerson = inlineformset_factory(Person, KnownLanguage, form=form,  fields=('language','level_of_proficiency','person'), max_num=get_num_supported_languages(), extra=known_languages+1)
 
