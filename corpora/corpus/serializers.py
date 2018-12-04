@@ -324,6 +324,7 @@ class TextSerializer(serializers.ModelSerializer):
             'id',
             'primary_language', 'secondary_language', 'dialect',
             'copyright', 'description', 'notes',
+            'config',
             'original_file', 'original_file_md5',
             'cleaned_file', 'cleaned_file_md5',
             'source', 'updated',
@@ -343,13 +344,13 @@ class TextSerializer(serializers.ModelSerializer):
     def get_original_file(self, obj):
         user = self.context['request'].user
         if user.is_staff:
-            return self.get_redirect_url(filepath=obj.original_file.url)
+            return self.get_redirect_url(filepath=obj.original_file.name)
         else:
             return obj.original_file.name
 
     def get_cleaned_file(self, obj):
         user = self.context['request'].user
         if user.is_staff:
-            return self.get_redirect_url(filepath=obj.original_file.url)
+            return self.get_redirect_url(filepath=obj.original_file.name)
         else:
             return obj.cleaned_file.name
