@@ -528,6 +528,8 @@ class Text(models.Model):
         default=True,
         help_text='A description of the contents of this text')
 
+    config = JSONField(null=True, blank=True)
+
     original_file = models.FileField(
         verbose_name=_('Original File'),
         upload_to='%Y/%m/%d/%H/%M',
