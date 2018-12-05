@@ -101,6 +101,12 @@ div.content{
          id='sort-by-recent'
          data-sort-url-query="?sort_by=recent"><span>Recent</span></a>
     </div>
+    <div class="col-12 filter-by buttons" >
+      <span>Filter By Person ID </span><input type="textfield"
+         class="filter-by person" 
+         id='filter-by-person'
+         data-filter-url-query="?person=">
+    </div>
     <div class="col-12 person-info" ></div>
     <div class="col-12 recording-info" ></div>    
     {% endif %}
@@ -240,6 +246,13 @@ function _didReadInstructions(){
         listen.next_url = null
         listen.get_recordings()
       }
+    })
+
+    $('#filter-by-person').on('blur', function(e){
+      listen.url_filter_query = `?person_id=${e.currentTarget.value}`
+      console.log(listen.url_filter_query)
+      listen.next_url = null
+      listen.get_recordings()
     })
 
 

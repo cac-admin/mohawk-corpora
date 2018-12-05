@@ -16,6 +16,8 @@ from django.contrib.postgres.indexes import BrinIndex
 from django.contrib.auth.models import User
 from corpus.base_settings import LANGUAGES, LANGUAGE_CODE, DIALECTS
 
+from django.contrib.postgres.fields import JSONField
+
 from uuid import uuid4
 import os
 import hashlib
@@ -493,26 +495,83 @@ class Recording(models.Model):
 
 
 class Text(models.Model):
-    language = models.CharField(
-        verbose_name=_('language'),
+    primary_language = models.CharField(
+        verbose_name=_('primary language'),
         choices=LANGUAGES,
         max_length=16,
         default=LANGUAGE_CODE
+        )
+    secondary_language = models.CharField(
+        verbose_name=_('secondary language'),
+        choices=LANGUAGES,
+        max_length=16,
+        blank=True,
+        null=True,
         )
     dialect = models.CharField(
         choices=DIALECTS,
         max_length=8,
         null=True,
         blank=True)
+
+    copyright = JSONField(null=True, blank=True)
     updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
     source = models.ForeignKey('Source', verbose_name=_('source'))
-    uploaded_file = models.FileField(verbose_name=_('uploaded file'),
-                                     upload_to='%Y/%m/%d/%H/%M',
-                                     help_text=_('.txt format'))
+
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Any miscellaneous observations about the text'
+        )
+    description = models.TextField(
+        blank=True,
+        default=True,
+        help_text='A description of the contents of this text')
+
+    config = JSONField(
+        null=True, blank=True,
+        help_text='A JSON object with any necessary configuration parameters.')
+
+    original_file = models.FileField(
+        upload_to=upload_directory,
+        help_text=_('This can be any type of file.')
+        )
+
+    original_file_md5 = models.CharField(
+        max_length=32,
+        editable=False,
+        default=None, null=True)
+
+    cleaned_file = models.FileField(
+        null=True,
+        default=None,
+        blank=True,
+        upload_to=upload_directory,
+        help_text=_('This should a .txt file with ut8 encoding.')
+        )
+    cleaned_file_md5 = models.CharField(
+        max_length=32, editable=False, default=None, null=True)
 
     class Meta:
         verbose_name = _('text')
         verbose_name_plural = _('texts')
 
     def __unicode__(self):
-        return str(self.uploaded_file)
+        return str(self.original_file)
+
+    def save(self, *args, **kwargs):
+        if self.original_file_md5 is None:
+            try:
+                self.original_file_md5 = \
+                    get_md5_hexdigest_of_file(self.original_file)
+            except ValueError:
+                pass
+
+        if self.cleaned_file_md5 is None:
+            try:
+                self.cleaned_file_md5 = \
+                    get_md5_hexdigest_of_file(self.cleaned_file)
+            except ValueError:
+                pass
+
+        super(Text, self).save(*args, **kwargs)

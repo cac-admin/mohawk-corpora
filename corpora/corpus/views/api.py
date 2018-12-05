@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from corpus.models import QualityControl, Sentence, Recording, Source
+from corpus.models import QualityControl, Sentence, Recording, Source, Text
 from django.db.models import \
     Count, Q, Sum, Case, When, Value, IntegerField, Max,\
     Prefetch
@@ -24,7 +24,8 @@ from corpus.serializers import QualityControlSerializer,\
                          RecordingSerializerPost, \
                          RecordingSerializerPostBase64, \
                          ListenSerializer, \
-                         SourceSerializer
+                         SourceSerializer, \
+                         TextSerializer
 from rest_framework import generics, serializers
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from django.core.cache import cache
@@ -113,6 +114,16 @@ class SourceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
       in their author field.
 
     create:
+
+    - `source_type` is one of,
+        ('W', 'Website'),
+        ('A', 'Article'),
+        ('B', 'Book'),
+        ('I', 'Interview'),
+        ('S', 'Self'),
+        ('D', 'Document'),
+        ('M', 'Machine'),
+
     When creating Sources for Machines, use the following convention.
 
     - `source_type: 'M'`
@@ -138,6 +149,35 @@ class SourceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             queryset = queryset.filter(author__icontains=filter_author)
 
         return queryset
+
+
+class TextViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+    """
+    list:
+    Returns a list of all Texts.
+
+    Supported query parameters: None yet...
+
+    create:
+    todo
+
+    read:
+    todo
+
+
+    """
+    queryset = Text.objects.all()
+    serializer_class = TextSerializer
+    permission_classes = (permissions.IsAdminUser,)
+    pagination_class = OneHundredResultPagination
+
+    # def get_queryset(self):
+    #     queryset = Source.objects.all()
+    #     filter_author = self.request.query_params.get('author', None)
+    #     if filter_author:
+    #         queryset = queryset.filter(author__icontains=filter_author)
+
+    #     return queryset
 
 
 class SentenceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
@@ -357,6 +397,15 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 )\
             .select_related('person', 'sentence', 'source')
 
+        if self.request.user.is_staff:
+            person_id = self.request.query_params.get('person_id', '')
+            try:
+                filtered_queryset = queryset.filter(person__id=person_id)
+                if filtered_queryset.count() > 0:
+                    queryset = filtered_queryset
+            except:
+                pass
+
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
@@ -512,6 +561,15 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                     )
                 )\
             .select_related('sentence')
+
+        if self.request.user.is_staff:
+            person_id = self.request.query_params.get('person_id', '')
+            try:
+                filtered_queryset = queryset.filter(person__id=person_id)
+                if filtered_queryset.count() > 0:
+                    queryset = filtered_queryset
+            except:
+                pass
 
         test_query = self.request.query_params.get('test_query', '')
 
