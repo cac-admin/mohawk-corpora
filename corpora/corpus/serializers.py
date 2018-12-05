@@ -351,6 +351,6 @@ class TextSerializer(serializers.ModelSerializer):
     def get_cleaned_file(self, obj):
         user = self.context['request'].user
         if user.is_staff:
-            return self.get_redirect_url(filepath=obj.original_file.name)
+            return self.get_redirect_url(filepath=obj.cleaned_file.name)
         else:
             return obj.cleaned_file.name
