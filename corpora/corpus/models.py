@@ -528,23 +528,26 @@ class Text(models.Model):
         default=True,
         help_text='A description of the contents of this text')
 
-    config = JSONField(null=True, blank=True)
+    config = JSONField(
+        null=True, blank=True,
+        help_text='A JSON object with any necessary configuration parameters.')
 
     original_file = models.FileField(
-        verbose_name=_('Original File'),
-        upload_to='%Y/%m/%d/%H/%M',
-        help_text=_('This can be any binary file.')
+        upload_to=upload_directory,
+        help_text=_('This can be any type of file.')
         )
+
     original_file_md5 = models.CharField(
-        max_length=32, editable=False, default=None, null=True)
+        max_length=32,
+        editable=False,
+        default=None, null=True)
 
     cleaned_file = models.FileField(
         null=True,
         default=None,
         blank=True,
-        verbose_name=_('Cleaned File'),
-        upload_to='%Y/%m/%d/%H/%M',
-        help_text=_('This can be any binary file.')
+        upload_to=upload_directory,
+        help_text=_('This should a .txt file with ut8 encoding.')
         )
     cleaned_file_md5 = models.CharField(
         max_length=32, editable=False, default=None, null=True)
