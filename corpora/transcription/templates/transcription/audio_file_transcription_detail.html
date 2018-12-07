@@ -72,13 +72,12 @@
         <div class="position"></div>
       </div>
       <div class="duration"><span>00:00</span></div>
-      <div id="speed" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0,50">
-        <i class="fas fa-sliders-h"></i>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-            <button class="dropdown-item playback-speed" id='1.5x' >1.5x</button>
-            <button class="dropdown-item playback-speed" id='1.0x' >1.0x</button>
-            <button class="dropdown-item playback-speed" id='0.5x' >0.5x</button>
-          </div>
+      <div class="select">
+        <select> 
+            <option class="playback-speed" id='1.25x' value="1.25">1.25x</option>
+            <option class="playback-speed" id='1.0x' value="1.0" selected="selected">1.0x</option>
+            <option class="playback-speed" id='0.75x' value="0.75">0.75x</option>
+        </select>
       </div>
       <div class="link active"><i class="fas fa-link fa-fw " data-fa-transform="rotate-45"></i></div>
         <!-- <div class="next">0.5x</div> -->
@@ -126,8 +125,8 @@ class CaptionPlayer{
 
     //playback event listener 
 
-    $(self.player).find('.playback-speed').on('click', function(event){
-      self.toggle_speed(event.target.id)
+    $(self.player).find('select').on('change', function(event){
+      self.toggle_speed(this.value)
     })
 
     $(self.player).find('.progress').on('click', function(event){
@@ -199,16 +198,17 @@ class CaptionPlayer{
     console.log('clicked')
     console.log(id)
     switch (id) {
-      case '1.5x':
-        document.getElementById("myaudio").playbackRate = 1.5
+      case '1.25':
+        document.getElementById("myaudio").playbackRate = 1.25
         break
-      case '1.0x':
+      case '1.0':
         document.getElementById("myaudio").playbackRate = 1.0
         break
-      case '0.5x':
-        document.getElementById("myaudio").playbackRate = 0.5
+      case '0.75':
+        document.getElementById("myaudio").playbackRate = 0.75
         break
     }
+    
   }
 
   init_linkPlay(){

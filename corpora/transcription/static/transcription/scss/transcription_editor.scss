@@ -141,3 +141,26 @@ div.audio{
 
 
 }
+
+select {
+  width: fit-content;
+  -moz-appearance: window;
+  -webkit-appearance: none;
+  text-align: center;
+  outline: none;
+  font-family: sans-serif;
+  font-size: .8em;
+  padding: 0px 6px;
+}
+
+.select {
+  bottom: 20%;
+  display: block;
+  position: relative;
+  bottom: -5px;
+}
+
+select:hover {
+  color: #000000;
+  background: rgb(255, 255, 255);
+  }
