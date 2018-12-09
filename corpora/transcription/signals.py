@@ -71,7 +71,7 @@ def query_transcription_api_segment(
     if created:
         cache.set('TRANSCRIPTION_JOBS', num_jobs+1)
         logger.debug('LAUNCHING API FOR: {0:<4f} jobs'.format(num_jobs))
-        launch_transcription_api.apply_async()
+        # launch_transcription_api.apply_async()
     else:
         # If self if done, then subtract from jobs
         if instance.text is not '':
