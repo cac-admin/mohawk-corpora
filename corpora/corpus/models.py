@@ -516,7 +516,10 @@ class Text(models.Model):
 
     copyright = JSONField(null=True, blank=True)
     updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
-    source = models.ForeignKey('Source', verbose_name=_('source'))
+    source = models.ForeignKey(
+        'Source',
+        null=True, on_delete=models.SET_NULL,
+        verbose_name=_('source'))
 
     notes = models.TextField(
         blank=True,
@@ -538,6 +541,7 @@ class Text(models.Model):
         )
 
     original_file_md5 = models.CharField(
+        unique=True,
         max_length=32,
         editable=False,
         default=None, null=True)
@@ -555,6 +559,7 @@ class Text(models.Model):
     class Meta:
         verbose_name = _('text')
         verbose_name_plural = _('texts')
+        # unique_together = (("original_file_md5", "content_type", "person"),)
 
     def __unicode__(self):
         return str(self.original_file)
