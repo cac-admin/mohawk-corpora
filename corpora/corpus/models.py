@@ -541,7 +541,6 @@ class Text(models.Model):
         )
 
     original_file_md5 = models.CharField(
-        unique=True,
         max_length=32,
         editable=False,
         default=None, null=True)
