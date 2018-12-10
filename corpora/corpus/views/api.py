@@ -171,14 +171,6 @@ class TextViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     permission_classes = (permissions.IsAdminUser,)
     pagination_class = OneHundredResultPagination
 
-    # def get_queryset(self):
-    #     queryset = Source.objects.all()
-    #     filter_author = self.request.query_params.get('author', None)
-    #     if filter_author:
-    #         queryset = queryset.filter(author__icontains=filter_author)
-
-    #     return queryset
-
 
 class SentenceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
@@ -650,7 +642,7 @@ def get_random_pk_from_queryset(queryset, cache_key):
     '''
     Returns a random object from a queryset in the form of a queryset e.g. [obj].
 
-    This function caches the original queryset and picks a new random object from 
+    This function caches the original queryset and picks a new random object from
     the first set while excluding objects that were already returned. It sets a max
     list size so as to not blow up the cache size. It also randobly picks a block
     from a queryset that exceeepts the max size so as to introduce more randomness
@@ -674,5 +666,3 @@ def get_random_pk_from_queryset(queryset, cache_key):
     cache.set(queryset_cache_key, queryset_cache, 60*5)
 
     return pk
-
-
