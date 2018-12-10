@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from django.utils.timezone import localtime
 
 from django.core.files.base import ContentFile
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from django.conf import settings
 from boto.s3.connection import S3Connection
 
@@ -114,6 +115,14 @@ class SourceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'view_name': 'api:source-detail'}
         }
+        validators = []
+
+    def create(self, validated_data):
+        try:
+            source_obj, created = Source.objects.get_or_create(**validated_data)
+        except Exception as e:
+            raise Exception(e)
+        return source_obj
 
 
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
@@ -313,10 +322,30 @@ class ListenSerializer(serializers.ModelSerializer):
             )
 
 
+class S3FileField(serializers.FileField):
+    def get_redirect_url(self, **kwargs):
+        if settings.ENVIRONMENT_TYPE == 'local':
+            return kwargs['filepath']
+        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
+                          settings.AWS_SECRET_ACCESS_KEY_S3,
+                          is_secure=True)
+        # Create a URL valid for 60 seconds.
+        return s3.generate_url(60, 'GET',
+                               bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                               key=kwargs['filepath'])
+
+    def to_representation(self, value):
+        user = self.context['request'].user
+        if user.is_staff:
+            return self.get_redirect_url(filepath=value.name)
+        else:
+            return value.name
+
+
 class TextSerializer(serializers.ModelSerializer):
-    source = SourceSerializer(partial=True, required=False)
-    original_file = serializers.SerializerMethodField()
-    cleaned_file = serializers.SerializerMethodField()
+    source = SourceSerializer(required=False)
+    original_file = S3FileField(required=False)
+    cleaned_file = S3FileField(required=False)
 
     class Meta:
         model = Text
@@ -330,27 +359,23 @@ class TextSerializer(serializers.ModelSerializer):
             'source', 'updated',
         )
 
-    def get_redirect_url(self, **kwargs):
-        if settings.ENVIRONMENT_TYPE == 'local':
-            return kwargs['filepath']
-        s3 = S3Connection(settings.AWS_ACCESS_KEY_ID_S3,
-                          settings.AWS_SECRET_ACCESS_KEY_S3,
-                          is_secure=True)
-        # Create a URL valid for 60 seconds.
-        return s3.generate_url(60, 'GET',
-                               bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                               key=kwargs['filepath'])
+    def create(self, validated_data):
 
-    def get_original_file(self, obj):
-        user = self.context['request'].user
-        if user.is_staff:
-            return self.get_redirect_url(filepath=obj.original_file.name)
-        else:
-            return obj.original_file.name
+        try:
+            source = validated_data.pop('source')
 
-    def get_cleaned_file(self, obj):
-        user = self.context['request'].user
-        if user.is_staff:
-            return self.get_redirect_url(filepath=obj.cleaned_file.name)
+            try:
+                source_obj, created = Source.objects.get_or_create(**source)
+            except Exception as e:
+                raise Exception(e)
+
+        except KeyError:
+            source_obj = None
+            pass
+
+        if source_obj:
+            text = Text.objects.create(source=source_obj, **validated_data)
         else:
-            return obj.cleaned_file.name
+            text = Text.objects.create(**validated_data)
+
+        return text
