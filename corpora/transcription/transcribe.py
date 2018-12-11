@@ -12,7 +12,11 @@ from transcription.models import \
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
 
-from corpora.utils.tmp_files import prepare_temporary_environment
+from corpora.utils.tmp_files import \
+    prepare_temporary_environment, \
+    erase_all_temp_files, \
+    get_tmp_stor_directory
+
 from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import create_and_return_transcription_segments
@@ -122,8 +126,14 @@ def transcribe_audio_sphinx(
 def transcribe_audio_quick(file_object):
     logger.debug('DOING QUICK TRANSCRIPTION')
 
-    tmp_file = "/tmp/tmp_file_{0}.{1}".format(
-        uuid.uuid4(), file_object.name.split('.')[-1])
+    BASE = get_tmp_stor_directory()
+
+    tmp_file = os.join(
+        BASE,
+        'QUICK',
+        "tmp_file_{0}.{1}".format(
+            uuid.uuid4(), file_object.name.split('.')[-1])
+        )
 
     f = file(tmp_file, 'wb')
     for chunk in file_object.chunks():
@@ -314,5 +324,7 @@ def transcribe_aft_async(pk):
             errors = errors + 1
             logger.error(
                 "Failed to transcribe segment {0}.".format(segment.pk))
+
+    erase_all_temp_files(aft)
 
     return "Transcribed {0} with {1} errors".format(aft, errors)
