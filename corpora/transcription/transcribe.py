@@ -128,7 +128,7 @@ def transcribe_audio_quick(file_object):
 
     BASE = get_tmp_stor_directory()
 
-    tmp_file = os.join(
+    tmp_file = os.path.join(
         BASE,
         'QUICK',
         "tmp_file_{0}.{1}".format(
