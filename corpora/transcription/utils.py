@@ -18,6 +18,7 @@ from wahi_korero import default_segmenter
 from wahi_korero import Segmenter
 import ast
 import json
+import time
 from django.core.files import File
 
 from django.core.files.base import ContentFile
@@ -273,6 +274,13 @@ def create_transcription_segments_admin(aft):
 def convert_audio_file_if_necessary(aft):
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(aft)
+
+    # Check if file exists
+    max_loop = 0
+    while not os.path.exists(tmp_file) and max_loop < 10:
+        # Might need to wait for the filesystem if we just downlaoded a large file?
+        time.sleep(1)
+        max_loop = max_loop + 1
 
     #  Check that audio is in the right format
     command = [
