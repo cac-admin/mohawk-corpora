@@ -20,12 +20,34 @@ def get_file_url(f, expires=60):
                            key=f.name)
 
 
-def prepare_temporary_environment(model, test=False):
+def get_tmp_stor_directory(model=None):
+    BASE = os.path.join(
+        '/tmp',
+        "{0}_files".format(settings.PROJECT_NAME))
+
+    if model:
+        return os.path.join(
+            BASE,
+            str(model.__class__.__name__)+str(model.pk))
+
+    return BASE
+
+
+def erase_all_temp_files(model, test=False):
+    '''
+    This medthod requires a model so that you don't accidentally erase
+    everything. Include model=None to erase the entire base directory.
+    '''
+    import shutil
+    shutil.rmtree(get_tmp_stor_directory(model))
+
+
+def prepare_temporary_environment(model, test=False, file_field='audio_file'):
     # This method gets strings for necessary media urls/directories and create
     # tmp folders/files
     # NOTE: we use "media" that should be changed.
 
-    file = model.audio_file
+    file = getattr(model, file_field)
     absolute_directory = ''
 
     if 'http' in file.url:
