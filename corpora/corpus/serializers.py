@@ -335,6 +335,8 @@ class S3FileField(serializers.FileField):
                                key=kwargs['filepath'])
 
     def to_representation(self, value):
+        if value.name is '':
+            return None
         user = self.context['request'].user
         if user.is_staff:
             return self.get_redirect_url(filepath=value.name)
