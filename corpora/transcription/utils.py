@@ -244,7 +244,7 @@ def captioning_segmenter(file_path, aft=None, offset=0):
 
     segmenter.enable_captioning(
         caption_threshold_ms=10,
-        min_caption_len_ms=2000
+        min_caption_len_ms=3400
     )
 
     # tmp_dir = get_tmp_stor_directory(aft)
