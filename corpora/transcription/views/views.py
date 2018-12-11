@@ -63,7 +63,8 @@ logger = logging.getLogger('corpora')
 class EnsureDeepSpeechRunning(object):
 
     def launch_ds(self):
-        launch_transcription_api.apply_async()
+        pass
+        # launch_transcription_api.apply_async()
 
     def get(self, request, **kwargs):
         if request.user.is_authenticated:

@@ -4,7 +4,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from celery import shared_task
 
-from corpora.utils.tmp_files import prepare_temporary_environment
+from corpora.utils.tmp_files import \
+    prepare_temporary_environment, \
+    get_tmp_stor_directory
+
 from transcription.models import \
     TranscriptionSegment, AudioFileTranscription
 
@@ -12,8 +15,11 @@ from subprocess import Popen, PIPE
 
 
 from wahi_korero import default_segmenter
+from wahi_korero import Segmenter
 import ast
 import json
+import time
+import os
 from django.core.files import File
 
 from django.core.files.base import ContentFile
@@ -123,8 +129,33 @@ def long_audio_segmenter(aft, duration):
     return captioned
 
 
+def long_audio_segmenter_2(aft, duration):
+
+    # We'll need to cut up audio and then segment it
+    files = []
+    slice_length = 10*60*100
+    for i in range(int(duration/slice_length)+1):
+        start = i*slice_length
+        end = start+slice_length
+        if end > duration:
+            end = duration
+
+        files.append(slice_audio(aft, start, end))
+
+    captioned = []
+
+    count = 0.0
+    for file in files:
+        offset = count*slice_length
+        this_segments = captioning_segmenter(file, offset=offset)
+        captioned = captioned + this_segments
+        count = count+1
+
+    return captioned
+
+
 def wahi_korero_segmenter(file_path, aft=None, offset=0):
-    MIN_DURATION = 3*100
+    MIN_DURATION = 2*100
 
     p = Popen(
         ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of',
@@ -185,6 +216,53 @@ def wahi_korero_segmenter(file_path, aft=None, offset=0):
     return captioned_for_real
 
 
+def captioning_segmenter(file_path, aft=None, offset=0):
+    config = {
+        'frame_duration_ms': 20,
+        'threshold_silence_ms': 40,
+        'threshold_voice_ms': 40,
+        'buffer_length_ms': 400,
+        'aggression': 3,
+        'squash_rate': 400
+    }
+
+    p = Popen(
+        ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of',
+         'default=noprint_wrappers=1:nokey=1', file_path],
+        stdin=PIPE, stdout=PIPE)
+
+    output, errors = p.communicate()
+    duration = float(output)*100  # Hundreths of a second
+
+    # Don't need to do this for short recordings!
+    if duration < 10*100:
+        return dummy_segmenter(file_path)
+    elif duration > 10*60*100:
+        return long_audio_segmenter_2(aft, duration)
+
+    segmenter = Segmenter(**config)
+
+    segmenter.enable_captioning(
+        caption_threshold_ms=10,
+        min_caption_len_ms=2000
+    )
+
+    # tmp_dir = get_tmp_stor_directory(aft)
+
+    # segmenter.segment_audio(file_path, 'tmp_dir', output_audio=False)
+    stream = segmenter.segment_stream(file_path, output_audio=False)
+    captioned_for_real = []
+    for seg, audio in stream:
+        start, end = seg
+        d = end - start
+        captioned_for_real.append({
+            'start': start*100+offset,
+            'end': end*100+offset,
+            'duration': d*100})
+
+    return captioned_for_real
+
+
 def create_transcription_segments_admin(aft):
     try:
         ts = create_and_return_transcription_segments(aft)
@@ -197,6 +275,13 @@ def create_transcription_segments_admin(aft):
 def convert_audio_file_if_necessary(aft):
     file_path, tmp_stor_dir, tmp_file, absolute_directory = \
         prepare_temporary_environment(aft)
+
+    # Check if file exists
+    max_loop = 0
+    while not os.path.exists(tmp_file) and max_loop < 10:
+        # Might need to wait for the filesystem if we just downlaoded a large file?
+        time.sleep(1)
+        max_loop = max_loop + 1
 
     #  Check that audio is in the right format
     command = [
@@ -243,7 +328,7 @@ def create_and_return_transcription_segments(aft):
 
     # This sometimes fails. Not hadnling exceptions here so that
     # we can get debug info in the celery flower task UI.
-    segments = wahi_korero_segmenter(tmp_file, aft)
+    segments = captioning_segmenter(tmp_file, aft)
 
     # segments = dummy_segmenter(tmp_file)
 
