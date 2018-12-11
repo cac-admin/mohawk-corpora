@@ -9,7 +9,7 @@ from transcription.models import \
 
 from people.helpers import get_person
 from transcription.utils import create_transcription_segments_admin
-
+from transcription.transcribe import transcribe_aft_async
 
 @admin.register(Transcription)
 class TranscriptionAdmin(admin.ModelAdmin):
@@ -20,7 +20,8 @@ class TranscriptionAdmin(admin.ModelAdmin):
 
 @admin.register(AudioFileTranscription)
 class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
-    actions = ('create_segments',)
+    list_display = ('name', 'duration', 'audio_file', 'uploaded_by')
+    actions = ('create_segments', 'transcribe_segments')
     raw_id_fields = ('uploaded_by',)
 
     def get_changeform_initial_data(self, request):
@@ -33,6 +34,13 @@ class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
             messages.add_message(
                 request, messages.INFO,
                 info)
+
+    def transcribe_segments(self, request, queryset):
+        for obj in queryset:
+            info = transcribe_aft_async.apply_async([obj.pk])
+            messages.add_message(
+                request, messages.INFO,
+                "Runing transcription job {0}.".format(info))
 
 
 @admin.register(TranscriptionSegment)
