@@ -277,11 +277,15 @@ def convert_audio_file_if_necessary(aft):
         prepare_temporary_environment(aft)
 
     # Check if file exists
+    # Or is something else deleting stuff???
     max_loop = 0
-    while not os.path.exists(tmp_file) and max_loop < 10:
+    while not os.path.exists(tmp_file) and max_loop < 30:
         # Might need to wait for the filesystem if we just downlaoded a large file?
         time.sleep(1)
         max_loop = max_loop + 1
+        if max_loop == 15:
+            file_path, tmp_stor_dir, tmp_file, absolute_directory = \
+                prepare_temporary_environment(aft)
 
     #  Check that audio is in the right format
     command = [
