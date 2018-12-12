@@ -313,13 +313,17 @@ class ListenSerializer(serializers.ModelSerializer):
     # )
     audio_file_url = serializers.CharField(source='get_recording_file_url',
                                            read_only=True)
+    quality_control_aggregate = serializers.SerializerMethodField()
 
     class Meta:
         model = Recording
         fields = (
             'sentence', 'audio_file_url', 'id', 'sentence_text',
-            # 'quality_control'
+            'quality_control_aggregate',
             )
+
+    def get_quality_control_aggregate(self, obj):
+        return build_qualitycontrol_stat_dict(obj.quality_control.all())
 
 
 class S3FileField(serializers.FileField):
