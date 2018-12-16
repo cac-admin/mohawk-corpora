@@ -130,7 +130,6 @@ def transcribe_audio_quick(file_object):
 
     tmp_file = os.path.join(
         BASE,
-        'QUICK',
         "tmp_file_{0}.{1}".format(
             uuid.uuid4(), file_object.name.split('.')[-1])
         )
