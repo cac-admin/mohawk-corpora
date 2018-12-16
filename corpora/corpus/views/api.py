@@ -208,7 +208,7 @@ class SentencesView(generics.ListCreateAPIView):
 
     To get all of the approved sentences, use the query parameter
     `quality_control__approved=True`. These will be paginated results,
-    so you will need to follwo the `next` url to load all available sentences.
+    so you will need to follow the `next` url to load all available sentences.
 
     """
 
@@ -226,7 +226,7 @@ class SentencesView(generics.ListCreateAPIView):
         if 'True' in q:
             sentence = get_next_sentence(self.request)
             if sentence:
-                queryset = queryset.filter(pk=sentence.pk)
+                queryset = [sentence]
             else:
                 return []
 
