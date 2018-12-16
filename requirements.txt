@@ -70,3 +70,7 @@ django-analytical
 Collectfast
 
 django-cors-headers
+
+
+# Tests
+tox
