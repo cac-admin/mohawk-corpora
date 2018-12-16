@@ -15,13 +15,17 @@ MIN_SENTENCE_LENGTH = 4
 
 
 def save_sentences_from_text(text_obj):
-    contents = get_textfile_contents(text_obj.uploaded_file)
+    try:
+        contents = get_textfile_contents(text_obj.cleaned_file)
+    except AttributeError:
+        contents = get_textfile_contents(text_obj.original_file)
+
     errors = 0
     saved = 0
     for info in get_sentences(contents):
         sentence_data = {
             'source': text_obj.source,
-            'language': text_obj.language,
+            'language': text_obj.primary_language,
             'text': info['sentence']
         }
         sentence = Sentence(**sentence_data)
