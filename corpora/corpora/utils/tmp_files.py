@@ -100,14 +100,17 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
         code = "cp '%s' '%s'" % (file_path, tmp_file)
     result = commands.getstatusoutput(code)
 
+    # Turn this off as it's too much output
     try:
-        logger.debug(result[1])
+        # logger.debug(result[1])
         result = ' '.join([str(i) for i in result])
     except:
-        logger.debug(result)
+        pass
+        # logger.debug(result)
 
     if not os.path.exists(tmp_file) or 'ERROR 404' in result:
-        logger.debug('ERROR GETTING: ' + tmp_file)
+        logger.error('ERROR GETTING: ' + tmp_file)
+        logger.error(result)
         raise ValueError
     else:
         logger.debug('Downloaded: ' + os.path.abspath(tmp_file))
