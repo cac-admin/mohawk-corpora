@@ -252,11 +252,11 @@ class SentencesView(generics.ListCreateAPIView):
                     if eval(query) is True:
                         queryset = queryset\
                             .filter(sum_approved__gte=1)\
-                            .order_by('-sum_approved')
+                            .order_by('-updated')
                     elif eval(query) is False:
                         queryset = queryset\
                             .filter(sum_approved__lte=0)\
-                            .order_by('-sum_approved')
+                            .order_by('-updated')
                     else:
                         raise ValueError(
                             "Specify either True or False for quality_control__approved=")
