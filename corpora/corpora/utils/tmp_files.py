@@ -54,13 +54,10 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
     else:
         file_path = settings.MEDIA_ROOT + file.name
 
-    tmp_stor_dir = os.path.join(
-        '/tmp',
-        "{0}_files".format(settings.PROJECT_NAME),
-        str(model.__class__.__name__)+str(model.pk))
+    tmp_stor_dir = get_tmp_stor_directory(model)
 
     paths = [
-        '/tmp/{0}_files'.format(settings.PROJECT_NAME),
+        get_tmp_stor_directory(),
         tmp_stor_dir]
 
     for path in paths:
