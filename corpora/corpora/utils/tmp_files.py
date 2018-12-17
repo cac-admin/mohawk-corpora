@@ -88,8 +88,8 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
                      stat.S_IRGRP | stat.S_IROTH)
         except:
             logger.debug(
-                "File exists, cant modify its permissions,\
-                lets hope this is okay")
+                "File {0} exists, can't modify its permissions,\
+lets hope this is okay".format(tmp_file))
         return file_path, tmp_stor_dir, tmp_file, absolute_directory
 
     # Will just replace file since we only doing one encode.
