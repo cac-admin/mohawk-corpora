@@ -3,7 +3,6 @@ from django.conf import settings
 import os
 import commands
 import stat
-
 from boto.s3.connection import S3Connection
 
 import logging
@@ -55,13 +54,10 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
     else:
         file_path = settings.MEDIA_ROOT + file.name
 
-    tmp_stor_dir = os.path.join(
-        '/tmp',
-        "{0}_files".format(settings.PROJECT_NAME),
-        str(model.__class__.__name__)+str(model.pk))
+    tmp_stor_dir = get_tmp_stor_directory(model)
 
     paths = [
-        '/tmp/{0}_files'.format(settings.PROJECT_NAME),
+        get_tmp_stor_directory(),
         tmp_stor_dir]
 
     for path in paths:
@@ -88,8 +84,8 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
                      stat.S_IRGRP | stat.S_IROTH)
         except:
             logger.debug(
-                "File exists, cant modify its permissions,\
-                lets hope this is okay")
+                "File {0} exists, can't modify its permissions,\
+lets hope this is okay".format(tmp_file))
         return file_path, tmp_stor_dir, tmp_file, absolute_directory
 
     # Will just replace file since we only doing one encode.
@@ -100,14 +96,17 @@ def prepare_temporary_environment(model, test=False, file_field='audio_file'):
         code = "cp '%s' '%s'" % (file_path, tmp_file)
     result = commands.getstatusoutput(code)
 
+    # Turn this off as it's too much output
     try:
-        logger.debug(result[1])
+        # logger.debug(result[1])
         result = ' '.join([str(i) for i in result])
     except:
-        logger.debug(result)
+        pass
+        # logger.debug(result)
 
     if not os.path.exists(tmp_file) or 'ERROR 404' in result:
-        logger.debug('ERROR GETTING: ' + tmp_file)
+        logger.error('ERROR GETTING: ' + tmp_file)
+        logger.error(result)
         raise ValueError
     else:
         logger.debug('Downloaded: ' + os.path.abspath(tmp_file))

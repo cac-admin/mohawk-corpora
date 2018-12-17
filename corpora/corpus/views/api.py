@@ -3,6 +3,7 @@ from corpus.models import QualityControl, Sentence, Recording, Source, Text
 from django.db.models import \
     Count, Q, Sum, Case, When, Value, IntegerField, Max,\
     Prefetch
+from django.db.models.functions import Length
 
 from django.contrib.contenttypes.models import ContentType
 
@@ -256,7 +257,10 @@ class SentencesView(generics.ListCreateAPIView):
                     elif eval(query) is False:
                         queryset = queryset\
                             .filter(sum_approved__lte=0)\
-                            .order_by('-updated')
+                            .annotate(text_length=Length('text'))\
+                            .filter(text_length__gte=12)\
+                            .order_by('-updated')\
+                            .order_by(Length('text').asc())
                     else:
                         raise ValueError(
                             "Specify either True or False for quality_control__approved=")
