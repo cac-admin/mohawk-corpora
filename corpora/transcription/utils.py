@@ -354,7 +354,13 @@ def create_and_return_transcription_segments(aft):
     Creates the transcription segments from an AudioFileTranscription model.
     If there's an error this returns an empty list.
     '''
-    convert_audio_file_if_necessary(aft)
+    try:
+        convert_audio_file_if_necessary(aft)
+    except:
+        # If this fails, let's assume that wahi_korero will handle
+        # the audio format stuff because it does!
+        pass
+
     # We should delete all segments if we're going to create more!
     deleted = TranscriptionSegment.objects.filter(parent=aft).delete()
 

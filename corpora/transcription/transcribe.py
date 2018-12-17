@@ -309,7 +309,7 @@ def transcribe_aft_async(pk):
         aft = AudioFileTranscription.objects.get(pk=pk)
     except ObjectDoesNotExist:
         return "No AFT with ID {0} exists.".format(pk)
-
+    prepare_temporary_environment(aft)
     segments = create_and_return_transcription_segments(aft)
     if len(segments) == 0:
         return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
