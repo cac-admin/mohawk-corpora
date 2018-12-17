@@ -310,7 +310,13 @@ def transcribe_aft_async(pk):
     except ObjectDoesNotExist:
         return "No AFT with ID {0} exists.".format(pk)
 
-    segments = create_and_return_transcription_segments(aft)
+    try:
+        segments = create_and_return_transcription_segments(aft)
+    except Exception as e:
+        logger.debug(e)
+        msg = transcribe_aft_async.apply_async([pk], countdown=5)
+        return "FAILED. Trying again soon... {0}".format(msg)
+
     if len(segments) == 0:
         return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
 
