@@ -128,8 +128,8 @@ def encode_audio(obj, test=False, codec='aac'):
         return False
 
     # Need a better way to check this!
-    data = commands.getstatusoutput('rm ' + tmp_file)
-    logger.debug('Removed tmp file %s' % (tmp_file))
+    # data = commands.getstatusoutput('rm ' + tmp_file)
+    # logger.debug('Removed tmp file %s' % (tmp_file))
 
     # data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
     # logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
