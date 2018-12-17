@@ -3,7 +3,6 @@ from django.conf import settings
 import os
 import commands
 import stat
-
 from boto.s3.connection import S3Connection
 
 import logging
