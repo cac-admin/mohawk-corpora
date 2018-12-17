@@ -263,6 +263,37 @@ def captioning_segmenter(file_path, aft=None, offset=0):
     return captioned_for_real
 
 
+def create_caption_segments(file_path):
+
+    config = {
+        'frame_duration_ms': 20,
+        'threshold_silence_ms': 40,
+        'threshold_voice_ms': 40,
+        'buffer_length_ms': 400,
+        'aggression': 3,
+        'squash_rate': 4000
+    }
+
+    segmenter = Segmenter(**config)
+
+    segmenter.enable_captioning(
+        caption_threshold_ms=10,
+        min_caption_len_ms=3400
+    )
+
+    stream = segmenter.segment_stream(file_path, output_audio=False)
+    captioned_for_real = []
+    for seg, audio in stream:
+        start, end = seg
+        captioned_for_real.append({
+            'start': start*100,
+            'end': end*100,
+            'duration': (end-start)*100,
+            })
+
+    return captioned_for_real
+
+
 def create_transcription_segments_admin(aft):
     try:
         ts = create_and_return_transcription_segments(aft)
@@ -332,7 +363,7 @@ def create_and_return_transcription_segments(aft):
 
     # This sometimes fails. Not hadnling exceptions here so that
     # we can get debug info in the celery flower task UI.
-    segments = captioning_segmenter(tmp_file, aft)
+    segments = create_caption_segments(tmp_file)
 
     # segments = dummy_segmenter(tmp_file)
 
