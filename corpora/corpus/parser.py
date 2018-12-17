@@ -11,7 +11,8 @@ import codecs
 
 from .models import Sentence
 
-MIN_SENTENCE_LENGTH = 4
+MIN_SENTENCE_LENGTH = 12
+MAX_SENTENCE_LENGTH = 12*8
 
 
 def save_sentences_from_text(text_obj):
@@ -65,7 +66,7 @@ def get_sentences(text):
             continue
 
         for sentence in map(normalise_sentence, line.split('.')):
-            if len(sentence) < MIN_SENTENCE_LENGTH or has_english(sentence):
+            if len(sentence) < MIN_SENTENCE_LENGTH or has_english(sentence) or len(sentence) > MAX_SENTENCE_LENGTH:
                 continue
             yield {'sentence': sentence}
 
