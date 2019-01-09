@@ -25,7 +25,12 @@ class SiteInfoMixin(object):
             site = get_current_site(self.request)
             self.x_image = 'https://'+site.domain + self.x_image
 
+        if 'http' not in self.x_icon:
+            site = get_current_site(self.request)
+            self.x_icon = 'https://'+site.domain + self.x_icon
+
         context['x_image'] = self.x_image
+        context['x_icon'] = self.x_icon
 
         person = get_or_create_person(self.request)
 

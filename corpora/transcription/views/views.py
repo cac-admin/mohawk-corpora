@@ -177,8 +177,10 @@ class AudioFileTranscriptionListView(
         person = get_person(self.request)
         qs = AudioFileTranscription.objects\
             .filter(uploaded_by=person)\
-            .annotate(num_segments=Count('transcriptionsegment'))\
             .order_by('-updated')
+        # .annotate(num_segments=Count('transcriptionsegment'))\ => takes too long
+        # instead maybe we should delete the "quick test recordings" or better yet just 
+        # store them as anonuymous data if we *really* want to keep it
         # .filter(num_segments__gte=1)\ => prevents us from showing fresh aft
         return qs
 
