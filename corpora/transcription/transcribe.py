@@ -300,6 +300,8 @@ def transcribe_segment(ts):
         ts.transcriber_log = result
         ts.save()
 
+    os.remove(tmp_seg_file)
+
     return result
 
 
