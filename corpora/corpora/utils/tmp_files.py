@@ -25,9 +25,13 @@ def get_tmp_stor_directory(model=None):
         "{0}_files".format(settings.PROJECT_NAME))
 
     if model:
-        return os.path.join(
+        BASE = os.path.join(
             BASE,
             str(model.__class__.__name__)+str(model.pk))
+
+    # CREATE DIRECTORY IF NO EXIST
+    if not os.path.isdir(BASE):
+        os.mkdir(BASE)
 
     return BASE
 
