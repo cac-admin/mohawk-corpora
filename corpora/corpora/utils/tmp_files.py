@@ -1,6 +1,8 @@
 
 from django.conf import settings
 import os
+import pwd
+import grp
 import commands
 import stat
 from subprocess import Popen, PIPE
@@ -33,7 +35,12 @@ def get_tmp_stor_directory(model=None):
 
     # CREATE DIRECTORY IF NO EXIST
     if not os.path.isdir(BASE):
+        uid = pwd.getpwnam(settings.APPLICATION_USER).pw_uid
+        gid = grp.getgrnam(settings.APPLICATION_GROUP).gr_gid
         os.mkdir(BASE)
+        os.chown(BASE, uid, gid)
+
+    # Check permissions and change?
 
     return BASE
 
