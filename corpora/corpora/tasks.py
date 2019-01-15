@@ -9,7 +9,7 @@ logger_test = logging.getLogger('django.test')
 
 
 @shared_task
-def erase_all_temp_files():
+def erase_all_project_files():
     try:
         erase_all_temp_files(None)
         return "Erased all temp files."
