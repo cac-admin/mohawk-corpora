@@ -323,12 +323,22 @@ def transcribe_aft_async(pk):
             cache.set(cache_key, retry+1)
             msg = transcribe_aft_async.apply_async([pk], countdown=5)
 
-        erase_all_temp_files(aft)
+        try:
+            erase_all_temp_files(aft)
+        except Exception as e:
+            logger.debug('Error erasing files for AFT {0}'.format(pk))
+            logger.debug(e)
+
         return "FAILED. Trying again soon... {0}".format(msg)
 
     if len(segments) == 0:
 
-        erase_all_temp_files(aft)
+        try:
+            erase_all_temp_files(aft)
+        except Exception as e:
+            logger.debug('Error erasing files for AFT {0}'.format(pk))
+            logger.debug(e)
+
         return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
 
     results = []
