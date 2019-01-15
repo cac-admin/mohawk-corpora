@@ -3,6 +3,8 @@ from django.conf import settings
 import os
 import commands
 import stat
+from subprocess import Popen, PIPE
+
 from boto.s3.connection import S3Connection
 
 import logging
@@ -36,13 +38,23 @@ def get_tmp_stor_directory(model=None):
     return BASE
 
 
-def erase_all_temp_files(model, test=False):
+def erase_all_temp_files(model, test=False, force=False):
     '''
     This medthod requires a model so that you don't accidentally erase
     everything. Include model=None to erase the entire base directory.
     '''
-    import shutil
-    shutil.rmtree(get_tmp_stor_directory(model))
+
+    try:
+        import shutil
+        shutil.rmtree(get_tmp_stor_directory(model))
+    except:
+        if force:
+
+            p = Popen(
+                ['rm', '-Rf', os.path.join(get_tmp_stor_directory(model), '*')
+                 ], stdin=PIPE, stdout=PIPE)
+
+            output, errors = p.communicate()
 
 
 def prepare_temporary_environment(model, test=False, file_field='audio_file'):

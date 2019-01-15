@@ -15,4 +15,5 @@ def erase_all_project_files():
         return "Erased all temp files."
     except Exception as e:
         logger.debug(e)
+        erase_all_temp_files(None, force=True)
         return "Error erasing all temp files: {0}".format(e)
