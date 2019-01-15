@@ -322,7 +322,8 @@ def transcribe_aft_async(pk):
         if retry < 5:
             cache.set(cache_key, retry+1)
             msg = transcribe_aft_async.apply_async([pk], countdown=5)
-
+        else:
+            msg = 'Tried 5 times. Stopping.'
         try:
             erase_all_temp_files(aft)
         except Exception as e:
