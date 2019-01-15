@@ -13,5 +13,6 @@ def erase_all_temp_files():
     try:
         erase_all_temp_files(None)
         return "Erased all temp files."
-    except:
-        return "Error erasing all temp files."
+    except Exception as e:
+        logger.debug(e)
+        return "Error erasing all temp files: {0}".format(e)
