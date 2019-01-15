@@ -26,7 +26,7 @@ from people.competition import \
     get_valid_group_members
 
 from django.core.cache import cache
-from corpora.celery import app
+from corpora.celery_config import app
 
 import datetime
 import time

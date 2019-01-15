@@ -13,7 +13,7 @@ from transcription.utils import \
 
 from corpora.utils.tasks_transcoding import transcode_audio
 
-from corpora.celery import app
+from corpora.celery_config import app
 
 from django.core.cache import cache
 
