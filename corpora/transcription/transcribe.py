@@ -317,9 +317,13 @@ def transcribe_aft_async(pk):
     except Exception as e:
         logger.debug(e)
         msg = transcribe_aft_async.apply_async([pk], countdown=5)
+
+        erase_all_temp_files(aft)
         return "FAILED. Trying again soon... {0}".format(msg)
 
     if len(segments) == 0:
+
+        erase_all_temp_files(aft)
         return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
 
     results = []
@@ -333,5 +337,4 @@ def transcribe_aft_async(pk):
                 "Failed to transcribe segment {0}.".format(segment.pk))
 
     erase_all_temp_files(aft)
-
     return "Transcribed {0} with {1} errors".format(aft, errors)
