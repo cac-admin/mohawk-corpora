@@ -316,10 +316,30 @@ def transcribe_aft_async(pk):
         segments = create_and_return_transcription_segments(aft)
     except Exception as e:
         logger.debug(e)
-        msg = transcribe_aft_async.apply_async([pk], countdown=5)
+
+        cache_key = 'aft-{0}-retry-transcribe'.format(pk)
+        retry = cache.get(cache_key, 0)
+        if retry < 5:
+            cache.set(cache_key, retry+1)
+            msg = transcribe_aft_async.apply_async([pk], countdown=5)
+        else:
+            msg = 'Tried 5 times. Stopping.'
+        try:
+            erase_all_temp_files(aft)
+        except Exception as e:
+            logger.debug('Error erasing files for AFT {0}'.format(pk))
+            logger.debug(e)
+
         return "FAILED. Trying again soon... {0}".format(msg)
 
     if len(segments) == 0:
+
+        try:
+            erase_all_temp_files(aft)
+        except Exception as e:
+            logger.debug('Error erasing files for AFT {0}'.format(pk))
+            logger.debug(e)
+
         return "ERROR: NO SEGMENTS CREATED for AFT {0}".format(pk)
 
     results = []
@@ -333,5 +353,4 @@ def transcribe_aft_async(pk):
                 "Failed to transcribe segment {0}.".format(segment.pk))
 
     erase_all_temp_files(aft)
-
     return "Transcribed {0} with {1} errors".format(aft, errors)

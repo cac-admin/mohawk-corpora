@@ -1,8 +1,12 @@
 
 from django.conf import settings
 import os
+import pwd
+import grp
 import commands
 import stat
+from subprocess import Popen, PIPE
+
 from boto.s3.connection import S3Connection
 
 import logging
@@ -25,20 +29,39 @@ def get_tmp_stor_directory(model=None):
         "{0}_files".format(settings.PROJECT_NAME))
 
     if model:
-        return os.path.join(
+        BASE = os.path.join(
             BASE,
             str(model.__class__.__name__)+str(model.pk))
+
+    # CREATE DIRECTORY IF NO EXIST
+    if not os.path.isdir(BASE):
+        uid = pwd.getpwnam(settings.APPLICATION_USER).pw_uid
+        gid = grp.getgrnam(settings.APPLICATION_GROUP).gr_gid
+        os.mkdir(BASE)
+        os.chown(BASE, uid, gid)
+
+    # Check permissions and change?
 
     return BASE
 
 
-def erase_all_temp_files(model, test=False):
+def erase_all_temp_files(model, test=False, force=False):
     '''
     This medthod requires a model so that you don't accidentally erase
     everything. Include model=None to erase the entire base directory.
     '''
-    import shutil
-    shutil.rmtree(get_tmp_stor_directory(model))
+
+    try:
+        import shutil
+        shutil.rmtree(get_tmp_stor_directory(model))
+    except:
+        if force:
+
+            p = Popen(
+                ['rm', '-Rf', os.path.join(get_tmp_stor_directory(model), '*')
+                 ], stdin=PIPE, stdout=PIPE)
+
+            output, errors = p.communicate()
 
 
 def prepare_temporary_environment(model, test=False, file_field='audio_file'):

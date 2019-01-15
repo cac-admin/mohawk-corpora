@@ -6,6 +6,7 @@ from celery.schedules import crontab
 from corpus.tasks_scheduled import CELERYBEAT_SCHEDULE as corpus_schedule
 from people.tasks_scheduled import CELERYBEAT_SCHEDULE as people_schedule
 from transcription.tasks_scheduled import CELERYBEAT_SCHEDULE as transcription_schedule
+from corpora.tasks_scheduled import CELERYBEAT_SCHEDULE as corpora_schedule
 
 from django.conf import settings
 
@@ -23,6 +24,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 CELERYBEAT_SCHEDULE = corpus_schedule
 CELERYBEAT_SCHEDULE.update(people_schedule)
 CELERYBEAT_SCHEDULE.update(transcription_schedule)
+CELERYBEAT_SCHEDULE.update(corpora_schedule)
+
 
 app.conf.beat_schedule = CELERYBEAT_SCHEDULE
 

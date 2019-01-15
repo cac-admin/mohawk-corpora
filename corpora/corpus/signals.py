@@ -8,7 +8,7 @@ from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 from people.models import KnownLanguage
 
-from corpora.celery import app
+from corpora.celery_config import app
 
 from django.core.cache import cache
 
