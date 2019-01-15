@@ -7,6 +7,6 @@ from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
     'erase_tmp_folder': {
         'task': 'corpora.tasks.erase_all_temp_files',
-        'schedule': crontab(minute=1, hour=1, day_of_week='*'),
+        'schedule': crontab(minute='*', hour='*', day_of_week='*'),
     },
 }
