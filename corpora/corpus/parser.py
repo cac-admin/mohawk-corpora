@@ -18,7 +18,7 @@ MAX_SENTENCE_LENGTH = 12*8
 def save_sentences_from_text(text_obj):
     try:
         contents = get_textfile_contents(text_obj.cleaned_file)
-    except AttributeError:
+    except Exception as e:
         contents = get_textfile_contents(text_obj.original_file)
 
     errors = 0

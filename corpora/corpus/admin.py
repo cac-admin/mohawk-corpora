@@ -45,8 +45,8 @@ class QualityControlAdmin(admin.ModelAdmin):
 
 @admin.register(Sentence)
 class SentenceAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'get_approved', 'get_approved_by',
-                    'num_recordings')
+    list_display = ('text', 'source', 'updated', 'get_approved',
+                    'get_approved_by', 'num_recordings')
     inlines = [QualityControlInline, RecordingsInline]
     search_fields = ['text']
 
@@ -173,11 +173,10 @@ class SourceAdmin(admin.ModelAdmin):
 @admin.register(Text)
 class TextAdmin(admin.ModelAdmin):
     list_display = (
+        'source', 'original_file', 'cleaned_file',
+        'description', 'notes',
         'primary_language', 'secondary_language', 'dialect',
-        'copyright', 'description', 'notes',
-        'config',
-        'original_file', 'cleaned_file',
-        'source', 'updated', )
+        'copyright', 'config', 'updated', )
     readonly_fields = ('updated', 'original_file_md5', 'cleaned_file_md5',)
     raw_id_fields = ('source', )
     actions = ('save_sentences', )
