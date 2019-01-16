@@ -167,7 +167,33 @@ class RecordingAdmin(admin.ModelAdmin):
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
-    pass
+    actions = ('delete_unapproved',)
+
+    def delete_unapproved(self, request, queryset):
+        for obj in queryset:
+            sentences = Sentence.objects\
+                .filter(source=obj)\
+                .annotate(sum_approved=models.Sum(
+                    models.Case(
+                        models.When(
+                            quality_control__isnull=True,
+                            then=models.Value(0)),
+                        models.When(
+                            quality_control__approved=True,
+                            then=models.Value(1)),
+                        models.When(
+                            quality_control__approved=False,
+                            then=models.Value(0)),
+                        default=models.Value(0),
+                        output_field=models.IntegerField())))\
+                .filter(sum_approved=0)
+            num_to_delete = sentences.count()
+            sentences.delete()
+            messages.add_message(
+                request, messages.INFO,
+                'Deleted {0} sentences from source {1}.'.format(
+                    num_to_delete, obj))
+    delete_unapproved.short_description = "Delete all upapproved sentences."
 
 
 @admin.register(Text)
