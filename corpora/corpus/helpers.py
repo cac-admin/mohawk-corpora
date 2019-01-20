@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Sum, Case, When, Value, IntegerField
-from corpus.models import Sentence
-from people.helpers import get_current_language, get_or_create_person
+from corpus.models import Sentence, QualityControl
+from people.helpers import \
+    get_current_language, get_or_create_person, get_person
 import random
+
+from django.contrib.contenttypes.models import ContentType
+
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -56,3 +61,19 @@ def get_sentences_annonymous(request):
 def get_sentence_annonymous(request):
     sentences_without_recordings = get_sentences_annonymous(request)
     return sentences_without_recordings.first()
+
+
+def approve_sentence(request, sentence):
+    person = get_person(request)
+    try:
+        qc = QualityControl.objects.create(
+            person=person,
+            approved=True,
+            approved_by=request.user,
+            notes='Approved in bulk using the admin page.',
+            object_id=sentence.pk,
+            content_type=ContentType.objects.get_for_model(sentence)
+        )
+    except:
+        return False
+    return True

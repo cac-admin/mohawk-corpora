@@ -8,6 +8,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from .models import QualityControl, Sentence, Recording, Source, Text
 from corpus.views.views import RecordingFileView
 from .parser import save_sentences_from_text
+from .helpers import approve_sentence
 
 
 class QualityControlInline(GenericTabularInline):
@@ -49,6 +50,7 @@ class SentenceAdmin(admin.ModelAdmin):
                     'get_approved_by', 'num_recordings')
     inlines = [QualityControlInline, RecordingsInline]
     search_fields = ['text']
+    actions = ('approve_sentences',)
 
     def get_queryset(self, request):
         qs = super(SentenceAdmin, self).get_queryset(request)
@@ -91,6 +93,16 @@ class SentenceAdmin(admin.ModelAdmin):
         return Recording.objects.filter(sentence=obj).count()
     num_recordings.short_description = '# Recordings'
     num_recordings.admin_order_field = 'recording__count'
+
+    def approve_sentences(self, request, queryset):
+        count = 0
+        for sentence in queryset:
+            count = count + 1 if approve_sentence(request, sentence) else count
+        messages.add_message(
+            request, messages.INFO,
+            '{0} sentence(s) of {1} sentence(s) approved.'.format(
+                count, queryset.count())
+        )
 
 
 @admin.register(Recording)
