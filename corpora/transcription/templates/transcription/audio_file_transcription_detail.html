@@ -384,9 +384,10 @@ class TranscriptionPlayer{
             self.seek(self.segments[self.currentIndex]);
           } else {
             // PLAY NEAR THE CURRENT TEXT USING LINEAR APPROX
-            var focusedSegment = event.currentTarget.parentElement;
+            var focusedSegment = window.getSelection().getRangeAt(0).startContainer.parentNode.parentNode
             self.logger(focusedSegment)
-            self.playAtCursorPosition(focusedSegment)
+            // self.playAtCursorPosition(focusedSegment)
+            self.playWithShortRewind(focusedSegment)
           }
           self.logger(`Current segment index: ${self.currentIndex}`)
         }
@@ -442,7 +443,7 @@ class TranscriptionPlayer{
           self.scroll()
         } else {
           self.audioElm.pause()
-          self.seek(self.segments[self.currentIndex], false)
+          // self.seek(self.segments[self.currentIndex], false)
         }
       }
     })
@@ -514,6 +515,22 @@ class TranscriptionPlayer{
     this.logger(`End time: ${end}`)
     this.logger(`Seeking to time: ${time}`)
     this.audioElm.currentTime = time/100;
+    this.audioElm.play()
+  }
+
+  playWithShortRewind(segment){
+    /*
+    Don't rewind to a previous caption, and don't loop to the begining of a caption
+    */
+
+    var rewind_time = this.audioElm.currentTime - 1.5
+    const end_time = parseFloat($(segment).find('.time').attr('x-data-start'))/100
+    console.log('Current segment end time: ',end_time)
+    console.log('Rewind time: ', rewind_time)
+    if (end_time > rewind_time){
+      rewind_time = end_time
+    }
+    this.audioElm.currentTime = rewind_time
     this.audioElm.play()
   }
 
