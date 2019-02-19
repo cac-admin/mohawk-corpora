@@ -31,6 +31,7 @@ from django.core.cache import cache
 from corpus.aggregate import get_num_approved, get_net_votes
 
 from corpora.mixins import SiteInfoMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -40,7 +41,8 @@ import logging
 logger = logging.getLogger('corpora')
 
 
-class SentenceListView(SiteInfoMixin, ListView):
+class SentenceListView(
+        SiteInfoMixin, ListView):
     model = Sentence
     x_description = _('Approve sentences to use when gathering recordings.')
     x_title = _('Sentences')

@@ -61,19 +61,20 @@
       </a>
     </li>      
 
-
-
-    
-{% if request.user.is_authenticated %}
-  
-    {% if request.user.is_authenticated and request.user.is_staff %}
+    {% if perms.corpus.change_sentence and perms.corpus.add_sentence and perms.corpus.delete_sentence %}
     {% url 'corpus:sentence-list' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
       <a href="{{path}}" class="nav-link" >
         <i class="far fa-lg fa-fw fa-font"></i>
         <div >{% trans 'Sentences' %}</div>
       </a>
-    </li>      
+    </li> 
+    {% endif %}
+    
+{% if request.user.is_authenticated %}
+  
+    {% if request.user.is_authenticated and request.user.is_staff %}
+     
 
     {% url 'stats' as path %}
     <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
