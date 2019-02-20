@@ -30,7 +30,7 @@ div.content{
   <div class="row sentence-block disabled">
     <div class="col-lg-7 sentence"></div>
     <div class="col-lg-5 actions">
-      {% if user.can_approve %}
+      {% if perms.corpus.change_sentence and perms.corpus.add_sentence and perms.corpus.delete_sentence %}
       <a href="#" class="save disabled"
         data-toggle="popover" 
         data-trigger="hover" 
@@ -96,11 +96,11 @@ div.content{
 $('a.approve').popover({})
 
 sentences = new Sentences(
-  {{person.id}},
-  {{content_type}},
-  '{% if user.can_approve %}?quality_control__approved=False{% else %}{%endif%}',
-  {{user.can_approve|lower}},
-  {% if user.can_approve %}{{user.id}}{% else %}null{% endif %}
+  {{ person.id }},
+  {{ content_type }},
+  '{% if perms.corpus.change_sentence and perms.corpus.add_sentence and perms.corpus.delete_sentence %}?quality_control__approved=False{% else %}{%endif%}',
+  {% if perms.corpus.change_sentence and perms.corpus.add_sentence and perms.corpus.delete_sentence %}true{% else %}false{%endif%},
+  {% if perms.corpus.change_sentence and perms.corpus.add_sentence and perms.corpus.delete_sentence %}{{user.id}}{% else %}null{% endif %}
 )
 
 sentences.next()
