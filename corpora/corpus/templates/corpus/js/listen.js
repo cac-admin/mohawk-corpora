@@ -1,9 +1,10 @@
 class Listen{
-  constructor(person_pk, target_element_selector, content_type, admin=false, user_id=null){
+  constructor(person_pk, target_element_selector, content_type, admin=false, editor=false, user_id=null){
     var self = this;
     this.debug = true
     this.sentence_block = $(target_element_selector)
     this.admin = admin
+    this.editor = editor
     this.user_id = user_id
     this.objects = null
     this.recording = null
@@ -224,7 +225,7 @@ class Listen{
 
       var display_text = self.recording.sentence_text
 
-      if (self.admin){
+      if (self.editor){
         var input_elm = $('<textarea id="editText" class="text-area" type="textarea" name="text" rows="4">')
         $(input_elm).val(display_text);
         $(this.sentence_block).find('.sentence').append(input_elm)

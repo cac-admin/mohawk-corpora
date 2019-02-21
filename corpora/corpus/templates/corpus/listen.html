@@ -177,7 +177,8 @@ listen = new Listen(
   {{ person.pk }},
   '.sentence-block',
   {{content_type}}
-  {% if user.can_approve %}, true, {{request.user.pk}} {% endif %}
+  {% if user.can_approve %},   true, true, {{request.user.pk}} 
+  {% elif user.can_review %}, false, true, {{request.user.pk}} {% endif %}
 );
 
 $(document).ready(function(){
