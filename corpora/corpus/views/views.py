@@ -332,7 +332,15 @@ the quality of recordings we use.')
             .order_by('num_qc')
 
         ct = ContentType.objects.get(model='recording')
-        user.can_approve = user.is_staff and user.is_authenticated()
+        user.can_review = False
+        user.can_approve = False
+        if user.is_staff and user.is_authenticated():
+            user.can_approve = True
+        elif user.has_perms([
+                'corpus.add_recording',
+                'corpus.change_recording',
+                'corpus.delete_recording']):
+            user.can_review = True
 
         if user.can_approve:
             kl = KnownLanguage()

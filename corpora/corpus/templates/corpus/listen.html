@@ -50,7 +50,7 @@ div.content{
       <a href="#" class="star disabled toggle-after-playback noborder" data-key="star"><i class="far fa-star fa-fw"></i></a>
       </div>
     -->
-      {% if user.can_approve %}
+      {% if user.can_approve or user.can_review %}
       <a href="#" class="follow-up disabled toggle-after-playback" data-key="follow_up">
         <i class="fas fa-reply fa-fw"></i><span>Follow Up</span></a>
       <a href="#" class="noise disabled toggle-after-playback" data-key="noise">
@@ -67,7 +67,7 @@ div.content{
       {% endif %}
 
       <a href="javascript:void(0)" class="auto-play auto-play-off"><span>Auto</span><i class="fas fa-play-circle fa-fw"></i></a>            
-      {% if user.can_approve %}
+      {% if user.can_approve or user.can_review %}
       <a href="#" class="approve disabled toggle-after-playback"
         data-toggle="popover" 
         data-trigger="hover" 
@@ -89,7 +89,7 @@ div.content{
 
     </div>
 
-    {% if user.can_approve %}
+    {% if user.can_approve or user.can_review %}
     <div class="col-12 sort-by buttons" >
       Sort By: 
       <a href="javascript:void(0)"
@@ -173,7 +173,13 @@ div.content{
 
 <script type="text/javascript">
 
-listen = new Listen({{person.pk}}, '.sentence-block', {{content_type}} {% if user.can_approve %}, true, {{request.user.pk}} {% endif %});
+listen = new Listen(
+  {{ person.pk }},
+  '.sentence-block',
+  {{content_type}}
+  {% if user.can_approve %}, true, {{request.user.pk}} {% endif %}
+);
+
 $(document).ready(function(){
   listen.next()
 });

@@ -122,7 +122,7 @@
 {% else %}
 
 
-    {% if available_languages|length > 1 %}
+    {% if available_languages|length > 999999 %}
     <li class="dropdown nav-item">
     {% get_current_language request as current_language %}
     {% get_known_languages request as known_languages %}
