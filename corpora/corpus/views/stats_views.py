@@ -98,7 +98,11 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
             },
         }
 
-        total_recordings = 0
+        r = recordings.filter(
+            created__lt=start_day+timezone_shift)\
+            .aggregate(Sum('duration'))
+
+        total_recordings = r['duration__sum']/60
         total_reviews = 0
         counter = 0
         tomorrow = next_day + day_offset
