@@ -23,8 +23,19 @@ div.content{
 {% endaddtoblock %}
   
 <div class="container">
+
   <div class="row">
     <div class="col">
+      <form>
+        <input type="date" name="start_date" value="{{start_day|date:'Y-m-d'}}">
+        <input type="date" name="end_date" value="{{end_day|date:'Y-m-d'}}">
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </div>    
+  <div class="row">
+    <div class="col">
+
       
       <h1>{% trans "Recordings" %}</h1>
 
@@ -196,7 +207,7 @@ var border = ''
   
 $(document).ready(function(){
   window.setInterval(function(){
-    $.ajax({url: "?format=json"}).done(function(data){
+    $.ajax({url: "?format=json&" + window.location.search.replace("?","")}).done(function(data){
 
       recordings = data.data.recordings
       growth_rate = data.data.growth_rate
