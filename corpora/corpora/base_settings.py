@@ -156,6 +156,8 @@ CORS_ORIGIN_WHITELIST = \
     ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
+CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ['172.28.128.13', 'kaituhi.nz']
+
 # STORAGES #
 DEFAULT_FILE_STORAGE =      os.environ['FILE_STORAGE']
 AWS_ACCESS_KEY_ID =         os.environ['AWS_ID']
