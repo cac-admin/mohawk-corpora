@@ -46,8 +46,17 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
             .distinct()\
             .order_by('-updated')
 
-        start_date = recordings.last().created
-        end_date = recordings.first().created
+        start_date = self.request.GET.get('start_date', None)
+        try:
+            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        except:
+            start_date = timezone.now() - datetime.timedelta(days=30)
+
+        end_date = self.request.GET.get('end_date', None)
+        try:
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        except:
+            end_date = timezone.now()
 
         start_day = \
             timezone.make_aware(
@@ -89,15 +98,19 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
             },
         }
 
-        total_recordings = 0
+        r = recordings.filter(
+            created__lt=start_day+timezone_shift)\
+            .aggregate(Sum('duration'))
+
+        total_recordings = r['duration__sum']/60
         total_reviews = 0
         counter = 0
         tomorrow = next_day + day_offset
         # next_day = next_day
-        while next_day < timezone.now() - timezone_shift:
+        while next_day < end_day - timezone_shift:
 
             if counter == 0:
-                start_30days_back = timezone.now() - datetime.timedelta(days=30)
+                start_30days_back = start_day
                 # if start_30days_back > next_day:
                 tomorrow = timezone.make_aware(
                         datetime.datetime.combine(start_30days_back, datetime.time()),

@@ -30,7 +30,9 @@ def get_sentences(request,
 
     query = sentences.filter(recording__isnull=True)
 
-    if query.count() > 0:
+    # This creates a bad loop if only one sentence without a recording
+    # only that sentence is served. Perhpas we should order by num recordings
+    if query.count() > 100:
         sentences = query
     else:
         sentences = sentences\
