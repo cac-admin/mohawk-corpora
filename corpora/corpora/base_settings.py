@@ -98,7 +98,7 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -157,9 +157,6 @@ CORS_ORIGIN_WHITELIST = \
     ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
-CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ('172.28.128.13', 'kaituhi.nz')
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 # STORAGES #
 DEFAULT_FILE_STORAGE =      os.environ['FILE_STORAGE']

@@ -11,7 +11,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 
-from people.helpers import get_person
+from people.helpers import get_person, get_current_language
+
 from people.competition import \
     filter_qs_for_competition, \
     filter_recordings_to_top_ten, \
@@ -219,8 +220,9 @@ class SentencesView(generics.ListCreateAPIView):
     permission_classes = (IsStaffOrReadOnly,)
 
     def get_queryset(self):
-        # person = get_person(self.request)
-        queryset = Sentence.objects.all()\
+        person = get_person(self.request)
+        language = get_current_language(self.request)
+        queryset = Sentence.objects.filter(language=get_current_language)\
             .order_by('quality_control__approved', 'quality_control__updated')
 
         q = self.request.query_params.get('recording', 'False')
@@ -382,7 +384,9 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         return serializer_class
 
     def get_queryset(self):
-        queryset = Recording.objects.all()\
+        language = get_current_language(self.request)
+
+        queryset = Recording.objects.filter(language=language)\
             .prefetch_related(
                 Prefetch(
                     'quality_control',
@@ -405,6 +409,9 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
+
+        if queryset.count() == 0:
+            return []
 
         if sort_by in ['listen', 'random', 'recent']:
 
@@ -446,7 +453,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             # Here we return a single object, so rather than making a whole
             # new DB query lets be clever an use a cache. We'll need to get
             # the most recent recording that was served however...
-            query_cache_key = '{0}:recording-viewset'.format(person.uuid)
+            query_cache_key = '{0}:{1}:recording-viewset'.format(person.uuid, language)
             pk = get_random_pk_from_queryset(queryset, query_cache_key)
             return [Recording.objects.get(pk=pk)]
 
@@ -523,6 +530,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
+        language = get_current_language(self.request)
 
         # we should treat all anonymous usesrs as the same so we dont' overload shit!
         awhi = self.request.query_params.get('awhi', False)
@@ -534,20 +542,23 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 raise ValueError('You must pass an integer to the awhi field')
 
             recordings = Recording.objects\
+                .filter(language=language)\
                 .filter(sentence__pk=int(awhi))\
                 .filter(quality_control__approved=True)\
                 .first()
 
             # if len(recordings) > 0:
-            #     query_cache_key = '{0}:listen-awhi'.format(pk)
+            #     query_cache_key = '{0}:{1}:listen-awhi'.format(pk, language)
             #     cpk = get_random_pk_from_queryset(recordings, query_cache_key)
             #     return [Recording.objects.get(pk=cpk)]
 
             return recordings
 
         # ctm = ContentTypeManager()
+
         queryset = Recording.objects\
             .exclude(person=person)\
+            .filter(language=language)\
             .prefetch_related(
                 Prefetch(
                     'quality_control',
@@ -625,13 +636,16 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             .order_by('num_qc')
         '''
 
+        if queryset.count() == 0:
+            return []
+
         if 'random' in sort_by.lower():
             if person is not None:
                 uuid = person.uuid
             else:
                 uuid = 'None-Person-Object'
 
-            query_cache_key = '{0}:listen-viewset'.format(uuid)
+            query_cache_key = '{0}:{1}:listen-viewset'.format(uuid, language)
             pk = get_random_pk_from_queryset(queryset, query_cache_key)
 
             key = '{0}:{1}:listen'.format(uuid, pk)

@@ -11,4 +11,10 @@ LANGUAGE_CODE = 'en'
 
 LOGIN_REDIRECT_URL = "/dashboard"
 
-X_FRAME_OPTIONS = 'ALLOW-FROM koreromaori.com koreromaori.io dev.koreromaori.com dev.koreromaori.io corporalocal.io'
+X_FRAME_OPTIONS = 'ALLOW-FROM koreromaori.com koreromaori.io \
+dev.koreromaori.com dev.koreromaori.io corporalocal.io \
+172.28.128.13 kaituhi.nz'
+
+CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ('172.28.128.13', 'kaituhi.nz')
+
+# CORS_ORIGIN_ALLOW_ALL = True

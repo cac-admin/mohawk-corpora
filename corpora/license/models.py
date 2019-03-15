@@ -8,6 +8,8 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from people.models import Person
 
+from corpus.base_settings import LANGUAGES, LANGUAGE_CODE
+
 
 class License(models.Model):
     license_name = models.CharField(
@@ -22,6 +24,12 @@ class License(models.Model):
         help_text=_('How the license should be displayed. This field is meant\
                     to include style e.g. html.'),
         null=True)
+    language = models.CharField(
+        choices=LANGUAGES,
+        max_length=16,
+        verbose_name=_('language'),
+        default=LANGUAGE_CODE)
+
     # should the site have alink to this? or each person can choose a icense?
     # initially just have one license in the database and that's the only one
     # they can use

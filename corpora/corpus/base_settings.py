@@ -59,7 +59,7 @@ LANGUAGES = (
     ('smo',    _('Samoan')),
     ('rar',    _('Cook Island Maori')),
     # ('en',    _('English')),
-    ('en_NZ', _('New Zealand English')),
+    # ('en_NZ', _('New Zealand English')),
 )
 
 DIALECTS = (

@@ -3,8 +3,10 @@
 from django.utils import translation
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from people.helpers import get_current_language, get_or_create_person
-from license.models import SiteLicense
+from people.models import KnownLanguage
+from license.models import SiteLicense, License
 from django.contrib.sites.shortcuts import get_current_site
 
 from urlparse import parse_qs
@@ -140,11 +142,12 @@ class LicenseMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
+        person = get_or_create_person(request)
         try:
+            active = KnownLanguage.objects.get(active=True, person=person)
+            license = License.objects.get(language=active.language)
+        except ObjectDoesNotExist:
             license = SiteLicense.objects.get(site=get_current_site(request))
-        except:
-            license = None
-
         request.license = license
 
         response = self.get_response(request)

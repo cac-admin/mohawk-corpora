@@ -131,29 +131,32 @@ def set_language_cookie(response, language):
 
 
 def set_current_language_for_person(person, language):
+    # First, deactivate active languages
+    active = KnownLanguage.objects.filter(person=person, active=True)
+    for kl in active:
+        kl.active = False
+        kl.save()
+
     try:
         kl = KnownLanguage.objects.get(person=person, language=language)
-        kl.active = True
-        kl.save()
     except ObjectDoesNotExist:
         kl = KnownLanguage.objects.create(person=person, language=language)
+    finally:
         kl.active = True
         kl.save()
+
     translation.activate(language)
 
 
 def get_current_language(request):
     language = translation.get_language()
-    if request.user.is_authenticated():
-        person = get_or_create_person(request)
-        try:
-            active_language = \
-                KnownLanguage.objects.get(person=person, active=True)
-            return active_language.language
+    person = get_or_create_person(request)
+    try:
+        active_language = \
+            KnownLanguage.objects.get(person=person, active=True)
+        return active_language.language
 
-        except ObjectDoesNotExist:
-            return language
-    else:
+    except ObjectDoesNotExist:
         return language
 
 
