@@ -26,6 +26,7 @@ from rest_framework.response import Response
 from people.helpers import get_person
 from rest_framework.authtoken.models import Token
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 import logging
 logger = logging.getLogger('corpora')
@@ -35,21 +36,21 @@ class HomeView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/home.html"
     x_title = _('kōreromāori.io')
     x_description = _('Indigenous language tools powered by machine learning.')
-    x_image = "/static/reo_api/img/home.jpg"
+    x_image = static("reo_api/img/icon.png")
 
 
 class DocsDashboardView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/docs.html"
     x_title = _('Documentation')
     x_description = _('API documentation.')
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/icon.png")
 
 
 class BrowseAPIDashboardView(SiteInfoMixin, TemplateView):
     template_name = "reo_api/api_browse.html"
     x_title = _('Browseable API')
     x_description = _('Browseable API.')
-    x_image = "/static/reo_api/img/api.jpg"
+    x_image = static("reo_api/img/icon.png")
 
 
 class TokenView(

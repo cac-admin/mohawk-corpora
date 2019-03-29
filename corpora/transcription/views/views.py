@@ -82,7 +82,7 @@ class DashboardView(
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
     template_name = "transcription/dashboard.html"
-    x_image = static("reo_api/img/transcribe_tool.jpg")
+    x_image = static("reo_api/img/icon.png")
 
     def test_func(self):
         return self.request.user.is_authenticated
@@ -109,6 +109,7 @@ class TranscribeView(
     x_description = _('Try the speech recognizer!')
     x_title = _('Kōrero Demo')
     template_name = "transcription/speak.html"
+    x_image = static("reo_api/img/icon.png")
 
     def test_func(self):
 
@@ -127,7 +128,7 @@ class AudioFileTranscriptionView(
         SiteInfoMixin, UserPassesTestMixin, DetailView):
     x_description = _('Edit your transcription.')
     x_title = _('Edit Transcription')
-    x_image = static("reo_api/img/transcribe_tool.jpg")
+    x_image = static("reo_api/img/icon.png")
     model = AudioFileTranscription
     context_object_name = 'aft'
     template_name = 'transcription/audio_file_transcription_detail.html'
@@ -169,7 +170,7 @@ class AudioFileTranscriptionListView(
         SiteInfoMixin, UserPassesTestMixin, ListView):
     x_description = _('List of your transcriptions.')
     x_title = _('Transcriptions')
-    x_image = static("reo_api/img/transcribe_tool.jpg")
+    x_image = static("reo_api/img/icon.png")
     model = AudioFileTranscription
     context_object_name = 'transcriptions'
     template_name = 'transcription/audio_file_transcription_list.html'
