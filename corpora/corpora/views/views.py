@@ -28,6 +28,8 @@ from django.views.decorators.cache import cache_page
 
 from corpora.mixins import SiteInfoMixin
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
+
 
 class HomeView(SiteInfoMixin, TemplateView):
     template_name = "corpora/home.html"
@@ -35,7 +37,7 @@ class HomeView(SiteInfoMixin, TemplateView):
     x_description = _("Kōrero Māori is teaching computers indigenous languages.\
         We've created an open sourced web app to help indigenous\
         communities strealine their work in language revitalisation.")
-    x_image = "/static/corpora/img/icon.png"
+    x_image = static("corpora/img/icon.png")
 
     def get_context_data(self, **kwargs):
         context = super(
