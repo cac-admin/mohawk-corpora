@@ -44,6 +44,8 @@ from people.views.stats_views import JSONResponseMixin
 
 from transcription.tasks import launch_transcription_api
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -80,7 +82,7 @@ class DashboardView(
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
     template_name = "transcription/dashboard.html"
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/transcribe_tool.jpg")
 
     def test_func(self):
         return self.request.user.is_authenticated
@@ -125,7 +127,7 @@ class AudioFileTranscriptionView(
         SiteInfoMixin, UserPassesTestMixin, DetailView):
     x_description = _('Edit your transcription.')
     x_title = _('Edit Transcription')
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/transcribe_tool.jpg")
     model = AudioFileTranscription
     context_object_name = 'aft'
     template_name = 'transcription/audio_file_transcription_detail.html'
@@ -167,7 +169,7 @@ class AudioFileTranscriptionListView(
         SiteInfoMixin, UserPassesTestMixin, ListView):
     x_description = _('List of your transcriptions.')
     x_title = _('Transcriptions')
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/transcribe_tool.jpg")
     model = AudioFileTranscription
     context_object_name = 'transcriptions'
     template_name = 'transcription/audio_file_transcription_list.html'
