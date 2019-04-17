@@ -62,6 +62,11 @@ django-autocomplete-light==3.2.10
 #Support
 pyyaml
 
+# Transcription
+# To calculate wer from speech api
+# jiwer - requires python 3
+jellyfish==0.6
+
 
 # Analytics
 django-analytical
