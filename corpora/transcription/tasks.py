@@ -328,5 +328,5 @@ def calculate_wer_for_null():
                 'ERROR calculated wer for Transcription {0}:{1}'.format(
                     t.pk, t.text))
         count = count + 1
-        if count > 20000:
+        if count > 1000:
             return "Done"
