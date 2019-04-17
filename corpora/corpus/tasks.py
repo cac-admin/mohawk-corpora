@@ -231,7 +231,7 @@ def encode_audio(recording, test=False, codec='aac'):
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
-        'aac': ['libfdk_aac', 'm4a'],
+        'aac': ['aac', 'm4a'],
         'wav': ['pcm_s16le', 'wav', 16000, 1]
     }
 
@@ -250,7 +250,9 @@ def encode_audio(recording, test=False, codec='aac'):
             audio = True
 
     if audio:
-        file_name = recording.get_recording_file_name() + '_16kHz'
+        file_name = recording.get_recording_file_name()
+        if codec in 'wav':
+            file_name = file_name + '_16kHz'
         extension = codecs[codec][1]
 
         if codec in 'wav':
