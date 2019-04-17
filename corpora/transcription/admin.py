@@ -11,11 +11,13 @@ from people.helpers import get_person
 from transcription.utils import create_transcription_segments_admin
 from transcription.transcribe import transcribe_aft_async
 
+
 @admin.register(Transcription)
 class TranscriptionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'corrected_text', 'recording')
+    list_display = ('text', 'corrected_text', 'recording', 'word_error_rate')
     date_hierarchy = 'updated'
     raw_id_fields = ('recording',)
+    readonly_fields = ('word_error_rate',)
 
 
 @admin.register(AudioFileTranscription)

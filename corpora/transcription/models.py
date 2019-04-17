@@ -37,6 +37,12 @@ def transcription_directory(instance, filename):
 
 
 class Transcription(models.Model):
+    '''
+    A transcription is very specifically a machine transcription
+    of a human recording. Perhaps we should have called this model
+    something else but oh well.
+    '''
+
     recording = models.ForeignKey(
         'corpus.Recording')
 
@@ -67,6 +73,12 @@ class Transcription(models.Model):
     transcriber_log = JSONField(
         null=True,
         blank=True)
+
+    word_error_rate = models.FloatField(
+        default=None,
+        blank=True,
+        editable=False,
+        null=True)
 
     # Need a model to store the extra metadata from the transcription
     # But we also need the nice times info
