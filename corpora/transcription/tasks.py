@@ -316,12 +316,17 @@ def calculate_wer_for_null():
     count = 0
     for t in trans:
         # Calculate wer
-        original = t.recording.sentence_text.lower()
-        t.word_error_rate = (
-            levd(original, t.text.lower()) /
-            float(len(original))
-            )
-        t.save()
+        try:
+            original = t.recording.sentence_text.lower()
+            t.word_error_rate = (
+                levd(original, t.text.lower()) /
+                float(len(original))
+                )
+            t.save()
+        except:
+            logger.error(
+                'ERROR calculated wer for Transcription {0}:{1}'.format(
+                    t.pk, t.text))
         count = count + 1
         if count > 20000:
             return "Done"
