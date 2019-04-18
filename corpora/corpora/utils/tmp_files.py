@@ -28,6 +28,10 @@ def get_tmp_stor_directory(model=None):
         '/tmp',
         "{0}_files".format(settings.PROJECT_NAME))
 
+    if not os.path.isdir(BASE):
+        os.mkdir(BASE)
+        os.chown(BASE, uid, gid)
+
     if model:
         BASE = os.path.join(
             BASE,
