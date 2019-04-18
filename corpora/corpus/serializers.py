@@ -275,13 +275,15 @@ class RecordingSerializer(serializers.ModelSerializer):
     updated = serializers.SerializerMethodField()
     quality_control_aggregate = serializers.SerializerMethodField()
     transcription = serializers.SerializerMethodField()
+    word_error_rate = serializers.SerializerMethodField()
 
     class Meta:
         model = Recording
         fields = ('person', 'sentence', 'audio_file_url', 'quality_control',
                   'id', 'sentence_text', 'user_agent', 'created', 'updated',
                   'audio_file_md5', 'audio_file_wav_md5',
-                  'quality_control_aggregate', 'transcription',)
+                  'quality_control_aggregate', 'transcription',
+                  'word_error_rate')
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
@@ -297,6 +299,14 @@ class RecordingSerializer(serializers.ModelSerializer):
         try:
             t = obj.transcription_set.first()
             return t.text
+        except:
+            pass
+        return None
+
+    def get_word_error_rate(self, obj):
+        try:
+            t = obj.transcription_set.first()
+            return t.word_error_rate
         except:
             pass
         return None
