@@ -416,8 +416,12 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             queryset = queryset\
                 .annotate(
                     reviewed=Case(
+                        When(quality_control__approved=True, then=Value(1)),
+                        When(quality_control__delete=True, then=Value(1)),
+                        When(quality_control__good__gte=1, then=Value(1)),
+                        When(quality_control__bad__gte=1, then=Value(1)),
                         When(quality_control__isnull=True, then=Value(0)),
-                        When(quality_control__follow_up=True, then=Value(0)),
+                        # When(quality_control__follow_up=True, then=Value(0)),  # potential to kee; showing up - need to remove follow up
                         default=Value(1),
                         output_field=IntegerField()))\
                 .filter(reviewed=0)\
