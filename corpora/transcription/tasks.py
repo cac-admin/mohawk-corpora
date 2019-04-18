@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
@@ -202,7 +203,7 @@ def transcribe_recording(pk):
     start = timezone.now()
     if not transcription.text:
         try:
-            from jellyfish import levenshtein_distance as levd
+            from transcription.wer.wer import word_error_rate
             # This should tell us if the file exists
             recording.audio_file_wav.open('rb')
             result = transcribe_audio_sphinx(
@@ -214,10 +215,12 @@ def transcribe_recording(pk):
             transcription.transcriber_log = result
             # Calculate wer
             original = recording.sentence_text.lower()
-            transcription.word_error_rate = (
-                levd(original, transcription.text.lower()) /
-                float(len(original))
-                )
+            transcription.word_error_rate = \
+                word_error_rate(
+                    original,
+                    transcription.text,
+                    recording.language)
+
             transcription.save()
             dt = timezone.now() - start
             return "Transcribed {0} in {1}s".format(
