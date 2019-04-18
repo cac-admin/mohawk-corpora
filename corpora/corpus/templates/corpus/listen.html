@@ -100,6 +100,10 @@ div.content{
          class="sort-by recent " 
          id='sort-by-recent'
          data-sort-url-query="?sort_by=recent"><span>Recent</span></a>
+      <a href="javascript:void(0)" 
+         class="sort-by wer " 
+         id='sort-by-wer'
+         data-sort-url-query="?sort_by=wer"><span>High word error rate</span></a>         
     </div>
     <div class="col-12 filter-by buttons" >
       <span>Filter By Person ID </span><input type="textfield"
@@ -244,7 +248,7 @@ function _didReadInstructions(){
       $('.recording-info').append(created)
     })
 
-    $('#sort-by-recent, #sort-by-random').on('click', function(e){
+    $('#sort-by-recent, #sort-by-random, #sort-by-wer').on('click', function(e){
       if (!$(e.currentTarget).hasClass('on')){
         $('#sort-by-recent, #sort-by-random').removeClass('on')
         $(e.currentTarget).addClass('on')

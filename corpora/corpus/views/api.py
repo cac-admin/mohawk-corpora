@@ -406,7 +406,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         sort_by = sort_by.lower()
         person = get_person(self.request)
 
-        if sort_by in ['listen', 'random', 'recent']:
+        if sort_by in ['listen', 'random', 'recent', 'wer', '-wer']:
 
             # Disable this for now
             # if sort_by not in 'recent':
@@ -437,6 +437,17 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
             if 'recent' in sort_by:
                 queryset = queryset.order_by('-pk')
+                return queryset
+            elif 'wer' in sort_by:
+
+                queryset = queryset\
+                    .filter(transcription__word_error_rate__gte=0.75)\
+
+                if '-wer' in sort_by:
+                    queryset = queryset.order_by('-transcription__word_error_rate')
+                else:
+                    queryset = queryset.order_by('-transcription__word_error_rate')
+
                 return queryset
 
             # We use these for comps, disabling for now as they're VERY slow.
