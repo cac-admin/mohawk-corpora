@@ -454,6 +454,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                             default=Value(1),
                             output_field=IntegerField()))\
                     .filter(reviewed=0)\
+                    .filter(transcription__word_error_rate__isnull=False)\
                     .filter(transcription__word_error_rate__gte=0.75)
 
                 if '-wer' in sort_by:
