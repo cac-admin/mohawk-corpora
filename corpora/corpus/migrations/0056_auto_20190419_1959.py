@@ -21,6 +21,13 @@ def convert_quality_controls(apps, schema_editor):
 
     quality_controls = RecordingQualityControl.objects.using(db_alias).all()
 
+    num_qc = quality_controls.count()
+    num_rqc = quality_controls.filter(content_type__model='recording').count()
+    num_sqc = quality_controls.filter(content_type__model='sentence').count()
+
+    if num_qc != num_sqc + num_rqc:
+        raise Exception("{0} != {1} + {2}".format(num_qc, num_sqc, num_rqc))
+
     to_delete = []
     for qc in quality_controls:
         ct = ContentType.objects.get(
@@ -51,6 +58,7 @@ def convert_quality_controls(apps, schema_editor):
             if not sqc:
                 print("ERROR converting {0}".format(qc))
             else:
+                sqc.save()
                 to_delete.append(qc.pk)
 
         elif 'recording' in qc.content_type.model:
@@ -67,6 +75,10 @@ def convert_quality_controls(apps, schema_editor):
         print("Deleting old object {0}".format(pk))
         qc.delete()
 
+    if num_rqc != RecordingQualityControl.objects.using(db_alias).all().count():
+        raise Exception('Error migrations recordings qcs')
+    if num_sqc != SentenceQualityControl.objects.using(db_alias).all().count():
+        raise Exception('Error migrations sentence qcs')
 
 def restore_quality_controls(apps, schema_editor):
 
@@ -117,6 +129,7 @@ def restore_quality_controls(apps, schema_editor):
         if not rqc:
             print("Did not create recording qc")
         else:
+            rqc.save()
             to_delete.append(qc.pk)
 
     for pk in to_delete:
