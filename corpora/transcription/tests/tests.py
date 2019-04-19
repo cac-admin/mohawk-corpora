@@ -23,10 +23,16 @@ sample_3 = ["reira nui-\u0101-rua tuia tuia h\u016b", "<s> 0.230 0.280 0.999500"
 sample_4 = ["aihe", "<s> 0.000 0.020 0.999900", "aihe 0.030 0.400 0.006329", "</s> 0.410 0.550 1.000000", "ka m\u014dhio koutou ki te patu", "<s> 0.540 0.560 1.000000", "ka 0.570 0.620 0.689807", "m\u014dhio 0.630 0.990 0.998801", "koutou 1.000 1.310 0.238433", "ki 1.320 1.430 0.862761", "te 1.440 1.560 0.964926", "patu 1.570 2.670 1.000000", "a ha", "<s> 4.120 4.230 0.999800", "a 4.240 4.290 0.001030", "ha 4.300 4.670 0.111375", "</s> 4.680 5.110 1.000000", "\u0101", "<s> 5.790 5.870 0.999800", "\u0101 5.880 6.220 0.964347", "<sil> 6.230 6.560 1.000000", "<sil> 6.570 6.900 1.000000", "</s> 6.910 7.310 1.000000", "", "<s> 7.780 8.020 1.000000", "</s> 8.030 8.470 1.000000", "ko aua reo mahara", "<s> 8.850 8.910 1.000000", "ko 8.920 9.030 0.407749", "aua 9.040 9.180 0.433399", "reo 9.190 9.490 1.000000", "mahara 9.500 9.990 1.000000", ""]
 # sample_5 = ["ng\u0101 whakatipuranga h\u014du ki te whakaora me t\u014d t\u0101tou m\u0101oritanga \u014d whanaunga t\u0113n\u0101 koutou", "<s> 0.000 0.020 0.999800", "ng\u0101 0.030 0.120 0.984618", "whakatipuranga 0.130 1.030 0.701355", "h\u014du 1.040 1.480 0.082754", "ki 1.490 1.610 0.802017", "te 1.620 1.740 0.922185", "whakaora 1.750 2.570 0.708830", "me 2.580 2.660 0.536831", "t\u014d 2.670 2.830 0.989257", "t\u0101tou 2.840 3.190 0.864402", "m\u0101oritanga 3.200 3.780 1.000000", "\u014d 3.790 4.240 0.416486", "<sil> 4.250 4.520 0.992031", "whanaunga 4.530 5.220 0.969278", "<sil> 5.230 5.650 0.999400", "t\u0113n\u0101 5.660 5.960 0.984322", "koutou 5.970 6.650 1.000000", "t\u0113n\u0101 koutou t\u0113n\u0101 koutou katoa", "<s> 6.780 6.840 1.000200", "t\u0113n\u0101 6.850 7.120 0.941475", "koutou 7.130 7.480 1.000100", "<sil> 7.490 7.690 0.791895", "<sil> 7.700 8.000 0.911731", "t\u0113n\u0101 8.010 8.260 0.585633", "koutou 8.270 8.500 0.973845", "katoa 8.510 8.890 1.000000", "<sil> 8.900 9.670 1.000000", "<sil> 9.680 10.060 1.000000", "<sil> 10.070 10.410 1.000000", "</s> 10.420 10.480 1.000000", ""]
 
-original_1 = u'Whakarongo mai ki te reo irirangi o te hiku o te ika 97.1'
-asr_1 = u'whakarongo mai ki te reo irirangi o te hiku o te ika iwa tekau mā whitutahi'
-original_2 = u'1, 2, 3, 45, 100, 1000, 537, 9375'
-asr_2 = u'tahi rua toru whā tekau mā rima kotahi rau kotahi mano rima rau toru tekau mā whitu iwa mano toru rau whitu tekau mā rima'
+
+asr_wer = \
+    ((u'Te 22 o ngā rā o Ākuhata 1898',
+      u'te rua tekau mā rua o ngā rā o ākuhata kotahi mano waru rau iwa tekau mā waru'),
+     (u'11 o ngā rā Hepetema 1875',
+      u'tekau mā tahi o ngā rā hepetema kotahi mano waru rau whitu tekau mā rima'),
+     (u'Whakarongo mai ki te reo irirangi o te hiku o te ika 97.1',
+      u'whakarongo mai ki te reo irirangi o te hiku o te ika iwa tekau mā whitutahi'),
+     (u'1, 2, 3, 45, 100, 1000, 537, 9375',
+      u'tahi rua toru whā tekau mā rima kotahi rau kotahi mano rima rau toru tekau mā whitu iwa mano toru rau whitu tekau mā rima'))
 
 
 class TestTranscribeMethods(TestCase):
@@ -82,16 +88,8 @@ class TestWERCalculatio(TestCase):
         from transcription.wer.wer import word_error_rate
         from transcription.wer.mi import clean_text_for_wer_calculation
 
-        logger_test.debug(clean_text_for_wer_calculation(original_1))
-        logger_test.debug(asr_1)
-        logger_test.debug(clean_text_for_wer_calculation(original_2))
-        logger_test.debug(asr_2)
-        self.assertEqual(
-            0,
-            word_error_rate(original_1, asr_1, 'mi')
-            )
+        for item in asr_wer:
+            logger_test.debug(clean_text_for_wer_calculation(item[0]))
+            logger_test.debug(item[1])
+            self.assertEqual(0, word_error_rate(item[0], item[1], 'mi'))
 
-        self.assertEqual(
-            0,
-            word_error_rate(original_2, asr_2, 'mi')
-            )
