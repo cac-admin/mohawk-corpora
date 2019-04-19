@@ -253,7 +253,7 @@ function _didReadInstructions(){
 
     $('#sort-by-recent, #sort-by-random, #sort-by-wer').on('click', function(e){
       if (!$(e.currentTarget).hasClass('on')){
-        $('#sort-by-recent, #sort-by-random, #sort-by-random').removeClass('on')
+        $('#sort-by-recent, #sort-by-random, #sort-by-wer').removeClass('on')
         $(e.currentTarget).addClass('on')
         listen.url_filter_query = e.currentTarget.getAttribute('data-sort-url-query')
         listen.next_url = null
