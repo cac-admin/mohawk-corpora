@@ -1,4 +1,7 @@
-from .models import QualityControl, Sentence, Recording, Source, Text
+from .models import \
+    RecordingQualityControl, Sentence, Recording, Source, Text, \
+    SentenceQualityControl
+
 from rest_framework import serializers
 from people.helpers import get_person
 from rest_framework.response import Response
@@ -36,7 +39,7 @@ class SetPersonFromTokenWhenSelf(object):
         return super(SetPersonFromTokenWhenSelf, self).run_validation(d2)
 
 
-class QualityControlHyperLinkedRelatedField(
+class RecordingQualityControlHyperLinkedRelatedField(
         serializers.HyperlinkedRelatedField):
 
     def to_representation(self, value):
@@ -44,53 +47,69 @@ class QualityControlHyperLinkedRelatedField(
             value.__class__.__name__.lower()
             )
         return super(
-            QualityControlHyperLinkedRelatedField,
+            RecordingQualityControlHyperLinkedRelatedField,
             self
             ).to_representation(value)
 
 
-# class ContentTypeStringRelatedField(serializers.StringRelatedField):
-#     def to_representation(self, value):
-#         return value.model
+class SentenceQualityControlHyperLinkedRelatedField(
+        serializers.HyperlinkedRelatedField):
 
-#     def to_internal_value(self, value):
-#         model = ContentType.objects.get(model='sentence')
-#         return model.id
+    def to_representation(self, value):
+        self.view_name = 'api:{0}-detail'.format(
+            value.__class__.__name__.lower()
+            )
+        return super(
+            SentenceQualityControlHyperLinkedRelatedField,
+            self
+            ).to_representation(value)
 
 
-class QualityControlSerializer(
+class RecordingQualityControlSerializer(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
-    content_object = QualityControlHyperLinkedRelatedField(
+    content_object = RecordingQualityControlHyperLinkedRelatedField(
         read_only=True,
         view_name='api:sentence-detail'
         )
-    # person = serializers.PrimaryKeyRelatedField()
 
     class Meta:
-        model = QualityControl
-        fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'object_id',
-                  'content_type', 'content_object', 'updated', 'person',
+        model = RecordingQualityControl
+        fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
+                  'person', 'recording',
                   'delete', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
 
-    # def run_validation(self, data):
-    #     if 'person' in data.keys():
-    #         if data['person'] == 'self':
-    #             d2 = data.copy()
-    #             person = get_person(self.context['request'])
-    #             d2['person'] = person.id
-    #     return super(QualityControlSerializer, self).run_validation(d2)
+
+class SentenceQualityControlSerializer(
+        SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
+    content_object = SentenceQualityControlHyperLinkedRelatedField(
+        read_only=True,
+        view_name='api:sentence-detail'
+        )
+
+    class Meta:
+        model = SentenceQualityControl
+        fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
+                  'person', 'sentence',
+                  'delete', 'follow_up', 'noise', 'star',
+                  'machine', 'source', 'notes')
 
 
-class QualityControRelatedField(serializers.RelatedField):
+class RecordingQualityControRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        serializer = QualityControlSerializer(value, context=self.parent.context)
+        serializer = RecordingQualityControlSerializer(value, context=self.parent.context)
+        return serializer.data
+
+
+class SentenceQualityControRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = SentenceQualityControlSerializer(value, context=self.parent.context)
         return serializer.data
 
 
 class ListenQualityControRelatedField(serializers.RelatedField):
     def to_representation(self, value):
-        serializer = QualityControlSerializer(value, context=self.parent.context)
+        serializer = RecordingQualityControlSerializer(value, context=self.parent.context)
         person = get_person(self.parent.context['request'])
         data = serializer.data
         return data
@@ -126,7 +145,7 @@ class SourceSerializer(serializers.ModelSerializer):
 
 
 class SentenceSerializer(serializers.HyperlinkedModelSerializer):
-    quality_control = QualityControRelatedField(
+    quality_control = SentenceQualityControRelatedField(
         many=True,
         read_only=True,
     )
@@ -262,7 +281,7 @@ class RecordingSerializer(serializers.ModelSerializer):
         many=False,
         read_only=True
     )
-    quality_control = QualityControRelatedField(
+    quality_control = RecordingQualityControRelatedField(
         many=True,
         read_only=True,
     )
@@ -286,14 +305,14 @@ class RecordingSerializer(serializers.ModelSerializer):
                   'word_error_rate')
 
     def get_updated(self, obj):
-        qc = obj.quality_control.all().order_by('-updated').first()
+        qc = obj.recording_quality_control.all().order_by('-updated').first()
         if qc is not None:
             if qc.updated > obj.updated:
                 return localtime(qc.updated)
         return localtime(obj.updated)
 
     def get_quality_control_aggregate(self, obj):
-        return build_qualitycontrol_stat_dict(obj.quality_control.all())
+        return build_qualitycontrol_stat_dict(obj.recording_quality_control.all())
 
     def get_transcription(self, obj):
         try:
@@ -333,7 +352,7 @@ class ListenSerializer(serializers.ModelSerializer):
             )
 
     def get_quality_control_aggregate(self, obj):
-        return build_qualitycontrol_stat_dict(obj.quality_control.all())
+        return build_qualitycontrol_stat_dict(obj.recording_quality_control.all())
 
 
 class S3FileField(serializers.FileField):

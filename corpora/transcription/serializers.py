@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 
 from transcription.models import \
-    Transcription, TranscriptionSegment, AudioFileTranscription
+    Transcription, TranscriptionSegment, AudioFileTranscription, \
+    TranscriptionQualityControl
 
 from people.helpers import get_person
 
@@ -10,7 +11,7 @@ from rest_framework import serializers
 # from transcription.transcribe import transcribe_audio
 from rest_framework.response import Response
 
-from corpus.serializers import RecordingSerializer, QualityControRelatedField
+from corpus.serializers import RecordingSerializer, SetPersonFromTokenWhenSelf
 
 from transcription.transcribe import transcribe_audio_quick
 
@@ -21,19 +22,42 @@ logger = logging.getLogger('corpora')
 class TranscriptionSerializerPost(serializers.ModelSerializer):
     class Meta:
         model = Transcription
-        fields = ('recording', 'text', 'corrected_text', 'updated',
-                  'source', 'quality_control')
+        fields = ('transcription', 'text', 'corrected_text', 'updated',
+                  'source', )
 
-    # def create(self, validated_data):
-    #     recording = \
-    #         super(RecordingSerializerPost, self).create(validated_data)
 
-    #     result = transcribe_audio(recording, validated_data['audio_file'])
+class TranscriptionQualityControlHyperLinkedRelatedField(
+        serializers.HyperlinkedRelatedField):
 
-    #     return recording
-    #     # serializer = self.get_serializer(recording)
-    #     # data = serializer.data
-    #     # return Response(data)
+    def to_representation(self, value):
+        self.view_name = 'api:{0}-detail'.format(
+            value.__class__.__name__.lower()
+            )
+        return super(
+            TranscriptionQualityControlHyperLinkedRelatedField,
+            self
+            ).to_representation(value)
+
+
+class TranscriptionQualityControlSerializer(
+        SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
+    content_object = TranscriptionQualityControlHyperLinkedRelatedField(
+        read_only=True,
+        view_name='api:sentence-detail'
+        )
+
+    class Meta:
+        model = TranscriptionQualityControl
+        fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
+                  'person', 'transcription',
+                  'delete', 'follow_up', 'noise', 'star',
+                  'machine', 'source', 'notes')
+
+
+class TranscriptionQualityControRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = TranscriptionQualityControlSerializer(value, context=self.parent.context)
+        return serializer.data
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
@@ -41,7 +65,7 @@ class TranscriptionSerializer(serializers.ModelSerializer):
         many=False,
         read_only=False
     )
-    quality_control = QualityControRelatedField(
+    quality_control = TranscriptionQualityControRelatedField(
         many=True,
         read_only=True,
     )

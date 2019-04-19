@@ -17,7 +17,9 @@ from django.middleware.csrf import CsrfViewMiddleware
 
 from django.contrib.contenttypes.models import ContentType
 
-from corpus.models import Recording, Sentence, QualityControl
+from corpus.models import Recording, Sentence, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from people.models import Person, KnownLanguage, Group
 from people.tasks import send_person_emails
 from people.forms import SendEmailForm
@@ -153,7 +155,7 @@ class PersonQCStatsView(JSONResponseMixin, TemplateView):
         person = get_person(self.request)
         language = get_current_language(self.request)
 
-        qcs = QualityControl.objects.filter(person=person)
+        qcs = RecordingQualityControl.objects.filter(person=person)
 
         pks = []
         for qc in qcs:
@@ -217,10 +219,9 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
                 .annotate(
                     num_reviewed=models.Count(
                         Case(
-                            When(Q(qualitycontrol__updated__gte=start) &
-                                 Q(qualitycontrol__updated__lte=end) &
-                                 Q(qualitycontrol__content_type__id=8),
-                                 then=F('qualitycontrol')),
+                            When(Q(recording_quality_control__updated__gte=start) &
+                                 Q(recording_quality_control__updated__lte=end),
+                                 then=F('recording_quality_control')),
                             output_field=CharField()), distinct=True))\
                 .annotate(
                     num_recordings=models.Count(
@@ -235,12 +236,10 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
             people = Person.objects.all()\
                 .annotate(
                     num_reviewed=models.Count(
-                        Case(
-                            When(qualitycontrol__content_type__id=8,
-                                 then=F('qualitycontrol')),
-                            output_field=CharField()), distinct=True))\
+                        'recording_quality_control', distinct=True))\
                 .annotate(
-                    num_recordings=models.Count('recording', distinct=True))\
+                    num_recordings=models.Count(
+                        'recording', distinct=True))\
                 .order_by('-num_recordings')
 
         return people
@@ -268,30 +267,18 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
 
         people = people\
             .annotate(
-                num_reviewed=models.Sum(
-                    Case(
-                        When(
-                            qualitycontrol__isnull=True,
-                            then=Value(0)),
-                        When(
-                            qualitycontrol__content_type__model__icontains='recording',
-                            then=Value(1)),
-                        default=Value(0),
-                        output_field=IntegerField())))\
+                num_reviewed=models.Sum('recording_quality_control'))\
             .annotate(
                 num_approved=models.Sum(
                     Case(
                         When(
-                            qualitycontrol__isnull=True,
+                            recording_quality_control__isnull=True,
                             then=Value(0)),
                         When(
-                            qualitycontrol__content_type__model__icontains='sentence',
-                            then=Value(0)),
-                        When(
-                            qualitycontrol__approved=True,
+                            recording_quality_control__approved=True,
                             then=Value(1)),
                         When(
-                            qualitycontrol__approved=False,
+                            recording_quality_control__approved=False,
                             then=Value(0)),
                         default=Value(0),
                         output_field=IntegerField())))\
@@ -299,13 +286,10 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                 num_good=models.Sum(
                     Case(
                         When(
-                            qualitycontrol__isnull=True,
+                            recording_quality_control__isnull=True,
                             then=Value(0)),
                         When(
-                            qualitycontrol__content_type__model__icontains='sentence',
-                            then=Value(0)),
-                        When(
-                            qualitycontrol__good__gte=1,
+                            recording_quality_control__good__gte=1,
                             then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
@@ -313,13 +297,10 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                 num_bad=models.Sum(
                     Case(
                         When(
-                            qualitycontrol__isnull=True,
+                            recording_quality_control__isnull=True,
                             then=Value(0)),
                         When(
-                            qualitycontrol__content_type__model__icontains='sentence',
-                            then=Value(0)),
-                        When(
-                            qualitycontrol__bad__gte=1,
+                            recording_quality_control__bad__gte=1,
                             then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
@@ -345,7 +326,7 @@ to our project.")
         groups = Group.objects.all().order_by('-score')\
             .annotate(
                 review_rate=Cast(Count(
-                    'person__recording__quality_control', distinct=True
+                    'person__recording__recording_quality_control', distinct=True
                     ), FloatField())/Cast(
                     1+Count(
                         'person__recording', distinct=True
@@ -355,18 +336,18 @@ to our project.")
                 approval_rate=Sum(
                     Case(
                         When(
-                            person__recording__quality_control__isnull=True,
+                            person__recording__recording_quality_control__isnull=True,
                             then=Value(0)),
                         When(
-                            person__recording__quality_control__approved=True,
+                            person__recording__recording_quality_control__approved=True,
                             then=Value(1)),
                         When(
-                            person__recording__quality_control__approved=False,
+                            person__recording__recording_quality_control__approved=False,
                             then=Value(0)),
                         default=Value(0),
                         output_field=FloatField())) /
                 Cast(1+Count(
-                    'person__recording__quality_control', distinct=True
+                    'person__recording__recording_quality_control', distinct=True
                     ), FloatField()
                 )
             ) \

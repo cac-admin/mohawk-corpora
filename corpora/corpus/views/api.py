@@ -1,5 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
-from corpus.models import QualityControl, Sentence, Recording, Source, Text
+from corpus.models import \
+    RecordingQualityControl, Sentence, Recording, Source, Text, \
+    SentenceQualityControl
 from django.db.models import \
     Count, Q, Sum, Case, When, Value, IntegerField, Max,\
     Prefetch
@@ -19,14 +21,16 @@ from people.competition import \
 from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
 
-from corpus.serializers import QualityControlSerializer,\
-                         SentenceSerializer, \
-                         RecordingSerializer, \
-                         RecordingSerializerPost, \
-                         RecordingSerializerPostBase64, \
-                         ListenSerializer, \
-                         SourceSerializer, \
-                         TextSerializer
+from corpus.serializers import \
+    RecordingQualityControlSerializer,\
+    SentenceQualityControlSerializer,\
+    SentenceSerializer, \
+    RecordingSerializer, \
+    RecordingSerializerPost, \
+    RecordingSerializerPostBase64, \
+    ListenSerializer, \
+    SourceSerializer, \
+    TextSerializer
 from rest_framework import generics, serializers
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from django.core.cache import cache
@@ -94,12 +98,22 @@ class PutOnlyStaffReadPermission(permissions.BasePermission):
                 return request.user.is_staff
 
 
-class QualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+class RecordingQualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows qc to be viewed or edited.
     """
-    queryset = QualityControl.objects.all()
-    serializer_class = QualityControlSerializer
+    queryset = RecordingQualityControl.objects.all()
+    serializer_class = RecordingQualityControlSerializer
+    permission_classes = (PutOnlyStaffReadPermission,)
+    pagination_class = OneHundredResultPagination
+
+
+class SentenceQualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+    """
+    API endpoint that allows qc to be viewed or edited.
+    """
+    queryset = SentenceQualityControl.objects.all()
+    serializer_class = SentenceQualityControlSerializer
     permission_classes = (PutOnlyStaffReadPermission,)
     pagination_class = OneHundredResultPagination
 
@@ -208,7 +222,7 @@ class SentencesView(generics.ListCreateAPIView):
     This will return a random, approved sentence that the person hasn't read.
 
     To get all of the approved sentences, use the query parameter
-    `quality_control__approved=True`. These will be paginated results,
+    `sentence_quality_control__approved=True`. These will be paginated results,
     so you will need to follow the `next` url to load all available sentences.
 
     """
@@ -221,7 +235,9 @@ class SentencesView(generics.ListCreateAPIView):
     def get_queryset(self):
         # person = get_person(self.request)
         queryset = Sentence.objects.all()\
-            .order_by('quality_control__approved', 'quality_control__updated')
+            .order_by(
+                'sentence_quality_control__approved',
+                'sentence_quality_control__updated')
 
         q = self.request.query_params.get('recording', 'False')
         if 'True' in q:
@@ -233,18 +249,19 @@ class SentencesView(generics.ListCreateAPIView):
 
         else:
 
-            query = self.request.query_params.get('quality_control__approved')
+            query = self.request.query_params.get(
+                'sentence_quality_control__approved')
             if query is not None:
                 queryset = queryset.annotate(sum_approved=Sum(
                     Case(
                         When(
-                            quality_control__approved=True,
+                            sentence_quality_control__approved=True,
                             then=Value(1)),
                         When(
-                            quality_control__approved=False,
+                            sentence_quality_control__approved=False,
                             then=Value(0)),
                         When(
-                            quality_control__isnull=True,
+                            sentence_quality_control__isnull=True,
                             then=Value(0)),
                         default=Value(0),
                         output_field=IntegerField())
@@ -263,10 +280,12 @@ class SentencesView(generics.ListCreateAPIView):
                             .order_by(Length('text').asc())
                     else:
                         raise ValueError(
-                            "Specify either True or False for quality_control__approved=")
+                            "Specify either True or False for \
+                            sentence_quality_control__approved=")
                 except:
                     raise ValueError(
-                        "Specify either True or False for quality_control__approved=")
+                        "Specify either True or False for \
+                        sentence_quality_control__approved=")
 
         return queryset
 
@@ -385,10 +404,8 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         queryset = Recording.objects.all()\
             .prefetch_related(
                 Prefetch(
-                    'quality_control',
-                    queryset=QualityControl.objects.filter(
-                        content_type=ContentType.objects.get_for_model(
-                            Recording))
+                    'recording_quality_control',
+                    queryset=RecordingQualityControl.objects.all()
                     )
                 )\
             .select_related('person', 'sentence', 'source')
@@ -417,11 +434,11 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 queryset = queryset\
                     .annotate(
                         reviewed=Case(
-                            When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
-                            When(quality_control__good__gte=1, then=Value(1)),
-                            When(quality_control__bad__gte=1, then=Value(1)),
-                            When(quality_control__isnull=True, then=Value(0)),
+                            When(recording_quality_control__approved=True, then=Value(1)),
+                            When(recording_quality_control__delete=True, then=Value(1)),
+                            When(recording_quality_control__good__gte=1, then=Value(1)),
+                            When(recording_quality_control__bad__gte=1, then=Value(1)),
+                            When(recording_quality_control__isnull=True, then=Value(0)),
                             # When(quality_control__follow_up=True, then=Value(0)),  # potential to kee; showing up - need to remove follow up
                             default=Value(1),
                             output_field=IntegerField()))\
@@ -448,11 +465,11 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 queryset = queryset\
                     .annotate(
                         reviewed=Case(
-                            When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
-                            When(quality_control__good__gte=5, then=Value(1)),
-                            When(quality_control__bad__gte=5, then=Value(1)),
-                            When(quality_control__isnull=True, then=Value(0)),
+                            When(recording_quality_control__approved=True, then=Value(1)),
+                            When(recording_quality_control__delete=True, then=Value(1)),
+                            When(recording_quality_control__good__gte=5, then=Value(1)),
+                            When(recording_quality_control__bad__gte=5, then=Value(1)),
+                            When(recording_quality_control__isnull=True, then=Value(0)),
                             default=Value(1),
                             output_field=IntegerField()))\
                     .filter(reviewed=0)\
@@ -487,7 +504,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 .annotate(changed=Max('updated'))  # Added as dummy for join.
             q2 = queryset\
                 .filter(updated__lt=date)\
-                .annotate(changed=Max('quality_control__updated'))\
+                .annotate(changed=Max('recording_quality_control__updated'))\
                 .filter(changed__gte=date)
             queryset = q1.union(q2)
 
@@ -561,7 +578,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
             recordings = Recording.objects\
                 .filter(sentence__pk=int(awhi))\
-                .filter(quality_control__approved=True)\
+                .filter(recording_quality_control__approved=True)\
                 .first()
 
             # if len(recordings) > 0:
@@ -576,10 +593,8 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             .exclude(person=person)\
             .prefetch_related(
                 Prefetch(
-                    'quality_control',
-                    queryset=QualityControl.objects.filter(
-                        content_type=ContentType.objects.get_for_model(
-                            Recording))
+                    'recording_quality_control',
+                    queryset=RecordingQualityControl.objects.all()
                     )
                 )\
             .select_related('sentence')
@@ -597,32 +612,32 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
         if test_query == 'exclude':
             queryset = queryset\
-                .exclude(quality_control__approved=True) \
-                .exclude(quality_control__delete=True) \
-                .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__person=person)
+                .exclude(recording_quality_control__approved=True) \
+                .exclude(recording_quality_control__delete=True) \
+                .exclude(recording_quality_control__bad__gte=1)\
+                .exclude(recording_quality_control__good__gte=1)\
+                .exclude(recording_quality_control__person=person)
 
         elif test_query == 'when':
             queryset = queryset.annotate(reviewed=Sum(
                 Case(
                     When(
-                        quality_control__isnull=True,
+                        recording_quality_control__isnull=True,
                         then=Value(0)),
                     When(
-                        quality_control__approved=True,
+                        recording_quality_control__approved=True,
                         then=Value(1)),
                     When(
-                        quality_control__bad__gte=1,
+                        recording_quality_control__bad__gte=1,
                         then=Value(1)),
                     When(
-                        quality_control__good__gte=1,
+                        recording_quality_control__good__gte=1,
                         then=Value(1)),
                     When(
-                        quality_control__delete=True,
+                        recording_quality_control__delete=True,
                         then=Value(1)),
                     When(
-                        quality_control__person=person,
+                        recording_quality_control__person=person,
                         then=Value(1)),
                     default=Value(0),
                     output_field=IntegerField())))\
@@ -632,14 +647,14 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             # This strategy is fast but it means we only get one review per
             # item. It works for now until we reviewed everything.
             q1 = queryset\
-                .annotate(num_qc=Count('quality_control'))\
+                .annotate(num_qc=Count('recording_quality_control'))\
                 .filter(num_qc__lte=0)
 
             if q1.count() > 0:
                 queryset = q1
             else:
                 queryset = queryset\
-                    .annotate(num_qc=Count('quality_control'))\
+                    .annotate(num_qc=Count('recording_quality_control'))\
                     .filter(num_qc__lte=4)
 
         sort_by = self.request.query_params.get('sort_by', '')
@@ -647,7 +662,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         # Let's just get a random recording.
         '''
         queryset = queryset\
-            .annotate(num_qc=Count('quality_control'))\
+            .annotate(num_qc=Count('recording_quality_control'))\
             .order_by('num_qc')
         '''
 

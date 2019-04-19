@@ -1,7 +1,9 @@
 from django.dispatch import receiver
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Sentence, Recording, QualityControl
+from .models import Sentence, Recording, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
@@ -14,18 +16,16 @@ from django.core.cache import cache
 
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
-
-
-def create_quality_control_instance_when_object_created(
-        sender, instance, **kwargs):
-    qc, created = QualityControl.objects.get_or_create(
-            object_id=instance.pk,
-            content_type=ContentType.objects.get_for_model(instance)
-        )
-    if created:
-        print "Created QC object {0}".format(qc.pk)
-    else:
-        print "QC object {0} exists".format(qc.pk)
+# def create_quality_control_instance_when_object_created(
+#         sender, instance, **kwargs):
+#     qc, created = QualityControl.objects.get_or_create(
+#             object_id=instance.pk,
+#             content_type=ContentType.objects.get_for_model(instance)
+#         )
+#     if created:
+#         print "Created QC object {0}".format(qc.pk)
+#     else:
+#         print "QC object {0} exists".format(qc.pk)
 
 
 @receiver(models.signals.pre_save, sender=Sentence)
@@ -38,9 +38,8 @@ def clear_quality_control_instance_when_object_modified(
 
             if not (old_sentence.text == instance.text and
                     old_sentence.language == instance.language):
-                qcs = QualityControl.objects.filter(
-                    object_id=instance.pk,
-                    content_type=ContentType.objects.get_for_model(instance)
+                qcs = SentenceQualityControl.objects.filter(
+                    sentence__pk=instance.pk,
                     )
                 qcs.delete()
                 # for qc in qcs:
@@ -53,7 +52,8 @@ def clear_quality_control_instance_when_object_modified(
 
 @receiver(models.signals.pre_save, sender=Sentence)
 @receiver(models.signals.pre_save, sender=Recording)
-@receiver(models.signals.pre_save, sender=QualityControl)
+@receiver(models.signals.pre_save, sender=SentenceQualityControl)
+@receiver(models.signals.pre_save, sender=RecordingQualityControl)
 def update_update_field_when_model_saved(sender, instance, **kwargs):
     instance.updated = timezone.now()
 
@@ -155,7 +155,7 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 # control to get a new score not the person who done the QC.
 # Will need to update this later. for nwo it's ok
 
-@receiver(models.signals.post_save, sender=QualityControl)
+@receiver(models.signals.post_save, sender=RecordingQualityControl)
 @receiver(models.signals.post_save, sender=Recording)
 def update_person_score_when_model_saved(sender, instance, created, **kwargs):
 
@@ -189,7 +189,7 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                 task_id=task_id,
                 countdown=60*4)
 
-        elif isinstance(instance, QualityControl):
+        elif isinstance(instance, RecordingQualityControl):
             if isinstance(instance.content_object, Recording):
                 recording = instance.content_object
 
@@ -212,7 +212,7 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                     task_id=task_id,
                     countdown=60*4)
 
-            elif isinstance(instance, QualityControl):
+            elif isinstance(instance, RecordingQualityControl):
                 if isinstance(instance.content_object, Recording):
                     recording = instance.content_object
 

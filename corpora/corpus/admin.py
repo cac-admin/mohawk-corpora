@@ -3,19 +3,29 @@ from django.contrib import admin
 from django.db import models
 
 from django.contrib import messages
-from django.contrib.contenttypes.admin import GenericTabularInline
 
-from .models import QualityControl, Sentence, Recording, Source, Text
+from .models import \
+    RecordingQualityControl, Sentence, Recording, Source, Text, \
+    SentenceQualityControl
+
 from corpus.views.views import RecordingFileView
 from .parser import save_sentences_from_text
 from .helpers import approve_sentence
 
 
-class QualityControlInline(GenericTabularInline):
+class RecordingQualityControlInline(admin.TabularInline):
     # max_num = 1
     extra = 0
     can_delete = False
-    model = QualityControl
+    model = RecordingQualityControl
+    raw_id_fields = ('person', 'approved_by', 'source')
+
+
+class SentenceQualityControlInline(admin.TabularInline):
+    # max_num = 1
+    extra = 0
+    can_delete = False
+    model = SentenceQualityControl
     raw_id_fields = ('person', 'approved_by', 'source')
 
 
@@ -32,11 +42,23 @@ class RecordingsInline(admin.TabularInline):
         return False
 
 
-@admin.register(QualityControl)
-class QualityControlAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'content_type', 'object_id',
+@admin.register(RecordingQualityControl)
+class RecordingQualityControlAdmin(admin.ModelAdmin):
+    list_display = ('text', 'updated', 'recording',
                     'good', 'bad', 'calculate_score',
                     'approved', 'delete', 'follow_up', 'noise', 'star')
+    date_hierarchy = 'updated'
+    raw_id_fields = ('person', 'approved_by')
+
+    def text(self, obj):
+        return obj.__unicode__()
+
+
+@admin.register(SentenceQualityControl)
+class SentenceQualityControlAdmin(admin.ModelAdmin):
+    list_display = ('text', 'updated', 'sentence',
+                    'good', 'bad',
+                    'approved', 'delete', )
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by')
 
@@ -48,7 +70,7 @@ class QualityControlAdmin(admin.ModelAdmin):
 class SentenceAdmin(admin.ModelAdmin):
     list_display = ('text', 'source', 'updated', 'get_approved',
                     'get_approved_by', 'num_recordings')
-    inlines = [QualityControlInline, RecordingsInline]
+    inlines = [SentenceQualityControlInline, RecordingsInline]
     search_fields = ['text']
     actions = ('approve_sentences',)
 
@@ -58,13 +80,13 @@ class SentenceAdmin(admin.ModelAdmin):
             .annotate(sum_approved=models.Sum(
                 models.Case(
                     models.When(
-                        quality_control__isnull=True,
+                        sentence_quality_control__isnull=True,
                         then=models.Value(0)),
                     models.When(
-                        quality_control__approved=True,
+                        sentene_quality_control__approved=True,
                         then=models.Value(1)),
                     models.When(
-                        quality_control__approved=False,
+                        sentence_quality_control__approved=False,
                         then=models.Value(0)),
                     default=models.Value(0),
                     output_field=models.IntegerField())))
@@ -76,7 +98,7 @@ class SentenceAdmin(admin.ModelAdmin):
     get_approved.admin_order_field = 'sum_approved'
 
     def get_approved_by(self, obj):
-        qc = obj.quality_control
+        qc = obj.sentence_quality_control
         results = qc.all()
         names = []
         if len(results) > 0:
@@ -87,7 +109,7 @@ class SentenceAdmin(admin.ModelAdmin):
         else:
             return _("None")
     get_approved_by.short_description = 'Approved By'
-    get_approved_by.admin_order_field = 'quality_control__approved'
+    get_approved_by.admin_order_field = 'sentence_quality_control__approved'
 
     def num_recordings(self, obj):
         return Recording.objects.filter(sentence=obj).count()
@@ -116,7 +138,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'created',
     )
 
-    inlines = [QualityControlInline]
+    inlines = [RecordingQualityControlInline]
 
     readonly_fields = (
         'duration',
@@ -143,13 +165,13 @@ class RecordingAdmin(admin.ModelAdmin):
             .annotate(sum_approved=models.Sum(
                 models.Case(
                     models.When(
-                        quality_control__isnull=True,
+                        recording_quality_control__isnull=True,
                         then=models.Value(0)),
                     models.When(
-                        quality_control__approved=True,
+                        recording_quality_control__approved=True,
                         then=models.Value(1)),
                     models.When(
-                        quality_control__approved=False,
+                        recording_quality_control__approved=False,
                         then=models.Value(0)),
                     default=models.Value(0),
                     output_field=models.IntegerField())))
@@ -163,7 +185,7 @@ class RecordingAdmin(admin.ModelAdmin):
     # get_approved.admin_order_field = 'sum_approved'
 
     def get_approved_by(self, obj):
-        qc = obj.quality_control
+        qc = obj.recording_quality_control
         results = qc.all()
         names = []
         if len(results) > 0:
@@ -174,7 +196,7 @@ class RecordingAdmin(admin.ModelAdmin):
         else:
             return _("None")
     get_approved_by.short_description = 'Approved By'
-    get_approved_by.admin_order_field = 'quality_control__approved'
+    get_approved_by.admin_order_field = 'recording_quality_control__approved'
 
 
 @admin.register(Source)
@@ -188,13 +210,13 @@ class SourceAdmin(admin.ModelAdmin):
                 .annotate(sum_approved=models.Sum(
                     models.Case(
                         models.When(
-                            quality_control__isnull=True,
+                            sentence_quality_control__isnull=True,
                             then=models.Value(0)),
                         models.When(
-                            quality_control__approved=True,
+                            sentence_quality_control__approved=True,
                             then=models.Value(1)),
                         models.When(
-                            quality_control__approved=False,
+                            sentence_quality_control__approved=False,
                             then=models.Value(0)),
                         default=models.Value(0),
                         output_field=models.IntegerField())))\

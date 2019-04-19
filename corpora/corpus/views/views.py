@@ -13,7 +13,9 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
-from corpus.models import Recording, Sentence, QualityControl
+from corpus.models import Recording, Sentence, \
+    RecordingQualityControl, SentenceQualityControl
+
 from people.models import Person, KnownLanguage
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person, get_person, get_current_language
@@ -248,7 +250,7 @@ class RecordingFileView(RedirectView):
 
 
 class StatsView(SiteInfoMixin, ListView):
-    model = QualityControl
+    model = RecordingQualityControl
     x_title = _('Stats')
     x_description = _('Statistics for all data.')
 
@@ -268,8 +270,8 @@ class StatsView(SiteInfoMixin, ListView):
 
         length = Recording.objects.aggregate(Sum('duration'))
 
-        approved_sentences = sentences.filter(quality_control__approved=True)
-        approved_recordings = recordings.filter(quality_control__approved=True)
+        approved_sentences = sentences.filter(sentence_quality_control__approved=True)
+        approved_recordings = recordings.filter(recording_quality_control__approved=True)
 
         seconds = float(length['duration__sum'])
         hours = int(seconds/(60.0*60))
@@ -344,8 +346,8 @@ the quality of recordings we use.')
 
         # Don't fech recordings the person already listened to
         recordings = Recording.objects\
-            .exclude(quality_control__person=person)\
-            .annotate(num_qc=Count('quality_control'))\
+            .exclude(recording_quality_control__person=person)\
+            .annotate(num_qc=Count('recording_quality_control'))\
             .order_by('num_qc')
 
         ct = ContentType.objects.get(model='recording')

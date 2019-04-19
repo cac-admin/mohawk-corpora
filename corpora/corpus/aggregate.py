@@ -2,7 +2,9 @@
 from __future__ import absolute_import
 
 from django.utils.translation import ugettext as _
-from corpus.models import Recording, Sentence, QualityControl
+from corpus.models import Recording, Sentence, \
+    SentenceQualityControl, \
+    RecordingQualityControl
 from django.db.models import Sum, Count, When, Value, Case, IntegerField
 from django.db.models import Q, F
 
@@ -12,13 +14,13 @@ def get_num_approved(query):
         .aggregate(sum_approved=Sum(
             Case(
                 When(
-                    quality_control__isnull=True,
+                    recording_quality_control__isnull=True,
                     then=Value(0)),
                 When(
-                    quality_control__approved=True,
+                    recording_quality_control__approved=True,
                     then=Value(1)),
                 When(
-                    quality_control__approved=False,
+                    recording_quality_control__approved=False,
                     then=Value(0)),
                 default=Value(0),
                 output_field=IntegerField())))
@@ -28,9 +30,9 @@ def get_num_approved(query):
 def get_net_votes(query):
 
     net_votes = query \
-        .filter(quality_control__person__user__is_staff=True) \
+        .filter(recording_quality_control__person__user__is_staff=True) \
         .annotate(net_vote=Sum(
-            F('quality_control__good') - F('quality_control__bad')))
+            F('recording_quality_control__good') - F('recording_quality_control__bad')))
 
     goods = net_votes.filter(net_vote__gte=1)
     bads = net_votes.filter(net_vote__lte=-1)
@@ -38,9 +40,9 @@ def get_net_votes(query):
     return (goods.count(), bads.count())
 
     # d1 = query\
-    #     .aggregate(total_up_votes=Sum('quality_control__good'))
+    #     .aggregate(total_up_votes=Sum('recording_quality_control__good'))
     # d2 = query\
-    #     .aggregate(total_down_votes=Sum('quality_control__bad'))
+    #     .aggregate(total_down_votes=Sum('recording_quality_control__bad'))
 
     # return (d1['total_up_votes'], d2['total_down_votes'])
 
@@ -48,11 +50,11 @@ def get_net_votes(query):
 def build_recordings_stat_dict(recording_queryset):
     duration = recording_queryset.aggregate(Sum('duration'))
     approved_recordings = \
-        recording_queryset.filter(quality_control__approved=True)
+        recording_queryset.filter(recording_quality_control__approved=True)
     recording_votes = get_net_votes(recording_queryset)
 
     reviewed_recordings = recording_queryset\
-        .exclude(quality_control__isnull=True)
+        .exclude(recording_quality_control__isnull=True)
 
     if duration['duration__sum'] is None:
         total_seconds = 0

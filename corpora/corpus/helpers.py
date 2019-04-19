@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Sum, Case, When, Value, IntegerField
-from corpus.models import Sentence, QualityControl
+from corpus.models import Sentence, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from people.helpers import \
     get_current_language, get_or_create_person, get_person
 import random
@@ -26,7 +28,7 @@ def get_sentences(request,
 
     sentences = Sentence.objects\
         .filter(language=current_language)\
-        .filter(quality_control__approved=True)
+        .filter(sentence_quality_control__approved=True)
 
     query = sentences.filter(recording__isnull=True)
 
@@ -68,7 +70,7 @@ def get_sentence_annonymous(request):
 def approve_sentence(request, sentence):
     person = get_person(request)
     try:
-        qc = QualityControl.objects.create(
+        qc = SentenceQualityControl.objects.create(
             person=person,
             approved=True,
             approved_by=request.user,
