@@ -450,11 +450,12 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                         reviewed=Case(
                             When(quality_control__approved=True, then=Value(1)),
                             When(quality_control__delete=True, then=Value(1)),
+                            When(quality_control__good__gte=5, then=Value(1)),
+                            When(quality_control__bad__gte=5, then=Value(1)),
                             When(quality_control__isnull=True, then=Value(0)),
                             default=Value(1),
                             output_field=IntegerField()))\
                     .filter(reviewed=0)\
-                    .filter(transcription__word_error_rate__isnull=False)\
                     .filter(transcription__word_error_rate__gte=0.75)
 
                 if '-wer' in sort_by:
