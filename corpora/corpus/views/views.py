@@ -37,6 +37,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 import json
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -74,6 +76,20 @@ def failed_submit(request):
 
 def record_redirect(request):
     return redirect(reverse('corpus:record'))
+
+
+class RecordView(
+        SiteInfoMixin, TemplateView):
+    '''
+    TODO: Move RECORD to a class view
+    '''
+
+    x_title = _('Record'),
+    x_description = _('Help us teach computers the sounds\
+        of a language by reading sentences.')
+    x_image = static("corpora/img/icon.png")
+
+    pass
 
 
 @ensure_csrf_cookie
@@ -150,6 +166,7 @@ def record(request):
                'show_stats': True,
                'x_title': _('Record'),
                'x_description': _('Help us teach computers the sounds of a language by reading sentences.'),
+               'x_image': static("corpora/img/icon.png")
                }
 
     response = render(request, 'corpus/record.html', context)
