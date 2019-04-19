@@ -40,6 +40,9 @@ div.content{
         </div>
     </div>
     <!-- <div class="col-lg-7"></div> -->
+    <div class="col-lg-12 extra-info">
+      
+    </div>
     <div class="col-lg-12 actions">
       <!--
       <div class="action-group">
@@ -100,6 +103,10 @@ div.content{
          class="sort-by recent " 
          id='sort-by-recent'
          data-sort-url-query="?sort_by=recent"><span>Recent</span></a>
+      <a href="javascript:void(0)" 
+         class="sort-by wer " 
+         id='sort-by-wer'
+         data-sort-url-query="?sort_by=wer"><span>High word error rate</span></a>         
     </div>
     <div class="col-12 filter-by buttons" >
       <span>Filter By Person ID </span><input type="textfield"
@@ -244,12 +251,11 @@ function _didReadInstructions(){
       $('.recording-info').append(created)
     })
 
-    $('#sort-by-recent, #sort-by-random').on('click', function(e){
+    $('#sort-by-recent, #sort-by-random, #sort-by-wer').on('click', function(e){
       if (!$(e.currentTarget).hasClass('on')){
-        $('#sort-by-recent, #sort-by-random').removeClass('on')
+        $('#sort-by-recent, #sort-by-random, #sort-by-wer').removeClass('on')
         $(e.currentTarget).addClass('on')
         listen.url_filter_query = e.currentTarget.getAttribute('data-sort-url-query')
-        // console.log(listen.url_filter_query)
         listen.next_url = null
         listen.get_recordings()
       }

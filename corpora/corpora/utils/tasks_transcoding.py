@@ -65,7 +65,7 @@ def encode_audio(obj, test=False, codec='aac'):
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
-        'aac': ['libfdk_aac', 'm4a', 44100, 1],
+        'aac': ['aac', 'm4a', 44100, 1],
         'wav': ['pcm_s16le', 'wav', 16000, 1]
     }
 
@@ -97,7 +97,7 @@ def encode_audio(obj, test=False, codec='aac'):
                 "ffmpeg -i {0} -vn -acodec {1} -ar {5} -ac {6} {7} {2}/{3}.{4}".format(
                     tmp_file, codecs[codec][0], tmp_stor_dir, file_name,
                     extension, codecs[codec][2], codecs[codec][3],
-                    "-c:a libfdk_aac -profile:a aac_he -b:a 32k")
+                    "-c:a aac -b:a 64k")  # -profile:a aac_he
 
         logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)

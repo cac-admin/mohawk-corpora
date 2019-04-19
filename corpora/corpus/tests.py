@@ -27,7 +27,7 @@ class CorpusRecordingTestCase(TestCase):
             language='mi',
             source=source)
         file = File(
-            open('/webapp/corpora/corpora/transcription/tests/test.aac'))
+            open('corpora/tests/test.aac'))
 
         recording = Recording.objects.create(
             audio_file=file,
@@ -105,7 +105,10 @@ class CorpusTextTestCase(TestCase):
         # for s in sentences:
         #     print(s.encode('utf-8'))
         self.assertEqual(sentences[0]['sentence'], 'HAKIHEA/TĪHEMA 2017')
-        self.assertEqual(sentences[-1]['sentence'], 'Ka mutu, pēnā he kōrero ā koutou me pēhea te pānui nei e pai ake ai, pēnā he aha rānei ngā mea e hiahia ana koutou kia whakaurua ki ngā pānui o muri atu, tēnā, kōrerotia mai')
+        # self.assertEqual(sentences[-1]['sentence'], 'Ka mutu, pēnā he kōrero ā koutou me pēhea te pānui nei e pai ake ai, pēnā he aha rānei ngā mea e hiahia ana koutou kia whakaurua ki ngā pānui o muri atu, tēnā, kōrerotia mai')
+
+        # We're only allowing sentences of certain lengths so this is thr correct eval
+        self.assertEqual(sentences[-1]['sentence'], 'TE RŪNANGA NUI O TE AUPŌURI')
 
     def test_get_sentences_2(self):
         sentences = list(parser.get_sentences(SAMPLE_2))

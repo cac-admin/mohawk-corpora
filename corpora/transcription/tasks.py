@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
@@ -202,6 +203,7 @@ def transcribe_recording(pk):
     start = timezone.now()
     if not transcription.text:
         try:
+            from transcription.wer.wer import word_error_rate
             # This should tell us if the file exists
             recording.audio_file_wav.open('rb')
             result = transcribe_audio_sphinx(
@@ -211,6 +213,14 @@ def transcribe_recording(pk):
 
             transcription.text = result['transcription'].strip()
             transcription.transcriber_log = result
+            # Calculate wer
+            original = recording.sentence_text.lower()
+            transcription.word_error_rate = \
+                word_error_rate(
+                    original,
+                    transcription.text,
+                    recording.language)
+
             transcription.save()
             dt = timezone.now() - start
             return "Transcribed {0} in {1}s".format(
@@ -294,3 +304,32 @@ def check_and_transcribe_blank_audiofiletranscriptions():
 
     return "Processed {0} AFTs. Had {1} errors. {2}".format(
         count, errors, error_msg)
+
+
+@shared_task
+def calculate_wer_for_null():
+    '''
+    Calculates the WER for transcriptions that don't have this.
+    This can be removed after a migration as this was a newly added
+    field and we really only need to run this once.
+    '''
+    from jellyfish import levenshtein_distance as levd
+    trans = Transcription.objects\
+        .filter(word_error_rate=None)
+    count = 0
+    for t in trans:
+        # Calculate wer
+        try:
+            original = t.recording.sentence_text.lower()
+            t.word_error_rate = (
+                levd(original, t.text.lower()) /
+                float(len(original))
+                )
+            t.save()
+        except:
+            logger.error(
+                'ERROR calculated wer for Transcription {0}:{1}'.format(
+                    t.pk, t.text))
+        count = count + 1
+        if count > 500:
+            return "Done"

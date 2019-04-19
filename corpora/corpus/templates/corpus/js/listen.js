@@ -114,7 +114,7 @@ class Listen{
     if (self.fetching){ return; }
     self.fetching = true;
     $.ajax({
-      url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+      url: ( (this.next_url==null) ? this.base_url + this.url_filter_query : this.next_url),
       error: function(XMLHttpRequest, textStatus, errorThrown){
         self.logger('ERROR fetching recordings')
         self.fetching = false;
@@ -259,6 +259,16 @@ class Listen{
 
       }
       
+      // Load extra info if available
+      $(this.sentence_block).find('.extra-info').empty()
+      if (self.recording.transcription != null){
+        var transcription_elm = $(`<div id='transcription'>Transcription: ${self.recording.transcription}</div>`)
+        $(this.sentence_block).find('.extra-info').append(transcription_elm)
+      }
+      if (self.recording.word_error_rate != null){
+        var wer_elm = $(`<div id='wer'>Word Error Rate: ${self.recording.word_error_rate.toFixed(2)}</div>`)
+        $(this.sentence_block).find('.extra-info').append(wer_elm)
+      }
 
       // $('#play-button').show();
 
