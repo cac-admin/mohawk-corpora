@@ -87,7 +87,7 @@ class RecordingQualityControl(models.Model):
         default=False,
         help_text='Check if an item has noise but is still intelligible.')
     content_type = models.ForeignKey(
-        ContentType, on_delete=models.SET_NULL, null=True
+        ContentType, on_delete=models.SET_NULL, null=True,
         help_text='Model to which this QualityControl refers. This should be \
         the content type ID. Implemented types are Recordings (id=8),\
         Sentences (id=10), Transcription Segments (id=24).')
