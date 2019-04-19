@@ -114,7 +114,7 @@ class Listen{
     if (self.fetching){ return; }
     self.fetching = true;
     $.ajax({
-      url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+      url: ( (this.next_url==null) ? this.base_url + this.url_filter_query : this.next_url),
       error: function(XMLHttpRequest, textStatus, errorThrown){
         self.logger('ERROR fetching recordings')
         self.fetching = false;
