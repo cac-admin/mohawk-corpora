@@ -141,7 +141,7 @@ def restore_quality_controls(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('corpus', '0055_auto_20190419_2251'),
+        ('corpus', '0055_auto_20190420_0956'),
     ]
 
     operations = [

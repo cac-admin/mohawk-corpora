@@ -75,7 +75,7 @@ def set_all_recording_md5():
     '''
     recordings = Recording.objects\
         .filter(audio_file_md5=None)\
-        .exclude(recording_quality_control__delete=True)\
+        .exclude(quality_control__delete=True)\
         .distinct()
     count = 0
     total = recordings.count()
@@ -86,7 +86,7 @@ def set_all_recording_md5():
     if total == 0:
         recordings = Recording.objects\
             .filter(audio_file_wav_md5=None)\
-            .exclude(recording_quality_control__delete=True)\
+            .exclude(quality_control__delete=True)\
             .distinct()
 
         count = 0

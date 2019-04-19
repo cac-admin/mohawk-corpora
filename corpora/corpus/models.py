@@ -107,6 +107,7 @@ class RecordingQualityControl(models.Model):
     # Move to Recording QC
     recording = models.ForeignKey(
         'corpus.Recording',
+        related_name='quality_control',
         null=True,
         on_delete=models.SET_NULL,)
 
@@ -192,8 +193,9 @@ class SentenceQualityControl(models.Model):
 
     sentence = models.ForeignKey(
         'corpus.Sentence',
+        related_name='quality_control',
         null=True,
-        on_delete=models.CASCADE)
+        on_delete=models.SET_NULL)
 
     notes = models.TextField(
         blank=True,

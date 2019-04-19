@@ -305,14 +305,14 @@ class RecordingSerializer(serializers.ModelSerializer):
                   'word_error_rate')
 
     def get_updated(self, obj):
-        qc = obj.recording_quality_control.all().order_by('-updated').first()
+        qc = obj.quality_control.all().order_by('-updated').first()
         if qc is not None:
             if qc.updated > obj.updated:
                 return localtime(qc.updated)
         return localtime(obj.updated)
 
     def get_quality_control_aggregate(self, obj):
-        return build_qualitycontrol_stat_dict(obj.recording_quality_control.all())
+        return build_qualitycontrol_stat_dict(obj.quality_control.all())
 
     def get_transcription(self, obj):
         try:
@@ -352,7 +352,7 @@ class ListenSerializer(serializers.ModelSerializer):
             )
 
     def get_quality_control_aggregate(self, obj):
-        return build_qualitycontrol_stat_dict(obj.recording_quality_control.all())
+        return build_qualitycontrol_stat_dict(obj.quality_control.all())
 
 
 class S3FileField(serializers.FileField):

@@ -270,8 +270,8 @@ class StatsView(SiteInfoMixin, ListView):
 
         length = Recording.objects.aggregate(Sum('duration'))
 
-        approved_sentences = sentences.filter(sentence_quality_control__approved=True)
-        approved_recordings = recordings.filter(recording_quality_control__approved=True)
+        approved_sentences = sentences.filter(quality_control__approved=True)
+        approved_recordings = recordings.filter(quality_control__approved=True)
 
         seconds = float(length['duration__sum'])
         hours = int(seconds/(60.0*60))
@@ -346,8 +346,8 @@ the quality of recordings we use.')
 
         # Don't fech recordings the person already listened to
         recordings = Recording.objects\
-            .exclude(recording_quality_control__person=person)\
-            .annotate(num_qc=Count('recording_quality_control'))\
+            .exclude(quality_control__person=person)\
+            .annotate(num_qc=Count('quality_control'))\
             .order_by('num_qc')
 
         ct = ContentType.objects.get(model='recording')

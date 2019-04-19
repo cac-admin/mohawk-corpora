@@ -28,7 +28,7 @@ def get_sentences(request,
 
     sentences = Sentence.objects\
         .filter(language=current_language)\
-        .filter(sentence_quality_control__approved=True)
+        .filter(quality_control__approved=True)
 
     query = sentences.filter(recording__isnull=True)
 

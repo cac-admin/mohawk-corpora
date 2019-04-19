@@ -80,13 +80,13 @@ class SentenceAdmin(admin.ModelAdmin):
             .annotate(sum_approved=models.Sum(
                 models.Case(
                     models.When(
-                        sentence_quality_control__isnull=True,
+                        quality_control__isnull=True,
                         then=models.Value(0)),
                     models.When(
-                        sentene_quality_control__approved=True,
+                        quality_control__approved=True,
                         then=models.Value(1)),
                     models.When(
-                        sentence_quality_control__approved=False,
+                        quality_control__approved=False,
                         then=models.Value(0)),
                     default=models.Value(0),
                     output_field=models.IntegerField())))
@@ -98,7 +98,7 @@ class SentenceAdmin(admin.ModelAdmin):
     get_approved.admin_order_field = 'sum_approved'
 
     def get_approved_by(self, obj):
-        qc = obj.sentence_quality_control
+        qc = obj.quality_control
         results = qc.all()
         names = []
         if len(results) > 0:
@@ -109,7 +109,7 @@ class SentenceAdmin(admin.ModelAdmin):
         else:
             return _("None")
     get_approved_by.short_description = 'Approved By'
-    get_approved_by.admin_order_field = 'sentence_quality_control__approved'
+    get_approved_by.admin_order_field = 'quality_control__approved'
 
     def num_recordings(self, obj):
         return Recording.objects.filter(sentence=obj).count()
@@ -165,13 +165,13 @@ class RecordingAdmin(admin.ModelAdmin):
             .annotate(sum_approved=models.Sum(
                 models.Case(
                     models.When(
-                        recording_quality_control__isnull=True,
+                        quality_control__isnull=True,
                         then=models.Value(0)),
                     models.When(
-                        recording_quality_control__approved=True,
+                        quality_control__approved=True,
                         then=models.Value(1)),
                     models.When(
-                        recording_quality_control__approved=False,
+                        quality_control__approved=False,
                         then=models.Value(0)),
                     default=models.Value(0),
                     output_field=models.IntegerField())))
@@ -185,7 +185,7 @@ class RecordingAdmin(admin.ModelAdmin):
     # get_approved.admin_order_field = 'sum_approved'
 
     def get_approved_by(self, obj):
-        qc = obj.recording_quality_control
+        qc = obj.quality_control
         results = qc.all()
         names = []
         if len(results) > 0:
@@ -196,7 +196,7 @@ class RecordingAdmin(admin.ModelAdmin):
         else:
             return _("None")
     get_approved_by.short_description = 'Approved By'
-    get_approved_by.admin_order_field = 'recording_quality_control__approved'
+    get_approved_by.admin_order_field = 'quality_control__approved'
 
 
 @admin.register(Source)
@@ -210,13 +210,13 @@ class SourceAdmin(admin.ModelAdmin):
                 .annotate(sum_approved=models.Sum(
                     models.Case(
                         models.When(
-                            sentence_quality_control__isnull=True,
+                            quality_control__isnull=True,
                             then=models.Value(0)),
                         models.When(
-                            sentence_quality_control__approved=True,
+                            quality_control__approved=True,
                             then=models.Value(1)),
                         models.When(
-                            sentence_quality_control__approved=False,
+                            quality_control__approved=False,
                             then=models.Value(0)),
                         default=models.Value(0),
                         output_field=models.IntegerField())))\
