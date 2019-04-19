@@ -321,10 +321,11 @@ def calculate_wer_for_null():
         # Calculate wer
         try:
             original = t.recording.sentence_text.lower()
-            t.word_error_rate = (
-                levd(original, t.text.lower()) /
-                float(len(original))
-                )
+            t.word_error_rate = \
+                word_error_rate(
+                    original,
+                    t.text,
+                    t.recording.language)
             t.save()
         except:
             logger.error(
