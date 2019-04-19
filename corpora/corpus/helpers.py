@@ -75,8 +75,9 @@ def approve_sentence(request, sentence):
             approved=True,
             approved_by=request.user,
             notes='Approved in bulk using the admin page.',
-            object_id=sentence.pk,
-            content_type=ContentType.objects.get_for_model(sentence)
+            sentence=sentence,
+            # object_id=sentence.pk,
+            # content_type=ContentType.objects.get_for_model(sentence)
         )
     except:
         return False

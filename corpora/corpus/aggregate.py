@@ -110,7 +110,7 @@ def build_qualitycontrol_stat_dict(queryset):
 
     goods = queryset.filter(good__gte=1).aggregate(sum=Sum('good'))
     bads = queryset.filter(bad__gte=1).aggregate(sum=Sum('bad'))
-    deletes = queryset.filter(delete=True)
+    deletes = queryset.filter(trash=True)
     stars = queryset.filter(star__gte=1).aggregate(sum=Sum('star'))
 
     stats = {
@@ -118,7 +118,7 @@ def build_qualitycontrol_stat_dict(queryset):
         'approved': approved.count(),
         'good': goods['sum'] if goods['sum'] is not None else 0,
         'bad': bads['sum'] if bads['sum'] is not None else 0,
-        'delete': deletes.count(),
+        'trash': deletes.count(),
         'star': stars['sum'] if stars['sum'] is not None else 0,
     }
 

@@ -435,7 +435,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                     .annotate(
                         reviewed=Case(
                             When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
+                            When(quality_control__trash=True, then=Value(1)),
                             When(quality_control__good__gte=1, then=Value(1)),
                             When(quality_control__bad__gte=1, then=Value(1)),
                             When(quality_control__isnull=True, then=Value(0)),
@@ -466,7 +466,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                     .annotate(
                         reviewed=Case(
                             When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
+                            When(quality_control__trash=True, then=Value(1)),
                             When(quality_control__good__gte=5, then=Value(1)),
                             When(quality_control__bad__gte=5, then=Value(1)),
                             When(quality_control__isnull=True, then=Value(0)),
@@ -613,7 +613,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         if test_query == 'exclude':
             queryset = queryset\
                 .exclude(quality_control__approved=True) \
-                .exclude(quality_control__delete=True) \
+                .exclude(quality_control__trash=True) \
                 .exclude(quality_control__bad__gte=1)\
                 .exclude(quality_control__good__gte=1)\
                 .exclude(quality_control__person=person)
@@ -634,7 +634,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                         quality_control__good__gte=1,
                         then=Value(1)),
                     When(
-                        quality_control__delete=True,
+                        quality_control__trash=True,
                         then=Value(1)),
                     When(
                         quality_control__person=person,

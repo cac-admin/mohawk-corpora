@@ -75,7 +75,7 @@ def set_all_recording_md5():
     '''
     recordings = Recording.objects\
         .filter(audio_file_md5=None)\
-        .exclude(quality_control__delete=True)\
+        .exclude(quality_control__trash=True)\
         .distinct()
     count = 0
     total = recordings.count()
@@ -86,7 +86,7 @@ def set_all_recording_md5():
     if total == 0:
         recordings = Recording.objects\
             .filter(audio_file_wav_md5=None)\
-            .exclude(quality_control__delete=True)\
+            .exclude(quality_control__trash=True)\
             .distinct()
 
         count = 0
@@ -130,7 +130,7 @@ def set_all_recording_md5():
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
             qc, created = RecordingQualityControl.objects.get_or_create(
-                delete=True,
+                trash=True,
                 recording=recording,
                 notes='File does not exist.',
                 machine=True,

@@ -164,7 +164,7 @@ class RecordingQualityControl(models.Model):
 
     def __unicode__(self):
         try:
-            return u'Recording QC: {1}'.format(self.recording.pk)
+            return u'Recording QC: {0}'.format(self.recording.pk)
         except:
             return u'old sentence?'
 
@@ -231,7 +231,7 @@ class SentenceQualityControl(models.Model):
 
     def __unicode__(self):
         try:
-            return u'Sentence QC: {1}'.format(self.sentence.pk)
+            return u'Sentence QC: {0}'.format(self.sentence.pk)
         except:
             return 'migration error?'
 

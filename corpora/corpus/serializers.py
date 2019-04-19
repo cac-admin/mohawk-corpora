@@ -76,7 +76,7 @@ class RecordingQualityControlSerializer(
         model = RecordingQualityControl
         fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
                   'person', 'recording',
-                  'delete', 'follow_up', 'noise', 'star',
+                  'trash', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
 
 
@@ -91,7 +91,7 @@ class SentenceQualityControlSerializer(
         model = SentenceQualityControl
         fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
                   'person', 'sentence',
-                  'delete', 'follow_up', 'noise', 'star',
+                  'trash', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
 
 

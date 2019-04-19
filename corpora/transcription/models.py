@@ -54,7 +54,7 @@ class TranscriptionQualityControl(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         help_text='User that approved the object. Should be a user ID.')
-    delete = models.BooleanField(
+    trash = models.BooleanField(
         default=False,
         help_text='Flag for deletion.')
     star = models.PositiveIntegerField(
@@ -104,7 +104,7 @@ class TranscriptionQualityControl(models.Model):
         unique_together = (("transcription", "person"),)
         indexes = [
             # models.Index(fields=['object_id', 'content_type', ]),
-            models.Index(fields=['delete', ]),
+            models.Index(fields=['trash', ]),
             models.Index(fields=['approved', ]),
             models.Index(fields=['good', ]),
             models.Index(fields=['bad', ]),

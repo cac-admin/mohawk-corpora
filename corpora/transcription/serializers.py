@@ -50,7 +50,7 @@ class TranscriptionQualityControlSerializer(
         model = TranscriptionQualityControl
         fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
                   'person', 'transcription',
-                  'delete', 'follow_up', 'noise', 'star',
+                  'trash', 'follow_up', 'noise', 'star',
                   'machine', 'source', 'notes')
 
 

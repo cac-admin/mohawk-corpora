@@ -46,7 +46,7 @@ class RecordingsInline(admin.TabularInline):
 class RecordingQualityControlAdmin(admin.ModelAdmin):
     list_display = ('text', 'updated', 'recording',
                     'good', 'bad', 'calculate_score',
-                    'approved', 'delete', 'follow_up', 'noise', 'star')
+                    'approved', 'trash', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by')
 
@@ -58,7 +58,7 @@ class RecordingQualityControlAdmin(admin.ModelAdmin):
 class SentenceQualityControlAdmin(admin.ModelAdmin):
     list_display = ('text', 'updated', 'sentence',
                     'good', 'bad',
-                    'approved', 'delete', )
+                    'approved', 'trash', )
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by')
 
