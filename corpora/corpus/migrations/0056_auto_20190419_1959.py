@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, IntegrityError, transaction
+import sys
 
 
 def convert_quality_controls(apps, schema_editor):
@@ -29,48 +30,114 @@ def convert_quality_controls(apps, schema_editor):
         raise Exception("{0} != {1} + {2}".format(num_qc, num_sqc, num_rqc))
 
     to_delete = []
+    errors = []
+    r_count = 0
+    s_count = 0
+    print('\n')
     for qc in quality_controls:
+
         ct = ContentType.objects.get(
             model=qc.content_type.model,
             app_label=qc.content_type.app_label)
-        content_object = ct.get_object_for_this_type(pk=qc.object_id)
+        try:
+            content_object = ct.get_object_for_this_type(pk=qc.object_id)
+        except ObjectDoesNotExist:
+            errors.append({
+                error_type: 'ObjectDoesNotExist',
+                object_description: '{0}.{1}'.format(
+                    qc.content_type.app_label, qc.content_type.model),
+                note: 'Could not get content object.',
+                })
+            content_object = None
+
         if 'sentence' in qc.content_type.model:
-            sentence = Sentence.objects.get(pk=qc.object_id)
-            # try:
-            #     with transaction.atomic():
-            sqc = SentenceQualityControl.objects.using(db_alias).create(
-                good=qc.good,
-                bad=qc.bad,
-                approved=qc.approved,
-                approved_by=qc.approved_by,
-                trash=qc.trash,
-                updated=qc.updated,
-                person=qc.person,
-                notes=qc.notes,
-                machine=qc.machine,
-                source=qc.source,
-                sentence=sentence)
-            # except IntegrityError as e:
-            #     if 'duplicate key' in str(e):
-            #         print("migration woes")
-            #     sqc = None
+            s_count = s_count + 1
+            sys.stdout.write('\rProcessing: {0: 6d} / {1: 6d} {2: 6d} / {3: 6d}'.format(
+                s_count, num_sqc, r_count, num_rqc))
+            sys.stdout.flush()
+            try:
+                sentence = Sentence.objects.get(pk=qc.object_id)
+
+                sqc = SentenceQualityControl.objects.using(db_alias).create(
+                    good=qc.good,
+                    bad=qc.bad,
+                    approved=qc.approved,
+                    approved_by=qc.approved_by,
+                    trash=qc.trash,
+                    updated=qc.updated,
+                    person=qc.person,
+                    notes=qc.notes,
+                    machine=qc.machine,
+                    source=qc.source,
+                    sentence=sentence)
+
+            except ObjectDoesNotExist:
+                errors.append({
+                    error_type: 'ObjectDoesNotExist',
+                    object_description: 'Sentence: {0}'.format(qc.object_id),
+                    note: 'Could not get sentence.'
+                    })
+
+                sqc = None
+
             if not sqc:
-                print("ERROR converting {0}".format(qc))
+                errors.append({
+                    error_type: 'MigrationError',
+                    object_description: 'Sentence: {0}'.format(qc.object_id),
+                    })
             else:
                 sqc.save()
                 to_delete.append(qc.pk)
 
         elif 'recording' in qc.content_type.model:
-            recording = Recording.objects.using(db_alias).get(pk=qc.object_id)
-            qc.recording = recording
-            qc.save()
+            r_count = r_count + 1
+            sys.stdout.write('\rProcessing: {0: 6d} / {1: 6d} {2: 6d} / {3: 6d}'.format(
+                s_count, num_sqc, r_count, num_rqc))
+            sys.stdout.flush()
+
+            try:
+                recording = Recording.objects.using(db_alias).get(
+                    pk=qc.object_id)
+                qc.recording = recording
+                qc.save()
+            except ObjectDoesNotExist:
+                errors.append({
+                    error_type: 'MigrationError',
+                    object_description: 'Recording: {0}'.format(qc.object_id),
+                    })
 
         else:
-            print("Something bad happened", qc.content_type.model, content_object)
+            errors.append({
+                error_type: 'UnknownError',
+                object_description: '{0}.{1}'.format(
+                    qc.content_type.app_label, qc.content_type.model),
+                })
 
+    print('\nProcessed:  {0: 6d} / {1: 6d} {2: 6d} / {3: 6d}'.format(
+                s_count, num_sqc, r_count, num_rqc))
+
+    d_count = 0
     for pk in to_delete:
-        qc = RecordingQualityControl.objects.using(db_alias).get(pk=pk)
-        qc.delete()
+
+        sys.stdout.write('\rDeleting:   {0: 6d} / {1: 6d}'.format(
+                d_count, len(to_delete)))
+        sys.stdout.flush()
+
+        try:
+            qc = RecordingQualityControl.objects.using(db_alias).get(pk=pk)
+            qc.delete()
+            d_count = d_count + 1
+        except ObjectDoesNotExist:
+            errors.append({
+                error_type: 'DeletionError',
+                object_description: 'Recording: {0}'.format(pk),
+                })
+
+    print('\nDeleted:    {0: 6d} / {1: 6d}\r'.format(
+            d_count, len(to_delete)))
+
+    for error in errors:
+        print(error)
 
     if num_rqc != RecordingQualityControl.objects.using(db_alias).all().count():
         raise Exception('Error migrations recordings qcs')
