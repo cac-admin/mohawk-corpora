@@ -67,10 +67,10 @@ class SentenceQualityControlHyperLinkedRelatedField(
 
 class RecordingQualityControlSerializer(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
-    content_object = RecordingQualityControlHyperLinkedRelatedField(
-        read_only=True,
-        view_name='api:sentence-detail'
-        )
+    # recording = RecordingQualityControlHyperLinkedRelatedField(
+    #     read_only=True,
+    #     view_name='api:recording-detail'
+    #     )
 
     class Meta:
         model = RecordingQualityControl
@@ -82,10 +82,10 @@ class RecordingQualityControlSerializer(
 
 class SentenceQualityControlSerializer(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
-    content_object = SentenceQualityControlHyperLinkedRelatedField(
-        read_only=True,
-        view_name='api:sentence-detail'
-        )
+    # sentence = SentenceQualityControlHyperLinkedRelatedField(
+    #     read_only=True,
+    #     view_name='api:sentence-detail'
+    #     )
 
     class Meta:
         model = SentenceQualityControl
