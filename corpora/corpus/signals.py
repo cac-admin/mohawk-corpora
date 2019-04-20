@@ -127,16 +127,18 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
 
     if instance.audio_file:
 
-        if instance.duration <= 0:
+        if not created and instance.duration <= 0:
+            # Encoding tasks handles duration calc.
             set_recording_length.apply_async(
                 args=[instance.pk],
-                # task_id='set_recording_length-{0}-{1}-{2}'.format(
-                #     p_pk,
-                #     instance.pk,
-                #     instance.__class__.__name__)
+                task_id='set_recording_length-{0}-{1}-{2}'.format(
+                    p_pk,
+                    instance.pk,
+                    instance.__class__.__name__)
                 )
 
-        if not instance.audio_file_aac or not instance.audio_file_wav:
+        if created or (
+                not instance.audio_file_aac or not instance.audio_file_wav):
 
             key = u"xtrans-{0}-{1}".format(
                 instance.pk, instance.audio_file.name)
@@ -147,10 +149,10 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                 time = timezone.now()
                 transcode_audio.apply_async(
                     args=[instance.pk],
-                    # task_id='transcode_audio-{0}-{1}-{2}'.format(
-                    #     p_pk,
-                    #     instance.pk,
-                    #     time.strftime('%d%m%y%H%M%S'))
+                    task_id='transcode_audio-{0}-{1}-{2}'.format(
+                        p_pk,
+                        instance.pk,
+                        time.strftime('%d%m%y%H%M%S'))
                     )
 
 

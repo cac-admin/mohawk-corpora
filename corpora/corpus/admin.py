@@ -44,26 +44,19 @@ class RecordingsInline(admin.TabularInline):
 
 @admin.register(RecordingQualityControl)
 class RecordingQualityControlAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'recording',
+    list_display = ('recording', 'updated',
                     'good', 'bad', 'calculate_score',
                     'approved', 'trash', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by', 'recording')
 
-    def text(self, obj):
-        return obj.__unicode__()
-
 
 @admin.register(SentenceQualityControl)
 class SentenceQualityControlAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'sentence',
-                    'good', 'bad',
-                    'approved', 'trash', )
+    list_display = ('sentence', 'updated', 'good', 'bad',
+                    'approved', 'approved_by', 'trash', )
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by', 'sentence')
-
-    def text(self, obj):
-        return obj.__unicode__()
 
 
 @admin.register(Sentence)
