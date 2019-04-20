@@ -121,14 +121,15 @@ def convert_quality_controls(apps, schema_editor):
     d_count = 0
     for pk in to_delete:
 
-        sys.stdout.write('\rDeleting:   {0: 6d} / {1: 6d}'.format(
-                d_count, len(to_delete)))
-        sys.stdout.flush()
-
         try:
             qc = RecordingQualityControl.objects.using(db_alias).get(pk=pk)
             qc.delete()
             d_count = d_count + 1
+
+            sys.stdout.write('\rDeleting:   {0: 6d} / {1: 6d}'.format(
+                    d_count, len(to_delete)))
+            sys.stdout.flush()
+
         except ObjectDoesNotExist:
             errors.append({
                 'error_type': 'DeletionError',
