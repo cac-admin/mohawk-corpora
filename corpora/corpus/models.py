@@ -91,7 +91,7 @@ class RecordingQualityControl(models.Model):
         help_text='Model to which this QualityControl refers. This should be \
         the content type ID. Implemented types are Recordings (id=8),\
         Sentences (id=10), Transcription Segments (id=24).')
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
     updated = models.DateTimeField(auto_now=True)
     person = models.ForeignKey(
