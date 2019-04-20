@@ -45,10 +45,10 @@ def convert_quality_controls(apps, schema_editor):
             content_object = ct.get_object_for_this_type(pk=qc.object_id)
         except ObjectDoesNotExist:
             errors.append({
-                error_type: 'ObjectDoesNotExist',
-                object_description: '{0}.{1}'.format(
+                'error_type': 'ObjectDoesNotExist',
+                'object_description': '{0}.{1}'.format(
                     qc.content_type.app_label, qc.content_type.model),
-                note: 'Could not get content object.',
+                'note': 'Could not get content object.',
                 })
             content_object = None
 
@@ -75,17 +75,17 @@ def convert_quality_controls(apps, schema_editor):
 
             except ObjectDoesNotExist:
                 errors.append({
-                    error_type: 'ObjectDoesNotExist',
-                    object_description: 'Sentence: {0}'.format(qc.object_id),
-                    note: 'Could not get sentence.'
+                    'error_type': 'ObjectDoesNotExist',
+                    'object_description': 'Sentence: {0}'.format(qc.object_id),
+                    'note': 'Could not get sentence.'
                     })
 
                 sqc = None
 
             if not sqc:
                 errors.append({
-                    error_type: 'MigrationError',
-                    object_description: 'Sentence: {0}'.format(qc.object_id),
+                    'error_type': 'MigrationError',
+                    'object_description': 'Sentence: {0}'.format(qc.object_id),
                     })
             else:
                 sqc.save()
@@ -104,14 +104,14 @@ def convert_quality_controls(apps, schema_editor):
                 qc.save()
             except ObjectDoesNotExist:
                 errors.append({
-                    error_type: 'MigrationError',
-                    object_description: 'Recording: {0}'.format(qc.object_id),
+                    'error_type': 'MigrationError',
+                    'object_description': 'Recording: {0}'.format(qc.object_id),
                     })
 
         else:
             errors.append({
-                error_type: 'UnknownError',
-                object_description: '{0}.{1}'.format(
+                'error_type': 'UnknownError',
+                'object_description': '{0}.{1}'.format(
                     qc.content_type.app_label, qc.content_type.model),
                 })
 
@@ -131,8 +131,8 @@ def convert_quality_controls(apps, schema_editor):
             d_count = d_count + 1
         except ObjectDoesNotExist:
             errors.append({
-                error_type: 'DeletionError',
-                object_description: 'Recording: {0}'.format(pk),
+                'error_type': 'DeletionError',
+                'object_description': 'Recording: {0}'.format(pk),
                 })
 
     print('\nDeleted:    {0: 6d} / {1: 6d}\r'.format(
