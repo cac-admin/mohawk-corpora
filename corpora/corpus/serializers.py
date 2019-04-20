@@ -90,8 +90,7 @@ class SentenceQualityControlSerializer(
     class Meta:
         model = SentenceQualityControl
         fields = ('id', 'good', 'bad', 'approved', 'approved_by', 'updated',
-                  'person', 'sentence',
-                  'trash', 'follow_up', 'noise', 'star',
+                  'person', 'sentence', 'trash',
                   'machine', 'source', 'notes')
 
 
