@@ -18,7 +18,7 @@ class RecordingQualityControlInline(admin.TabularInline):
     extra = 0
     can_delete = False
     model = RecordingQualityControl
-    raw_id_fields = ('person', 'approved_by', 'source')
+    raw_id_fields = ('person', 'approved_by', 'source', 'recording')
 
 
 class SentenceQualityControlInline(admin.TabularInline):
@@ -26,7 +26,7 @@ class SentenceQualityControlInline(admin.TabularInline):
     extra = 0
     can_delete = False
     model = SentenceQualityControl
-    raw_id_fields = ('person', 'approved_by', 'source')
+    raw_id_fields = ('person', 'approved_by', 'source', 'sentence')
 
 
 class RecordingsInline(admin.TabularInline):
@@ -48,7 +48,7 @@ class RecordingQualityControlAdmin(admin.ModelAdmin):
                     'good', 'bad', 'calculate_score',
                     'approved', 'trash', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
-    raw_id_fields = ('person', 'approved_by')
+    raw_id_fields = ('person', 'approved_by', 'recording')
 
     def text(self, obj):
         return obj.__unicode__()
@@ -60,7 +60,7 @@ class SentenceQualityControlAdmin(admin.ModelAdmin):
                     'good', 'bad',
                     'approved', 'trash', )
     date_hierarchy = 'updated'
-    raw_id_fields = ('person', 'approved_by')
+    raw_id_fields = ('person', 'approved_by', 'sentence')
 
     def text(self, obj):
         return obj.__unicode__()
