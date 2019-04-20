@@ -35,7 +35,6 @@ def convert_quality_controls(apps, schema_editor):
             app_label=qc.content_type.app_label)
         content_object = ct.get_object_for_this_type(pk=qc.object_id)
         if 'sentence' in qc.content_type.model:
-            print("Converting QC to Sentence QC")
             sentence = Sentence.objects.get(pk=qc.object_id)
             # try:
             #     with transaction.atomic():
@@ -62,7 +61,6 @@ def convert_quality_controls(apps, schema_editor):
                 to_delete.append(qc.pk)
 
         elif 'recording' in qc.content_type.model:
-            print("Adding recording object to foreignkey field")
             recording = Recording.objects.using(db_alias).get(pk=qc.object_id)
             qc.recording = recording
             qc.save()
@@ -72,13 +70,13 @@ def convert_quality_controls(apps, schema_editor):
 
     for pk in to_delete:
         qc = RecordingQualityControl.objects.using(db_alias).get(pk=pk)
-        print("Deleting old object {0}".format(pk))
         qc.delete()
 
     if num_rqc != RecordingQualityControl.objects.using(db_alias).all().count():
         raise Exception('Error migrations recordings qcs')
     if num_sqc != SentenceQualityControl.objects.using(db_alias).all().count():
         raise Exception('Error migrations sentence qcs')
+
 
 def restore_quality_controls(apps, schema_editor):
 
@@ -95,19 +93,24 @@ def restore_quality_controls(apps, schema_editor):
     Sentence = \
         apps.get_model('corpus', 'Sentence')
 
-    recording_quality_controls = RecordingQualityControl.objects.all()
-    sentence_quality_controls = SentenceQualityControl.objects.all()
+    recording_quality_controls = RecordingQualityControl.objects.using(db_alias).all()
+    sentence_quality_controls = SentenceQualityControl.objects.using(db_alias).all()
+
+    ct = ContentType.objects.get(
+        model='recording',
+        app_label='corpus')
+
+    to_delete = []
+    for qc in recording_quality_controls:
+        qc.object_id = qc.recording.pk
+        qc.content_type = ct
+        qc.save()
 
     ct = ContentType.objects.get(
         model='sentence',
         app_label='corpus')
 
-    to_delete = []
     for qc in sentence_quality_controls:
-        print("Adding sentence_quality_control to quality_control")
-
-        # try:
-        #     with transaction.atomic():
         rqc = RecordingQualityControl.objects.using(db_alias).create(
             good=qc.good,
             bad=qc.bad,
@@ -121,10 +124,6 @@ def restore_quality_controls(apps, schema_editor):
             content_type=ct,
             object_id=qc.sentence.pk,
             source=qc.source)
-        # except IntegrityError as e:
-        #     if 'duplicate key value violates unique constraint' in str(e):
-        #         print('Did we not delete this in migration?')
-        #     rqc = None
 
         if not rqc:
             print("Did not create recording qc")
@@ -134,7 +133,6 @@ def restore_quality_controls(apps, schema_editor):
 
     for pk in to_delete:
         qc = SentenceQualityControl.objects.using(db_alias).get(pk=pk)
-        print("Deleting old object {0}".format(pk))
         qc.delete()
 
 
