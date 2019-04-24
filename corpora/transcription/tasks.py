@@ -255,6 +255,7 @@ def check_and_transcribe_blank_segments():
     segments = TranscriptionSegment.objects\
         .filter(text__isnull=True)\
         .filter(edited_by__isnull=True)\
+        .filter(parent__ignore=False)\
         .order_by('?')  # Expensive but okay for this context.
     count = 0
     for segment in segments:

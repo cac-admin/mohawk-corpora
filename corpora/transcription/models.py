@@ -297,6 +297,15 @@ class AudioFileTranscription(models.Model):
             A Person ID. This field is populated automatically if\
             not provided.'))
 
+    ignore = models.BooleanField(
+        default=False,
+        help_text='Help us find and ignore bad files/uploads.')
+
+    errors = JSONField(
+        help_text='Place to store any error information.',
+        default=None,
+        null=True)
+
     # duration = models.PositiveIntegerField(
     #     blank=True, null=True, editable=False)
 
