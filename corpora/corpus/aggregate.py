@@ -119,6 +119,7 @@ def build_qualitycontrol_stat_dict(queryset):
         'good': goods['sum'] if goods['sum'] is not None else 0,
         'bad': bads['sum'] if bads['sum'] is not None else 0,
         'trash': deletes.count(),
+        'delete': deletes.count(),
         'star': stars['sum'] if stars['sum'] is not None else 0,
     }
 
