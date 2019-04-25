@@ -28,6 +28,8 @@ from people.competition import \
 from django.core.cache import cache
 from corpora.celery_config import app
 
+from corpus.models import Recording
+
 import datetime
 import time
 import logging
@@ -36,7 +38,6 @@ logger = logging.getLogger('corpora')
 
 @shared_task
 def clean_empty_person_models():
-    from corpus.models import Recording
 
     people = Person.objects\
         .filter(full_name='')\
@@ -44,8 +45,6 @@ def clean_empty_person_models():
         .filter(demographic__isnull=True)\
         .filter(known_languages__isnull=True)\
         .filter(recording__isnull=True)
-        # .annotate(num_recordings=Count('recording'))\
-        # .filter(num_recordings=0)
 
     count = people.count()
     if count == 0:
@@ -59,7 +58,6 @@ def clean_empty_person_models():
 
 @shared_task
 def clean_empty_group_models():
-    from corpus.models import Recording
 
     groups = Group.objects.all()
 
@@ -71,7 +69,6 @@ def clean_empty_group_models():
 
 @shared_task
 def calculate_person_scores():
-    from corpus.models import Recording, QualityControl
 
     people = Person.objects.all()
 
@@ -80,15 +77,11 @@ def calculate_person_scores():
     # onto another?
     for person in people:
         recordings = Recording.objects.filter(person=person)
-        # qcs = QualityControl.objects.filter(person=person)
 
         score = 0
 
         for r in recordings:
             score = score + float(r.calculate_score())
-
-        # for q in qcs:
-        #     score = score + float(q.calculate_score())
 
         person.score = int(score)
         person.save()
@@ -98,7 +91,6 @@ def calculate_person_scores():
 
 @shared_task
 def calculate_group_scores():
-    from corpus.models import Recording, QualityControl
 
     groups = Group.objects.all()
 
@@ -141,7 +133,6 @@ def update_group_score(group):
 @shared_task
 def update_person_score(person_pk):
     return "this is off"
-    from corpus.models import Recording, QualityControl
 
     try:
         person = Person.objects.get(pk=person_pk)
@@ -153,7 +144,6 @@ def update_person_score(person_pk):
     # onto another?
 
     recordings = Recording.objects.filter(person=person)
-    # qcs = QualityControl.objects.filter(person=person)
 
     score = 0
 
