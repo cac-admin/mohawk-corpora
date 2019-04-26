@@ -235,6 +235,13 @@ def transcode_all_audio():
 
 
 def encode_audio(recording, test=False, codec='aac'):
+    '''
+    Encode audio into required formats. Also sets recording duration.
+    '''
+    if not isinstance(codec, list):
+        codec_list = [codec]  # Backwards compatibility
+    else:
+        codec_list = codec
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
@@ -258,42 +265,52 @@ def encode_audio(recording, test=False, codec='aac'):
 
     if audio:
         file_name = recording.get_recording_file_name()
-        if codec in 'wav':
-            file_name = file_name + '_16kHz'
-        extension = codecs[codec][1]
 
-        if codec in 'wav':
-            code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
-                tmp_file,
-                codecs[codec][0], codecs[codec][2], codecs[codec][3],
-                tmp_stor_dir, file_name, extension)
-        else:
-            code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
-                tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+        code = \
+            "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
+                tmp_file)
 
-        logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)
-        logger.debug(data[1])
+        recording.duration = float(data[1])
 
-        logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
-        if file_name is None:
-            file_name = 'audio'
+        for codec in codec_list:
 
-        if 'aac' in codec:
-            recording.audio_file_aac.save(
-                file_name+'.'+extension,
-                File(open(tmp_stor_dir+'/{0}.{1}'.format(
-                    file_name, extension))))
-        elif 'wav' in codec:
-            recording.audio_file_wav.save(
-                file_name+'.'+extension,
-                File(open(tmp_stor_dir+'/{0}.{1}'.format(
-                    file_name, extension))))
+            if codec in 'wav':
+                file_name = file_name + '_16kHz'
+            extension = codecs[codec][1]
 
-        code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
-        logger.debug('Running: '+code)
-        data = commands.getstatusoutput(code)
-        logger.debug(data[1])
+            if codec in 'wav':
+                code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
+                    tmp_file,
+                    codecs[codec][0], codecs[codec][2], codecs[codec][3],
+                    tmp_stor_dir, file_name, extension)
+            else:
+                code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
+                    tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+
+            logger.debug('Running: '+code)
+            data = commands.getstatusoutput(code)
+            logger.debug(data[1])
+
+            logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
+            if file_name is None:
+                file_name = 'audio'
+
+            if 'aac' in codec:
+                recording.audio_file_aac.save(
+                    file_name+'.'+extension,
+                    File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                        file_name, extension))))
+            elif 'wav' in codec:
+                recording.audio_file_wav.save(
+                    file_name+'.'+extension,
+                    File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                        file_name, extension))))
+
+            code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
+            logger.debug('Running: '+code)
+            data = commands.getstatusoutput(code)
+            logger.debug(data[1])
 
     if not audio:
         logger.debug('No audio stream found.')
