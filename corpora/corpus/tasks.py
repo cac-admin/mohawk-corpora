@@ -170,18 +170,21 @@ def transcode_audio(recording_pk):
     key = u"xtrans-{0}-{1}".format(
         recording.pk, recording.audio_file.name)
 
-    is_running = cache.get(key)
+    is_running = cache.get(key, False)
 
     result = ''
-    if is_running is None:
+    if not is_running:
+        codecs = []
         if not recording.audio_file_aac:
-            is_running = cache.set(key, True, 60*5)
-            result = encode_audio(recording)
-            cache.set(key, False, 60)
+            codecs.append('aac')
         if not recording.audio_file_wav:
-            is_running = cache.set(key, True, 60*5)
-            result = result + encode_audio(recording, codec='wav')
-            cache.set(key, False, 60)
+            codecs.append('wav')
+
+        if len(codecs) >= 1:
+            is_running = cache.set(key, True, 60)
+            result = encode_audio(recording, codec=codecs)
+            cache.set(key, False)
+
         return result
 
     elif is_running:
