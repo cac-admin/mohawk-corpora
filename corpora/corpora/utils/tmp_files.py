@@ -45,7 +45,7 @@ def get_tmp_stor_directory(model=None):
         try:
             os.chown(BASE, uid, gid)
         except OSError:
-            logger.error('COULD NOT CHOWN: {0}'.format(base))
+            logger.error('COULD NOT CHOWN: {0}'.format(BASE))
 
     # Check permissions and change?
 
