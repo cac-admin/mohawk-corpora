@@ -254,8 +254,8 @@ def check_and_transcribe_blank_segments():
 
     segments = TranscriptionSegment.objects\
         .filter(text__isnull=True)\
-        .filter(edited_by__isnull=True)\
-        .order_by('?')  # Expensive but okay for this context.
+        .filter(edited_by__isnull=True)
+    # .order_by('?')  # Expensive but okay for this context.
     count = 0
     for segment in segments:
         if count > 600:
@@ -265,7 +265,7 @@ def check_and_transcribe_blank_segments():
         count = count = 1
 
     clear_running_tasks(task_key)
-    return "Checked {0} segments.".format(count)
+    return "Checked {0} segments of {1}.".format(count, segments.count())
 
 
 @shared_task
