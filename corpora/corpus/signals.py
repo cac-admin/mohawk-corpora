@@ -155,6 +155,16 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                         time.strftime('%d%m%y%H%M%S'))
                     )
 
+                # We need to wait for the wav file to be encoded
+                # for this task to run, otherwise we need to use
+                # a different method. It's probably better to
+                # use the inmemory file option here if we want
+                # something quick but for now this just get's
+                # us a transcription quickly.
+                transcibe_recrding.apply_async(
+                    args=[instance.pk],
+                    countdown=5)
+
 
 # This isn't correct - we want the person of the recording object of quality
 # control to get a new score not the person who done the QC.
