@@ -242,6 +242,8 @@ class TranscriptionSegment(models.Model):
         null=True,
         blank=True)
 
+    updated = models.DateTimeField(auto_now=True)
+
     def save(self, *args, **kwargs):
         if self.corrected_text is None:
             if self.text:
