@@ -50,5 +50,5 @@ class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
 @admin.register(TranscriptionSegment)
 class TranscriptionSegmentAdmin(admin.ModelAdmin):
     readonly_fields = ('start', 'end')
-    list_display = ('parent', 'text', 'start', 'end')
+    list_display = ('parent', 'text', 'start', 'end', 'updated')
     raw_id_fields = ('parent', 'edited_by', 'child',)
