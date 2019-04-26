@@ -9,7 +9,7 @@ from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 from people.models import KnownLanguage
-from transcription.tasks import transcibe_recrding
+from transcription.tasks import transcribe_recording
 
 from corpora.celery_config import app
 
@@ -162,9 +162,14 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                 # use the inmemory file option here if we want
                 # something quick but for now this just get's
                 # us a transcription quickly.
-                transcibe_recrding.apply_async(
+                transcribe_recording.apply_async(
                     args=[instance.pk],
-                    countdown=5)
+                    countdown=5,
+                    task_id='transcribe_audio-{0}-{1}-{2}'.format(
+                        p_pk,
+                        instance.pk,
+                        time.strftime('%d%m%y%H%M%S'))
+                    )
 
 
 # This isn't correct - we want the person of the recording object of quality

@@ -199,6 +199,17 @@ def transcribe_recording(pk):
         transcription = transcriptions.last()
         t = transcriptions.first()
         t.delete()
+    except ObjectDoesNotExist:
+        source, created = Source.objects.get_or_create(
+            source_name='Transcription API',
+            source_type='M',
+            source_url=settings.DEEPSPEECH_URL,
+            author='Keoni Mahelona'
+        )
+
+        transcription, created = Transcription.objects.get_or_create(
+            recording=recording,
+            source=source)
 
     start = timezone.now()
     if not transcription.text:
