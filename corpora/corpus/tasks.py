@@ -48,8 +48,12 @@ def set_recording_length(recording_pk):
         logger.warning('Tried to get recording that doesn\'t exist')
         return 'Tried to get recording that doesn\'t exist'
 
-    recording.duration = get_media_duration(recording)
-    recording.save()
+    try:
+        recording.duration = get_media_duration(recording)
+        recording.save()
+    except Exception as e:
+        logger.error(e)
+        return 'Cound not set Recording {0} duration'.format(recording.pk)
 
     return 'Recording {0} duration set to {1}'.format(
         recording.pk, recording.duration)
