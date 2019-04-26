@@ -42,7 +42,10 @@ def get_tmp_stor_directory(model=None):
         uid = pwd.getpwnam(settings.APPLICATION_USER).pw_uid
         gid = grp.getgrnam(settings.APPLICATION_GROUP).gr_gid
         os.mkdir(BASE)
-        os.chown(BASE, uid, gid)
+        try:
+            os.chown(BASE, uid, gid)
+        except OSError:
+            logger.error('COULD NOT CHOWN: {0}'.format(BASE))
 
     # Check permissions and change?
 
