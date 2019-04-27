@@ -219,9 +219,9 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
                 .annotate(
                     num_reviewed=models.Count(
                         Case(
-                            When(Q(quality_control__updated__gte=start) &
-                                 Q(quality_control__updated__lte=end),
-                                 then=F('quality_control')),
+                            When(Q(recordingqualitycontrol__updated__gte=start) &
+                                 Q(recordingqualitycontrol__updated__lte=end),
+                                 then=F('recordingqualitycontrol')),
                             output_field=CharField()), distinct=True))\
                 .annotate(
                     num_recordings=models.Count(
@@ -236,7 +236,7 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
             people = Person.objects.all()\
                 .annotate(
                     num_reviewed=models.Count(
-                        'quality_control', distinct=True))\
+                        'recordingqualitycontrol', distinct=True))\
                 .annotate(
                     num_recordings=models.Count(
                         'recording', distinct=True))\
@@ -267,18 +267,18 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
 
         people = people\
             .annotate(
-                num_reviewed=models.Sum('quality_control'))\
+                num_reviewed=models.Sum('recordingqualitycontrol'))\
             .annotate(
                 num_approved=models.Sum(
                     Case(
                         When(
-                            quality_control__isnull=True,
+                            recordingqualitycontrol__isnull=True,
                             then=Value(0)),
                         When(
-                            quality_control__approved=True,
+                            recordingqualitycontrol__approved=True,
                             then=Value(1)),
                         When(
-                            quality_control__approved=False,
+                            recordingqualitycontrol__approved=False,
                             then=Value(0)),
                         default=Value(0),
                         output_field=IntegerField())))\
@@ -286,10 +286,10 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                 num_good=models.Sum(
                     Case(
                         When(
-                            quality_control__isnull=True,
+                            recordingqualitycontrol__isnull=True,
                             then=Value(0)),
                         When(
-                            quality_control__good__gte=1,
+                            recordingqualitycontrol__good__gte=1,
                             then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
@@ -297,10 +297,10 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                 num_bad=models.Sum(
                     Case(
                         When(
-                            quality_control__isnull=True,
+                            recordingqualitycontrol__isnull=True,
                             then=Value(0)),
                         When(
-                            quality_control__bad__gte=1,
+                            recordingqualitycontrol__bad__gte=1,
                             then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
