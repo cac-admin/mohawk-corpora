@@ -264,17 +264,17 @@ def check_and_transcribe_blank_segments():
         return "Task already running. Skipping this instance."
 
     segments = TranscriptionSegment.objects\
-        .filter(text__isnull=True)\
-        .filter(edited_by__isnull=True)\
-        .filter(parent__ignore=False)\
-        .order_by('?')  # Expensive but okay for this context.
+        .filter(Q(text__isnull=True) &
+                Q(edited_by__isnull=True) &
+                Q(parent__ignore=False))
+
     count = 0
     for segment in segments:
         if count > 600:
             return "Checked 600 segments. \
                     Reached max loop."
         transcribe_segment_async(segment.pk)
-        count = count = 1
+        count = count + 1
 
     clear_running_tasks(task_key)
     return "Checked {0} segments.".format(count)
