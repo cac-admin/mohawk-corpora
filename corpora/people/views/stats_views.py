@@ -284,8 +284,6 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
 
         people = people\
             .annotate(
-                num_reviewed=models.Sum('recordingqualitycontrol'))\
-            .annotate(
                 num_approved=models.Sum(
                     Case(
                         When(
@@ -321,7 +319,7 @@ class PeopleQCStatsView(UserPassesTestMixin, ListView):
                             then=Value(1)),
                         default=Value(0),
                         output_field=IntegerField())))\
-            .order_by('-num_reviewed')
+            .order_by('-num_reviews')
 
         return people
 
