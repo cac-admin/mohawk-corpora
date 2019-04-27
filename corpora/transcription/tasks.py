@@ -199,6 +199,17 @@ def transcribe_recording(pk):
         transcription = transcriptions.last()
         t = transcriptions.first()
         t.delete()
+    except ObjectDoesNotExist:
+        source, created = Source.objects.get_or_create(
+            source_name='Transcription API',
+            source_type='M',
+            source_url=settings.DEEPSPEECH_URL,
+            author='Keoni Mahelona'
+        )
+
+        transcription, created = Transcription.objects.get_or_create(
+            recording=recording,
+            source=source)
 
     start = timezone.now()
     if not transcription.text:
@@ -253,8 +264,10 @@ def check_and_transcribe_blank_segments():
         return "Task already running. Skipping this instance."
 
     segments = TranscriptionSegment.objects\
-        .filter(Q(text__isnull=True) & Q(edited_by__isnull=True))
-    # .order_by('?')  # Expensive but okay for this context.
+        .filter(Q(text__isnull=True) &
+                Q(edited_by__isnull=True) &
+                Q(parent__ignore=False))
+
     count = 0
     for segment in segments:
         if count > 600:

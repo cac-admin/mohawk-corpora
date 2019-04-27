@@ -5,7 +5,7 @@ class Stats{
   constructor(stat_block_selector='div.stat', url=''){
     this.stat_block = $(stat_block_selector).get(0);
     this.base_url = url
-    this.debug = true
+    this.debug = false
     this.stats = null
     // this.get_stats()
     this.refetch = false

@@ -42,9 +42,9 @@ Data are update approximately every 10 minutes.</small></p>
   <td>{{person|username}}</td>
   {% if request.user.is_staff and request.user.is_authenticated %}<td>{{person.uuid}}</td>{% endif %}
   {% if request.user.is_staff and request.user.is_authenticated %}<td>{{person|email}}</td>{% endif %}
-  <td>{{person.num_recordings}}</td>
-  <td>{{person.num_reviewed}}</td>
-  <td>{{person.score}}</td>
+  <td>{% if competition %}{{person.num_recordings_comp}}{% else %}{{person.num_recordings}}{% endif %}</td>
+  <td>{% if competition %}{{person.num_reviews_comp}}{% else %}{{person.num_reviews}}{% endif %}</td>
+  <td>{% if competition %}{{person.score_comp}}{% else %}{{person.score}}{% endif %}</td>
 </tr>
 {% endif %}
 {% endfor %}

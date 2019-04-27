@@ -13,7 +13,7 @@ from people.models import Person, KnownLanguage, Group
 from people.helpers import get_email, set_current_language_for_person, email_verified
 
 from corpus.aggregate import build_recordings_stat_dict
-from corpus.models import Recording
+from corpus.models import Recording, RecordingQualityControl
 
 from celery.task.control import revoke, inspect
 
@@ -136,12 +136,13 @@ def get_competition_group_score(group):
 
 
 def get_competition_person_score(group, person):
+    # start, end = get_start_end_for_competition()
     start = parse_datetime("2018-03-15 13:00:00")
     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
     end = parse_datetime("2018-03-25 18:00:00")
     end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
 
-    # ERROR! This doesn't consder language!
+    # ERROR! This doesn't consdier language!
     members = get_valid_group_members(group)
     if members is None:
         return 0
@@ -152,55 +153,71 @@ def get_competition_person_score(group, person):
     #     return 0
 
     recordings = Recording.objects\
-        .filter(person=person)\
-        .filter(created__lte=end)\
-        .filter(created__gte=start)
+        .filter(Q(person=person) &
+                Q(created__lte=end) &
+                Q(created__gte=start))
+
+    reviews = RecordingQualityControl.objects\
+        .filter(Q(person=person) &
+                Q(updated__gte=end) &
+                Q(updated__lte=start))
 
     SCORE_KEY = "COMP-PERSON-SCORE-{0}".format(person.pk)
     score = cache.get(SCORE_KEY)
     if score is None:
         score = 0
         for r in recordings:
-            score = score + calculate_recording_score(r)
+            score = score + r.calculate_score()
+        for q in reviews:
+            score = score + q.calculate_score()
         cache.set(SCORE_KEY, score, 60*5)
     return score, recordings.count()
 
 
 # TODO TEST THIS!
-def calculate_recording_score(recording):
-    """Score awarded for uploading this recording. """
-    start = parse_datetime("2018-03-18 13:00:00")
-    start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
-    end = parse_datetime("2018-03-19 13:00:00")
-    end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
+# Why did we make this?
+# def calculate_recording_score(recording):
+#     """Score awarded for uploading this recording. """
+#     # start, end = get_start_end_for_competition()
+#     start = parse_datetime("2018-03-18 13:00:00")
+#     start = pytz.timezone("Pacific/Auckland").localize(start, is_dst=None)
+#     end = parse_datetime("2018-03-19 13:00:00")
+#     end = pytz.timezone("Pacific/Auckland").localize(end, is_dst=None)
 
-    factor_1 = 1
-    if recording.created > start and recording.created < end:
-        factor_1 = 2
+#     factor_1 = 1
+#     if recording.created > start and recording.created < end:
+#         factor_1 = 2
 
-    approved = recording.quality_control \
-        .filter(person__user__is_staff=True) \
-        .filter(approved=True)
+#     approved = recording.quality_control \
+#         .filter(person__user__is_staff=True) \
+#         .filter(approved=True)
 
-    if approved.count() >= 1:
-        return 1
+#     if approved.count() >= 1:
+#         return 1
 
-    net_votes = recording.quality_control \
-        .filter(person__user__is_staff=True) \
-        .aggregate(value=Sum(F('good') - F('bad')))
+#     net_votes = recording.quality_control \
+#         .filter(person__user__is_staff=True) \
+#         .aggregate(value=Sum(F('good') - F('bad')))
 
-    net_votes = decimal.Decimal(net_votes['value'] or 0)
+#     net_votes = decimal.Decimal(net_votes['value'] or 0)
 
-    if net_votes != 0:
-        net_votes = net_votes/abs(net_votes)
+#     if net_votes != 0:
+#         net_votes = net_votes/abs(net_votes)
 
-    damper = 4
-    score = max(0, 1 - math.exp(-(net_votes + 1) / damper))
+#     damper = 4
+#     score = max(0, 1 - math.exp(-(net_votes + 1) / damper))
 
-    if net_votes == 0:
-        return score * factor_1
-    else:
-        return score
+#     if net_votes == 0:
+#         return score * factor_1
+#     else:
+#         return score
+
+
+'''
+=============================================================================
+Below are methods to help with reviewing faster and doing other custom stuffs
+=============================================================================
+'''
 
 
 def mahi_tahi(group):

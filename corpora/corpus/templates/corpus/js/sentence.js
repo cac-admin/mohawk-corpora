@@ -6,7 +6,7 @@ class Sentences{
     this.objects = null
     this.sentence = null
     this.base_url = '/api/sentences/'
-    this.base_quality_url = '/api/qualitycontrol/'
+    this.base_quality_url = '/api/sentencequalitycontrol/'
     this.base_sentence_url = '/api/sentences/'
     this.url_filter_query = filter_query
     this.next_url = null
@@ -14,7 +14,7 @@ class Sentences{
     this.quality_control.person = person_id
     this.quality_control.approved_by = approver_user_id
     this.can_approve = can_approve
-    this.quality_control.content_type = content_type
+    // this.quality_control.content_type = content_type
 
     this.debug = false
 
@@ -190,7 +190,7 @@ class Sentences{
 
   post_qc(data){
     var self = this
-    this.quality_control.object_id = this.sentence.id
+    this.quality_control.sentence = this.sentence.id
     $.ajax({
       type: "POST",
       data: this.quality_control,
@@ -252,7 +252,7 @@ class Sentences{
 
   post_put(){
     var method = 'POST'
-    this.quality_control.object_id = this.sentence.id
+    this.quality_control.sentence = this.sentence.id
 
     for (let qc of this.sentence.quality_control){
       if (qc.person == this.quality_control.person){

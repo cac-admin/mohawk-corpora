@@ -3,20 +3,30 @@ from django.contrib import admin
 from django.db import models
 
 from django.contrib import messages
-from django.contrib.contenttypes.admin import GenericTabularInline
 
-from .models import QualityControl, Sentence, Recording, Source, Text
+from .models import \
+    RecordingQualityControl, Sentence, Recording, Source, Text, \
+    SentenceQualityControl
+
 from corpus.views.views import RecordingFileView
 from .parser import save_sentences_from_text
 from .helpers import approve_sentence
 
 
-class QualityControlInline(GenericTabularInline):
+class RecordingQualityControlInline(admin.TabularInline):
     # max_num = 1
     extra = 0
     can_delete = False
-    model = QualityControl
-    raw_id_fields = ('person', 'approved_by', 'source')
+    model = RecordingQualityControl
+    raw_id_fields = ('person', 'approved_by', 'source', 'recording')
+
+
+class SentenceQualityControlInline(admin.TabularInline):
+    # max_num = 1
+    extra = 0
+    can_delete = False
+    model = SentenceQualityControl
+    raw_id_fields = ('person', 'approved_by', 'source', 'sentence')
 
 
 class RecordingsInline(admin.TabularInline):
@@ -32,23 +42,28 @@ class RecordingsInline(admin.TabularInline):
         return False
 
 
-@admin.register(QualityControl)
-class QualityControlAdmin(admin.ModelAdmin):
-    list_display = ('text', 'updated', 'content_type', 'object_id',
+@admin.register(RecordingQualityControl)
+class RecordingQualityControlAdmin(admin.ModelAdmin):
+    list_display = ('recording', 'updated',
                     'good', 'bad', 'calculate_score',
-                    'approved', 'delete', 'follow_up', 'noise', 'star')
+                    'approved', 'trash', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
-    raw_id_fields = ('person', 'approved_by')
+    raw_id_fields = ('person', 'approved_by', 'recording')
 
-    def text(self, obj):
-        return obj.__unicode__()
+
+@admin.register(SentenceQualityControl)
+class SentenceQualityControlAdmin(admin.ModelAdmin):
+    list_display = ('sentence', 'updated', 'good', 'bad',
+                    'approved', 'approved_by', 'trash', )
+    date_hierarchy = 'updated'
+    raw_id_fields = ('person', 'approved_by', 'sentence')
 
 
 @admin.register(Sentence)
 class SentenceAdmin(admin.ModelAdmin):
     list_display = ('text', 'source', 'updated', 'get_approved',
                     'get_approved_by', 'num_recordings')
-    inlines = [QualityControlInline, RecordingsInline]
+    inlines = [SentenceQualityControlInline, RecordingsInline]
     search_fields = ['text']
     actions = ('approve_sentences',)
 
@@ -116,7 +131,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'created',
     )
 
-    inlines = [QualityControlInline]
+    inlines = [RecordingQualityControlInline]
 
     readonly_fields = (
         'duration',

@@ -294,6 +294,9 @@ def transcribe_segment(ts):
 
         ts.source = source
 
+        if ts.text is '':
+            ts.no_speech_detected = True
+
         ts.save()
     else:
         result['status'] = unicode(_('Error'))
@@ -323,7 +326,10 @@ def transcribe_aft_async(pk):
             cache.set(cache_key, retry+1)
             msg = transcribe_aft_async.apply_async([pk], countdown=5)
         else:
+            aft.ignore = True
             msg = 'Tried 5 times. Stopping.'
+            aft.errors = {'info': 'Tried 5 times to transcibe and no luck.'}
+            aft.save()
         try:
             erase_all_temp_files(aft)
         except Exception as e:

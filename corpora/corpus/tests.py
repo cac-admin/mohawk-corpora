@@ -82,7 +82,7 @@ class CorpusRecordingTestCase(TestCase):
         self.assertEqual(stats['approved'], 1)
         self.assertEqual(stats['good'], 2)
         self.assertEqual(stats['bad'], 1)
-        self.assertEqual(stats['delete'], 1)
+        self.assertEqual(stats['trash'], 1)
         self.assertEqual(stats['star'], 4)
         self.assertEqual(stats['count'], 7)
 
@@ -91,7 +91,7 @@ class CorpusRecordingTestCase(TestCase):
         self.assertEqual(stats['approved'], 0)
         self.assertEqual(stats['good'], 0)
         self.assertEqual(stats['bad'], 0)
-        self.assertEqual(stats['delete'], 0)
+        self.assertEqual(stats['trash'], 0)
         self.assertEqual(stats['star'], 0)
         self.assertEqual(stats['count'], 0)
 
