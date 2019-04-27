@@ -107,11 +107,11 @@
 
 
 class CaptionPlayer{
-  constructor(){
+  constructor(debug=false){
     var self=this;
     this.audioElm = $('.audio audio')[0];  
     this.player = $('div.player');
-    this.debug = true
+    this.debug = debug
 
     $(self.player).find('.play, .pause').on('click', function(event){
       self.toggle_play()
@@ -329,13 +329,13 @@ var editor = new TranscriptionSegmentEditor();
 
 
 class TranscriptionPlayer{
-  constructor(){
+  constructor(debug=false){
     this.segments = $('.segments .segment')
     this.currentIndex = 0
     this.audioElm = $('.audio audio')[0];  
     this.offset 
     this.fixed_offset = -300;
-    this.debug = true
+    this.debug = debug
     this.keyMap = {16: false}
     var self = this
 

@@ -1,6 +1,6 @@
 
 class Profile{
-  constructor(pk, target_element_selector, target_alert_element_selector=null){
+  constructor(pk, target_element_selector, target_alert_element_selector=null, debug=false){
     this.base_url = '/api/persons/'+pk+'/'
     this.target_element = $(target_element_selector)
     this.alert_element = (target_alert_element_selector==null) ? null : $(target_alert_element_selector);
@@ -9,7 +9,7 @@ class Profile{
     this.alert = null
     this.change_counter = 0
     this.saving = false
-    this.debug = true
+    this.debug = debug
     var self = this
 
     // CREATE AND REGISTER EVENT LISTENERS
