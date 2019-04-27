@@ -30,6 +30,7 @@ from django.core.cache import cache
 
 
 @receiver(models.signals.pre_save, sender=Sentence)
+@receiver(models.signals.pre_save, sender=Recording)
 def clear_quality_control_instance_when_object_modified(
         sender, instance, **kwargs):
 
@@ -47,6 +48,19 @@ def clear_quality_control_instance_when_object_modified(
                 #     print "Clearing quality control"
                 #     qc.delete()
 
+        except ObjectDoesNotExist:
+            pass
+
+    # Clear recording QC if the sentence text was changed.
+    if isinstance(instance, Recording):
+        try:
+            old_recording = Recording.objects.get(pk=instance.pk)
+
+            if not (old_recording.sentence_text == instance.sentence_text):
+                qc = RecordingQualityControl.objects.filter(
+                    recording__pk=instance.pk,
+                    )
+                qc.delete()
         except ObjectDoesNotExist:
             pass
 
@@ -208,7 +222,7 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
             update_person_score.apply_async(
                 args=[instance.person.pk],
                 task_id=task_id,
-                countdown=60*4)
+                countdown=60*3)
 
         elif isinstance(instance, RecordingQualityControl):
             if isinstance(instance.content_object, Recording):
@@ -217,9 +231,9 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=60*4)
+                    countdown=60*3)
 
-        cache.set(key, task_id, 60*4)
+        cache.set(key, task_id, 60*3)
 
     else:
 
@@ -231,7 +245,7 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=60*4)
+                    countdown=60*3)
 
             elif isinstance(instance, RecordingQualityControl):
                 if isinstance(instance.content_object, Recording):
@@ -240,6 +254,6 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                     update_person_score.apply_async(
                         args=[instance.person.pk],
                         task_id=task_id,
-                        countdown=60*4)
+                        countdown=60*3)
         else:
             pass

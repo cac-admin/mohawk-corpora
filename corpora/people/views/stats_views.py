@@ -211,38 +211,55 @@ class PeopleRecordingStatsView(SiteInfoMixin, UserPassesTestMixin, ListView):
         return True
         # return self.request.user.is_staff
 
-    def get_queryset(self):
-        # language = get_current_language(self.request)
+    def get_context_data(self, **kwargs):
+        context = \
+            super(PeopleRecordingStatsView, self).get_context_data(**kwargs)
         start, end = get_start_end_for_competition()
         if start is not None:
-            people = Person.objects.all()\
-                .annotate(
-                    num_reviewed=models.Count(
-                        Case(
-                            When(Q(recordingqualitycontrol__updated__gte=start) &
-                                 Q(recordingqualitycontrol__updated__lte=end),
-                                 then=F('recordingqualitycontrol')),
-                            output_field=CharField()), distinct=True))\
-                .annotate(
-                    num_recordings=models.Count(
-                        Case(
-                            When(Q(recording__created__gte=start) &
-                                 Q(recording__created__lte=end),
-                                 then=F('recording')),
-                            output_field=CharField()), distinct=True))\
-                .order_by('-num_recordings')
-
+            context['competition'] = True
         else:
-            people = Person.objects.all()\
-                .annotate(
-                    num_reviewed=models.Count(
-                        'recordingqualitycontrol', distinct=True))\
-                .annotate(
-                    num_recordings=models.Count(
-                        'recording', distinct=True))\
-                .order_by('-num_recordings')
+            context['competition'] = False
+        return context
 
-        return people
+    def get_queryset(self):
+        # language = get_current_language(self.request)
+        people = Person.objects.all()
+        start, end = get_start_end_for_competition()
+        if start is not None:
+            return people.order_by('-num_recordings_com')
+        else:
+            return people.order_by('-num_recordings')
+
+        # start, end = get_start_end_for_competition()
+        # if start is not None:
+        #     people = Person.objects.all()\
+        #         .annotate(
+        #             num_reviewed=models.Count(
+        #                 Case(
+        #                     When(Q(recordingqualitycontrol__updated__gte=start) &
+        #                          Q(recordingqualitycontrol__updated__lte=end),
+        #                          then=F('recordingqualitycontrol')),
+        #                     output_field=CharField()), distinct=True))\
+        #         .annotate(
+        #             num_recordings=models.Count(
+        #                 Case(
+        #                     When(Q(recording__created__gte=start) &
+        #                          Q(recording__created__lte=end),
+        #                          then=F('recording')),
+        #                     output_field=CharField()), distinct=True))\
+        #         .order_by('-num_recordings')
+
+        # else:
+        #     people = Person.objects.all()\
+        #         .annotate(
+        #             num_reviewed=models.Count(
+        #                 'recordingqualitycontrol', distinct=True))\
+        #         .annotate(
+        #             num_recordings=models.Count(
+        #                 'recording', distinct=True))\
+        #         .order_by('-num_recordings')
+
+        # return people
 
 
 # This is currently only for recording QCs

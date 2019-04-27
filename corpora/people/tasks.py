@@ -12,7 +12,7 @@ from people.models import Person, KnownLanguage, Group
 from people.helpers import get_email, set_current_language_for_person
 
 from corpus.aggregate import build_recordings_stat_dict
-from corpus.models import Recording
+from corpus.models import Recording, RecordingQualityControl
 
 from celery.task.control import revoke, inspect
 
@@ -23,7 +23,8 @@ from people.competition import \
     get_competition_group_score, \
     get_competition_person_score, \
     filter_qs_for_competition, \
-    get_valid_group_members
+    get_valid_group_members, \
+    get_start_end_for_competition
 
 from django.core.cache import cache
 from corpora.celery_config import app
@@ -102,7 +103,7 @@ def calculate_group_scores():
 
 @shared_task
 def update_group_score(group):
-    return "this is off"
+
     if type(group) is int:
         try:
             group = Group.objects.get(pk=group)
@@ -132,7 +133,6 @@ def update_group_score(group):
 
 @shared_task
 def update_person_score(person_pk):
-    return "this is off"
 
     try:
         person = Person.objects.get(pk=person_pk)
@@ -144,14 +144,26 @@ def update_person_score(person_pk):
     # onto another?
 
     recordings = Recording.objects.filter(person=person)
+    reviews = RecordingQualityControl.objects.filter(person=person)
+    person.num_recordings = recordings.count()
+    person.num_reviews = reviews.count()
+
+    start, end = get_start_end_for_competition()
+    if start is not None:
+        person.num_recordings_comp = recordings.filter(
+            Q(created__gte=start) &
+            Q(created__lte=end)).count()
+        person.num_reviews_comp = reviews.filter(
+            Q(updated__gte=start) &
+            Q(updated__lte=end)).count()
 
     score = 0
 
     for r in recordings:
         score = score + float(r.calculate_score())
 
-    # for q in qcs:
-    #     score = score + float(q.calculate_score())
+    for q in reviews:
+        score = score + float(q.calculate_score())
 
     person.score = score
     group = person.groups.first()

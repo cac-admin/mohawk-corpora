@@ -126,6 +126,22 @@ class Person(models.Model):
         blank=True,
         help_text=_('Choose a group, or enter a group name to create a new one.'))
 
+    num_recordings = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
+    num_reviews = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
+    num_recordings_comp = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
+    num_reviews_comp = models.PositiveIntegerField(
+        editable=False,
+        default=0)
+
     score = models.PositiveIntegerField(
         editable=False,
         default=0)
