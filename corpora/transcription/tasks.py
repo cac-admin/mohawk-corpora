@@ -277,7 +277,7 @@ def check_and_transcribe_blank_segments():
         count = count + 1
 
     clear_running_tasks(task_key)
-    return "Checked {0} segments.".format(count)
+    return "Checked {0} segments of {1}.".format(count, segments.count())
 
 
 @shared_task
