@@ -1,5 +1,5 @@
 class Player {
-  constructor(target_element_selector, audio_element_id='play-audio'){
+  constructor(target_element_selector, audio_element_id='play-audio', debug=false){
     var self = this;    
     this.actions_element = $(target_element_selector).get(0)
     this.audio = document.getElementById(audio_element_id);
@@ -9,7 +9,7 @@ class Player {
     this.loading_button = document.getElementById('loading-button')
     this.record_button = document.getElementById('record-button')
 
-    this.debug = true;
+    this.debug = debug;
 
     $(this.play_button).on('mousedown', function(){
       $('.foreground-circle.play').removeClass('unclicked-circle').addClass('clicked-circle');
