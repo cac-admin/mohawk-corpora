@@ -155,20 +155,9 @@ class PersonQCStatsView(JSONResponseMixin, TemplateView):
         person = get_person(self.request)
         language = get_current_language(self.request)
 
-        qcs = RecordingQualityControl.objects.filter(person=person)
-
-        pks = []
-        for qc in qcs:
-            if qc.content_object is not None:
-                try:
-                    if qc.content_type.name.lower() in 'recording' and \
-                            qc.content_object.sentence.language == language:
-                        pks.append(qc.pk)
-                except AttributeError:
-                    # Some content objects may not have a sentence
-                    pass
-
-        qcs = qcs.filter(pk__in=pks)
+        qcs = RecordingQualityControl.objects\
+            .filter(person=person)\
+            .filter(sentence__language=language)
 
         now = timezone.now()
 
