@@ -204,7 +204,6 @@ class Demographic(models.Model):
     tribe = models.ManyToManyField(
         Tribe,
         help_text=_('Which tribe(s) do you identify with?'),
-        null=True,
         blank=True,
         verbose_name=_('tribe'))
     # tribe - This should be many field - many to many?

@@ -242,6 +242,11 @@ class TranscriptionSegment(models.Model):
         null=True,
         blank=True)
 
+    no_speech_detected = models.BooleanField(
+        help_text='If we get back an empty string from the ASR, we set this\
+                  flag to True.',
+        default=False)
+
     updated = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):

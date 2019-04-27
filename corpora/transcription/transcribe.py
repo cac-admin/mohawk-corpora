@@ -294,6 +294,9 @@ def transcribe_segment(ts):
 
         ts.source = source
 
+        if ts.text is '':
+            ts.no_speech_detected = True
+
         ts.save()
     else:
         result['status'] = unicode(_('Error'))
