@@ -1,5 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
-from corpus.models import QualityControl, Sentence, Recording, Source, Text
+from corpus.models import \
+    RecordingQualityControl, Sentence, Recording, Source, Text, \
+    SentenceQualityControl
 from django.db.models import \
     Count, Q, Sum, Case, When, Value, IntegerField, Max,\
     Prefetch
@@ -19,14 +21,16 @@ from people.competition import \
 from corpus.helpers import get_next_sentence
 from rest_framework import viewsets, permissions, pagination
 
-from corpus.serializers import QualityControlSerializer,\
-                         SentenceSerializer, \
-                         RecordingSerializer, \
-                         RecordingSerializerPost, \
-                         RecordingSerializerPostBase64, \
-                         ListenSerializer, \
-                         SourceSerializer, \
-                         TextSerializer
+from corpus.serializers import \
+    RecordingQualityControlSerializer,\
+    SentenceQualityControlSerializer,\
+    SentenceSerializer, \
+    RecordingSerializer, \
+    RecordingSerializerPost, \
+    RecordingSerializerPostBase64, \
+    ListenSerializer, \
+    SourceSerializer, \
+    TextSerializer
 from rest_framework import generics, serializers
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from django.core.cache import cache
@@ -94,12 +98,22 @@ class PutOnlyStaffReadPermission(permissions.BasePermission):
                 return request.user.is_staff
 
 
-class QualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+class RecordingQualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows qc to be viewed or edited.
     """
-    queryset = QualityControl.objects.all()
-    serializer_class = QualityControlSerializer
+    queryset = RecordingQualityControl.objects.all()
+    serializer_class = RecordingQualityControlSerializer
+    permission_classes = (PutOnlyStaffReadPermission,)
+    pagination_class = OneHundredResultPagination
+
+
+class SentenceQualityControlViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+    """
+    API endpoint that allows qc to be viewed or edited.
+    """
+    queryset = SentenceQualityControl.objects.all()
+    serializer_class = SentenceQualityControlSerializer
     permission_classes = (PutOnlyStaffReadPermission,)
     pagination_class = OneHundredResultPagination
 
@@ -221,7 +235,9 @@ class SentencesView(generics.ListCreateAPIView):
     def get_queryset(self):
         # person = get_person(self.request)
         queryset = Sentence.objects.all()\
-            .order_by('quality_control__approved', 'quality_control__updated')
+            .order_by(
+                'quality_control__approved',
+                'quality_control__updated')
 
         q = self.request.query_params.get('recording', 'False')
         if 'True' in q:
@@ -233,7 +249,8 @@ class SentencesView(generics.ListCreateAPIView):
 
         else:
 
-            query = self.request.query_params.get('quality_control__approved')
+            query = self.request.query_params.get(
+                'quality_control__approved')
             if query is not None:
                 queryset = queryset.annotate(sum_approved=Sum(
                     Case(
@@ -263,10 +280,12 @@ class SentencesView(generics.ListCreateAPIView):
                             .order_by(Length('text').asc())
                     else:
                         raise ValueError(
-                            "Specify either True or False for quality_control__approved=")
+                            "Specify either True or False for \
+                            quality_control__approved=")
                 except:
                     raise ValueError(
-                        "Specify either True or False for quality_control__approved=")
+                        "Specify either True or False for \
+                        quality_control__approved=")
 
         return queryset
 
@@ -386,9 +405,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             .prefetch_related(
                 Prefetch(
                     'quality_control',
-                    queryset=QualityControl.objects.filter(
-                        content_type=ContentType.objects.get_for_model(
-                            Recording))
+                    queryset=RecordingQualityControl.objects.all()
                     )
                 )\
             .select_related('person', 'sentence', 'source')
@@ -418,7 +435,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                     .annotate(
                         reviewed=Case(
                             When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
+                            When(quality_control__trash=True, then=Value(1)),
                             When(quality_control__good__gte=1, then=Value(1)),
                             When(quality_control__bad__gte=1, then=Value(1)),
                             When(quality_control__isnull=True, then=Value(0)),
@@ -449,7 +466,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                     .annotate(
                         reviewed=Case(
                             When(quality_control__approved=True, then=Value(1)),
-                            When(quality_control__delete=True, then=Value(1)),
+                            When(quality_control__trash=True, then=Value(1)),
                             When(quality_control__good__gte=5, then=Value(1)),
                             When(quality_control__bad__gte=5, then=Value(1)),
                             When(quality_control__isnull=True, then=Value(0)),
@@ -577,9 +594,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             .prefetch_related(
                 Prefetch(
                     'quality_control',
-                    queryset=QualityControl.objects.filter(
-                        content_type=ContentType.objects.get_for_model(
-                            Recording))
+                    queryset=RecordingQualityControl.objects.all()
                     )
                 )\
             .select_related('sentence')
@@ -598,7 +613,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         if test_query == 'exclude':
             queryset = queryset\
                 .exclude(quality_control__approved=True) \
-                .exclude(quality_control__delete=True) \
+                .exclude(quality_control__trash=True) \
                 .exclude(quality_control__bad__gte=1)\
                 .exclude(quality_control__good__gte=1)\
                 .exclude(quality_control__person=person)
@@ -619,7 +634,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                         quality_control__good__gte=1,
                         then=Value(1)),
                     When(
-                        quality_control__delete=True,
+                        quality_control__trash=True,
                         then=Value(1)),
                     When(
                         quality_control__person=person,

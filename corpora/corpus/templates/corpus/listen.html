@@ -58,7 +58,7 @@ div.content{
         <i class="fas fa-reply fa-fw"></i><span>Follow Up</span></a>
       <a href="#" class="noise disabled toggle-after-playback" data-key="noise">
         <i class="fas fa-bullhorn fa-fw"></i><span>Noise</span></a>      
-      <a href="#" class="delete disabled toggle-after-playback" data-key="delete"><i class="fas fa-trash fa-fw"></i></a> 
+      <a href="#" class="delete disabled toggle-after-playback" data-key="trash"><i class="fas fa-trash fa-fw"></i></a> 
 
        <a href="#" class="save disabled"
         data-toggle="popover" 
@@ -74,13 +74,14 @@ div.content{
       <a href="#" class="approve disabled toggle-after-playback"
         data-toggle="popover" 
         data-trigger="hover" 
+        data-key="approved"
         title="Approve" 
         data-content="{% trans 'Approve for recording?' %}"
         ><i class="fas fa-check-circle fa-fw"></i><span>Approve</span></a>
       {% endif %}
 
-      <a href="#" class="good disabled toggle-after-playback"><i class="fas fa-check fa-fw"></i>&nbsp;Ka Tika</a>
-      <a href="#" class="bad disabled toggle-after-playback"><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a>
+      <a href="#" class="good disabled toggle-after-playback" data-key="good"><i class="fas fa-check fa-fw"></i>&nbsp;Ka Tika</a>
+      <a href="#" class="bad disabled toggle-after-playback"  data-key="bad"><i class="fas fa-times fa-fw"></i>&nbsp;Kia Kaha</a>
 
       <a href="javascript:void(0)" id="next disabled" class="next"><i class="fas fa-step-forward fw"></i>&nbsp;Skip</a>    
 
@@ -263,7 +264,7 @@ function _didReadInstructions(){
 
     $('#filter-by-person').on('blur', function(e){
       listen.url_filter_query = `?person_id=${e.currentTarget.value}`
-      console.log(listen.url_filter_query)
+      // console.log(listen.url_filter_query)
       listen.next_url = null
       listen.get_recordings()
     })

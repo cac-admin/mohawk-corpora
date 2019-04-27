@@ -1,12 +1,15 @@
 from django.dispatch import receiver
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Sentence, Recording, QualityControl
+from .models import Sentence, Recording, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from corpus.tasks import set_recording_length, transcode_audio
 from people.tasks import update_person_score
 from people.models import KnownLanguage
+from transcription.tasks import transcribe_recording
 
 from corpora.celery_config import app
 
@@ -14,21 +17,20 @@ from django.core.cache import cache
 
 # @receiver(models.signals.post_save, sender=Sentence)
 # @receiver(models.signals.post_save, sender=Recording)
-
-
-def create_quality_control_instance_when_object_created(
-        sender, instance, **kwargs):
-    qc, created = QualityControl.objects.get_or_create(
-            object_id=instance.pk,
-            content_type=ContentType.objects.get_for_model(instance)
-        )
-    if created:
-        print "Created QC object {0}".format(qc.pk)
-    else:
-        print "QC object {0} exists".format(qc.pk)
+# def create_quality_control_instance_when_object_created(
+#         sender, instance, **kwargs):
+#     qc, created = QualityControl.objects.get_or_create(
+#             object_id=instance.pk,
+#             content_type=ContentType.objects.get_for_model(instance)
+#         )
+#     if created:
+#         print "Created QC object {0}".format(qc.pk)
+#     else:
+#         print "QC object {0} exists".format(qc.pk)
 
 
 @receiver(models.signals.pre_save, sender=Sentence)
+@receiver(models.signals.pre_save, sender=Recording)
 def clear_quality_control_instance_when_object_modified(
         sender, instance, **kwargs):
 
@@ -38,9 +40,8 @@ def clear_quality_control_instance_when_object_modified(
 
             if not (old_sentence.text == instance.text and
                     old_sentence.language == instance.language):
-                qcs = QualityControl.objects.filter(
-                    object_id=instance.pk,
-                    content_type=ContentType.objects.get_for_model(instance)
+                qcs = SentenceQualityControl.objects.filter(
+                    sentence__pk=instance.pk,
                     )
                 qcs.delete()
                 # for qc in qcs:
@@ -50,10 +51,24 @@ def clear_quality_control_instance_when_object_modified(
         except ObjectDoesNotExist:
             pass
 
+    # Clear recording QC if the sentence text was changed.
+    if isinstance(instance, Recording):
+        try:
+            old_recording = Recording.objects.get(pk=instance.pk)
+
+            if not (old_recording.sentence_text == instance.sentence_text):
+                qc = RecordingQualityControl.objects.filter(
+                    recording__pk=instance.pk,
+                    )
+                qc.delete()
+        except ObjectDoesNotExist:
+            pass
+
 
 @receiver(models.signals.pre_save, sender=Sentence)
 @receiver(models.signals.pre_save, sender=Recording)
-@receiver(models.signals.pre_save, sender=QualityControl)
+@receiver(models.signals.pre_save, sender=SentenceQualityControl)
+@receiver(models.signals.pre_save, sender=RecordingQualityControl)
 def update_update_field_when_model_saved(sender, instance, **kwargs):
     instance.updated = timezone.now()
 
@@ -155,12 +170,27 @@ def set_recording_length_on_save(sender, instance, created, **kwargs):
                         time.strftime('%d%m%y%H%M%S'))
                     )
 
+                # We need to wait for the wav file to be encoded
+                # for this task to run, otherwise we need to use
+                # a different method. It's probably better to
+                # use the inmemory file option here if we want
+                # something quick but for now this just get's
+                # us a transcription quickly.
+                transcribe_recording.apply_async(
+                    args=[instance.pk],
+                    countdown=5,
+                    task_id='transcribe_audio-{0}-{1}-{2}'.format(
+                        p_pk,
+                        instance.pk,
+                        time.strftime('%d%m%y%H%M%S'))
+                    )
+
 
 # This isn't correct - we want the person of the recording object of quality
 # control to get a new score not the person who done the QC.
 # Will need to update this later. for nwo it's ok
 
-@receiver(models.signals.post_save, sender=QualityControl)
+@receiver(models.signals.post_save, sender=RecordingQualityControl)
 @receiver(models.signals.post_save, sender=Recording)
 def update_person_score_when_model_saved(sender, instance, created, **kwargs):
 
@@ -192,18 +222,18 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
             update_person_score.apply_async(
                 args=[instance.person.pk],
                 task_id=task_id,
-                countdown=60*4)
+                countdown=60*3)
 
-        elif isinstance(instance, QualityControl):
+        elif isinstance(instance, RecordingQualityControl):
             if isinstance(instance.content_object, Recording):
                 recording = instance.content_object
 
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=60*4)
+                    countdown=60*3)
 
-        cache.set(key, task_id, 60*4)
+        cache.set(key, task_id, 60*3)
 
     else:
 
@@ -215,15 +245,15 @@ def update_person_score_when_model_saved(sender, instance, created, **kwargs):
                 update_person_score.apply_async(
                     args=[instance.person.pk],
                     task_id=task_id,
-                    countdown=60*4)
+                    countdown=60*3)
 
-            elif isinstance(instance, QualityControl):
+            elif isinstance(instance, RecordingQualityControl):
                 if isinstance(instance.content_object, Recording):
                     recording = instance.content_object
 
                     update_person_score.apply_async(
                         args=[instance.person.pk],
                         task_id=task_id,
-                        countdown=60*4)
+                        countdown=60*3)
         else:
             pass

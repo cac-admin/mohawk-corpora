@@ -15,10 +15,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
-from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person, KnownLanguage
-from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person, get_person, get_current_language
+from people.helpers import get_person
 from django.conf import settings
 
 from django import http

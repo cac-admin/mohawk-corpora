@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 
-from corpus.models import Recording, QualityControl
+from corpus.models import Recording, RecordingQualityControl
 from people.helpers import get_current_language
 
 import datetime
@@ -41,9 +41,8 @@ class RecordingStatsView(JSONResponseMixin, SiteInfoMixin, TemplateView):
         language = get_current_language(self.request)
 
         recordings = Recording.objects.all().order_by('-created')
-        reviews = QualityControl.objects\
-            .filter(content_type__model__icontains='recording')\
-            .distinct()\
+        reviews = RecordingQualityControl.objects\
+            .all()\
             .order_by('-updated')
 
         start_date = self.request.GET.get('start_date', None)

@@ -4,7 +4,9 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from corpus.models import Recording, QualityControl, Source
+from corpus.models import Recording, Source, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from django.contrib.contenttypes.models import ContentType
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
@@ -77,7 +79,7 @@ def set_all_recording_md5():
     '''
     recordings = Recording.objects\
         .filter(audio_file_md5=None)\
-        .exclude(quality_control__delete=True)\
+        .exclude(quality_control__trash=True)\
         .distinct()
     count = 0
     total = recordings.count()
@@ -88,7 +90,7 @@ def set_all_recording_md5():
     if total == 0:
         recordings = Recording.objects\
             .filter(audio_file_wav_md5=None)\
-            .exclude(quality_control__delete=True)\
+            .exclude(quality_control__trash=True)\
             .distinct()
 
         count = 0
@@ -131,10 +133,9 @@ def set_all_recording_md5():
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
-            qc, created = QualityControl.objects.get_or_create(
-                delete=True,
-                content_type=recording_ct,
-                object_id=recording.pk,
+            qc, created = RecordingQualityControl.objects.get_or_create(
+                trash=True,
+                recording=recording,
                 notes='File does not exist.',
                 machine=True,
                 source=source,

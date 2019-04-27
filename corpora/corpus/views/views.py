@@ -13,7 +13,9 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
-from corpus.models import Recording, Sentence, QualityControl
+from corpus.models import Recording, Sentence, \
+    RecordingQualityControl, SentenceQualityControl
+
 from people.models import Person, KnownLanguage
 from corpus.helpers import get_next_sentence
 from people.helpers import get_or_create_person, get_person, get_current_language
@@ -248,7 +250,7 @@ class RecordingFileView(RedirectView):
 
 
 class StatsView(SiteInfoMixin, ListView):
-    model = QualityControl
+    model = RecordingQualityControl
     x_title = _('Stats')
     x_description = _('Statistics for all data.')
 
