@@ -329,6 +329,7 @@ def calculate_wer_for_null():
     field and we really only need to run this once.
     '''
     from jellyfish import levenshtein_distance as levd
+    from transcription.wer.wer import word_error_rate
     trans = Transcription.objects\
         .filter(word_error_rate=None)
     logger.debug('Need to calc wer for {0} items.'.format(trans.count()))
