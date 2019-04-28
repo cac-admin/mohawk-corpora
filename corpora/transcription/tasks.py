@@ -271,6 +271,8 @@ def check_and_transcribe_blank_segments():
 
     count = 0
     for segment in segments:
+        logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
+        logger.debug(segment.transcriber_log)
         if count > 600:
             return "Checked 600 segments. \
                     Reached max loop."
