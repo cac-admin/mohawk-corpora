@@ -273,8 +273,8 @@ def check_and_transcribe_blank_segments():
     for segment in segments:
         logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
         logger.debug(segment.transcriber_log)
-        if count > 100:
-            return "Checked 100 segments. \
+        if count > 50:
+            return "Checked 50 segments. \
                     Reached max loop."
         transcribe_segment_async(segment.pk)
         count = count + 1
@@ -329,9 +329,12 @@ def calculate_wer_for_null():
     field and we really only need to run this once.
     '''
     from jellyfish import levenshtein_distance as levd
+    from transcription.wer.wer import word_error_rate
     trans = Transcription.objects\
         .filter(word_error_rate=None)
+    logger.debug('Need to calc wer for {0} items.'.format(trans.count()))
     count = 0
+    errors = 0
     for t in trans:
         # Calculate wer
         try:
@@ -342,10 +345,12 @@ def calculate_wer_for_null():
                     t.text,
                     t.recording.language)
             t.save()
-        except:
+        except Exception as e:
             logger.error(
                 'ERROR calculated wer for Transcription {0}:{1}'.format(
                     t.pk, t.text))
+            logger.error(e)
+            errors = errors + 1
         count = count + 1
-        if count > 500:
-            return "Done"
+        if count > 10000:
+            return "Done with {0} calcs and {1} errors.".format(count, errors)
