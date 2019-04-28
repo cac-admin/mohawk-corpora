@@ -157,7 +157,7 @@ class PersonQCStatsView(JSONResponseMixin, TemplateView):
 
         qcs = RecordingQualityControl.objects\
             .filter(person=person)\
-            .filter(sentence__language=language)
+            .filter(recording__language=language)
 
         now = timezone.now()
 
