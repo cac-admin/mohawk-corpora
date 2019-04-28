@@ -273,8 +273,8 @@ def check_and_transcribe_blank_segments():
     for segment in segments:
         logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
         logger.debug(segment.transcriber_log)
-        if count > 100:
-            return "Checked 100 segments. \
+        if count > 50:
+            return "Checked 50 segments. \
                     Reached max loop."
         transcribe_segment_async(segment.pk)
         count = count + 1
