@@ -331,7 +331,9 @@ def calculate_wer_for_null():
     from jellyfish import levenshtein_distance as levd
     trans = Transcription.objects\
         .filter(word_error_rate=None)
+    logger.debug('Need to calc wer for {0} items.'.format(trans.count()))
     count = 0
+    errors = 0
     for t in trans:
         # Calculate wer
         try:
@@ -346,6 +348,7 @@ def calculate_wer_for_null():
             logger.error(
                 'ERROR calculated wer for Transcription {0}:{1}'.format(
                     t.pk, t.text))
+            errors = errors + 1
         count = count + 1
-        if count > 500:
-            return "Done"
+        if count > 10000:
+            return "Done with {0} calcs and {1} errors.".format(count, errors)
