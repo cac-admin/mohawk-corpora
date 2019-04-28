@@ -266,7 +266,8 @@ def check_and_transcribe_blank_segments():
     segments = TranscriptionSegment.objects\
         .filter(Q(text__isnull=True) &
                 Q(edited_by__isnull=True) &
-                Q(parent__ignore=False))
+                Q(parent__ignore=False) &
+                Q(no_speech_detected=False))
 
     count = 0
     for segment in segments:
