@@ -344,10 +344,11 @@ def calculate_wer_for_null():
                     t.text,
                     t.recording.language)
             t.save()
-        except:
+        except Exception as e:
             logger.error(
                 'ERROR calculated wer for Transcription {0}:{1}'.format(
                     t.pk, t.text))
+            logger.error(e)
             errors = errors + 1
         count = count + 1
         if count > 10000:
