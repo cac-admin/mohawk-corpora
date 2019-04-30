@@ -9,6 +9,6 @@ ROOT_URLCONF = 'reo_api.urls'
 LANGUAGE_CODE = 'en'
 
 
-LOGIN_REDIRECT_URL = "/dashboard"
+LOGIN_REDIRECT_URL = "transcription:dashboard"
 
 X_FRAME_OPTIONS = 'ALLOW-FROM koreromaori.com koreromaori.io dev.koreromaori.com dev.koreromaori.io corporalocal.io'

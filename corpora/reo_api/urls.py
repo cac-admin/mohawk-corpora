@@ -64,7 +64,7 @@ urlpatterns = [
             url='/accounts/login'),
         name='login'),
 
-    url(_(r'^people/'), include('people.urls', namespace='people')),
+    # url(_(r'^people/'), include('people.urls', namespace='people')),
 
 ]
 
