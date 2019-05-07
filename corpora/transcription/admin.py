@@ -24,7 +24,7 @@ class TranscriptionAdmin(admin.ModelAdmin):
 @admin.register(AudioFileTranscription)
 class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
     list_display = ('name', 'duration', 'audio_file',
-                    'uploaded_by', 'updated', 'created')
+                    'uploaded_by', 'updated', 'created', 'ignore')
     actions = ('create_segments', 'transcribe_segments')
     raw_id_fields = ('uploaded_by',)
 
