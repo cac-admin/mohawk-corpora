@@ -14,7 +14,7 @@ DEEPSPEECH_URL_PUBLIC = \
 # Internally we can't use application LBs, we have to use network ones
 # Unfortunately we don't get the same statistics here.
 DEEPSPEECH_URL_PRIVATE = \
-    "http://LB-corpora-production-deep-tcp-4113e81f0772e13a.elb.ap-southeast-2.amazonaws.com"
+    "http://LB-corpora-production-deep-tcp-4113e81f0772e13a.elb.ap-southeast-2.amazonaws.com/transcribe"
 
 
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
