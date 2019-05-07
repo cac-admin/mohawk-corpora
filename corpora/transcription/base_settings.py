@@ -10,7 +10,7 @@ DEEPSPEECH_URL_PUBLIC = \
 # This is no longer "private" we have it on a application LBB bbut only certain
 # security groups and IPs can access this LBB.
 DEEPSPEECH_URL_PRIVATE = \
-    "LB-corpora-production-deepspeech-1243053555.ap-southeast-2.elb.amazonaws.com/transcribe"
+    "http://LB-corpora-production-deepspeech-1243053555.ap-southeast-2.elb.amazonaws.com/transcribe"
 
 
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
