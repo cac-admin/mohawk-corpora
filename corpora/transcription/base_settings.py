@@ -3,11 +3,14 @@ import os
 
 FILE_UPLOAD_PERMISSIONS = 0644
 
+# This isn't set up anymore. This was really for local development
 DEEPSPEECH_URL_PUBLIC = \
     "http://deep.koreromaori.io/transcribe"
 
+# This is no longer "private" we have it on a application LBB bbut only certain
+# security groups and IPs can access this LBB.
 DEEPSPEECH_URL_PRIVATE = \
-    "http://LB-corpora-production-deep-tcp-4113e81f0772e13a.elb.ap-southeast-2.amazonaws.com/transcribe"
+    "LB-corpora-production-deepspeech-1243053555.ap-southeast-2.elb.amazonaws.com/transcribe"
 
 
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
