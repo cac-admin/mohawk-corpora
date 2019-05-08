@@ -21,6 +21,8 @@ from people.helpers import get_current_known_language_for_person
 
 from transcription.utils import \
     create_and_return_transcription_segments, check_to_transcribe_segment
+from corpora.utils.task_management import \
+    check_and_set_task_running
 
 from django.core.files import File
 import wave
@@ -251,8 +253,9 @@ def transcribe_segment_async(ts_id):
     ts = TranscriptionSegment.objects.get(pk=ts_id)
     try:
         key = u"xtransseg-{0}".format(ts.pk)
+        if check_and_set_task_running(key):
+            return "Task already running."
         if not ts.text:
-            cache.set(key, 'transcribing', 60)
             result = transcribe_segment(ts)
         else:
             return "Segment already has text."
