@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404
 
 from corpus.views.api import TenResultPagination
 
-from transcription.utils import build_vtt
+from transcription.utils import build_vtt, compile_aft
 
 import logging
 logger = logging.getLogger('corpora')
@@ -245,6 +245,7 @@ class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
         if format:
             if format in 'txt':
                 aft = self.get_object()
+                compile_aft(aft.pk)
                 return Response(aft.transcription)
             if format in 'vtt':
                 aft = self.get_object()
