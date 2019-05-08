@@ -81,7 +81,7 @@ class TranscriptionSegmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TranscriptionSegment
         fields = ('corrected_text', 'start', 'end', 'parent', 'edited_by',
-                  'pk', 'no_speech_detected')
+                  'pk', 'no_speech_detected', 'transcriber_log')
 
 
 class AudioFileTranscriptionSerializer(serializers.ModelSerializer):

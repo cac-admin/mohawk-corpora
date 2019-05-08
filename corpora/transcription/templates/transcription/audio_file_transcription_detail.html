@@ -312,8 +312,8 @@ class TranscriptionSegmentEditor{
       type: "GET", 
       sync: sync,
     }).done(function(data){
-      if (data.corrected_text==null){
-        // window.setTimeout(function(){self.fetch(this_element)}, 3000)
+      if (data.corrected_text==null && data.transcriber_log.retry){
+        window.setTimeout(function(){self.fetch(this_element)}, 3000)
       } else{
         element.innerHTML = data.corrected_text;
         element.attributes['x-data'].value = data.corrected_text
