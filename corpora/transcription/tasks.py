@@ -274,6 +274,10 @@ def check_and_transcribe_blank_segments():
     for segment in segments:
         logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
         logger.debug(segment.transcriber_log)
+        if 'retry' IN segment.transcriber_log.keys():
+            if not segment.transcriber_log['retry']:
+                continue
+
         if count > 25:
             return "Checked 25 segments. \
                     Reached max loop."

@@ -309,7 +309,14 @@ def transcribe_segment(ts):
         ts.save()
     else:
         result['status'] = unicode(_('Error'))
-        ts.transcriber_log = result
+        if ts.transcriber_log:
+            if 'retry' in ts.transcriber_log.keys():
+                ts.transcriber_log.update(result)
+                ts.transcriber_log['retry'] = False
+            else:
+                ts.transcriber_log['retry'] = True
+        else:
+            ts.transcriber_log = result
         ts.save()
 
     os.remove(tmp_seg_file)
