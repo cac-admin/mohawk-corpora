@@ -19,7 +19,8 @@ from corpora.utils.tmp_files import \
 
 from people.helpers import get_current_known_language_for_person
 
-from transcription.utils import create_and_return_transcription_segments
+from transcription.utils import \
+    create_and_return_transcription_segments, check_to_transcribe_segment
 
 from django.core.files import File
 import wave
@@ -264,6 +265,8 @@ def transcribe_segment_async(ts_id):
 
 
 def transcribe_segment(ts):
+    if not check_to_transcribe_segment(ts):
+        return 'Not transcribing segment. Likely segment too long.'
     try:
         file_path, tmp_stor_dir, tmp_file, absolute_directory = \
             prepare_temporary_environment(ts.parent)
@@ -367,12 +370,8 @@ def transcribe_aft_async(pk):
     results = []
     errors = 0
     for segment in segments:
-        if segment.end - segment.start > 60*100:
-            segment.corrected_text = '[Segment too long to transcribe.]'
-            segment.transcriber_log = {
-                retry: False,
-                message: 'Segment too long to transcribe'
-            }
+        if not check_to_transcribe_segment(segment):
+            continue
         try:
             transcribe_segment(segment)
         except:
