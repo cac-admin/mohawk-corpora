@@ -92,33 +92,37 @@ def transcribe_audio_sphinx(
 
     logger.debug(u'Sending request to {0}'.format(API_URL))
 
-    try:
-        response = requests.post(
-            API_URL,
-            data=audio,
-            timeout=timeout,
-            headers=headers)
-        logger.debug(u'{0}'.format(response.text))
+    tries = 0
+    while tries < timeout:
+        tries = tries + 1
 
-        result = json.loads(response.text)
+        try:
+            response = requests.post(
+                API_URL,
+                data=audio,
+                timeout=1,
+                headers=headers)
+            logger.debug(u'{0}'.format(response.text))
 
-    except requests.exceptions.ConnectTimeout:
-        result = {
-            'success': False,
-            'transcription': 'Could not get a transcription. ConnectTimeout'
-        }
-    except requests.exceptions.ReadTimeout:
-        result = {
-            'success': False,
-            'transcription': 'Could not get a transcription. ReadTimeout'
-        }
-    except Exception as e:
-        result = {
-            'success': False,
-            'transcription': 'Unhandled exception. {0}'.format(e)
-        }
+            result = json.loads(response.text)
+            tries = 11
+        except requests.exceptions.ConnectTimeout:
+            result = {
+                'success': False,
+                'transcription': 'Could not get a transcription. ConnectTimeout'
+            }
+        except requests.exceptions.ReadTimeout:
+            result = {
+                'success': False,
+                'transcription': 'Could not get a transcription. ReadTimeout'
+            }
+        except Exception as e:
+            result = {
+                'success': False,
+                'transcription': 'Unhandled exception. {0}'.format(e)
+            }
 
-    result['API_URL'] = API_URL
+        result['API_URL'] = API_URL
 
     return result
 
