@@ -278,12 +278,10 @@ class TranscriptionSegmentEditor{
       })
     })
 
-    $('.segment .text[x-data="None"]').each(function(index, element){
-      window.setTimeout(function(){
-        self.fetch(element);
-      }, (index+1)*3000)
-    });
-
+    window.setTimeout(()=>{
+      $('.segment .text[x-data="None"]').each(function(index, element){
+        self.fetch(element, false);
+      })}, 2000);
   }
 
   save(element){
@@ -304,14 +302,15 @@ class TranscriptionSegmentEditor{
     })
   }
 
-  fetch(element){
+  fetch(element, sync=true){
     var self=this;
     var id = element.attributes['x-data-id'].value
     var url = '/api/transcription-segment/'+id+'/'
     var this_element = element
     $.ajax({
       url: url,
-      type: "GET",      
+      type: "GET", 
+      sync: sync,
     }).done(function(data){
       if (data.corrected_text==null){
         window.setTimeout(function(){self.fetch(this_element)}, 3000)

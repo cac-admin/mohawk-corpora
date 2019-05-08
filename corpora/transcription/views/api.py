@@ -16,6 +16,7 @@ from django.shortcuts import get_object_or_404
 from corpus.views.api import TenResultPagination
 
 from transcription.utils import build_vtt, compile_aft
+from transcription.transcribe import transcribe_segment
 
 import logging
 logger = logging.getLogger('corpora')
@@ -146,18 +147,19 @@ class TranscriptionSegmentViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    # This doesn't appear to speed things up much.
-    # def retrieve(self, request, pk=None):
-    #     ts = get_object_or_404(self.get_queryset(), pk=pk)
-    #     serializer = self.serializer_class(ts)
+    def retrieve(self, request, pk=None):
+        ts = get_object_or_404(self.get_queryset(), pk=pk)
 
-    #     response = Response(serializer.data)
+        if (ts.text is None and
+                ts.edited_by is None and
+                not ts.parent.ignore and not ts.no_speech_detected):
+            transcribe_segment(ts)
 
-    #     rest = cache.get('test-key', 'NOT-READY')
+        serializer = self.serializer_class(ts)
 
-    #     response['STATUS'] = rest
+        response = Response(serializer.data)
 
-    #     return response
+        return response
 
 
 class AudioFileTranscriptionPermissions(permissions.BasePermission):
