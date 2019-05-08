@@ -68,7 +68,7 @@ def parse_sphinx_transcription(lines):
 
 
 def transcribe_audio_sphinx(
-        audio, continuous=False, file_path=None, timeout=10):
+        audio, continuous=False, file_path=None, timeout=32):
     # api_url = "https://waha-tuhi.dragonfly.nz/transcribe"
     # DeepSpeech: http://waha-tuhi-api-17.dragonfly.nz
     API_URL = settings.DEEPSPEECH_URL
@@ -92,20 +92,20 @@ def transcribe_audio_sphinx(
 
     logger.debug(u'Sending request to {0}'.format(API_URL))
 
+    timeouts = [2, 4, 8, 16, 32]
     tries = 0
-    while tries < timeout:
-        tries = tries + 1
+    while tries < len(timeouts):
 
         try:
             response = requests.post(
                 API_URL,
                 data=audio,
-                timeout=1,
+                timeout=timeouts[tries],
                 headers=headers)
             logger.debug(u'{0}'.format(response.text))
 
             result = json.loads(response.text)
-            tries = 11
+            this_timeout = timeout + 1
         except requests.exceptions.ConnectTimeout:
             result = {
                 'success': False,
@@ -121,6 +121,8 @@ def transcribe_audio_sphinx(
                 'success': False,
                 'transcription': 'Unhandled exception. {0}'.format(e)
             }
+
+        tries = tries + 1
 
         result['API_URL'] = API_URL
 
