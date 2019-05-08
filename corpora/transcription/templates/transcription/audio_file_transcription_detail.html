@@ -280,7 +280,7 @@ class TranscriptionSegmentEditor{
 
     window.setTimeout(()=>{
       $('.segment .text[x-data="None"]').each(function(index, element){
-        self.fetch(element, sync=false);
+        self.fetch(element, false);
       })}, 2000);
   }
 
