@@ -278,12 +278,10 @@ class TranscriptionSegmentEditor{
       })
     })
 
-    $('.segment .text[x-data="None"]').each(function(index, element){
-      window.setTimeout(function(){
+    window.setTimeout(()=>{
+      $('.segment .text[x-data="None"]').each(function(index, element){
         self.fetch(element);
-      }, (index+1)*3000)
-    });
-
+      })}, 2000);
   }
 
   save(element){

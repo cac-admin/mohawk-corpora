@@ -147,7 +147,6 @@ class TranscriptionSegmentViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    # This doesn't appear to speed things up much.
     def retrieve(self, request, pk=None):
         ts = get_object_or_404(self.get_queryset(), pk=pk)
 
