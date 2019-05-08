@@ -124,6 +124,9 @@ def transcribe_audio_sphinx(
 
         result['API_URL'] = API_URL
 
+    if tries >= timeout:
+        logger.debug(result)
+
     return result
 
 
