@@ -293,8 +293,8 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     task_key = 'check_and_transcribe_blank_aft'
     if check_task_counter_running(task_key):
         return "Task already running. Skipping this instance."
-    else:
-        task_counter(task_key, 1)
+
+    task_counter(task_key, 1)
 
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
