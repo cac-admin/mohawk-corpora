@@ -367,6 +367,12 @@ def transcribe_aft_async(pk):
     results = []
     errors = 0
     for segment in segments:
+        if segment.end - segment.start > 60*100:
+            segment.corrected_text = '[Segment too long to transcribe.]'
+            segment.transcriber_log = {
+                retry: False,
+                message: 'Segment too long to transcribe'
+            }
         try:
             transcribe_segment(segment)
         except:
