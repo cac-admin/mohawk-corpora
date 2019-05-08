@@ -278,6 +278,12 @@ def check_and_transcribe_blank_segments():
             if not segment.transcriber_log['retry']:
                 continue
 
+        if segment.end - segment.start > 120*100:
+            segment.corrected_text = '[Segment too long to transceribe]'
+            segment.transcriber_log['retry'] = False
+            segment.save()
+            continue
+
         if count > 25:
             return "Checked 25 segments. \
                     Reached max loop."
