@@ -428,8 +428,8 @@ def check_to_transcribe_segment(ts):
         ts.text = '[Segment too long to transcribe.]'
         ts.corrected_text = '[Segment too long to transcribe.]'
         ts.transcriber_log = {
-            retry: False,
-            message: 'Segment too long to transcribe.'
+            'retry': False,
+            'message': 'Segment too long to transcribe.'
         }
         ts.save()
         return False
