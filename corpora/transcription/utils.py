@@ -431,6 +431,7 @@ def check_to_transcribe_segment(ts):
             retry: False,
             message: 'Segment too long to transcribe.'
         }
+        ts.save()
         return False
     else:
         return True
