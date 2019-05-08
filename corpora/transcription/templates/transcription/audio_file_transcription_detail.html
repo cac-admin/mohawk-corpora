@@ -50,8 +50,8 @@
         <div class="col col-10 col-xs-11 col-lg-9 text" contenteditable="true"
              x-data-model="transcribe_segment"
              x-data-field="corrected_text"
-             x-data="{{segment.corrected_text}}"
-             x-data-id="{{segment.pk}}">{% if segment.corrected_text is not None %}{{segment.corrected_text}}{% endif %}</div>
+             x-data="{% if segment.no_speech_detected %}[no speech detected]{% else %}{{segment.corrected_text}}{% endif %}"
+             x-data-id="{{segment.pk}}">{% if segment.corrected_text is not None %}{{segment.corrected_text}}{% elif segment.no_speech_detected %}[no speech detected]{% endif %}</div>
       </div>
       {% endfor %}
     </div>
@@ -312,7 +312,7 @@ class TranscriptionSegmentEditor{
       type: "GET", 
       sync: sync,
     }).done(function(data){
-      if (data.corrected_text==null){
+      if (data.corrected_text==null && data.transcriber_log.retry){
         window.setTimeout(function(){self.fetch(this_element)}, 3000)
       } else{
         element.innerHTML = data.corrected_text;
