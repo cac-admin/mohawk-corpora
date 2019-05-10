@@ -159,8 +159,8 @@ def transcribe_audio_quick(file_object):
     output, errors = p.communicate()
     duration = float(output)
 
-    if duration > 10:
-        return {'transcription': ''}
+    if duration > 100:
+        return {'transcription': 'Stream duration is too long. Not Transcribing.'}
 
     convert = [
         'ffmpeg', '-y', '-i', tmp_file, '-ar', '16000', '-ac', '1',
