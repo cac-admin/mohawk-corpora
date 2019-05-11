@@ -154,10 +154,10 @@ WSGI_APPLICATION = 'corpora.wsgi.application'
 
 # CORS
 CORS_ORIGIN_WHITELIST = \
-    ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+    ['https://{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
-CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ('172.28.128.13', 'kaituhi.nz')
+CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ('https://172.28.128.13', 'https://kaituhi.nz')
 
 CORS_ORIGIN_ALLOW_ALL = True
 
