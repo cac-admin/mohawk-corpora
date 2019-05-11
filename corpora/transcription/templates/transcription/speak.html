@@ -11,19 +11,23 @@
 div.Korero div.header{
 	border: 0;
 }
+div.Korero{
+	height: 100% !important;
+	justify-content: flex-start !important;
+}
 </style>
 {% endaddtoblock %}
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="height: 100vh;">
 
-  <div class="row">
+<!--   <div class="row">
   	<div class="col ">
   		<div class="title">
   		<h1>Speak Demo</h1>
 	  	</div>
   	</div>
-  </div>
+  </div> -->
 
   <vue-widget></vue-widget>
   <script type="text/javascript" src="{% static 'transcription/vad-korero/js/manifest.js' %}"></script>
