@@ -129,10 +129,6 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             result = transcribe_audio_quick(validated_data['audio_file'])
             text = result['transcription'].strip()
             validated_data['transcription'] = text
-            try:
-                validated_data['metadata'] = result['metadata']
-            except KeyError:
-                pass
 
             # For streaming, let's not create an AFT
             # Instead we should just have a log of a transcription
@@ -140,6 +136,12 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             aft = AudioFileTranscription()
             for key in validated_data.keys():
                 setattr(aft, key, validated_data[key])
+
+            try:
+                aft.metadata = result['metadata']
+            except KeyError:
+                pass
+
             return aft
 
         if 'name' not in validated_data.keys():
