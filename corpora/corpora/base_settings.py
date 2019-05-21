@@ -168,7 +168,9 @@ AWS_SECRET_ACCESS_KEY =     os.environ['AWS_SECRET']
 AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'private'
-
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
 
 # S3 only access
 AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
