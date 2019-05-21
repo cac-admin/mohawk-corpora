@@ -20,6 +20,9 @@ django-storages
 django-bower
 django-yarn
 
+# Better static files stuff with CDNs
+# whitenoise - mneed to look at django static files stuff
+
 django-debug-toolbar
 
 # changing social auth app
