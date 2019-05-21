@@ -129,6 +129,11 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             result = transcribe_audio_quick(validated_data['audio_file'])
             text = result['transcription'].strip()
             validated_data['transcription'] = text
+            try:
+                validated_data['metadata'] = result['metadata']
+            except KeyError:
+                pass
+
             # For streaming, let's not create an AFT
             # Instead we should just have a log of a transcription
             # I meand we could keep the audio as well...
