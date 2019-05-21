@@ -18,7 +18,7 @@ DEEPSPEECH_URL_PRIVATE = \
 
 
 DEEPSPEECH_URL_BETA = \
-    "http://13.236.93.200:5000/transcribe_with_metadata"
+    "http://172.31.10.32:5000/transcribe_with_metadata"
 
 
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
