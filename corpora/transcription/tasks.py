@@ -13,7 +13,8 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from corpora.utils.tmp_files import prepare_temporary_environment
 from corpora.utils.task_management import \
-    check_and_set_task_running, clear_running_tasks
+    check_and_set_task_running, clear_running_tasks, \
+    check_task_counter_running, task_counter
 from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
@@ -273,6 +274,16 @@ def check_and_transcribe_blank_segments():
     for segment in segments:
         logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
         logger.debug(segment.transcriber_log)
+        if 'retry' in segment.transcriber_log.keys():
+            if not segment.transcriber_log['retry']:
+                continue
+
+        if segment.end - segment.start > 120*100:
+            segment.corrected_text = '[Segment too long to transceribe]'
+            segment.transcriber_log['retry'] = False
+            segment.save()
+            continue
+
         if count > 25:
             return "Checked 25 segments. \
                     Reached max loop."
@@ -290,8 +301,10 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     create and transcribe then.
     '''
     task_key = 'check_and_transcribe_blank_aft'
-    if check_and_set_task_running(task_key):
+    if check_task_counter_running(task_key):
         return "Task already running. Skipping this instance."
+
+    task_counter(task_key, 1)
 
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
@@ -315,7 +328,7 @@ def check_and_transcribe_blank_audiofiletranscriptions():
             error_msg.append(e)
         count = count + 1
 
-    clear_running_tasks(task_key)
+    task_counter(task_key, -1)
 
     return "Processed {0} AFTs. Had {1} errors. {2}".format(
         count, errors, error_msg)

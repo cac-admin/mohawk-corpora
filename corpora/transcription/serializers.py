@@ -80,7 +80,8 @@ class TranscriptionSegmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TranscriptionSegment
-        fields = ('corrected_text', 'start', 'end', 'parent', 'edited_by', 'pk')
+        fields = ('corrected_text', 'start', 'end', 'parent', 'edited_by',
+                  'pk', 'no_speech_detected', 'transcriber_log')
 
 
 class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
@@ -128,6 +129,13 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             result = transcribe_audio_quick(validated_data['audio_file'])
             text = result['transcription'].strip()
             validated_data['transcription'] = text
+            # For streaming, let's not create an AFT
+            # Instead we should just have a log of a transcription
+            # I meand we could keep the audio as well...
+            aft = AudioFileTranscription()
+            for key in validated_data.keys():
+                setattr(aft, key, validated_data[key])
+            return aft
 
         if 'name' not in validated_data.keys():
             fname = validated_data['audio_file'].name

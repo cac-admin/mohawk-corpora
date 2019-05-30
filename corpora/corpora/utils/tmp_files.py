@@ -24,6 +24,9 @@ def get_file_url(f, expires=60):
 
 
 def get_tmp_stor_directory(model=None):
+    uid = pwd.getpwnam(settings.APPLICATION_USER).pw_uid
+    gid = grp.getgrnam(settings.APPLICATION_GROUP).gr_gid
+
     BASE = os.path.join(
         '/tmp',
         "{0}_files".format(settings.PROJECT_NAME))
@@ -39,8 +42,6 @@ def get_tmp_stor_directory(model=None):
 
     # CREATE DIRECTORY IF NO EXIST
     if not os.path.isdir(BASE):
-        uid = pwd.getpwnam(settings.APPLICATION_USER).pw_uid
-        gid = grp.getgrnam(settings.APPLICATION_GROUP).gr_gid
         os.mkdir(BASE)
         try:
             os.chown(BASE, uid, gid)
