@@ -3,7 +3,8 @@ from django.conf.urls import url, include
 
 from transcription.views.views import \
     TranscribeView, AudioFileTranscriptionView, \
-    AudioFileTranscriptionListView, DashboardView
+    AudioFileTranscriptionListView, DashboardView, \
+    ReviewView
 
 urlpatterns = [
 
@@ -27,5 +28,11 @@ urlpatterns = [
         _(r'^speak/'),
         TranscribeView.as_view(),
         name='speak'),
+
+
+    url(
+        _(r'^review/'),
+        ReviewView.as_view(),
+        name='review'),
 
 ]

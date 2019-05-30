@@ -121,6 +121,34 @@ class TranscribeView(
         # return self.request.user.is_staff
 
 
+class ReviewView(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
+    x_description = _('Review API and Data')
+    x_title = _('Kōrero Māori Review for Admins')
+    template_name = "transcription/review.html"
+    x_image = static("reo_api/img/icon.png")
+
+    def test_func(self):
+        return (
+            self.request.user.is_authenticated and self.request.user.is_staff)
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ReviewView, self).get_context_data(**kwargs)
+        person = get_person(self.request)
+
+        try:
+            token = Token.objects.get(user=person.user)
+            context['token'] = token.key
+        except ObjectDoesNotExist:
+            pass
+
+        return context
+
+
 class AudioFileTranscriptionView(
         EnsureDeepSpeechRunning,
         SiteInfoMixin, UserPassesTestMixin, DetailView):
