@@ -126,10 +126,6 @@ class RecordingQualityControl(models.Model):
         on_delete=models.SET_NULL,
         help_text='Used to identify machines.')
 
-    private = models.BooleanField(
-        help_text='Set to prevent public from accessing this recording.',
-        default=False)
-
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
         indexes = [
@@ -407,6 +403,10 @@ class Recording(models.Model):
 
     user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
+
+    private = models.BooleanField(
+        help_text='Set to prevent public from accessing this recording.',
+        default=False)
 
     class Meta:
         verbose_name = 'Recording'
