@@ -126,6 +126,10 @@ class RecordingQualityControl(models.Model):
         on_delete=models.SET_NULL,
         help_text='Used to identify machines.')
 
+    private = models.BooleanField(
+        help_text='Set to prevent public from accessing this recording.',
+        default=False)
+
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
         indexes = [
