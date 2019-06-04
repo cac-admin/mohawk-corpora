@@ -129,6 +129,10 @@ class RecordingAdmin(admin.ModelAdmin):
         # 'get_approved_by',
         'calculate_score',
         'created',
+        'private',
+    )
+    list_editable = (
+        'private',
     )
 
     inlines = [RecordingQualityControlInline]

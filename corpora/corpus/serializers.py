@@ -301,7 +301,7 @@ class RecordingSerializer(serializers.ModelSerializer):
                   'id', 'sentence_text', 'user_agent', 'created', 'updated',
                   'audio_file_md5', 'audio_file_wav_md5',
                   'quality_control_aggregate', 'transcription',
-                  'word_error_rate')
+                  'word_error_rate', 'private')
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
