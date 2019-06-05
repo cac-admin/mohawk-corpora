@@ -116,7 +116,10 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
                 'percent': int(round(completed/total*100))}
 
     def get_metadata(self, obj):
-        return obj.metadata
+        try:
+            return obj.metadata
+        except AttributeError:
+            return None
 
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
