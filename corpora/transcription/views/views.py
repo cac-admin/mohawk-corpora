@@ -121,6 +121,28 @@ class TranscribeView(
         # return self.request.user.is_staff
 
 
+class TranscribeView2(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
+    x_description = _('Try the speech recognizer!')
+    x_title = _('Kōrero Demo')
+    template_name = "transcription/speak_new.html"
+    x_image = static("reo_api/img/icon.png")
+
+    def test_func(self):
+
+        return self.request.user.is_authenticated
+
+        # key = self.request.GET.get('key', '')
+
+        # if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+        #     return True
+
+        # return self.request.user.is_staff
+
+
 class ReviewView(
         EnsureDeepSpeechRunning,
         SiteInfoMixin,
