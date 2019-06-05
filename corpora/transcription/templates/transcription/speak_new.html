@@ -6,18 +6,35 @@
 
 {% addtoblock "css" %}
 <link href="{% static 'transcription/scss/speak.scss' %}" rel="stylesheet" type="text/x-scss" />
+<link href="{% static 'transcription/vad-korero/css/app.ff1d.css' %}" rel=stylesheet>
+<style type="text/css">
+div.Korero div.header{
+	border: 0;
+}
+div.Korero{
+	height: 100% !important;
+	justify-content: flex-start !important;
+}
+</style>
 {% endaddtoblock %}
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="height: 100vh;">
 
-  <div class="row">
+<!--   <div class="row">
   	<div class="col ">
   		<div class="title">
   		<h1>Speak Demo</h1>
 	  	</div>
   	</div>
-  </div>
+  </div> -->
+
+  <vue-widget></vue-widget>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/manifest.ff1d.js' %}"></script>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/vendor.ff1d.js' %}"></script>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/app.ff1d.js' %}"></script>
+
+  {% comment %}
 
   <div class="row">
   	<div class="col ">
@@ -45,9 +62,39 @@
   	</div>
   	<div class="col"></div>
   </div>
+  {% endcomment %}
 
 
+
+{% addtoblock "js-end" %}<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+// document.onready = () => {
+ api_auth['headers'] = {"X-CSRFToken": csrftoken}
+// }
+	
+</script>{% endaddtoblock %}
+
+
+
+{% comment %}
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorder/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
 
 {% addtoblock "js-end" %}
@@ -197,4 +244,6 @@ if (Recorder.isRecordingSupported()){
 </script>
 
 {% endaddtoblock %}
+  {% endcomment %}
+
 {% endblock %}
