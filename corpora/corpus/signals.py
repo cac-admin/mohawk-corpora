@@ -73,7 +73,7 @@ def update_update_field_when_model_saved(sender, instance, **kwargs):
     instance.updated = timezone.now()
 
 
-@receiver(models.signals.pre_save, sender=Sentence)
+# @receiver(models.signals.pre_save, sender=Sentence)
 def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
     parts = instance.text.split('.')
     for i in range(1, len(parts)):
