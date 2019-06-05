@@ -17,3 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'pk',)
+
+    def create(self, validated_data):
+        try:
+            user, created = User.objects.get_or_create(**validated_data)
+        except Exception as e:
+            raise Exception(e)
+        return user

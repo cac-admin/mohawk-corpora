@@ -6,6 +6,7 @@ from corpora.serializers import UserSerializer
 from rest_framework import serializers
 from dal import autocomplete
 
+import ast
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from allauth.account.models import EmailAddress
 
@@ -69,6 +70,26 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                   'leaderboard', 'receive_daily_updates', 'receive_feedback')
         extra_kwargs = {"username": {"error_messages": {"required": "Give yourself a username"}}}
         validators = []
+
+    def create(self, validated_data):
+        if validated_data['groups'] == []:
+            del validated_data['groups']
+
+        try:
+            user_data = self.initial_data['user']
+            user_data = ast.literal_eval(user_data)
+            user = User.objects.get(**user_data)
+        except Exception as e:
+            logger.error(e)
+            user = None
+
+        try:
+            person, created = Person.objects.get_or_create(
+                user=user, **validated_data)
+            logger.debug(person.user)
+        except Exception as e:
+            raise Exception(e)
+        return person
 
     def validate_username(self, validated_data):
         person = self.instance
