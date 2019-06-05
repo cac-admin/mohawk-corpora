@@ -44,6 +44,14 @@
       </a>
     </li>
 
+    {% url 'transcription:speak2' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-microphone-alt fa-fw"></i>
+        <div >{% trans 'VAD Demo' %}</div>
+      </a>
+    </li>
+
     <li class="nav-item ">
       <a href="/api" class="nav-link" >
         <i class="fas fa-lg fa-code fa-fw"></i>

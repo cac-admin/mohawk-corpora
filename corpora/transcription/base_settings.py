@@ -17,8 +17,17 @@ DEEPSPEECH_URL_PRIVATE = \
     "http://LB-corpora-production-deep-tcp-4113e81f0772e13a.elb.ap-southeast-2.amazonaws.com/transcribe"
 
 
+DEEPSPEECH_URL_BETA = \
+    "http://172.31.10.32:5000/transcribe_with_metadata"
+
+DEEPSPEECH_URL_BETA_PUBLIC = \
+    "http://13.210.236.139:5000/transcribe_with_metadata"
+
+
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
     DEEPSPEECH_URL = DEEPSPEECH_URL_PUBLIC
+elif 'staging' in os.environ['ENVIRONMENT_TYPE']:
+    DEEPSPEECH_URL = DEEPSPEECH_URL_PRIVATE
 else:
     DEEPSPEECH_URL = DEEPSPEECH_URL_PRIVATE
 

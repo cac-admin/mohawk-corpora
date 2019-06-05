@@ -11,14 +11,13 @@ class UserPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-
         action = view.action
 
         if request.user.is_staff and request.user.is_authenticated:
             self.message = _("Only staff can view this information.")
             return True
-        elif view.action in 'update partial_update':
-            return True
+        # elif view.action in 'update partial_update':
+        #     return True
         else:
             self.message = _("You're not allowed to view this information.")
             return False

@@ -18,7 +18,8 @@ from corpora.utils.task_management import \
 from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
-from transcription.utils import create_and_return_transcription_segments
+from transcription.utils import \
+    create_and_return_transcription_segments, check_to_transcribe_segment
 
 from transcription.transcribe import \
     transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async
@@ -274,14 +275,15 @@ def check_and_transcribe_blank_segments():
     for segment in segments:
         logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
         logger.debug(segment.transcriber_log)
-        if 'retry' in segment.transcriber_log.keys():
-            if not segment.transcriber_log['retry']:
-                continue
 
-        if segment.end - segment.start > 120*100:
-            segment.corrected_text = '[Segment too long to transceribe]'
-            segment.transcriber_log['retry'] = False
-            segment.save()
+        try:
+            if 'retry' in segment.transcriber_log.keys():
+                if not segment.transcriber_log['retry']:
+                    continue
+        except AttributeError:
+            pass
+
+        if not check_to_transcribe_segment(segment):
             continue
 
         if count > 25:

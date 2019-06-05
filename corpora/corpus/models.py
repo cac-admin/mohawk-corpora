@@ -404,6 +404,10 @@ class Recording(models.Model):
     user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
 
+    private = models.BooleanField(
+        help_text='Set to prevent public from accessing this recording.',
+        default=False)
+
     class Meta:
         verbose_name = 'Recording'
         verbose_name_plural = 'Recordings'

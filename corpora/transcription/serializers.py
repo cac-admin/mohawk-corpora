@@ -87,12 +87,13 @@ class TranscriptionSegmentSerializer(serializers.ModelSerializer):
 class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
     segments = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
+    metadata = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = AudioFileTranscription
         fields = (
             'uploaded_by', 'audio_file', 'pk', 'name',
-            'transcription', 'segments', 'status')
+            'transcription', 'segments', 'status', 'metadata')
         read_only_fields = ('uploaded_by',)
 
     def get_segments(self, obj):
@@ -114,6 +115,12 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
                 'status': 'transcribing',
                 'percent': int(round(completed/total*100))}
 
+    def get_metadata(self, obj):
+        try:
+            return obj.metadata
+        except AttributeError:
+            return None
+
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
         return get_person(self.context['request'])
@@ -129,12 +136,19 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             result = transcribe_audio_quick(validated_data['audio_file'])
             text = result['transcription'].strip()
             validated_data['transcription'] = text
+
             # For streaming, let's not create an AFT
             # Instead we should just have a log of a transcription
             # I meand we could keep the audio as well...
             aft = AudioFileTranscription()
             for key in validated_data.keys():
                 setattr(aft, key, validated_data[key])
+
+            try:
+                aft.metadata = result['metadata']
+            except KeyError:
+                pass
+
             return aft
 
         if 'name' not in validated_data.keys():

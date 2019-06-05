@@ -168,7 +168,9 @@ AWS_SECRET_ACCESS_KEY =     os.environ['AWS_SECRET']
 AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'private'
-
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
 
 # S3 only access
 AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
@@ -376,14 +378,14 @@ ENVIRONMENT_TYPE = os.environ['ENVIRONMENT_TYPE']
 if ENVIRONMENT_TYPE != 'local':
     AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
     AWS_STATIC_DEFAULT_ACL = 'public-read'
-    COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
-    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_DOMAIN']
+    COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_CNAME']+'/'
+    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_CNAME']
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     # AWS_IS_GZIPPED = True
     CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + \
-        ('https://'+os.environ['AWS_CLOUDFRONT_DOMAIN'],)
+        ('https://' + os.environ['AWS_CLOUDFRONT_CNAME'],)
 
 LOGGING = {
     'version': 1,

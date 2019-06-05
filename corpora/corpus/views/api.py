@@ -559,7 +559,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     TODO: Add a query so we can get all recordings (or just approved ones).
     """
-    queryset = Recording.objects.all()
+    queryset = Recording.objects.exclude(private=True)
     pagination_class = TenResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
@@ -591,6 +591,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         # ctm = ContentTypeManager()
         queryset = Recording.objects\
             .exclude(person=person)\
+            .filter(private=False)\
             .prefetch_related(
                 Prefetch(
                     'quality_control',
@@ -673,7 +674,10 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 uuid = 'None-Person-Object'
 
             query_cache_key = '{0}:listen-viewset'.format(uuid)
-            pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            try:
+                pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            except IndexError:
+                return queryset
 
             key = '{0}:{1}:listen'.format(uuid, pk)
             cache.set(key, True, 15)

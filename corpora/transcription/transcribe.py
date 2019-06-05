@@ -19,7 +19,10 @@ from corpora.utils.tmp_files import \
 
 from people.helpers import get_current_known_language_for_person
 
-from transcription.utils import create_and_return_transcription_segments
+from transcription.utils import \
+    create_and_return_transcription_segments, check_to_transcribe_segment
+from corpora.utils.task_management import \
+    check_and_set_task_running
 
 from django.core.files import File
 import wave
@@ -156,8 +159,8 @@ def transcribe_audio_quick(file_object):
     output, errors = p.communicate()
     duration = float(output)
 
-    if duration > 10:
-        return {'transcription': ''}
+    if duration > 100:
+        return {'transcription': 'Stream duration is too long. Not Transcribing.'}
 
     convert = [
         'ffmpeg', '-y', '-i', tmp_file, '-ar', '16000', '-ac', '1',
@@ -250,8 +253,9 @@ def transcribe_segment_async(ts_id):
     ts = TranscriptionSegment.objects.get(pk=ts_id)
     try:
         key = u"xtransseg-{0}".format(ts.pk)
+        if check_and_set_task_running(key):
+            return "Task already running."
         if not ts.text:
-            cache.set(key, 'transcribing', 60)
             result = transcribe_segment(ts)
         else:
             return "Segment already has text."
@@ -264,6 +268,8 @@ def transcribe_segment_async(ts_id):
 
 
 def transcribe_segment(ts):
+    if not check_to_transcribe_segment(ts):
+        return 'Not transcribing segment. Likely segment too long.'
     try:
         file_path, tmp_stor_dir, tmp_file, absolute_directory = \
             prepare_temporary_environment(ts.parent)
@@ -367,6 +373,8 @@ def transcribe_aft_async(pk):
     results = []
     errors = 0
     for segment in segments:
+        if not check_to_transcribe_segment(segment):
+            continue
         try:
             transcribe_segment(segment)
         except:

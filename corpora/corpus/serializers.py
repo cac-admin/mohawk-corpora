@@ -148,6 +148,16 @@ class SentenceSerializer(serializers.HyperlinkedModelSerializer):
         many=True,
         read_only=True,
     )
+    text = serializers.CharField(max_length=1024, validators=[])
+    # We set the validators to [] as this allows us to get the model
+    # when one with text already exists
+
+    def create(self, validated_data):
+        try:
+            sentence_obj, created = Sentence.objects.get_or_create(**validated_data)
+        except Exception as e:
+            raise Exception(e)
+        return sentence_obj
 
     class Meta:
         model = Sentence
@@ -184,7 +194,7 @@ class RecordingSerializerPost(
         model = Recording
         fields = (
             'sentence_text', 'user_agent', 'audio_file',
-            'person', 'id', 'sentence')
+            'person', 'id', 'sentence', 'private')
 
     def create(self, validated_data):
         # This sets a person even when you don't say person=self
@@ -301,7 +311,7 @@ class RecordingSerializer(serializers.ModelSerializer):
                   'id', 'sentence_text', 'user_agent', 'created', 'updated',
                   'audio_file_md5', 'audio_file_wav_md5',
                   'quality_control_aggregate', 'transcription',
-                  'word_error_rate')
+                  'word_error_rate', 'private')
 
     def get_updated(self, obj):
         qc = obj.quality_control.all().order_by('-updated').first()
