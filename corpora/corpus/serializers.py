@@ -191,6 +191,13 @@ class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
 class RecordingSerializerPost(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
 
+    '''
+    Okay, so we need to validate properly. We need to ensure a recording has a
+    language associated with it unless we figure it out ourselves.
+    right now we can post without a setnecne object and if the recording doesnt
+    have a language we don't know the language.
+    '''
+
     sentence = SentenceSerializerNotNested(
         many=False,
         read_only=True,
