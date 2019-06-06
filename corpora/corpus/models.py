@@ -353,7 +353,7 @@ class Recording(models.Model):
 
     sentence = models.ForeignKey(
         'Sentence',
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL
         )
 
@@ -390,7 +390,7 @@ class Recording(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    sentence_text = models.CharField(max_length=250, blank=True, null=True)
+    sentence_text = models.CharField(max_length=1024, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
 
     audio_file_aac = models.FileField(
