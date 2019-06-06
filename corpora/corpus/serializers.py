@@ -284,7 +284,8 @@ class RecordingSerializerPostBase64(
 class RecordingSerializer(serializers.ModelSerializer):
     sentence = SentenceSerializerNotNested(
         many=False,
-        read_only=True
+        read_only=True,
+        required=False,
     )
     person = serializers.PrimaryKeyRelatedField(
         many=False,
