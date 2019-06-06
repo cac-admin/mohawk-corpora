@@ -190,6 +190,13 @@ class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
 
 class RecordingSerializerPost(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
+
+    sentence = SentenceSerializerNotNested(
+        many=False,
+        read_only=True,
+        required=False
+    )
+
     class Meta:
         model = Recording
         fields = (
@@ -285,7 +292,7 @@ class RecordingSerializer(serializers.ModelSerializer):
     sentence = SentenceSerializerNotNested(
         many=False,
         read_only=True,
-        required=False,
+        required=False
     )
     person = serializers.PrimaryKeyRelatedField(
         many=False,
