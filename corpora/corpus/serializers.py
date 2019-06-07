@@ -208,7 +208,7 @@ class RecordingSerializerPost(
         model = Recording
         fields = (
             'sentence_text', 'user_agent', 'audio_file',
-            'person', 'id', 'sentence', 'private')
+            'person', 'id', 'sentence', 'private', 'language')
 
     def create(self, validated_data):
         # This sets a person even when you don't say person=self
