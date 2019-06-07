@@ -190,11 +190,25 @@ class ReadSentenceSerializer(serializers.HyperlinkedModelSerializer):
 
 class RecordingSerializerPost(
         SetPersonFromTokenWhenSelf, serializers.ModelSerializer):
+
+    '''
+    Okay, so we need to validate properly. We need to ensure a recording has a
+    language associated with it unless we figure it out ourselves.
+    right now we can post without a setnecne object and if the recording doesnt
+    have a language we don't know the language.
+    '''
+
+    sentence = SentenceSerializerNotNested(
+        many=False,
+        read_only=True,
+        required=False
+    )
+
     class Meta:
         model = Recording
         fields = (
             'sentence_text', 'user_agent', 'audio_file',
-            'person', 'id', 'sentence', 'private')
+            'person', 'id', 'sentence', 'private', 'language')
 
     def create(self, validated_data):
         # This sets a person even when you don't say person=self
@@ -284,7 +298,8 @@ class RecordingSerializerPostBase64(
 class RecordingSerializer(serializers.ModelSerializer):
     sentence = SentenceSerializerNotNested(
         many=False,
-        read_only=True
+        read_only=True,
+        required=False
     )
     person = serializers.PrimaryKeyRelatedField(
         many=False,
