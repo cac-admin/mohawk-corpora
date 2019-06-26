@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 from corpus.serializers import RecordingSerializer, SetPersonFromTokenWhenSelf
 
-from transcription.transcribe import transcribe_audio_quick
+from transcription.transcribe import transcribe_audio_quick, calculate_word_probabilities
 
 import logging
 logger = logging.getLogger('corpora')
@@ -88,12 +88,13 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
     segments = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
     metadata = serializers.SerializerMethodField(read_only=True)
+    words = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = AudioFileTranscription
         fields = (
             'uploaded_by', 'audio_file', 'pk', 'name',
-            'transcription', 'segments', 'status', 'metadata')
+            'transcription', 'segments', 'status', 'metadata', 'words')
         read_only_fields = ('uploaded_by',)
 
     def get_segments(self, obj):
@@ -114,6 +115,13 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             return {
                 'status': 'transcribing',
                 'percent': int(round(completed/total*100))}
+
+    def get_words(self, obj):
+        try:
+            return calculate_word_probabilities(obj.metadata)
+        except Exception as e:
+            logger.error(e)
+            return None
 
     def get_metadata(self, obj):
         try:
