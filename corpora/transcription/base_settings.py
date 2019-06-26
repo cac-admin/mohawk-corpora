@@ -21,11 +21,11 @@ DEEPSPEECH_URL_BETA = \
     "http://172.31.10.32:5000/transcribe_with_metadata"
 
 DEEPSPEECH_URL_BETA_PUBLIC = \
-    "http://13.210.236.139:5000/transcribe_with_metadata"
+    "http://3.104.105.146:5000/transcribe_with_metadata"
 
 
 if 'local' in os.environ['ENVIRONMENT_TYPE']:
-    DEEPSPEECH_URL = DEEPSPEECH_URL_PUBLIC
+    DEEPSPEECH_URL = DEEPSPEECH_URL_BETA_PUBLIC
 elif 'staging' in os.environ['ENVIRONMENT_TYPE']:
     DEEPSPEECH_URL = DEEPSPEECH_URL_PRIVATE
 else:
