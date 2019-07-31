@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
 
-from people.helpers import get_person, get_or_create_person
+from people.helpers import get_person, get_or_create_person, get_current_language
 from people.models import KnownLanguage
 from rest_framework import viewsets, permissions
 
@@ -53,11 +54,8 @@ class AcceptLicenseViewSet(viewsets.ModelViewSet):
         # person = get_person(self.request)
         queryset = AcceptLicense.objects.all()
         person = get_or_create_person(self.request)
-        try:
-            active = KnownLanguage.objects.get(person=person, active=True)
-            language = active.language
-        except:
-            language = translation.get_language()
+        
+        language = get_current_language(self.request)
 
         queryset = AcceptLicense.objects\
             .filter(person=person)\

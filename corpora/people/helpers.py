@@ -4,7 +4,7 @@ from django.utils import translation
 from django.conf import settings
 
 from corpus.base_settings import \
-    LANGUAGES
+    LANGUAGES, LANGUAGE_DOMAINS
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import Person, KnownLanguage
@@ -157,6 +157,14 @@ def get_current_language(request):
         return active_language.language
 
     except ObjectDoesNotExist:
+
+
+        domain = request.META['SERVER_NAME']
+            
+        language = LANGUAGE_DOMAINS[domain]
+
+        logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
+
         return language
 
 

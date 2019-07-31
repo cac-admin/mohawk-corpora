@@ -604,6 +604,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
         queryset = Recording.objects\
             .exclude(person=person)\
+            .exclude(quality_control__person=person)\
             .filter(language=language)\
             .filter(private=False)\
             .prefetch_related(

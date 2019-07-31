@@ -59,7 +59,7 @@ LANGUAGES = (
     ('smo',    _('Samoan')),
     ('rar',    _('Cook Island Maori')),
     # ('en',    _('English')),
-    # ('en_NZ', _('New Zealand English')),
+    ('en_NZ', _('New Zealand English')),
 )
 
 DIALECTS = (
@@ -113,4 +113,15 @@ ACCENTS = (
 
 )
 
-LANGUAGE_CODE = 'mi'
+LANGUAGE_CODE = 'haw'
+
+
+LANGUAGE_DOMAINS = {
+    'olelohawaii.com': 'haw',
+    'koreromaori.com': 'mi',
+    'koreromaori.io': 'mi',
+    'corporalocal.com': 'mi',
+    'corporalocal.nz': 'mi',
+    'corporalocal.io': 'mi',
+    'corpora.com': 'en_NZ',
+}

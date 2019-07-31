@@ -9,6 +9,8 @@ from people.models import KnownLanguage
 from license.models import SiteLicense, License
 from django.contrib.sites.shortcuts import get_current_site
 
+from corpus.base_settings import LANGUAGE_DOMAINS
+
 from urlparse import parse_qs
 
 from uuid import uuid4 as uuid
@@ -89,6 +91,17 @@ class ExpoLoginMiddleware(object):
 
 
 class LanguageMiddleware(object):
+    '''
+    Sets the default language for the site when a user access it.
+    Nopte that in the settings we set a default language (mi), however
+    we'd like to be able to switch languages based on the domain name
+    without having different site IDs. Therefore we write a middleware
+    that detects what domainname is being used and chooses a lanaguage
+    based on that. we should probaly put that language and domainname
+    dictionary in the settigns somewhere and load that up.
+
+    '''
+
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
@@ -106,7 +119,14 @@ class LanguageMiddleware(object):
                 if current_language:
                     set_cookie = True
         else:
-            language = translation.get_language()
+
+            # Choose a language ebased on the host domainname
+            domain = request.META['SERVER_NAME']
+            
+            language = LANGUAGE_DOMAINS[domain]
+
+            logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
+            # language = translation.get_language()
             # set_cookie = True
 
         translation.activate(language)
@@ -125,7 +145,9 @@ class LanguageMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
 
-        translation.deactivate()  # Deactivates our langauge after we've processed the request.
+        # Deactivates our langauge after we've processed the request.
+        # WHY?
+        # translation.deactivate()  
         return response
 
 

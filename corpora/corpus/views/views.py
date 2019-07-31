@@ -213,6 +213,8 @@ class RecordingFileView(RedirectView):
         access = cache.get(key)
         # logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
 
+        logger.debug(access)
+
         url = ''
         if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
             try:
@@ -224,6 +226,7 @@ class RecordingFileView(RedirectView):
                 except:
                     url = audio_file.url
 
+            logger.debug(url)
             if url:
                 if rType:
                     return http.HttpResponse(

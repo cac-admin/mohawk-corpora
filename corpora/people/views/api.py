@@ -52,7 +52,7 @@ class PersonPermissions(permissions.BasePermission):
         if request.user.is_staff and request.user.is_authenticated:
             self.message = _("Only staff can view this information.")
             return True
-        elif view.action in 'retrieve update partial_update':
+        elif request.method.lower() in 'get post put':
             return True
         else:
             self.message = _("You're not allowed to view this information.")
@@ -90,6 +90,9 @@ class PersonViewSet(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     permission_classes = (PersonPermissions,)
 
+    # def get_queryset(self):
+
+
 
 class TribeViewSet(viewsets.ModelViewSet):
     """
@@ -117,6 +120,10 @@ class KnownLanguageViewSet(viewsets.ModelViewSet):
     queryset = KnownLanguage.objects.all()
     serializer_class = KnownLanguageSerializer
     permission_classes = (PersonPermissions,)
+
+    def get_queryset(self):
+        person = get_person(self.request)
+        return KnownLanguage.objects.filter(person=person)
 
 
 class ProfilePermissions(PersonPermissions):

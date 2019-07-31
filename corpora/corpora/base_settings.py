@@ -33,6 +33,9 @@ DEBUG = eval(os.environ['DJANGO_ISNOT_PRODUCTION'])
 
 ALLOWED_HOSTS = ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 
+# Manual for now
+ALLOWED_HOSTS.append('olelohawaii.com')
+
 # INTERNAL_IPS = ['corporalocal.nz', 'corporalocal.io', 'dev.koreromaori.com', '10.1.160.139', '127.0.0.1']
 
 # For ELB Certificate & NGINX settings.

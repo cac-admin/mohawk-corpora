@@ -49,7 +49,7 @@ class RecordingQualityControlAdmin(admin.ModelAdmin):
                     'approved', 'trash', 'follow_up', 'noise', 'star')
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by', 'recording')
-
+    list_filter = ('recording__language', 'updated')
 
 @admin.register(SentenceQualityControl)
 class SentenceQualityControlAdmin(admin.ModelAdmin):
@@ -57,7 +57,7 @@ class SentenceQualityControlAdmin(admin.ModelAdmin):
                     'approved', 'approved_by', 'trash', )
     date_hierarchy = 'updated'
     raw_id_fields = ('person', 'approved_by', 'sentence')
-
+    list_filter = ('sentence__language', 'updated', )
 
 @admin.register(Sentence)
 class SentenceAdmin(admin.ModelAdmin):
@@ -66,7 +66,7 @@ class SentenceAdmin(admin.ModelAdmin):
     inlines = [SentenceQualityControlInline, RecordingsInline]
     search_fields = ['text']
     actions = ('approve_sentences',)
-    list_filter = ('language',)
+    list_filter = ('language', 'updated', )
 
     def get_queryset(self, request):
         qs = super(SentenceAdmin, self).get_queryset(request)
@@ -147,7 +147,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'created',
     )
 
-    list_filter = ('language',)
+    list_filter = ('language', 'created', 'quality_control__approved', 'quality_control__trash',)
 
 
     raw_id_fields = ('person', 'sentence')
