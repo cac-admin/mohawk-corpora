@@ -66,6 +66,7 @@ class SentenceAdmin(admin.ModelAdmin):
     inlines = [SentenceQualityControlInline, RecordingsInline]
     search_fields = ['text']
     actions = ('approve_sentences',)
+    list_filter = ('language',)
 
     def get_queryset(self, request):
         qs = super(SentenceAdmin, self).get_queryset(request)
@@ -145,6 +146,9 @@ class RecordingAdmin(admin.ModelAdmin):
         'updated',
         'created',
     )
+
+    list_filter = ('language',)
+
 
     raw_id_fields = ('person', 'sentence')
 
@@ -237,6 +241,7 @@ class TextAdmin(admin.ModelAdmin):
     readonly_fields = ('updated', 'original_file_md5', 'cleaned_file_md5',)
     raw_id_fields = ('source', )
     actions = ('save_sentences', )
+    list_filter = ('primary_language',)
 
     def save_sentences(self, request, queryset):
         for obj in queryset:
