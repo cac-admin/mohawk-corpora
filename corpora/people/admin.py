@@ -39,7 +39,9 @@ class PersonAdmin(admin.ModelAdmin):
         'get_groups'
         )
     raw_id_fields = ('user', )
-    readonly_fields = ('profile_email',)
+    readonly_fields = (
+        'profile_email', 'score_comp', 'num_recordings', 'num_reviews',
+        'num_reviews_comp', 'num_recordings_comp')
     inlines = [PersonRecordingsInline, PersonGroupInline]
     exclude = ('groups', )  # see PersonGroupInline
     search_fields = ['username', 'profile_email', 'user__username', 'user__email',

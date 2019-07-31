@@ -57,7 +57,7 @@ def upload_directory(instance, filename):
         filename.split('.')[-1])
 
 
-class QualityControl(models.Model):
+class RecordingQualityControl(models.Model):
     good = models.PositiveIntegerField(
         default=0,
         help_text='Indicates the object is good. Can be any interger >= 0.')
@@ -73,7 +73,7 @@ class QualityControl(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         help_text='User that approved the object. Should be a user ID.')
-    delete = models.BooleanField(
+    trash = models.BooleanField(
         default=False,
         help_text='Flag for deletion.')
     star = models.PositiveIntegerField(
@@ -87,11 +87,11 @@ class QualityControl(models.Model):
         default=False,
         help_text='Check if an item has noise but is still intelligible.')
     content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE,
+        ContentType, on_delete=models.SET_NULL, null=True,
         help_text='Model to which this QualityControl refers. This should be \
         the content type ID. Implemented types are Recordings (id=8),\
         Sentences (id=10), Transcription Segments (id=24).')
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
     updated = models.DateTimeField(auto_now=True)
     person = models.ForeignKey(
@@ -105,7 +105,11 @@ class QualityControl(models.Model):
         object.")
 
     # Move to Recording QC
-    # recording = models.ForeignKey('corpus.Recording', null=True)
+    recording = models.ForeignKey(
+        'corpus.Recording',
+        related_name='quality_control',
+        null=True,
+        on_delete=models.SET_NULL,)
 
     notes = models.TextField(
         blank=True,
@@ -125,8 +129,8 @@ class QualityControl(models.Model):
     class Meta:
         unique_together = (("object_id", "content_type", "person"),)
         indexes = [
-            models.Index(fields=['object_id', 'content_type', ]),
-            models.Index(fields=['delete', ]),
+            # models.Index(fields=['object_id', 'content_type', ]),
+            models.Index(fields=['trash', ]),
             models.Index(fields=['approved', ]),
             models.Index(fields=['good', ]),
             models.Index(fields=['bad', ]),
@@ -143,8 +147,12 @@ class QualityControl(models.Model):
         """Listener/reviewer score for this review - the closer to the mean,
         the higher the score. """
 
-        qc = QualityControl.objects.filter(content_type=self.content_type,
-                                           object_id=self.object_id)
+        if self.recording:
+            qc = RecordingQualityControl.objects.filter(
+                recording__pk=self.recording.pk)
+        else:
+            return 0
+
         avg = qc.aggregate(
             value=models.Avg(models.F('good') - models.F('bad')))
 
@@ -156,86 +164,76 @@ class QualityControl(models.Model):
 
     def __unicode__(self):
         try:
-            ct = str(self.content_type).title()
+            return u'Recording QC: {0}'.format(self.recording.pk)
         except:
-            ct = 'None'
+            return u'old sentence?'
+
+
+class SentenceQualityControl(models.Model):
+
+    good = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is good. Can be any interger >= 0.')
+    bad = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is bad. Can be any interger >= 0.')
+    approved = models.BooleanField(
+        default=False,
+        help_text='Approved indicates that the object is suitable for use.')
+    approved_by = models.ForeignKey(
+        User, null=True, blank=True,
+        on_delete=models.SET_NULL,
+        help_text='User that approved the object. Should be a user ID.')
+    trash = models.BooleanField(
+        default=False,
+        help_text='Flag for deletion.')
+
+    updated = models.DateTimeField(auto_now=True)
+    person = models.ForeignKey('people.Person', null=True, blank=True)
+
+    sentence = models.ForeignKey(
+        'corpus.Sentence',
+        related_name='quality_control',
+        null=True,
+        on_delete=models.SET_NULL)
+
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Field for providing extra information about a review.")
+
+    machine = models.BooleanField(
+        default=False,
+        help_text='Boolean to indicate if a machine made the review.')
+
+    source = models.ForeignKey(
+        'Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='Used to identify machines.')
+
+    class Meta:
+        unique_together = (("sentence", "person"),)
+        # indexes = [
+        #     models.Index(fields=['object_id', 'content_type', ]),
+        #     # models.Index(fields=['first_name'], name='first_name_idx'),
+        # ]
+
+    def clear(self):
+        self.good = 0
+        self.bad = 0
+        self.approved = False
+        self.approved_by = None
+
+    def random_foo(self):
+        print("Random, as")
+
+    def __unicode__(self):
         try:
-            co = self.content_object.__unicode__()
+            return u'Sentence QC: {0}'.format(self.sentence.pk)
         except:
-            co = 'None'
-        return u'{0}: {1}'.format(ct, co)
-
-
-# class SentenceQualityControl(models.Model):
-
-#     good = models.PositiveIntegerField(
-#         default=0,
-#         help_text='Indicates the object is good. Can be any interger >= 0.')
-#     bad = models.PositiveIntegerField(
-#         default=0,
-#         help_text='Indicates the object is bad. Can be any interger >= 0.')
-#     approved = models.BooleanField(
-#         default=False,
-#         help_text='Approved indicates that the object is suitable for use.')
-#     approved_by = models.ForeignKey(
-#         User, null=True, blank=True,
-#         on_delete=models.SET_NULL,
-#         help_text='User that approved the object. Should be a user ID.')
-#     delete = models.BooleanField(
-#         default=False,
-#         help_text='Flag for deletion.')
-#     star = models.PositiveIntegerField(
-#         default=0,
-#         help_text='Stars are to indicate an object is amazing. This is a positive\
-#         interger field so we can, for example, do a 5 star rating system.')
-#     follow_up = models.BooleanField(
-#         default=False,
-#         help_text='Flag an item for follow up later.')
-
-#     updated = models.DateTimeField(auto_now=True)
-#     person = models.ForeignKey('people.Person', null=True, blank=True)
-
-#     sentence = models.ForeignKey('corpus.Sentence', null=True)
-
-#     notes = models.TextField(
-#         blank=True,
-#         null=True,
-#         help_text="Field for providing extra information about a review.")
-
-#     machine = models.BooleanField(
-#         default=False,
-#         help_text='Boolean to indicate if a machine made the review.')
-
-#     source = models.ForeignKey(
-#         'Source',
-#         null=True,
-#         blank=True,
-#         on_delete=models.SET_NULL,
-#         help_text='Used to identify machines.')
-
-#     class Meta:
-#         unique_together = (("object_id", "content_type", "person"),)
-#         indexes = [
-#             models.Index(fields=['object_id', 'content_type', ]),
-#             # models.Index(fields=['first_name'], name='first_name_idx'),
-#         ]
-
-#     def clear(self):
-#         self.good = 0
-#         self.bad = 0
-#         self.approved = False
-#         self.approved_by = None
-
-#     def __unicode__(self):
-#         try:
-#             ct = str(self.content_type).title()
-#         except:
-#             ct = 'None'
-#         try:
-#             co = self.content_object.__unicode__()
-#         except:
-#             co = 'None'
-#         return u'{0}: {1}'.format(ct, co)
+            return 'migration error?'
 
 
 class Source(models.Model):
@@ -310,10 +308,10 @@ class Sentence(models.Model):
         null=True,
         blank=True)
 
-    quality_control = GenericRelation(
-        QualityControl,
-        related_query_name='sentence'
-        )
+    # quality_control = GenericRelation(
+    #     QualityControl,
+    #     related_query_name='sentence'
+    #     )
 
     updated = models.DateTimeField(auto_now=True)
     source = models.ForeignKey(
@@ -355,14 +353,14 @@ class Recording(models.Model):
 
     sentence = models.ForeignKey(
         'Sentence',
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL
         )
 
-    quality_control = GenericRelation(
-        QualityControl,
-        related_query_name='recording'
-        )
+    # quality_control = GenericRelation(
+    #     QualityControl,
+    #     related_query_name='recording'
+    #     )
 
     source = models.ForeignKey(
         'Source',
@@ -392,7 +390,7 @@ class Recording(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    sentence_text = models.CharField(max_length=250, blank=True, null=True)
+    sentence_text = models.CharField(max_length=1024, blank=True, null=True)
     duration = models.FloatField(default=0, blank=True)
 
     audio_file_aac = models.FileField(
@@ -405,6 +403,10 @@ class Recording(models.Model):
 
     user_agent = models.CharField(
                         max_length=512, blank=True, null=True)
+
+    private = models.BooleanField(
+        help_text='Set to prevent public from accessing this recording.',
+        default=False)
 
     class Meta:
         verbose_name = 'Recording'

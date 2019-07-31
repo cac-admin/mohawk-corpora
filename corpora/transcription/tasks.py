@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
@@ -12,11 +13,13 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from corpora.utils.tmp_files import prepare_temporary_environment
 from corpora.utils.task_management import \
-    check_and_set_task_running, clear_running_tasks
+    check_and_set_task_running, clear_running_tasks, \
+    check_task_counter_running, task_counter
 from corpora.utils.media_functions import get_media_duration
 from people.helpers import get_current_known_language_for_person
 
-from transcription.utils import create_and_return_transcription_segments
+from transcription.utils import \
+    create_and_return_transcription_segments, check_to_transcribe_segment
 
 from transcription.transcribe import \
     transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async
@@ -198,11 +201,23 @@ def transcribe_recording(pk):
         transcription = transcriptions.last()
         t = transcriptions.first()
         t.delete()
+    except ObjectDoesNotExist:
+        source, created = Source.objects.get_or_create(
+            source_name='Transcription API',
+            source_type='M',
+            source_url=settings.DEEPSPEECH_URL,
+            author='Keoni Mahelona'
+        )
+
+        transcription, created = Transcription.objects.get_or_create(
+            recording=recording,
+            source=source)
 
     start = timezone.now()
     if not transcription.text:
         try:
-            from jellyfish import levenshtein_distance as levd
+            from transcription.wer.wer import word_error_rate
+
             # This should tell us if the file exists
             recording.audio_file_wav.open('rb')
             result = transcribe_audio_sphinx(
@@ -214,10 +229,13 @@ def transcribe_recording(pk):
             transcription.transcriber_log = result
             # Calculate wer
             original = recording.sentence_text.lower()
-            transcription.word_error_rate = (
-                levd(original, transcription.text.lower()) /
-                float(len(original))
-                )
+
+            transcription.word_error_rate = \
+                word_error_rate(
+                    original,
+                    transcription.text,
+                    recording.language)
+
             transcription.save()
             dt = timezone.now() - start
             return "Transcribed {0} in {1}s".format(
@@ -250,19 +268,34 @@ def check_and_transcribe_blank_segments():
         return "Task already running. Skipping this instance."
 
     segments = TranscriptionSegment.objects\
-        .filter(text__isnull=True)\
-        .filter(edited_by__isnull=True)\
-        .order_by('?')  # Expensive but okay for this context.
+        .filter(Q(text__isnull=True) &
+                Q(edited_by__isnull=True) &
+                Q(parent__ignore=False) &
+                Q(no_speech_detected=False))
+
     count = 0
     for segment in segments:
-        if count > 600:
-            return "Checked 600 segments. \
+        logger.debug('THIS SEGMENT DID NOT TRANSCRIBE: {0}'.format(segment.pk))
+        logger.debug(segment.transcriber_log)
+
+        try:
+            if 'retry' in segment.transcriber_log.keys():
+                if not segment.transcriber_log['retry']:
+                    continue
+        except AttributeError:
+            pass
+
+        if not check_to_transcribe_segment(segment):
+            continue
+
+        if count > 25:
+            return "Checked 25 segments. \
                     Reached max loop."
         transcribe_segment_async(segment.pk)
-        count = count = 1
+        count = count + 1
 
     clear_running_tasks(task_key)
-    return "Checked {0} segments.".format(count)
+    return "Checked {0} segments of {1}.".format(count, segments.count())
 
 
 @shared_task
@@ -272,8 +305,10 @@ def check_and_transcribe_blank_audiofiletranscriptions():
     create and transcribe then.
     '''
     task_key = 'check_and_transcribe_blank_aft'
-    if check_and_set_task_running(task_key):
+    if check_task_counter_running(task_key):
         return "Task already running. Skipping this instance."
+
+    task_counter(task_key, 1)
 
     afts = AudioFileTranscription.objects\
         .annotate(num_segments=Count('transcriptionsegment'))\
@@ -297,7 +332,7 @@ def check_and_transcribe_blank_audiofiletranscriptions():
             error_msg.append(e)
         count = count + 1
 
-    clear_running_tasks(task_key)
+    task_counter(task_key, -1)
 
     return "Processed {0} AFTs. Had {1} errors. {2}".format(
         count, errors, error_msg)
@@ -310,18 +345,28 @@ def calculate_wer_for_null():
     This can be removed after a migration as this was a newly added
     field and we really only need to run this once.
     '''
-    from jellyfish import levenshtein_distance as levd
+    from transcription.wer.wer import word_error_rate
     trans = Transcription.objects\
         .filter(word_error_rate=None)
+    logger.debug('Need to calc wer for {0} items.'.format(trans.count()))
     count = 0
+    errors = 0
     for t in trans:
         # Calculate wer
-        original = t.recording.sentence_text.lower()
-        t.word_error_rate = (
-            levd(original, t.text.lower()) /
-            float(len(original))
-            )
-        t.save()
+        try:
+            original = t.recording.sentence_text.lower()
+            t.word_error_rate = \
+                word_error_rate(
+                    original,
+                    t.text,
+                    t.recording.language)
+            t.save()
+        except Exception as e:
+            logger.error(
+                'ERROR calculated wer for Transcription {0}:{1}'.format(
+                    t.pk, t.text))
+            logger.error(e)
+            errors = errors + 1
         count = count + 1
-        if count > 20000:
-            return "Done"
+        if count > 10000:
+            return "Done with {0} calcs and {1} errors.".format(count, errors)

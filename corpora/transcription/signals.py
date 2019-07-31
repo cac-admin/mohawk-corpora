@@ -116,7 +116,9 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
             instance.audio_file_wav.delete(False)
 
 
-@receiver(signals.post_save, sender=TranscriptionSegment)
+# Disable this and compile on demand e.g. when they download
+# the file
+# @receiver(signals.post_save, sender=TranscriptionSegment)
 def compile_parent_transcription(
         sender, instance, created, **kwargs):
 

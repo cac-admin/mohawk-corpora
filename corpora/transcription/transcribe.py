@@ -19,7 +19,10 @@ from corpora.utils.tmp_files import \
 
 from people.helpers import get_current_known_language_for_person
 
-from transcription.utils import create_and_return_transcription_segments
+from transcription.utils import \
+    create_and_return_transcription_segments, check_to_transcribe_segment
+from corpora.utils.task_management import \
+    check_and_set_task_running
 
 from django.core.files import File
 import wave
@@ -68,7 +71,7 @@ def parse_sphinx_transcription(lines):
 
 
 def transcribe_audio_sphinx(
-        audio, continuous=False, file_path=None, timeout=10):
+        audio, continuous=False, file_path=None, timeout=32):
     # api_url = "https://waha-tuhi.dragonfly.nz/transcribe"
     # DeepSpeech: http://waha-tuhi-api-17.dragonfly.nz
     API_URL = settings.DEEPSPEECH_URL
@@ -92,33 +95,42 @@ def transcribe_audio_sphinx(
 
     logger.debug(u'Sending request to {0}'.format(API_URL))
 
-    try:
-        response = requests.post(
-            API_URL,
-            data=audio,
-            timeout=timeout,
-            headers=headers)
-        logger.debug(u'{0}'.format(response.text))
+    timeouts = [2, 4, 8, 16, 32]
+    tries = 0
+    while tries < len(timeouts):
 
-        result = json.loads(response.text)
+        try:
+            response = requests.post(
+                API_URL,
+                data=audio,
+                timeout=timeouts[tries],
+                headers=headers)
+            logger.debug(u'{0}'.format(response.text))
 
-    except requests.exceptions.ConnectTimeout:
-        result = {
-            'success': False,
-            'transcription': 'Could not get a transcription. ConnectTimeout'
-        }
-    except requests.exceptions.ReadTimeout:
-        result = {
-            'success': False,
-            'transcription': 'Could not get a transcription. ReadTimeout'
-        }
-    except Exception as e:
-        result = {
-            'success': False,
-            'transcription': 'Unhandled exception. {0}'.format(e)
-        }
+            result = json.loads(response.text)
+            this_timeout = timeout + 1
+        except requests.exceptions.ConnectTimeout:
+            result = {
+                'success': False,
+                'transcription': 'Could not get a transcription. ConnectTimeout'
+            }
+        except requests.exceptions.ReadTimeout:
+            result = {
+                'success': False,
+                'transcription': 'Could not get a transcription. ReadTimeout'
+            }
+        except Exception as e:
+            result = {
+                'success': False,
+                'transcription': 'Unhandled exception. {0}'.format(e)
+            }
 
-    result['API_URL'] = API_URL
+        tries = tries + 1
+
+        result['API_URL'] = API_URL
+
+    if tries >= timeout:
+        logger.debug(result)
 
     return result
 
@@ -147,8 +159,8 @@ def transcribe_audio_quick(file_object):
     output, errors = p.communicate()
     duration = float(output)
 
-    if duration > 10:
-        return {'transcription': ''}
+    if duration > 100:
+        return {'transcription': 'Stream duration is too long. Not Transcribing.'}
 
     convert = [
         'ffmpeg', '-y', '-i', tmp_file, '-ar', '16000', '-ac', '1',
@@ -241,8 +253,9 @@ def transcribe_segment_async(ts_id):
     ts = TranscriptionSegment.objects.get(pk=ts_id)
     try:
         key = u"xtransseg-{0}".format(ts.pk)
+        if check_and_set_task_running(key):
+            return "Task already running."
         if not ts.text:
-            cache.set(key, 'transcribing', 60)
             result = transcribe_segment(ts)
         else:
             return "Segment already has text."
@@ -255,6 +268,8 @@ def transcribe_segment_async(ts_id):
 
 
 def transcribe_segment(ts):
+    if not check_to_transcribe_segment(ts):
+        return 'Not transcribing segment. Likely segment too long.'
     try:
         file_path, tmp_stor_dir, tmp_file, absolute_directory = \
             prepare_temporary_environment(ts.parent)
@@ -294,10 +309,20 @@ def transcribe_segment(ts):
 
         ts.source = source
 
+        if ts.text is '' or ts.text is ' ':
+            ts.no_speech_detected = True
+
         ts.save()
     else:
         result['status'] = unicode(_('Error'))
-        ts.transcriber_log = result
+        if ts.transcriber_log:
+            if 'retry' in ts.transcriber_log.keys():
+                ts.transcriber_log.update(result)
+                ts.transcriber_log['retry'] = False
+            else:
+                ts.transcriber_log['retry'] = True
+        else:
+            ts.transcriber_log = result
         ts.save()
 
     os.remove(tmp_seg_file)
@@ -323,7 +348,10 @@ def transcribe_aft_async(pk):
             cache.set(cache_key, retry+1)
             msg = transcribe_aft_async.apply_async([pk], countdown=5)
         else:
+            aft.ignore = True
             msg = 'Tried 5 times. Stopping.'
+            aft.errors = {'info': 'Tried 5 times to transcibe and no luck.'}
+            aft.save()
         try:
             erase_all_temp_files(aft)
         except Exception as e:
@@ -345,6 +373,8 @@ def transcribe_aft_async(pk):
     results = []
     errors = 0
     for segment in segments:
+        if not check_to_transcribe_segment(segment):
+            continue
         try:
             transcribe_segment(segment)
         except:
@@ -354,3 +384,39 @@ def transcribe_aft_async(pk):
 
     erase_all_temp_files(aft)
     return "Transcribed {0} with {1} errors".format(aft, errors)
+
+
+def calculate_word_probabilities(metadata):
+    words = []
+    i = 0
+    while i < len(metadata):
+        word = ''
+        word_probs = []
+        start_time = None
+        m = metadata[i]
+        while m['char'] != ' ':
+            if start_time is None:
+                start_time = m['start_time']
+            word = word + m['char']
+            word_probs.append(m['prob'])
+            if i+1 >= len(metadata):
+                break
+            i = i+1
+            m = metadata[i]
+        words.append({'word': word, 'prob': p_word(word_probs), 'start': start_time})
+        i = i+1
+    return words
+
+
+# The probability that a word is incorrect before the nth letter:
+def p_not_word(n, probabilities):
+    if n == 0:
+        return 0
+    else:
+        return probabilities[n - 1] * p_not_word(n - 1, probabilities)  + \
+            (1 - probabilities[n - 1])
+
+# The probability of a word being correctly emitted, given the character
+# probabilities:
+def p_word(probabilities):
+    return 1 - p_not_word(len(probabilities), probabilities)

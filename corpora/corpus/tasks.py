@@ -4,7 +4,9 @@ from celery import shared_task
 from django.conf import settings
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from corpus.models import Recording, QualityControl, Source
+from corpus.models import Recording, Source, \
+    RecordingQualityControl, \
+    SentenceQualityControl
 from django.contrib.contenttypes.models import ContentType
 from corpus.views.views import RecordingFileView
 from django.contrib.sites.shortcuts import get_current_site
@@ -48,8 +50,12 @@ def set_recording_length(recording_pk):
         logger.warning('Tried to get recording that doesn\'t exist')
         return 'Tried to get recording that doesn\'t exist'
 
-    recording.duration = get_media_duration(recording)
-    recording.save()
+    try:
+        recording.duration = get_media_duration(recording)
+        recording.save()
+    except Exception as e:
+        logger.error(e)
+        return 'Cound not set Recording {0} duration'.format(recording.pk)
 
     return 'Recording {0} duration set to {1}'.format(
         recording.pk, recording.duration)
@@ -73,7 +79,7 @@ def set_all_recording_md5():
     '''
     recordings = Recording.objects\
         .filter(audio_file_md5=None)\
-        .exclude(quality_control__delete=True)\
+        .exclude(quality_control__trash=True)\
         .distinct()
     count = 0
     total = recordings.count()
@@ -84,7 +90,7 @@ def set_all_recording_md5():
     if total == 0:
         recordings = Recording.objects\
             .filter(audio_file_wav_md5=None)\
-            .exclude(quality_control__delete=True)\
+            .exclude(quality_control__trash=True)\
             .distinct()
 
         count = 0
@@ -127,10 +133,9 @@ def set_all_recording_md5():
             logger_test.debug(
                 '{1: 6}/{2} Recording {0}: File does not exist.'.format(
                     recording.pk, count, total))
-            qc, created = QualityControl.objects.get_or_create(
-                delete=True,
-                content_type=recording_ct,
-                object_id=recording.pk,
+            qc, created = RecordingQualityControl.objects.get_or_create(
+                trash=True,
+                recording=recording,
                 notes='File does not exist.',
                 machine=True,
                 source=source,
@@ -166,18 +171,21 @@ def transcode_audio(recording_pk):
     key = u"xtrans-{0}-{1}".format(
         recording.pk, recording.audio_file.name)
 
-    is_running = cache.get(key)
+    is_running = cache.get(key, False)
 
     result = ''
-    if is_running is None:
+    if not is_running:
+        codecs = []
         if not recording.audio_file_aac:
-            is_running = cache.set(key, True, 60*5)
-            result = encode_audio(recording)
-            cache.set(key, False, 60)
+            codecs.append('aac')
         if not recording.audio_file_wav:
-            is_running = cache.set(key, True, 60*5)
-            result = result + encode_audio(recording, codec='wav')
-            cache.set(key, False, 60)
+            codecs.append('wav')
+
+        if len(codecs) >= 1:
+            is_running = cache.set(key, True, 60)
+            result = encode_audio(recording, codec=codecs)
+            cache.set(key, False)
+
         return result
 
     elif is_running:
@@ -228,6 +236,13 @@ def transcode_all_audio():
 
 
 def encode_audio(recording, test=False, codec='aac'):
+    '''
+    Encode audio into required formats. Also sets recording duration.
+    '''
+    if not isinstance(codec, list):
+        codec_list = [codec]  # Backwards compatibility
+    else:
+        codec_list = codec
 
     codecs = {
         'mp3': ['libmp3lame', 'mp3'],
@@ -251,42 +266,52 @@ def encode_audio(recording, test=False, codec='aac'):
 
     if audio:
         file_name = recording.get_recording_file_name()
-        if codec in 'wav':
-            file_name = file_name + '_16kHz'
-        extension = codecs[codec][1]
 
-        if codec in 'wav':
-            code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
-                tmp_file,
-                codecs[codec][0], codecs[codec][2], codecs[codec][3],
-                tmp_stor_dir, file_name, extension)
-        else:
-            code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
-                tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+        code = \
+            "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
+                tmp_file)
 
-        logger.debug('Running: '+code)
         data = commands.getstatusoutput(code)
-        logger.debug(data[1])
+        recording.duration = float(data[1])
 
-        logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
-        if file_name is None:
-            file_name = 'audio'
+        for codec in codec_list:
 
-        if 'aac' in codec:
-            recording.audio_file_aac.save(
-                file_name+'.'+extension,
-                File(open(tmp_stor_dir+'/{0}.{1}'.format(
-                    file_name, extension))))
-        elif 'wav' in codec:
-            recording.audio_file_wav.save(
-                file_name+'.'+extension,
-                File(open(tmp_stor_dir+'/{0}.{1}'.format(
-                    file_name, extension))))
+            if codec in 'wav':
+                file_name = file_name + '_16kHz'
+            extension = codecs[codec][1]
 
-        code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
-        logger.debug('Running: '+code)
-        data = commands.getstatusoutput(code)
-        logger.debug(data[1])
+            if codec in 'wav':
+                code = "ffmpeg -i {0} -vn -acodec {1} -ar {2} -ac {3} {4}/{5}.{6}".format(
+                    tmp_file,
+                    codecs[codec][0], codecs[codec][2], codecs[codec][3],
+                    tmp_stor_dir, file_name, extension)
+            else:
+                code = "ffmpeg -i {0} -vn -acodec {1} {2}/{3}.{4}".format(
+                    tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
+
+            logger.debug('Running: '+code)
+            data = commands.getstatusoutput(code)
+            logger.debug(data[1])
+
+            logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
+            if file_name is None:
+                file_name = 'audio'
+
+            if 'aac' in codec:
+                recording.audio_file_aac.save(
+                    file_name+'.'+extension,
+                    File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                        file_name, extension))))
+            elif 'wav' in codec:
+                recording.audio_file_wav.save(
+                    file_name+'.'+extension,
+                    File(open(tmp_stor_dir+'/{0}.{1}'.format(
+                        file_name, extension))))
+
+            code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
+            logger.debug('Running: '+code)
+            data = commands.getstatusoutput(code)
+            logger.debug(data[1])
 
     if not audio:
         logger.debug('No audio stream found.')

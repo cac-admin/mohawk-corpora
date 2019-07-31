@@ -44,6 +44,14 @@
       </a>
     </li>
 
+    {% url 'transcription:speak2' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a href="{{path}}" class="nav-link" >
+        <i class="fas fa-lg fa-microphone-alt fa-fw"></i>
+        <div >{% trans 'VAD Demo' %}</div>
+      </a>
+    </li>
+
     <li class="nav-item ">
       <a href="/api" class="nav-link" >
         <i class="fas fa-lg fa-code fa-fw"></i>
@@ -68,14 +76,7 @@
   {% if request.user.is_authenticated %}
 
 
-    
-<!--     {% url 'people:profile' as path %}
-    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
-      <a class="nav-link" href="{{path}}" >
-        <i class="fas fa-lg fa-fw fa-user-circle"></i>
-        <div >{% trans 'Account' %}</div>
-      </a>
-    </li> -->
+
 
 
     {% if request.user.is_staff %}
@@ -115,13 +116,23 @@
           {% endif %}
       
   </form>
+
+
+{% comment %}    
+<!--     {% url 'people:profile' as path %}
+    <li class="nav-item {% if path in request.get_full_path %}active{% endif %}">
+      <a class="nav-link" href="{{path}}" >
+        <i class="fas fa-lg fa-fw fa-user-circle"></i>
+        <div >{% trans 'Account' %}</div>
+      </a>
+    </li> -->    
   <form class="hidden" action="{% url 'people:set_language' %}" method="post" id="language_selector_form" >
       
           {% csrf_token %}
           <input name="language" type="hidden" value="{{current_language}}" />
       
   </form>
-
+{% endcomment %}
 
 
 </nav>

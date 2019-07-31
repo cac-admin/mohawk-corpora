@@ -423,6 +423,20 @@ def compile_aft(aft_pk):
     aft.save()
 
 
+def check_to_transcribe_segment(ts):
+    if ts.end - ts.start > 60*100:
+        ts.text = '[Segment too long to transcribe.]'
+        ts.corrected_text = '[Segment too long to transcribe.]'
+        ts.transcriber_log = {
+            'retry': False,
+            'message': 'Segment too long to transcribe.'
+        }
+        ts.save()
+        return False
+    else:
+        return True
+
+
 def get_duration_components(duration):
     h = int(duration/(100*60*60))
     m = int((duration - h*(100*60*60))/(100*60))

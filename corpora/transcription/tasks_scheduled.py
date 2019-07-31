@@ -11,7 +11,12 @@ CELERYBEAT_SCHEDULE = {
     # },
     'transcribe_recordings_without_reviews': {
         'task': 'transcription.tasks.transcribe_recordings_without_reviews',
-        'schedule': crontab(minute='*/20', hour=1, day_of_week='*'),
+        'schedule': crontab(minute='*/30', hour='1,3', day_of_week='*'),
+        # 'options': {'task_id': 'xribe_rec_without_rev'},
+    },
+    'calc_wer_when_null': {
+        'task': 'transcription.tasks.calculate_wer_for_null',
+        'schedule': crontab(minute=42, hour=2, day_of_week='*'),
         # 'options': {'task_id': 'xribe_rec_without_rev'},
     },
     'calc_wer_when_null': {
@@ -21,11 +26,11 @@ CELERYBEAT_SCHEDULE = {
     },
     'check_for_and_transcribe_blank_segments': {
         'task': 'transcription.tasks.check_and_transcribe_blank_segments',
-        'schedule': crontab(minute=5, hour=0, day_of_week='*'),
+        'schedule': crontab(minute='*/5', hour='*', day_of_week='*'),
     },
     'check_for_and_transcribe_blank_audiofiletranscriptions': {
         'task': 'transcription.tasks.check_and_transcribe_blank_audiofiletranscriptions',
-        'schedule': crontab(minute=35, hour=0, day_of_week='*'),
+        'schedule': crontab(minute=42, hour=1, day_of_week='*'),
     }
     # 'delete_transcriptions_for_approved_recordings': {
     #     'task': 'transcription.tasks.delete_transcriptions_for_approved_recordings',

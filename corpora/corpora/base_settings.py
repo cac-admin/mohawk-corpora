@@ -86,7 +86,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
 
-    'debug_toolbar',
+    # 'debug_toolbar',
 
     'corsheaders',
 
@@ -154,9 +154,13 @@ WSGI_APPLICATION = 'corpora.wsgi.application'
 
 # CORS
 CORS_ORIGIN_WHITELIST = \
-    ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+    ['https://{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
 CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
+
+CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + ('https://172.28.128.13', 'https://kaituhi.nz')
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # STORAGES #
 DEFAULT_FILE_STORAGE =      os.environ['FILE_STORAGE']
@@ -165,7 +169,9 @@ AWS_SECRET_ACCESS_KEY =     os.environ['AWS_SECRET']
 AWS_STORAGE_BUCKET_NAME =   os.environ['AWS_BUCKET']
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = 'private'
-
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
 
 # S3 only access
 AWS_ACCESS_KEY_ID_S3 =         os.environ['AWS_ID_S3']
@@ -373,14 +379,14 @@ ENVIRONMENT_TYPE = os.environ['ENVIRONMENT_TYPE']
 if ENVIRONMENT_TYPE != 'local':
     AWS_STATIC_BUCKET_NAME = os.environ['AWS_STATIC_BUCKET']
     AWS_STATIC_DEFAULT_ACL = 'public-read'
-    COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_DOMAIN']+'/'
-    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_DOMAIN']
+    COMPRESS_URL = 'https://'+os.environ['AWS_CLOUDFRONT_CNAME']+'/'
+    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_CLOUDFRONT_CNAME']
     STATIC_URL = COMPRESS_URL
     COMPRESS_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     STATICFILES_STORAGE = 'corpora.storage.CachedS3BotoStorage'
     # AWS_IS_GZIPPED = True
     CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + \
-        (os.environ['AWS_CLOUDFRONT_DOMAIN'],)
+        ('https://' + os.environ['AWS_CLOUDFRONT_CNAME'],)
 
 LOGGING = {
     'version': 1,
@@ -411,16 +417,16 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '../../logs/django.log',
             'formatter': 'verbose',
-            'maxBytes': 1024 * 500,  # 500kb
-            'backupCount': 10,
+            'maxBytes': 1024 * 1000,  # 1kb * X
+            'backupCount': 20,
         },
         'celery': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '../../logs/celery.log',
             'formatter': 'simple',
-            'maxBytes': 1024 * 500,  # 500 kb,
-            'backupCount': 10,
+            'maxBytes': 1024 * 1000,  # 500 kb,
+            'backupCount': 20,
         }
     },
     'loggers': {

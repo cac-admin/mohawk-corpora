@@ -14,15 +14,17 @@ from transcription.transcribe import transcribe_aft_async
 
 @admin.register(Transcription)
 class TranscriptionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'corrected_text', 'recording', 'word_error_rate')
+    list_display = ('text', 'corrected_text', 'recording',
+                    'word_error_rate', 'updated', )
     date_hierarchy = 'updated'
     raw_id_fields = ('recording',)
-    readonly_fields = ('word_error_rate',)
+    readonly_fields = ('word_error_rate', )
 
 
 @admin.register(AudioFileTranscription)
 class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
-    list_display = ('name', 'duration', 'audio_file', 'uploaded_by')
+    list_display = ('name', 'duration', 'audio_file',
+                    'uploaded_by', 'updated', 'created', 'ignore')
     actions = ('create_segments', 'transcribe_segments')
     raw_id_fields = ('uploaded_by',)
 
@@ -47,6 +49,6 @@ class AudioFileTranscriptionnAdmin(admin.ModelAdmin):
 
 @admin.register(TranscriptionSegment)
 class TranscriptionSegmentAdmin(admin.ModelAdmin):
-    readonly_fields = ('start', 'end')
-    list_display = ('parent', 'text', 'start', 'end')
+    readonly_fields = ('start', 'end', 'no_speech_detected')
+    list_display = ('parent', 'text', 'start', 'end', 'updated', 'no_speech_detected')
     raw_id_fields = ('parent', 'edited_by', 'child',)

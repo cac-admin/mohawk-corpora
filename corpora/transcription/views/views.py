@@ -15,10 +15,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 
-from corpus.models import Recording, Sentence, QualityControl
 from people.models import Person, KnownLanguage
-from corpus.helpers import get_next_sentence
-from people.helpers import get_or_create_person, get_person, get_current_language
+from people.helpers import get_person
 from django.conf import settings
 
 from django import http
@@ -43,6 +41,8 @@ from rest_framework.authtoken.models import Token
 from people.views.stats_views import JSONResponseMixin
 
 from transcription.tasks import launch_transcription_api
+
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 import logging
 logger = logging.getLogger('corpora')
@@ -80,7 +80,7 @@ class DashboardView(
     x_description = _('Reo API Dashboard')
     x_title = _('Dashboard')
     template_name = "transcription/dashboard.html"
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/icon.png")
 
     def test_func(self):
         return self.request.user.is_authenticated
@@ -107,6 +107,7 @@ class TranscribeView(
     x_description = _('Try the speech recognizer!')
     x_title = _('Kōrero Demo')
     template_name = "transcription/speak.html"
+    x_image = static("reo_api/img/icon.png")
 
     def test_func(self):
 
@@ -120,12 +121,62 @@ class TranscribeView(
         # return self.request.user.is_staff
 
 
+class TranscribeView2(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
+    x_description = _('Try the speech recognizer!')
+    x_title = _('Kōrero Demo')
+    template_name = "transcription/speak_new.html"
+    x_image = static("reo_api/img/icon.png")
+
+    def test_func(self):
+
+        return self.request.user.is_authenticated
+
+        # key = self.request.GET.get('key', '')
+
+        # if key == '720031ba-4db3-11e8-88f9-8c8590055544':
+        #     return True
+
+        # return self.request.user.is_staff
+
+
+class ReviewView(
+        EnsureDeepSpeechRunning,
+        SiteInfoMixin,
+        UserPassesTestMixin,
+        TemplateView):
+    x_description = _('Review API and Data')
+    x_title = _('Kōrero Māori Review for Admins')
+    template_name = "transcription/review.html"
+    x_image = static("reo_api/img/icon.png")
+
+    def test_func(self):
+        return (
+            self.request.user.is_authenticated and self.request.user.is_staff)
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ReviewView, self).get_context_data(**kwargs)
+        person = get_person(self.request)
+
+        try:
+            token = Token.objects.get(user=person.user)
+            context['token'] = token.key
+        except ObjectDoesNotExist:
+            pass
+
+        return context
+
+
 class AudioFileTranscriptionView(
         EnsureDeepSpeechRunning,
         SiteInfoMixin, UserPassesTestMixin, DetailView):
     x_description = _('Edit your transcription.')
     x_title = _('Edit Transcription')
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/icon.png")
     model = AudioFileTranscription
     context_object_name = 'aft'
     template_name = 'transcription/audio_file_transcription_detail.html'
@@ -167,7 +218,7 @@ class AudioFileTranscriptionListView(
         SiteInfoMixin, UserPassesTestMixin, ListView):
     x_description = _('List of your transcriptions.')
     x_title = _('Transcriptions')
-    x_image = "/static/reo_api/img/transcribe_tool.jpg"
+    x_image = static("reo_api/img/icon.png")
     model = AudioFileTranscription
     context_object_name = 'transcriptions'
     template_name = 'transcription/audio_file_transcription_list.html'

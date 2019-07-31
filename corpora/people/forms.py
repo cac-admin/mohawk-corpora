@@ -28,12 +28,12 @@ class KnownLanguageFormWithPerson(forms.ModelForm):
         # I have a feeling this will braeak when there's an empty instance - e.g. known language is None
         # We'll need to use autocomplete light to update fields when someone adds a new language.
 
-        language_accents = None
+        language_accents = []
         for i in range(len(ACCENTS)):
             if ACCENTS[i][0] == instance.language:
                 language_accents = ACCENTS[i][1]
 
-        language_dialects = None
+        language_dialects = []
         for i in range(len(DIALECTS)):
             if DIALECTS[i][0] == instance.language:
                 language_dialects = DIALECTS[i][1]

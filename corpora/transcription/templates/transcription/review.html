@@ -1,0 +1,63 @@
+{% extends 'transcription/base.html' %}
+{% load static sekizai_tags compress i18n time_filters file_access %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+<link href="{% static 'transcription/scss/speak.scss' %}" rel="stylesheet" type="text/x-scss" />
+<link href="{% static 'transcription/vad-korero/css/app.ff1d.css' %}" rel=stylesheet>
+<style type="text/css">
+div.Korero div.header{
+  border: 0;
+}
+div.Korero{
+  height: 100% !important;
+  justify-content: flex-start !important;
+}
+</style>
+{% endaddtoblock %}
+
+
+<div class="container-fluid" style="height: 100vh;">
+  <div class="row">
+    <div class="col ">
+      <div id="vue-app" class="vue-app">
+        <v-test message="works"></v-test>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% addtoblock "js-include" %}<script src="https://cdn.jsdelivr.net/npm/vue"></script>{% endaddtoblock %}
+{% addtoblock "js-end" %}
+  <!-- <script src="{% static 'transcription/vue/review.js' %}"></script> -->
+{% endaddtoblock %}
+
+{% addtoblock "js-end" %}<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+</script>{% endaddtoblock %}
+{% addtoblock "js-end" %}{% include 'transcription/vue/review.vue' %}></script>{% endaddtoblock %}
+
+
+
+{% comment %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+{% endcomment %}
+
+{% endblock %}

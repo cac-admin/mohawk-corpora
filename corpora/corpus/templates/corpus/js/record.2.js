@@ -3,7 +3,7 @@
 
 
 class MyRecorder extends Player{
-    constructor(target_element_selector, audio_element_id='play-audio', person_pk){
+    constructor(target_element_selector, audio_element_id='play-audio', person_pk, debug=false{
         super(target_element_selector, audio_element_id)
 
         this.recording = false
@@ -23,7 +23,7 @@ class MyRecorder extends Player{
         this.sourceNode =   this.audioContext.createMediaElementSource(this.audio);
         this.sourceNode.connect(this.audioContext.destination)        
         
-        this.debug = false
+        this.debug = debug
 
         var self = this
 

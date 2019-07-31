@@ -1,7 +1,7 @@
 class Listen{
-  constructor(person_pk, target_element_selector, content_type, admin=false, editor=false, user_id=null){
+  constructor(person_pk, target_element_selector, content_type, admin=false, editor=false, user_id=null, debug=false){
     var self = this;
-    this.debug = true
+    this.debug = debug
     this.sentence_block = $(target_element_selector)
     this.admin = admin
     this.editor = editor
@@ -27,7 +27,7 @@ class Listen{
     this.quality_control.person = person_pk
     this.error_loop = 0
     this.audio = document.getElementById('play-audio');
-    this.quality_control.content_type = content_type
+    // this.quality_control.content_type = content_type
     $(this.sentence_block).fadeOut(0)
 
     
@@ -114,7 +114,7 @@ class Listen{
     if (self.fetching){ return; }
     self.fetching = true;
     $.ajax({
-      url: ((this.next_url==null) ? this.base_url : this.next_url)+this.url_filter_query,
+      url: ( (this.next_url==null) ? this.base_url + this.url_filter_query : this.next_url),
       error: function(XMLHttpRequest, textStatus, errorThrown){
         self.logger('ERROR fetching recordings')
         self.fetching = false;
@@ -168,6 +168,8 @@ class Listen{
       this.recording = this.objects.shift()
       this.sentence = this.recording.sentence
 
+      this.logger(this.recording)
+      this.logger(this.recording.id)
       if (this.recording.sentence_text == '' || this.recording.sentence_text==null){
         if (this.sentence==null){
           this.recording.sentence_text = 'These arent teh droid your looking for'
@@ -186,14 +188,26 @@ class Listen{
       // Untoggle checks, and also reset their values to default which should be false
       $('.toggle-after-playback').removeClass('checked')
       $('.toggle-after-playback').find('[data-icon=star]').attr('data-prefix', 'far');
+      self.logger('RESETTING QUALITY CONTROL\n')
       $('.toggle-after-playback').each(function(i,o){
+
         if (self.quality_control[$(o).attr('data-key')] != undefined){
-          if ($(o).hasClass('star')){
+          self.logger('Need to reset ' + $(o).attr('data-key'))
+
+          if ($(o).hasClass('star') || $(o).hasClass('good') || $(o).hasClass('bad')){
             self.quality_control[$(o).attr('data-key')] = 0
-          } else{
+          
+          } else if ($(o).hasClass('approve')){
+            self.logger('RESET Approve')
+            self.quality_control[$(o).attr('data-key')] = false
+            self.quality_control.approved_by = null
+          
+          } else {
             self.quality_control[$(o).attr('data-key')] = false
           }
         
+        } else {
+          self.logger('NOT RESETTING ' + $(o).attr('data-key'))
         }
       })
 
@@ -259,6 +273,16 @@ class Listen{
 
       }
       
+      // Load extra info if available
+      $(this.sentence_block).find('.extra-info').empty()
+      if (self.recording.transcription != null){
+        var transcription_elm = $(`<div id='transcription'>Transcription: ${self.recording.transcription}</div>`)
+        $(this.sentence_block).find('.extra-info').append(transcription_elm)
+      }
+      if (self.recording.word_error_rate != null){
+        var wer_elm = $(`<div id='wer'>Word Error Rate: ${self.recording.word_error_rate.toFixed(2)}</div>`)
+        $(this.sentence_block).find('.extra-info').append(wer_elm)
+      }
 
       // $('#play-button').show();
 
@@ -333,7 +357,9 @@ class Listen{
   post_qc(data){
     var self = this
     self.show_loading()
-    this.quality_control.object_id = this.recording.id
+    this.quality_control.recording = this.recording.id
+    self.logger(this.quality_control)
+    self.logger(this.quality_control.recording)
     $.ajax({
       type: "POST",
       data: this.quality_control,
@@ -408,7 +434,7 @@ class Listen{
   post_put(){
     var self = this
     var method = 'POST'
-    this.quality_control.object_id = this.recording.id
+    this.quality_control.recording = this.recording.id
     this.audio.pause()
     if (this.recording.quality_control){
       for (let qc of this.recording.quality_control){
@@ -502,7 +528,7 @@ class Listen{
     }
 
 
-    console.log(self.quality_control['star'])
+    this.logger(self.quality_control['star'])
 
   }
 

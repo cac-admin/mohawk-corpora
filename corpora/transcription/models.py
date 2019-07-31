@@ -5,7 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from corpus.models import QualityControl
+# from corpus.models import QualityControl
+from django.contrib.auth.models import User
+
 from django.contrib.contenttypes.fields import GenericRelation
 
 from django.contrib.postgres.fields import JSONField
@@ -34,6 +36,89 @@ def transcription_directory(instance, filename):
         i,
         filename.split('.')[-1],
         p)
+
+
+class TranscriptionQualityControl(models.Model):
+    good = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is good. Can be any interger >= 0.')
+    bad = models.PositiveIntegerField(
+        default=0,
+        help_text='Indicates the object is bad. Can be any interger >= 0.')
+    approved = models.BooleanField(
+        default=False,
+        help_text='Approved indicates that the object is suitable for use.')
+    approved_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='User that approved the object. Should be a user ID.')
+    trash = models.BooleanField(
+        default=False,
+        help_text='Flag for deletion.')
+    star = models.PositiveIntegerField(
+        default=0,
+        help_text='Stars are to indicate an object is amazing. This is a positive\
+        interger field so we can, for example, do a 5 star rating system.')
+    follow_up = models.BooleanField(
+        default=False,
+        help_text='Flag an item for follow up later.')
+    noise = models.BooleanField(
+        default=False,
+        help_text='Check if an item has noise but is still intelligible.')
+
+    updated = models.DateTimeField(auto_now=True)
+    person = models.ForeignKey(
+        'people.Person',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text="ID of person associated with this QualityControl object.\
+        For Token Authenticated API calls, passing the string 'self' instead\
+        of an Integer will associate the person of the Token with this QC \
+        object.")
+
+    # Move to Recording QC
+    transcription = models.ForeignKey(
+        'transcription.Transcription',
+        null=True,
+        on_delete=models.SET_NULL,)
+
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Field for providing extra information about a review.")
+
+    machine = models.BooleanField(
+        default=False,
+        help_text='Boolean to indicate if a machine made the review.')
+    source = models.ForeignKey(
+        'corpus.Source',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='Used to identify machines.')
+
+    class Meta:
+        unique_together = (("transcription", "person"),)
+        indexes = [
+            # models.Index(fields=['object_id', 'content_type', ]),
+            models.Index(fields=['trash', ]),
+            models.Index(fields=['approved', ]),
+            models.Index(fields=['good', ]),
+            models.Index(fields=['bad', ]),
+            # models.Index(fields=['first_name'], name='first_name_idx'),
+        ]
+
+    def clear(self):
+        self.good = 0
+        self.bad = 0
+        self.approved = False
+        self.approved_by = None
+
+    def __unicode__(self):
+        return u'Transcription QC: {1}'.format(self.transcription.pk)
 
 
 class Transcription(models.Model):
@@ -65,10 +150,10 @@ class Transcription(models.Model):
         on_delete=models.SET_NULL,
         help_text='The source should be the transcription API.')
 
-    quality_control = GenericRelation(
-        QualityControl,
-        related_query_name='transcription'
-        )
+    # quality_control = GenericRelation(
+    #     QualityControl,
+    #     related_query_name='transcription'
+    #     )
 
     transcriber_log = JSONField(
         null=True,
@@ -157,6 +242,13 @@ class TranscriptionSegment(models.Model):
         null=True,
         blank=True)
 
+    no_speech_detected = models.BooleanField(
+        help_text='If we get back an empty string from the ASR, we set this\
+                  flag to True.',
+        default=False)
+
+    updated = models.DateTimeField(auto_now=True)
+
     def save(self, *args, **kwargs):
         if self.corrected_text is None:
             if self.text:
@@ -211,6 +303,15 @@ class AudioFileTranscription(models.Model):
         help_text=_('\
             A Person ID. This field is populated automatically if\
             not provided.'))
+
+    ignore = models.BooleanField(
+        default=False,
+        help_text='Help us find and ignore bad files/uploads.')
+
+    errors = JSONField(
+        help_text='Place to store any error information.',
+        default=None,
+        null=True)
 
     # duration = models.PositiveIntegerField(
     #     blank=True, null=True, editable=False)

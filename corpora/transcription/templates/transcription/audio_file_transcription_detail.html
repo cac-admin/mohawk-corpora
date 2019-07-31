@@ -50,8 +50,8 @@
         <div class="col col-10 col-xs-11 col-lg-9 text" contenteditable="true"
              x-data-model="transcribe_segment"
              x-data-field="corrected_text"
-             x-data="{{segment.corrected_text}}"
-             x-data-id="{{segment.pk}}">{% if segment.corrected_text is not None %}{{segment.corrected_text}}{% endif %}</div>
+             x-data="{% if segment.no_speech_detected %}[no speech detected]{% else %}{{segment.corrected_text}}{% endif %}"
+             x-data-id="{{segment.pk}}">{% if segment.corrected_text is not None %}{{segment.corrected_text}}{% elif segment.no_speech_detected %}[no speech detected]{% endif %}</div>
       </div>
       {% endfor %}
     </div>
@@ -107,11 +107,11 @@
 
 
 class CaptionPlayer{
-  constructor(){
+  constructor(debug=false){
     var self=this;
     this.audioElm = $('.audio audio')[0];  
     this.player = $('div.player');
-    this.debug = true
+    this.debug = debug
 
     $(self.player).find('.play, .pause').on('click', function(event){
       self.toggle_play()
@@ -278,12 +278,10 @@ class TranscriptionSegmentEditor{
       })
     })
 
-    $('.segment .text[x-data="None"]').each(function(index, element){
-      window.setTimeout(function(){
-        self.fetch(element);
-      }, (index+1)*3000)
-    });
-
+    window.setTimeout(()=>{
+      $('.segment .text[x-data="None"]').each(function(index, element){
+        self.fetch(element, false);
+      })}, 2000);
   }
 
   save(element){
@@ -304,16 +302,17 @@ class TranscriptionSegmentEditor{
     })
   }
 
-  fetch(element){
+  fetch(element, sync=true){
     var self=this;
     var id = element.attributes['x-data-id'].value
     var url = '/api/transcription-segment/'+id+'/'
     var this_element = element
     $.ajax({
       url: url,
-      type: "GET",      
+      type: "GET", 
+      sync: sync,
     }).done(function(data){
-      if (data.corrected_text==null){
+      if (data.corrected_text==null && data.transcriber_log.retry){
         window.setTimeout(function(){self.fetch(this_element)}, 3000)
       } else{
         element.innerHTML = data.corrected_text;
@@ -329,13 +328,13 @@ var editor = new TranscriptionSegmentEditor();
 
 
 class TranscriptionPlayer{
-  constructor(){
+  constructor(debug=false){
     this.segments = $('.segments .segment')
     this.currentIndex = 0
     this.audioElm = $('.audio audio')[0];  
     this.offset 
     this.fixed_offset = -300;
-    this.debug = true
+    this.debug = debug
     this.keyMap = {16: false}
     var self = this
 
