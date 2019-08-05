@@ -117,6 +117,7 @@ LANGUAGE_CODE = 'haw'
 
 
 LANGUAGE_DOMAINS = {
+    'dev.olelomaoli.com': 'haw',
     'olelohawaii.com': 'haw',
     'koreromaori.com': 'mi',
     'koreromaori.io': 'mi',
