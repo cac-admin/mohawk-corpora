@@ -113,7 +113,7 @@ ACCENTS = (
 
 )
 
-LANGUAGE_CODE = 'haw'
+LANGUAGE_CODE = 'mi'
 
 
 LANGUAGE_DOMAINS = {
