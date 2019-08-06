@@ -3,7 +3,7 @@
 from django.utils import translation
 from django.conf import settings
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from people.helpers import get_current_language, get_or_create_person
 from people.models import KnownLanguage
 from license.models import SiteLicense, License
@@ -170,6 +170,10 @@ class LicenseMiddleware(object):
             license = License.objects.get(language=active.language)
         except ObjectDoesNotExist:
             license = SiteLicense.objects.get(site=get_current_site(request))
+        except MultipleObjectsReturned:
+            licenses = License.objects.filter(language=active.language)
+            license = licenses[0]
+            logger.error('MORE THAN ONE LICENSE WITH SAME LANGUAGE!')
         request.license = license
 
         response = self.get_response(request)
