@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from corpora.base_settings import *
 import os
 
 SITE_ID = 2
