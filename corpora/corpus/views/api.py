@@ -237,7 +237,7 @@ class SentencesView(generics.ListCreateAPIView):
 
         person = get_person(self.request)
         language = get_current_language(self.request)
-        queryset = Sentence.objects.filter(language=get_current_language)\
+        queryset = Sentence.objects.filter(language=language)\
             .order_by('quality_control__approved', 'quality_control__updated')
 
 
