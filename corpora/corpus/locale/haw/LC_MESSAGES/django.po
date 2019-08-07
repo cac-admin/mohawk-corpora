@@ -31,7 +31,7 @@ msgstr "minuke"
 
 #: corpus/base_settings.py:57
 msgid "Maori"
-msgstr "Kōrero Māori"
+msgstr "te reo Māori"
 
 #: corpus/base_settings.py:58
 msgid "Hawaiian"

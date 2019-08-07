@@ -40,7 +40,7 @@ msgstr ""
 
 #: corpora/templates/corpora/footer.html:45
 msgid "Record"
-msgstr "ʻŌlelo"
+msgstr "E Leo"
 
 #: corpora/templates/corpora/footer.html:46
 #: corpora/templates/corpora/logged_in_nav_buttons.html:33
@@ -57,7 +57,7 @@ msgstr ""
 
 #: corpora/templates/corpora/footer.html:52
 msgid "Wānanga"
-msgstr ""
+msgstr "Hui"
 
 #: corpora/templates/corpora/footer.html:54
 msgid "Supporters"
