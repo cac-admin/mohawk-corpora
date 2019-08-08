@@ -21,7 +21,7 @@ RUN mkdir /webapp/run/
 # Copy files over
 COPY corpora /webapp/corpora/corpora
 COPY requirements.txt /webapp/corpora/
-
+COPY entry.sh /webapp/corpora/
 
 # Install any needed packages specified in requirements.txt
 WORKDIR /webapp/corpora/
@@ -32,4 +32,4 @@ RUN pip install -r requirements.txt
 RUN pip install pydub webrtcvad
 
 # Make port 80 available to the world outside this container
-EXPOSE 80
+# EXPOSE 80
