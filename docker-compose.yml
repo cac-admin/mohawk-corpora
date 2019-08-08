@@ -28,16 +28,16 @@ services:
     command: >
       bash -c "python /webapp/corpora/corpora/manage.py compilemessages
       && python /webapp/corpora/corpora/manage.py migrate --noinput
-      && python /webapp/corpora/corpora/manage.py bower_install --allow-root
       && python /webapp/corpora/corpora/manage.py collectstatic --clear --noinput 
-      && python /webapp/corpora/corpora/manage.py shell -c \"from django.db import DEFAULT_DB_ALIAS as database; from django.contrib import auth; model = auth.get_user_model(); model.objects.db_manager(database).create_superuser('docker','docker@email.com', 'password')\"
-      && python /webapp/corpora/corpora/manage.py loaddata /webapp/corpora/corpora/people/fixtures/iwi.yaml"
+      && python /webapp/corpora/corpora/manage.py loaddata /webapp/corpora/corpora/people/fixtures/iwi.yaml
+      && python /webapp/corpora/corpora/manage.py shell -c \"from django.db import DEFAULT_DB_ALIAS as database; from django.contrib import auth; model = auth.get_user_model(); model.objects.db_manager(database).create_superuser('docker','docker@email.com', 'password')\""
     depends_on:
       - db
     env_file: local.env 
   db:
-    image: postgres
-    restart: always
+    build: ./postgres
+    # image: postgres
+    # restart: always
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: corpora
@@ -66,3 +66,4 @@ volumes:
   static_volume:
   media_volume:
 
+# && python /webapp/corpora/corpora/manage.py bower_install --allow-root
