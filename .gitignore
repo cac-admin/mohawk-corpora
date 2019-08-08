@@ -52,7 +52,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-*.mo
+*django.mo
 
 # IPython Notebook
 .ipynb_checkpoints
