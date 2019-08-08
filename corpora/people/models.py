@@ -30,6 +30,8 @@ class Tribe(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
 
 class Group(models.Model):
     name = models.CharField(
@@ -52,6 +54,9 @@ class Group(models.Model):
         default=0, blank=True, editable=False)
 
     def __unicode__(self):
+        return self.name
+
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -182,6 +187,9 @@ class Person(models.Model):
         ]
 
     def __unicode__(self):
+        return self.full_name
+
+    def __str__(self):
         return self.full_name
 
 
