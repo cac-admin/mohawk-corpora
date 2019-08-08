@@ -6,6 +6,11 @@ RUN apt-get update && \
     apt-get -y install gcc
 RUN apt-get -y install ffmpeg
 
+# Bower stuff, which we need to get rid of
+RUN apt-get -y install git
+RUN apt-get -y install npm
+RUN npm install -g bower 
+
 # Required for compilemessages in django
 RUN apt-get -y install gettext
 
