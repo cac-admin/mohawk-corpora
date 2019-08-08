@@ -9,7 +9,6 @@ services:
       - static_volume:/webapp/public/static
       - media_volume:/webapp/public/media
     working_dir: /webapp/corpora/corpora/
-    #command: python /webapp/corpora/corpora/manage.py runserver 0.0.0.0:8000
     command: gunicorn --name corpora --max-requests 3 --log-level=debug --bind=0.0.0.0:8000 corpora.wsgi:application
     depends_on:
       - initialise
@@ -20,7 +19,6 @@ services:
       - db
       - memcached
       - rabbitmq
-
   initialise:
     build: .
     image: corpora
@@ -68,13 +66,3 @@ volumes:
   static_volume:
   media_volume:
 
-
-
-
-#
-# We need a management command to create super user so we can handle the error if su already exists
-# && python /webapp/corpora/corpora/manage.py shell -c \"from django.db import DEFAULT_DB_ALIAS as database; from django.contrib import auth; model = auth.get_user_model(); model.objects.db_manager(database).create_superuser('docker','docker@email.com', 'password')\"
-# && python /webapp/corpora/corpora/manage.py bower_install --allow-root
-# && python /webapp/corpora/corpora/manage.py collectstatic --clear --noinput
-# 
-#      && python /webapp/corpora/corpora/manage.py loaddata /webapp/corpora/corpora/people/fixtures/iwi.yaml
