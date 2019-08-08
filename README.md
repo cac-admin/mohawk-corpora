@@ -11,8 +11,7 @@ other technologies can work in te reo Māori, ʻōlelo Hawaiʻi, and other indig
 You can help us add more languages by translating this app. The current project is live at https://koreromaori.com/. If you'd like to lead a copora gathering campaign for your language, get in touch as we'd love to help.
 
 # Getting Started
-We're working on porting local development to Docker. Please checkout the `docker` branch. You
-must have docker installed for this to work.
+We're working on porting local development to Docker. Please checkout the `docker` branch. You must have docker installed for this to work.
 
 Theoretically all you need to do is:
 ```bash
@@ -21,6 +20,7 @@ cd corpora
 git checkout docker
 docker-compose up
 ```
+Then visit https://localhost:8002/ to access the Django site. You'll need to login and create some things, https://localhost:8002/admin, the default username and passwords are `docker` and `password` respectively. In particular, you'll want to add a License, https://localhost:8002/admin/license/license/add/, and associate that with a Django Site, https://localhost:8002/admin/license/sitelicense/add/. The license will show up when users start to record. How and why we collect data is essential to this project. See the "License: Kaitiakitanga" below.
 
 # Kōrero Māori
 Kōrero Māori is the project that's funding the build of corpora. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker audio recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
