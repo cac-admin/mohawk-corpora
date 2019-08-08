@@ -15,9 +15,12 @@ We're working on porting local development to Docker. Please checkout the `docke
 must have docker installed for this to work.
 
 Theoretically all you need to do is:
-1. git clone https://github.com/TeHikuMedia/corpora.git
-2. git checkout docker
-3. docker-compose up
+```bash
+git clone https://github.com/TeHikuMedia/corpora.git
+cd corpora
+git checkout docker
+docker-compose up
+```
 
 # Kōrero Māori
 Kōrero Māori is the project that's funding the build of corpora. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker audio recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
