@@ -20,7 +20,13 @@ cd corpora
 git checkout docker
 docker-compose up
 ```
-Then visit https://localhost:8002/ to access the Django site. You'll need to login and create some things, https://localhost:8002/admin, the default username and passwords are `docker` and `password` respectively. In particular, you'll want to add a License, https://localhost:8002/admin/license/license/add/, and associate that with a Django Site, https://localhost:8002/admin/license/sitelicense/add/. The license will show up when users start to record. How and why we collect data is essential to this project. See the "License: Kaitiakitanga" below.
+Then visit https://localhost:8002/ to access the Django site. You'll need to login and create some things in the databse to get started.
+
+1. https://localhost:8002/admin, the default username and passwords are `docker` and `password` respectively.
+2. In particular, you'll want to add a License, https://localhost:8002/admin/license/license/add/,
+3. and associate that with a Django Site, https://localhost:8002/admin/license/sitelicense/add/. 
+
+The license will show up when users start to record. How and why we collect data is essential to this project. See the "License: Kaitiakitanga" below.
 
 # Kōrero Māori
 Kōrero Māori is the project that's funding the build of corpora. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker audio recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
