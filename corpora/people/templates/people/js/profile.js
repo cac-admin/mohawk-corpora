@@ -95,6 +95,12 @@ class Profile{
     });
     
 
+    $(this.target_element).find('.select2-selection').on('blur', function(){
+      self.change_counter += 1
+      self.logger('counter = '+self.change_counter)
+      self.logger('Chagned')
+      self.save()
+    });
 
 
     var elem = '<div class="alert " role="alert"></div>'
