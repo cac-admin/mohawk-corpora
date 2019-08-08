@@ -38,7 +38,7 @@ EXTRA_LANG_INFO = {
 }
 
 LANG_INFO = \
-    dict(django.conf.locale.LANG_INFO.items() + EXTRA_LANG_INFO.items())
+    {**django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO}
 
 # update the language info
 django.conf.locale.LANG_INFO = LANG_INFO
@@ -127,4 +127,5 @@ LANGUAGE_DOMAINS = {
     'corporalocal.nz': 'mi',
     'corporalocal.io': 'mi',
     'corpora.com': 'en_NZ',
+    'corporadocker.nz': 'mi',
 }

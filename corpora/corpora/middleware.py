@@ -11,7 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from corpus.base_settings import LANGUAGE_DOMAINS
 
-from urlparse import parse_qs
+from urllib.parse import parse_qs
 
 from uuid import uuid4 as uuid
 
@@ -111,10 +111,10 @@ class LanguageMiddleware(object):
         # the view (and later middleware) are called.
 
         set_cookie = False
-        if request.COOKIES.has_key(settings.LANGUAGE_COOKIE_NAME):
+        if settings.LANGUAGE_COOKIE_NAME in request.COOKIES:
             language = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
         elif hasattr(request, 'user'):
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 current_language = get_current_language(request)
                 if current_language:
                     set_cookie = True
@@ -123,7 +123,10 @@ class LanguageMiddleware(object):
             # Choose a language ebased on the host domainname
             domain = request.META['SERVER_NAME']
             
-            language = LANGUAGE_DOMAINS[domain]
+            try:
+                language = LANGUAGE_DOMAINS[domain]
+            except KeyError:
+                language = settings.LANGUAGE_CODE
 
             logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
             # language = translation.get_language()
@@ -164,17 +167,20 @@ class LicenseMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        person = get_or_create_person(request)
         try:
-            active = KnownLanguage.objects.get(active=True, person=person)
-            license = License.objects.get(language=active.language)
-        except ObjectDoesNotExist:
-            license = SiteLicense.objects.get(site=get_current_site(request))
-        except MultipleObjectsReturned:
-            licenses = License.objects.filter(language=active.language)
-            license = licenses[0]
-            logger.error('MORE THAN ONE LICENSE WITH SAME LANGUAGE!')
-        request.license = license
+            person = get_or_create_person(request)
+            try:
+                active = KnownLanguage.objects.get(active=True, person=person)
+                license = License.objects.get(language=active.language)
+            except ObjectDoesNotExist:
+                license = SiteLicense.objects.get(site=get_current_site(request))
+            except MultipleObjectsReturned:
+                licenses = License.objects.filter(language=active.language)
+                license = licenses[0]
+                logger.error('MORE THAN ONE LICENSE WITH SAME LANGUAGE!')
+            request.license = license
+        except Exception as e:
+            request.license = None
 
         response = self.get_response(request)
 

@@ -83,7 +83,7 @@ class GroupsForm(forms.ModelForm):
         request = kwargs.pop('request')
         super(GroupsForm, self).__init__(*args, **kwargs)
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             self.fields['groups'].help_text = \
                 "If you can't find your group, log in or sign up to create " \
                 "a new one."

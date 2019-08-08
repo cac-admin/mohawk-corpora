@@ -129,7 +129,8 @@ class Transcription(models.Model):
     '''
 
     recording = models.ForeignKey(
-        'corpus.Recording')
+        'corpus.Recording',
+        on_delete=models.CASCADE)
 
     text = models.CharField(
         help_text='The initial transcribed text',
@@ -300,6 +301,7 @@ class AudioFileTranscription(models.Model):
         'people.Person',
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
         help_text=_('\
             A Person ID. This field is populated automatically if\
             not provided.'))

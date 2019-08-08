@@ -11,8 +11,11 @@ def license(request):
         active = KnownLanguage.objects.get(active=True, person=person)
         license = License.objects.get(language=active.language)
     except ObjectDoesNotExist:
-        sl = SiteLicense.objects.get(site=get_current_site(request))
-        license = sl.license
+        try:
+            sl = SiteLicense.objects.get(site=get_current_site(request))
+            license = sl.license
+        except:
+            license = None
     except:
         license = None
     if license:

@@ -26,7 +26,7 @@ import wave
 import contextlib
 import os
 import stat
-import commands
+import subprocess
 import ast
 import sys
 
@@ -256,7 +256,9 @@ def encode_audio(recording, test=False, codec='aac'):
     # If a video doesn't have audio this will fail.
     command = 'ffprobe -v quiet -show_entries stream -print_format json ' + \
               tmp_file
-    data = ast.literal_eval(commands.getoutput(command))
+    p = subprocess.Popen(command.split(' '))
+    output, error = p.communicate()
+    data = ast.literal_eval(output)
     streams = data['streams']
 
     audio = False
@@ -267,12 +269,17 @@ def encode_audio(recording, test=False, codec='aac'):
     if audio:
         file_name = recording.get_recording_file_name()
 
-        code = \
-            "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}".format(
-                tmp_file)
+        command = \
+            "ffprobe -v quiet -print_format json -show_format -show_streams {0}".format(tmp_file)
 
-        data = commands.getstatusoutput(code)
-        recording.duration = float(data[1])
+        p = subprocess.Popen(
+            command.split(' '),
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
+        output, errors = p.communicate()
+        data = json.loads(output)
+
+        recording.duration = float(data['format']['duration'])
 
         for codec in codec_list:
 
@@ -290,8 +297,9 @@ def encode_audio(recording, test=False, codec='aac'):
                     tmp_file, codecs[codec][0], tmp_stor_dir, file_name, extension)
 
             logger.debug('Running: '+code)
-            data = commands.getstatusoutput(code)
-            logger.debug(data[1])
+            p = subprocess.Popen(code.split(' '))
+            output, error = p.communicate()
+            logger.debug(output)
 
             logger.debug(u'FILE FILENAME: \t{0}'.format(file_name))
             if file_name is None:
@@ -310,17 +318,20 @@ def encode_audio(recording, test=False, codec='aac'):
 
             code = 'rm '+tmp_stor_dir+'/{0}.{1}'.format(file_name, extension)
             logger.debug('Running: '+code)
-            data = commands.getstatusoutput(code)
-            logger.debug(data[1])
+            p = subprocess.Popen(code.split(' '))
+            output, error = p.communicate()
+            logger.debug(output)
 
     if not audio:
         logger.debug('No audio stream found.')
         return False
 
-    data = commands.getstatusoutput('rm ' + tmp_file)
+    p = subprocess.Popen(['rm', tmp_file])
+    p.communicate()
     logger.debug('Removed tmp file %s' % (tmp_file))
 
-    data = commands.getstatusoutput('rm -r ' + tmp_stor_dir)
+    p = subprocess.Popen(['rm', '-r', tmp_stor_dir])
+    p.communicate()
     logger.debug('Removed tmp stor dir %s' % (tmp_stor_dir))
 
     set_s3_content_deposition(recording)

@@ -24,9 +24,9 @@ from django.core.cache import cache
 #             content_type=ContentType.objects.get_for_model(instance)
 #         )
 #     if created:
-#         print "Created QC object {0}".format(qc.pk)
+#         print("Created QC object {0}".format(qc.pk))
 #     else:
-#         print "QC object {0} exists".format(qc.pk)
+#         print("QC object {0} exists".format(qc.pk))
 
 
 @receiver(models.signals.pre_save, sender=Sentence)
@@ -45,7 +45,7 @@ def clear_quality_control_instance_when_object_modified(
                     )
                 qcs.delete()
                 # for qc in qcs:
-                #     print "Clearing quality control"
+                #     print("Clearing quality control")
                 #     qc.delete()
 
         except ObjectDoesNotExist:
@@ -87,7 +87,7 @@ def split_sentence_when_period_in_sentence(sender, instance, **kwargs):
             new_sentence = Sentence.objects.create(
                 text=parts[i]+'.',
                 language=instance.language)
-            print "Created {0}".format(new_sentence)
+            print("Created {0}".format(new_sentence))
 
 
 # @receiver(models.signals.pre_save, sender=Sentence)

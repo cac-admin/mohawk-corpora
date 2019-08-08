@@ -59,7 +59,7 @@ class SentenceListView(
         context = super(SentenceListView, self).get_context_data(**kwargs)
         user = self.request.user
         person = get_person(self.request)
-        user.can_approve = user.is_staff and user.is_authenticated()
+        user.can_approve = user.is_staff and user.is_authenticated
         ct = ContentType.objects.get(model='sentence')
         context['content_type'] = ct.id
         context['user'] = user
@@ -98,7 +98,7 @@ class RecordView(
 def record(request):
     # Get the person object from the user
 
-    # if not request.user.is_authenticated():
+    # if not request.user.is_authenticated:
     # return redirect(reverse('account_login'))
 
     person = get_or_create_person(request)
@@ -155,7 +155,7 @@ def record(request):
     # Load up the page normally with request and object context
 
     request.user.can_approve = request.user.is_staff and \
-        request.user.is_authenticated()
+        request.user.is_authenticated
 
     ct = ContentType.objects.get(model='sentence')
 
@@ -216,7 +216,7 @@ class RecordingFileView(RedirectView):
         logger.debug(access)
 
         url = ''
-        if (u.is_authenticated() and u.is_staff) or (p == m.person) or (access):
+        if (u.is_authenticated and u.is_staff) or (p == m.person) or (access):
             try:
                 url = audio_file.path
                 url = audio_file.url
@@ -356,7 +356,7 @@ the quality of recordings we use.')
         ct = ContentType.objects.get(model='recording')
         user.can_review = False
         user.can_approve = False
-        if user.is_staff and user.is_authenticated():
+        if user.is_staff and user.is_authenticated:
             user.can_approve = True
         elif user.has_perms([
                 'corpus.add_recording',

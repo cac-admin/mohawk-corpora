@@ -47,7 +47,7 @@ def get_textfile_contents(file_obj):
     contents = file_obj.read()
 
     # convert to unicode if it's a plain str
-    if not isinstance(contents, unicode):  # NOQA ignore F821
+    if not isinstance(contents, str):  # NOQA ignore F821
         contents = codecs.decode(contents, 'utf-8')
 
     return contents
@@ -61,7 +61,7 @@ def get_sentences(text):
     # for sentence in nltk.sent_tokenize(text):
 
     # assume all linebreaks denote end of sentence
-    for line in map(unicode.strip, text.splitlines()):
+    for line in map(str.strip, text.splitlines()):
         if not line or line.startswith('# '):
             continue
         line = line.replace('Mr.', 'Mika')

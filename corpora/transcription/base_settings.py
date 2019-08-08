@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-FILE_UPLOAD_PERMISSIONS = 0644
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # So, we can get to a LB externally but not internally.
 # This if for public access to the LB

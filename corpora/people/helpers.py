@@ -161,7 +161,10 @@ def get_current_language(request):
 
         domain = request.META['SERVER_NAME']
             
-        language = LANGUAGE_DOMAINS[domain]
+        try:
+            language = LANGUAGE_DOMAINS[domain]
+        except KeyError:
+            language = settings.LANGUAGE_CODE
 
         logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
 

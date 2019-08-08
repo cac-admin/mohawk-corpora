@@ -500,7 +500,10 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             # new DB query lets be clever an use a cache. We'll need to get
             # the most recent recording that was served however...
             query_cache_key = '{0}:{1}:recording-viewset'.format(person.uuid, language)
-            pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            try:
+                pk = get_random_pk_from_queryset(queryset, query_cache_key)
+            except IndexError:
+                return []
             return [Recording.objects.get(pk=pk)]
 
         updated_after = self.request.query_params.get('updated_after', None)
@@ -729,6 +732,8 @@ def get_random_pk_from_queryset(queryset, cache_key):
             i = random.randint(0, len(pks) - 1)
             queryset_cache.append(pks.pop(i))
 
+    if len(queryset_cache) == 0:
+        raise IndexError('No items in list cache')
     pk = queryset_cache.pop()
     cache.set(queryset_cache_key, queryset_cache, 60*5)
 

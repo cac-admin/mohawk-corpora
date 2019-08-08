@@ -29,11 +29,9 @@ import wave
 import contextlib
 import os
 import stat
-import commands
 import ast
 import sys
 import requests
-import urllib2
 import json
 import uuid
 from subprocess import Popen, PIPE

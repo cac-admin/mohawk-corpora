@@ -37,6 +37,8 @@ class License(models.Model):
     def __unicode__(self):
         return self.license_name
 
+    def __str__(self):
+        return self.license_name
 
 class AcceptLicense(models.Model):
     license = models.ManyToManyField(License)
@@ -51,5 +53,13 @@ class AcceptLicense(models.Model):
 
 
 class SiteLicense(models.Model):
-    site = models.OneToOneField(Site, default=settings.SITE_ID)
-    license = models.ForeignKey(License, null=True)
+    site = models.OneToOneField(
+        Site,
+        default=settings.SITE_ID,
+        on_delete=models.CASCADE)
+    license = models.ForeignKey(
+        License,
+        null=True,
+        on_delete=models.CASCADE
+    )
+
