@@ -1,6 +1,6 @@
 # pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
 
-Django==1.11.22
+Django>=1.11.22
 boto
 boto3
 Pillow
@@ -13,12 +13,13 @@ libsass
 # django-compressor-toolkit
 django-sekizai
 gunicorn
-psycopg2
+#psycopg2
+psycopg2-binary
 pycrypto
 pytz
 django-storages
 django-bower
-django-yarn
+# django-yarn
 
 # Better static files stuff with CDNs
 # whitenoise - mneed to look at django static files stuff
@@ -36,9 +37,9 @@ django-ckeditor
 simplejson
 
 # Search
-django-haystack
-pysolr
-celery-haystack
+#django-haystack
+#pysolr
+#celery-haystack
 
 # Bindings for Memchaced
 pylibmc
@@ -53,7 +54,7 @@ lxml
 premailer
 
 # API
-djangorestframework
+djangorestframework==3.8.2
 # API Docs
 django-coreapi
 pygments
