@@ -61,7 +61,7 @@ pygments
 markdown==2.6.11 # set to this version until DRF supports 3.0
 
 # Autocomplete
-django-autocomplete-light==3.2.10
+django-autocomplete-light==3.3.5
 
 #Support
 pyyaml
