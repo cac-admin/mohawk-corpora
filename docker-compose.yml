@@ -61,4 +61,3 @@ volumes:
   static_volume:
   media_volume:
 
-# && python /webapp/corpora/corpora/manage.py bower_install --allow-root
