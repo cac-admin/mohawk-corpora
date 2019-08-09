@@ -1,5 +1,36 @@
 version: '3.7'
 services:
+  flower:
+    image: corpora
+    depends_on:
+      - initialise
+      - rabbitmq
+    env_file: local.env
+    working_dir: /webapp/corpora/corpora/
+    command: celery -A corpora flower --persistent=False --max_tasks=1000
+    expose:
+      - 5555
+    ports:
+      - 5555:5555
+    volumes:
+      - .:/webapp/corpora/
+      - logs_volume:/webapp/logs/
+  celery:
+    image: corpora
+    depends_on:
+      - initialise
+      - rabbitmq
+    env_file: local.env
+    working_dir: /webapp/corpora/corpora/
+    command: >
+      celery 
+      -A corpora  
+      -Q celery worker 
+      -l info 
+      -n worker.corpora.%h
+    volumes:
+      - .:/webapp/corpora/
+      - logs_volume:/webapp/logs/
   web:
     image: corpora
     expose:
@@ -8,6 +39,7 @@ services:
       - .:/webapp/corpora/
       - static_volume:/webapp/public/static
       - media_volume:/webapp/public/media
+      - logs_volume:/webapp/logs/
     working_dir: /webapp/corpora/corpora/
     command: gunicorn --name corpora --max-requests 3 --log-level=debug --bind=0.0.0.0:8000 corpora.wsgi:application
     depends_on:
@@ -53,6 +85,7 @@ services:
     volumes:
       - static_volume:/webapp/public/static
       - media_volume:/webapp/public/media
+      - logs_volume:/webapp/logs/
     ports:
       - 8001:80
       - 8002:443
@@ -60,4 +93,4 @@ services:
 volumes:
   static_volume:
   media_volume:
-
+  logs_volume:
