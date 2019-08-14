@@ -69,12 +69,10 @@ class TranscriptionPermissions(permissions.BasePermission):
 
 class TranscriptionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows transcriptions to be viewed or edited.
-
-    This api provides acces to a audio_file_url field. This allows the retrival
-    of an audio file in the m4a container with the aac audio codec. To retrieve
-    an audio file in the wave format at 16kHz and 16bits, append the query
-    ?format=wav to the url given by the audio_file_url field.
+    This API Endpoint is for the automatic transcriptions of recordings
+    that the backend does. This helps us more efficiently review
+    recordings based on their word error rate calculated from the
+    transcription.
     """
 
     # TODO: Allow someone to get a list of ALL of their transcriptions.
@@ -83,13 +81,6 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
     serializer_class = TranscriptionSerializer
     permission_classes = (TranscriptionPermissions,)
     pagination_class = TenResultPagination
-
-    def get_queryset(self):
-        person = get_person(self.request)
-        queryset = AudioFileTranscription.objects\
-            .filter(uploaded_by=person)
-
-        return queryset
 
 
 class TranscriptionSegmentPermissions(permissions.BasePermission):

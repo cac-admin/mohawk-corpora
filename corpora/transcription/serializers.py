@@ -65,15 +65,16 @@ class TranscriptionSerializer(serializers.ModelSerializer):
         many=False,
         read_only=False
     )
-    quality_control = TranscriptionQualityControRelatedField(
-        many=True,
-        read_only=True,
-    )
+    # Don't think we're using this are we?
+    # quality_control = TranscriptionQualityControRelatedField(
+    #     many=True,
+    #     read_only=True,
+    # )
 
     class Meta:
         model = Transcription
-        fields = ('recording', 'text', 'corrected_text', 'quality_control',
-                  'id', 'source', 'updated')
+        fields = ('recording', 'text', 'corrected_text',
+                  'id', 'source', 'updated', 'transcriber_log')
 
 
 class TranscriptionSegmentSerializer(serializers.ModelSerializer):
