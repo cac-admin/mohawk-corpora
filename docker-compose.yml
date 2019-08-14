@@ -1,5 +1,6 @@
 version: '3.7'
 services:
+  # TODO: Add celery-beat service.
   flower:
     image: corpora
     depends_on:
