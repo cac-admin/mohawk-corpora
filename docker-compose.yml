@@ -54,7 +54,7 @@ services:
       - rabbitmq
   initialise:
     build: .
-    image: corpora
+    image: "tehiku/corpora:local-dev"
     volumes:
       - .:/webapp/corpora/
     working_dir: /webapp/corpora/corpora/
