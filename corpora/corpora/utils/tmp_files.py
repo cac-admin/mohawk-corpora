@@ -125,7 +125,7 @@ lets hope this is okay".format(tmp_file))
     else:
         code = ['cp', file_path, tmp_file]
 
-    p = Popen.communicate(code)
+    p = Popen(code)
     result, error = p.communicate()
 
     # Turn this off as it's too much output
