@@ -42,6 +42,8 @@ import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
+from corpus.tasks import encode_audio
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -202,6 +204,11 @@ class RecordingFileView(RedirectView):
         if f in 'wav':
             if m.audio_file_wav:
                 audio_file = m.audio_file_wav
+            else:
+                # Let's try to create the wave file
+                result = encode_audio(m)
+                if m.audio_file_wav:
+                    audio_file = m.audio_file_wav
         else:
             if m.audio_file_aac:
                 audio_file = m.audio_file_aac
@@ -218,6 +225,8 @@ class RecordingFileView(RedirectView):
 
         url = ''
         if (u.is_authenticated and u.is_staff) or (p == m.person) or (access):
+            
+            # This code in mental!
             try:
                 url = audio_file.path
                 url = audio_file.url
@@ -230,6 +239,8 @@ class RecordingFileView(RedirectView):
             logger.debug(url)
             if url:
                 if rType:
+                    if 'http' not in url:
+                        pass
                     return http.HttpResponse(
                         json.dumps({'url': url}),
                         content_type="application/json")
