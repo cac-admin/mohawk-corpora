@@ -67,7 +67,8 @@ class TranscriptionSerializer(serializers.ModelSerializer):
         fields = (
             'recording', 'text', 'corrected_text',
             'id', 'source', 'updated',
-            'transcriber_log', 'word_error_rate' )
+            'transcriber_log', 'word_error_rate',
+            'words', 'metadata')
 
 
 class TranscriptionSegmentSerializer(serializers.ModelSerializer):

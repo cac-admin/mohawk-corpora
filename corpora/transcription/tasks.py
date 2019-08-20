@@ -22,7 +22,8 @@ from transcription.utils import \
     create_and_return_transcription_segments, check_to_transcribe_segment
 
 from transcription.transcribe import \
-    transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async
+    transcribe_audio_sphinx, transcribe_segment_async, transcribe_aft_async, \
+    calculate_word_probabilities
 
 from django.utils import timezone
 from django.core.files import File
@@ -233,6 +234,12 @@ def transcribe_recording(pk):
                     original,
                     transcription.text,
                     recording.language)
+
+            # Store metadata
+            transcription.metadata = result['metadata']
+
+            # Calc and store word probabilities
+            transcription.words = calculate_word_probabilities(transcription.metadata)
 
             transcription.save()
             dt = timezone.now() - start
