@@ -329,8 +329,8 @@ class RecordingPermissions(permissions.BasePermission):
             self.message = _("Only staff can read recordings.")
             if request.user.is_staff:
                 person = get_person(request)
-                cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
-                logger.debug('SET KEY '+'{0}:{0}:listen'.format(person.uuid, obj.id))
+                cache.set('{0}:{1}:listen'.format(person.uuid, obj.id), True, 15)
+                logger.debug('SET KEY '+'{0}:{1}:listen'.format(person.uuid, obj.id))
                 return True
             elif person is not None:
                 # Allow people to get their own recordings.
