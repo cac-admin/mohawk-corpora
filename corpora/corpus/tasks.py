@@ -166,7 +166,6 @@ def set_all_recording_md5():
 
 @shared_task
 def transcode_audio(recording_pk):
-    logger.debug('EXECUTING TRANSCRODE_AUDIO {0}'.format(recording_pk))
     try:
         recording = Recording.objects.get(pk=recording_pk)
     except ObjectDoesNotExist:
@@ -176,17 +175,14 @@ def transcode_audio(recording_pk):
         recording.pk, recording.audio_file.name)
 
     is_running = cache.get(key, False)
-    logger.debug("ISRUNNING? {0}".format(is_running))
     result = ''
     if not is_running:
-        logger.debug('FIRST RUN ENCODE {0}'.format(recording_pk))
         codecs = []
         if not recording.audio_file_aac:
             codecs.append('aac')
         if not recording.audio_file_wav:
             codecs.append('wav')
 
-        logger.debug('CREATING {0}'.format(codecs))
         if len(codecs) >= 1:
             is_running = cache.set(key, True, 60)
             result = encode_audio(recording, codec=codecs)
@@ -283,7 +279,7 @@ def encode_audio(recording, test=False, codec='aac'):
                 try:
                     recording.audio_file_wav.save(
                         file_name+'.'+'wav',
-                        File(open(M.versions['wav']['file_path', 'rb'])))
+                        File(open(M.versions['wav']['file_path'], 'rb')))
                 except Exception as e:
                     logger.error(e)
             logger.debug(M.versions)

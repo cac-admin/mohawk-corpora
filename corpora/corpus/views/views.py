@@ -42,8 +42,6 @@ import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
-from corpus.tasks import encode_audio
-
 import logging
 logger = logging.getLogger('corpora')
 
@@ -206,6 +204,7 @@ class RecordingFileView(RedirectView):
                 audio_file = m.audio_file_wav
             else:
                 # Let's try to create the wave file
+                from corpus.tasks import encode_audio
                 result = encode_audio(m, codec='wav')
                 if m.audio_file_wav:
                     audio_file = m.audio_file_wav
@@ -235,7 +234,8 @@ class RecordingFileView(RedirectView):
                     url = self.get_redirect_url(filepath=audio_file.name)
                 except:
                     url = audio_file.url
-
+            if 'http' not in url:
+                url = 'https://'+ request.META['HTTP_HOST']+ url
             logger.debug(url)
             if url:
                 if rType:

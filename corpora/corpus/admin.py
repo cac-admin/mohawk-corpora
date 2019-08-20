@@ -144,6 +144,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'duration',
         'audio_file',
         'audio_file_aac',
+        'audio_file_wav',
         'audio_file_admin',
         'updated',
         'created',
@@ -206,7 +207,7 @@ class RecordingAdmin(admin.ModelAdmin):
     def encode_audio(self, request, queryset):
         for obj in queryset:
             transcode_audio.apply_async(
-                    args=[obj.pk],
+                    args=[obj.pk, ],
                     task_id='transcode_audio-{0}-{1}'.format(
                         obj.pk,
                         time.strftime('%d%m%y%H%M%S'))
