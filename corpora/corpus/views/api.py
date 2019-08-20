@@ -395,6 +395,16 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     ### Query Parameters
     The following query parameters are implemented.
 
+    - `sort_by`: A number of sorting options are provided.
+
+        The following will exclude Recordings that have one or more reviews.
+        
+        - `listen`, `random`, `recent`, `wer`, `-wer
+
+        These will not exclude results
+
+        - `num_approved`, `-num_approved`
+
     - `updated_after`
 
         Get recording objects that were updated after the provided datetime.
@@ -557,6 +567,23 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 value = parts[1]
                 if filt == 'sentence':
                     queryset = queryset.filter(sentence__pk=value)
+
+        if sort_by in ['num_approved', '-num_approved']:
+            queryset = queryset.annotate(num_approved=Sum(
+                Case(
+                    When(
+                        quality_control__approved=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__approved=False,
+                        then=Value(0)),
+                    When(
+                        quality_control__isnull=True,
+                        then=Value(0)),
+                    default=Value(0),
+                    output_field=IntegerField())
+            ))
+            queryset = queryset.order_by(sort_by)
 
         return queryset
 
