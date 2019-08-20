@@ -13,7 +13,7 @@ from people.helpers import get_person
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 
-from corpus.views.api import TenResultPagination
+from corpus.views.api import TenResultPagination, OneHundredResultPagination
 
 from transcription.utils import build_vtt, compile_aft
 from transcription.transcribe import transcribe_segment
@@ -70,11 +70,6 @@ class TranscriptionPermissions(permissions.BasePermission):
 class TranscriptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows transcriptions to be viewed or edited.
-
-    This api provides acces to a audio_file_url field. This allows the retrival
-    of an audio file in the m4a container with the aac audio codec. To retrieve
-    an audio file in the wave format at 16kHz and 16bits, append the query
-    ?format=wav to the url given by the audio_file_url field.
     """
 
     # TODO: Allow someone to get a list of ALL of their transcriptions.
@@ -82,14 +77,14 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
     queryset = Transcription.objects.all()
     serializer_class = TranscriptionSerializer
     permission_classes = (TranscriptionPermissions,)
-    pagination_class = TenResultPagination
+    pagination_class = OneHundredResultPagination
 
-    def get_queryset(self):
-        person = get_person(self.request)
-        queryset = AudioFileTranscription.objects\
-            .filter(uploaded_by=person)
+    # def get_queryset(self):
+    #     person = get_person(self.request)
+    #     queryset = AudioFileTranscription.objects\
+    #         .filter(uploaded_by=person)
 
-        return queryset
+    #     return queryset
 
 
 class TranscriptionSegmentPermissions(permissions.BasePermission):
