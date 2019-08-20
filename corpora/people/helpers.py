@@ -23,6 +23,7 @@ def get_or_create_person(request):
         try:
             token_auth = TokenAuthentication()
             user, token = token_auth.authenticate(request)
+            logger.debug('get user from token, {0} {1}'.format(user, token))
         except:
             pass
 

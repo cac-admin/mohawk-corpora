@@ -212,7 +212,8 @@ class RecordingFileView(RedirectView):
             uuid = 'None-Person-Object'
         key = '{0}:{1}:listen'.format(uuid, m.id)
         access = cache.get(key)
-        # logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
+        logger.debug('GET KEY '+'{0}:{0}:listen'.format(person.uuid, obj.id))
+        logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
 
         logger.debug(access)
 
