@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from corpora.utils.tmp_files import prepare_temporary_environment
-
+import json
 import subprocess
 
 def get_media_duration(obj):

@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'message',
     'transcription',
     'reo_api',
+    'helpers',
 
     'storages',
     'djangobower',

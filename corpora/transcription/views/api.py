@@ -18,6 +18,8 @@ from corpus.views.api import TenResultPagination, OneHundredResultPagination
 from transcription.utils import build_vtt, compile_aft
 from transcription.transcribe import transcribe_segment
 
+from transcription.tasks import transcribe_recording
+
 import logging
 logger = logging.getLogger('corpora')
 
@@ -90,6 +92,8 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
             .order_by('-updated')
 
         filter_by = self.request.query_params.get('filter')
+        filt = None
+        value = None
         if filter_by:
             parts = filter_by.split(':')
             if len(parts)==2:
@@ -98,6 +102,17 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
                 if filt == 'recording':
                     queryset = queryset.filter(recording__pk=value)
 
+        logger.debug(queryset)
+        if self.request.user.is_superuser and len(queryset)<2:
+            if len(queryset) == 0:
+                if filt=='recording':
+                    transcribe_recording(value)
+            elif queryset[0].metadata is None:
+                # Let's transcribe this recording again
+                # under this very certain circumstance
+                # which is Pronunciation analysis
+                transcribe_recording(queryset[0].pk)
+        transcribe_recording(value)
         return queryset
 
 
