@@ -291,7 +291,7 @@ class SentencesView(generics.ListCreateAPIView):
                         quality_control__approved=")
 
             query = self.request.query_params.get(
-                'sort_by')
+                'sort_by', '')
         
             if query in 'num_recordings -num_recordings':
                 queryset = queryset.annotate(Count('recording'))
@@ -299,6 +299,29 @@ class SentencesView(generics.ListCreateAPIView):
                     queryset = queryset.order_by('-recording__count')
                 else:
                     queryset = queryset.order_by('recording__count')
+
+            if query in 'num_approved_recordings -num_approved_recordings':
+                queryset = queryset\
+                    .annotate(Count('recording'))\
+                    .annotate(num_approved_recordings=Sum(
+                        Case(
+                            When(
+                                recording__quality_control__approved=True,
+                                then=Value(1)),
+                            When(
+                                recording__quality_control__approved=False,
+                                then=Value(0)),
+                            When(
+                                recording__quality_control__isnull=True,
+                                then=Value(0)),
+                            default=Value(0),
+                            output_field=IntegerField())
+                    ))
+                if query == '-num_approved_recordings':
+                    queryset = queryset.order_by('-recording__count', '-num_approved_recordings')
+                else:
+                    queryset = queryset.order_by('recording__count', 'num_approved_recordings')
+
 
         return queryset
 
