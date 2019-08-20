@@ -34,6 +34,7 @@ from corpus.aggregate import get_num_approved, get_net_votes
 
 from corpora.mixins import SiteInfoMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -375,3 +376,17 @@ the quality of recordings we use.')
         context['show_qc_stats'] = True
 
         return context
+
+
+class PronunciationView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
+    template_name = "corpus/pronunciation.html"
+    x_title = _('Pronunciation')
+    x_description = _('Developing pronunciation...')
+
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+
+
+

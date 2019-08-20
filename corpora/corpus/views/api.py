@@ -188,6 +188,7 @@ class TextViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     pagination_class = OneHundredResultPagination
 
 
+## OBSOLETE???
 class SentenceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows sentences to be viewed or edited.
@@ -219,12 +220,12 @@ class SentencesView(generics.ListCreateAPIView):
     """
     API endpoint that allows sentences to be viewed or edited.
 
-    To get sentences for recording, use the query parameter `recording=True`.
-    This will return a random, approved sentence that the person hasn't read.
+    ### Supported Query Parameters
+      - `recording=True`: This will return a random, approved sentence that a person hasn't read.
+      - `quality_control__approved=True`: This returns all approved sentences.
+      - `sort_by`: The following sorting options are implemented. Use `-` in front of the string to reverse.
+        - `num_recordings`
 
-    To get all of the approved sentences, use the query parameter
-    `quality_control__approved=True`. These will be paginated results,
-    so you will need to follow the `next` url to load all available sentences.
 
     """
 
@@ -253,7 +254,7 @@ class SentencesView(generics.ListCreateAPIView):
 
             query = self.request.query_params.get(
                 'quality_control__approved')
-            if query is not None:
+            if query:
                 queryset = queryset.annotate(sum_approved=Sum(
                     Case(
                         When(
@@ -288,6 +289,16 @@ class SentencesView(generics.ListCreateAPIView):
                     raise ValueError(
                         "Specify either True or False for \
                         quality_control__approved=")
+
+            query = self.request.query_params.get(
+                'sort_by')
+        
+            if query in 'num_recordings -num_recordings':
+                queryset = queryset.annotate(Count('recording'))
+                if query == '-num_recordings':
+                    queryset = queryset.order_by('-recording__count')
+                else:
+                    queryset = queryset.order_by('recording__count')
 
         return queryset
 
