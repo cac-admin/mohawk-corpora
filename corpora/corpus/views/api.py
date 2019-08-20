@@ -354,18 +354,6 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
 
-    ### Custom Query Parameters
-    The following query parameters are implemented.
-
-
-    - `updated_after`
-
-        Get recording objects that were updated after the provided datetime.
-        Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
-        assume local time for the machine (likely +1200).
-
-            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
-
     read:
     This api provides acces to a `audio_file_url` field. This allows the
     retrival of an audio file in the m4a container with the aac audio codec.
@@ -380,8 +368,16 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     `person="self"` which will assign the person of the token to the posted
     recording.
 
-    ### Custom Query Parameters
+    ### Query Parameters
     The following query parameters are implemented.
+
+    - `updated_after`
+
+        Get recording objects that were updated after the provided datetime.
+        Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
+        assume local time for the machine (likely +1200).
+
+            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
 
     - `encoding`
 
@@ -389,6 +385,9 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         `?encoding=base64` which will allow you to base64 encode a file
         and post as a normal string field for example when doing a json
         type post.
+
+    - `filter` You can pass the following filters
+        - `sentence:ID` - this returns recordings from a particular sentence.
 
     """
 
@@ -437,12 +436,6 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
-
-
-        # from old branch
-        # if queryset.count() == 0:
-        #     return []
-
 
         if sort_by in ['listen', 'random', 'recent', 'wer', '-wer']:
 
@@ -531,6 +524,15 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 .annotate(changed=Max('quality_control__updated'))\
                 .filter(changed__gte=date)
             queryset = q1.union(q2)
+
+        filter_by = self.request.query_params.get('filter')
+        if filter_by:
+            parts = filter_by.split(':')
+            if len(parts)==2:
+                filt = parts[0].lower()
+                value = parts[1]
+                if filt == 'sentence':
+                    queryset = queryset.filter(sentence__pk=value)
 
         return queryset
 

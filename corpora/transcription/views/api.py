@@ -70,6 +70,10 @@ class TranscriptionPermissions(permissions.BasePermission):
 class TranscriptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows transcriptions to be viewed or edited.
+
+    ### Query Parameters
+    - `filter`: Filter results by the following,
+       - `recording:ID`: Filter result by recording id.
     """
 
     # TODO: Allow someone to get a list of ALL of their transcriptions.
@@ -84,6 +88,15 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
         queryset = Transcription.objects\
             .all()\
             .order_by('-updated')
+
+        filter_by = self.request.query_params.get('filter')
+        if filter_by:
+            parts = filter_by.split(':')
+            if len(parts)==2:
+                filt = parts[0].lower()
+                value = parts[1]
+                if filt == 'recording':
+                    queryset = queryset.filter(recording__pk=value)
 
         return queryset
 
