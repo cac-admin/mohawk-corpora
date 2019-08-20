@@ -79,12 +79,13 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
     permission_classes = (TranscriptionPermissions,)
     pagination_class = OneHundredResultPagination
 
-    # def get_queryset(self):
-    #     person = get_person(self.request)
-    #     queryset = AudioFileTranscription.objects\
-    #         .filter(uploaded_by=person)
+    def get_queryset(self):
+        person = get_person(self.request)
+        queryset = Transcription.objects\
+            .all()\
+            .order_by('-updated')
 
-    #     return queryset
+        return queryset
 
 
 class TranscriptionSegmentPermissions(permissions.BasePermission):

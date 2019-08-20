@@ -61,14 +61,6 @@ class TranscriptionQualityControRelatedField(serializers.RelatedField):
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
-    # recording = RecordingSerializer(
-    #     many=False,
-    #     read_only=False
-    # )
-    # quality_control = TranscriptionQualityControRelatedField(
-    #     many=True,
-    #     read_only=True,
-    # )
 
     class Meta:
         model = Transcription
