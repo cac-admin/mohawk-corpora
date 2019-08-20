@@ -206,7 +206,7 @@ class RecordingFileView(RedirectView):
                 audio_file = m.audio_file_wav
             else:
                 # Let's try to create the wave file
-                result = encode_audio(m)
+                result = encode_audio(m, codec='wav')
                 if m.audio_file_wav:
                     audio_file = m.audio_file_wav
         else:
