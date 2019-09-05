@@ -215,6 +215,49 @@ class IsStaffOrReadOnly(permissions.BasePermission):
             self.message = _("Only staff can post/put sentences.")
             return request.user.is_staff
 
+class SentencePermission(permissions.BasePermission):
+    """
+    Model permission to only allow staff the ability to
+    edit and post new sentences.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            q = request.query_params.get('recording', 'False')
+            if eval(q):
+                return True
+            self.message = _("Only staff can get sentence lists.")
+            return request.user.is_staff
+        else:
+            # Anyone can post a recording
+            if request.method in ['POST', 'PUT']:
+                return True
+        self.message = _("Reading recording lists not allowed.")
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        person = get_person(request)
+
+        if request.method in permissions.SAFE_METHODS:
+            self.message = _("Only staff can read recordings.")
+            if request.user.is_staff:
+                person = get_person(request)
+                cache.set('{0}:{1}:listen'.format(person.uuid, obj.id), True, 15)
+                logger.debug('SET KEY '+'{0}:{1}:listen'.format(person.uuid, obj.id))
+                return True
+            elif person is not None:
+                # Allow people to get their own recordings.
+                return person == obj.person
+        else:
+            if request.method in ['PUT']:
+                if request.user.is_staff:
+                    return True
+                if person is not None:
+                    self.message = _("You're not allowed to edit this recording.")
+                    return obj.person == person
+        self.message = _("Reading recording is not allowed.")
+        return False
+
 
 class SentencesView(generics.ListCreateAPIView):
     """
@@ -222,6 +265,7 @@ class SentencesView(generics.ListCreateAPIView):
 
     ### Supported Query Parameters
       - `recording=True`: This will return a random, approved sentence that a person hasn't read.
+      - `recording_paginated=True`: This will return multiple sentences that a person hasn't read.
       - `quality_control__approved=True`: This returns all approved sentences.
       - `sort_by`: The following sorting options are implemented. Use `-` in front of the string to reverse.
         - `num_recordings`
@@ -232,7 +276,8 @@ class SentencesView(generics.ListCreateAPIView):
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     pagination_class = OneHundredResultPagination
-    permission_classes = (IsStaffOrReadOnly,)
+    permission_classes = (SentencePermission,IsStaffOrReadOnly)
+    throttle_scope = 'sentence'
 
     def get_queryset(self):
 
@@ -289,6 +334,10 @@ class SentencesView(generics.ListCreateAPIView):
                     raise ValueError(
                         "Specify either True or False for \
                         quality_control__approved=")
+
+            query = self.request.query_params.get('recording_paginated', 'False')        
+            if eval(query):
+                queryset = queryset.exclude(recording__person=person)
 
             query = self.request.query_params.get(
                 'sort_by', '')
@@ -347,7 +396,6 @@ class RecordingPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         person = get_person(request)
-
         if request.method in permissions.SAFE_METHODS:
             self.message = _("Only staff can read recordings.")
             if request.user.is_staff:
@@ -596,9 +644,9 @@ class ListenPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             # Unregisted people can only listen up to 100 recordings
-
-            # Registered people can only listen up to 1000 recordings
             return True
+            # Registered people can only listen up to 1000 recordings
+            # return request.user.is_staff
         else:
             self.message = _("{0} not allowed with this API\
                              endpoint.".format(request.method))
@@ -606,7 +654,6 @@ class ListenPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
-
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
             person = get_person(request)
@@ -616,8 +663,6 @@ class ListenPermissions(permissions.BasePermission):
                 uuid = 'None-Person-Object'
             key = '{0}:{1}:listen'.format(uuid, obj.id)
             cache.set(key, True, 15)
-            # logger.debug('  CACHE KEY: {0}'.format(key))
-
             return True
         else:
             self.message = _("{0} not allowed with this API\
@@ -632,14 +677,14 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     recording file link and the id.
 
     By default we exclude approved recordings, and we exclude listening to
-    one's own recordings
-
-    TODO: Add a query so we can get all recordings (or just approved ones).
+    ones own recordings
     """
+
     queryset = Recording.objects.exclude(private=True)
     pagination_class = TenResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
+    # throttle_scope = 'listen'
 
     def get_queryset(self):
         person = get_person(self.request)
@@ -752,7 +797,21 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         if queryset.count() == 0:
             return []
 
-        if 'random' in sort_by.lower():
+
+        # Check if this is a /listen/ID url
+        # logger.debug(self.request.path)
+        # logger.debug(self.lookup_url_kwarg)
+        # logger.debug(self.lookup_field)
+        # logger.debug(self.kwargs)
+        if self.lookup_field in self.kwargs.keys():
+            return queryset
+
+        if 'random' in sort_by.lower() or not self.request.user.is_staff:
+            queryset = queryset \
+                .filter(quality_control__isnull=True)
+
+            logger.debug('this many without review: ' + str(queryset.count()))
+
             if person is not None:
                 uuid = person.uuid
             else:
@@ -764,6 +823,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             except IndexError:
                 return queryset
 
+            # This meanms we don't ahve to do the extra call
             key = '{0}:{1}:listen'.format(uuid, pk)
             cache.set(key, True, 15)
 

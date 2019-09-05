@@ -52,7 +52,7 @@ class PersonPermissions(permissions.BasePermission):
         if request.user.is_staff and request.user.is_authenticated:
             self.message = _("Only staff can view this information.")
             return True
-        elif request.method.lower() in 'get post put':
+        elif request.method.lower() in 'post put':
             return True
         else:
             self.message = _("You're not allowed to view this information.")
