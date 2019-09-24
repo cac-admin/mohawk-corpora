@@ -1,5 +1,4 @@
 # pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
-
 Django>=1.11.22
 boto
 boto3

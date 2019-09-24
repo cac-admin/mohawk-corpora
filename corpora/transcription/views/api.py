@@ -71,7 +71,10 @@ class TranscriptionPermissions(permissions.BasePermission):
 
 class TranscriptionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows transcriptions to be viewed or edited.
+    This API Endpoint is for the automatic transcriptions of recordings
+    that the backend does. This helps us more efficiently review
+    recordings based on their word error rate calculated from the
+    transcription.
 
     ### Query Parameters
     - `filter`: Filter results by the following,

@@ -61,7 +61,6 @@ class TranscriptionQualityControRelatedField(serializers.RelatedField):
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Transcription
         fields = (
@@ -69,6 +68,7 @@ class TranscriptionSerializer(serializers.ModelSerializer):
             'id', 'source', 'updated',
             'transcriber_log', 'word_error_rate',
             'words', 'metadata')
+
 
 
 class TranscriptionSegmentSerializer(serializers.ModelSerializer):
