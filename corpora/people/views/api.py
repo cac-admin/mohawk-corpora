@@ -4,13 +4,21 @@ from people.models import \
 
 from people.helpers import get_person
 from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
 
 from people.serializers import PersonSerializer,\
                          TribeSerializer, \
                          DemographicSerializer,\
-                         KnownLanguageSerializer
+                         KnownLanguageSerializer, \
+                         MagicLoginSerializer
 
 from rest_framework import mixins
+from rest_framework import status
+from rest_framework.response import Response
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -153,3 +161,30 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         person = get_person(self.request)
         return [person]
+
+
+
+
+class MagicLoginView(APIView):
+    '''
+    Post an email to this endpoint and a magic login link will
+    be sent to that email if it exists
+    '''
+
+    def post(self, request, format=None):
+        errors = {'error': 'You must post an email field.'}
+        serializer = MagicLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            # Send an email to the user
+            try:
+                user = User.objects.get(email=request.data["email"])
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except ObjectDoesNotExist:
+                errors = {'error': 'Email does not exist.'}
+                pass
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+

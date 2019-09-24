@@ -6,7 +6,7 @@ from django.db import models
 from people.models import Person
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-
+import uuid
 # Create your models here.
 
 
@@ -39,6 +39,13 @@ class UserAPI(models.Model):
     def __unicode__(self):
         return str(self.user)
 
-# class ApplicationAPI(Token):
-#     name = models.CharField(max_length=256)
+class ApplicationAPI(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE)
+    name = models.CharField(max_length=256)
+    key = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name="App Token")
+    enabled = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = [['user', 'key']]

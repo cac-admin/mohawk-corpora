@@ -296,3 +296,12 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         instance.demographic.save()
 
         return instance
+
+
+class MagicLoginSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        myObject = object()
+        myObject.email = validated_data['email']
+        return myObject
