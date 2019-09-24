@@ -6,6 +6,7 @@ from transcription.serializers import \
     TranscriptionSegmentSerializer,\
     AudioFileTranscriptionSerializer
 
+from reo_api.models import UserAPI
 from rest_framework import viewsets, permissions, pagination
 from rest_framework.response import Response
 
@@ -22,6 +23,21 @@ from transcription.tasks import transcribe_recording
 
 import logging
 logger = logging.getLogger('corpora')
+
+
+class UserAPIPermissions(permissions.BasePermission):
+    '''
+    We're not using a new model for access to this API. This is a 
+    temporary implementation to now close the API until we move
+    things to somethign better.
+    '''
+    message = "Public beta testing is now closed. Please contact koreromaori@tehiku.nz for developer access."
+
+    def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+        u, created = UserAPI.objects.get_or_create(user=request.user)
+        return u.enabled
 
 
 class TranscriptionPermissions(permissions.BasePermission):
@@ -85,7 +101,7 @@ class TranscriptionViewSet(viewsets.ModelViewSet):
 
     queryset = Transcription.objects.all()
     serializer_class = TranscriptionSerializer
-    permission_classes = (TranscriptionPermissions,)
+    permission_classes = (UserAPIPermissions, TranscriptionPermissions)
     pagination_class = OneHundredResultPagination
 
     def get_queryset(self):
@@ -162,7 +178,7 @@ class TranscriptionSegmentViewSet(viewsets.ModelViewSet):
 
     queryset = TranscriptionSegment.objects.all()
     serializer_class = TranscriptionSegmentSerializer
-    permission_classes = (TranscriptionSegmentPermissions,)
+    permission_classes = (UserAPIPermissions, TranscriptionSegmentPermissions)
     pagination_class = TenResultPagination
 
     def get_queryset(self):
@@ -259,7 +275,7 @@ class AudioFileTranscriptionViewSet(viewsets.ModelViewSet):
 
     queryset = AudioFileTranscription.objects.all()
     serializer_class = AudioFileTranscriptionSerializer
-    permission_classes = (AudioFileTranscriptionPermissions,)
+    permission_classes = (UserAPIPermissions, AudioFileTranscriptionPermissions)
     pagination_class = TenResultPagination
 
     def get_queryset(self):
