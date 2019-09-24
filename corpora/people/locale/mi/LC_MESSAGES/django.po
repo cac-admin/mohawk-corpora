@@ -254,10 +254,10 @@ msgstr "Kia tūpato:"
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
-msgstr ""
-"Kāhore anō koe kia whakaatu mai i tō īmēra.  Me whakaatu mārika mai kia "
-"whiwhi ai koe ki ngā pānui, kia āhei ai anō hoki te whakahōu i tō kupu huna, "
-"aha noa."
+#msgstr ""
+#"Kāhore anō koe kia whakaatu mai i tō īmēra.  Me whakaatu mārika mai kia "
+#"whiwhi ai koe ki ngā pānui, kia āhei ai anō hoki te whakahōu i tō kupu huna, "
+#"aha noa."
 
 #: people/templates/account/email.html:52
 msgid "Add E-mail Address"
@@ -311,31 +311,31 @@ msgid ""
 "password for your user account at %(site_domain)s.\n"
 "It can be safely ignored if you did not request a password reset. Click the "
 "link below to reset your password."
-msgstr ""
-"Tēnei te mihi a %(site_name)s ki a koe!\n"
-"\n"
-"I whiwhi ai koe ki tēnei īmēra nā te mea e mea ana tētahi tangata kē ki te "
-"tiki i te kupu huna o tō kaute i %(site_domain)s.\n"
-"Mehemea ehara i a koe, kaua e āwangawanga. Patoa te hononga e whai ake nei "
-"hei whakahōu i tō kupu huna."
+#msgstr ""
+#"Tēnei te mihi a %(site_name)s ki a koe!\n"
+#"\n"
+#"I whiwhi ai koe ki tēnei īmēra nā te mea e mea ana tētahi tangata kē ki te "
+#"tiki i te kupu huna o tō kaute i %(site_domain)s.\n"
+#"Mehemea ehara i a koe, kaua e āwangawanga. Patoa te hononga e whai ake nei "
+#"hei whakahōu i tō kupu huna."
 
 #: people/templates/account/email/password_reset_key_message.txt:8
 #, python-format
 msgid "In case you forgot, your username is %(username)s."
-msgstr "Kia mahara ai koe, koia tēnei ko tō kupu huna %(username)s."
+#msgstr "Kia mahara ai koe, koia tēnei ko tō kupu huna %(username)s."
 
 #: people/templates/account/email/password_reset_key_message.txt:10
 #, python-format
 msgid ""
 "Thank you for using %(site_name)s!\n"
 "%(site_domain)s"
-msgstr ""
-"Tēnā anō koe e toro mai nei ki te %(site_name)s!\n"
-"%(site_domain)s"
+#msgstr ""
+#"Tēnā anō koe e toro mai nei ki te %(site_name)s!\n"
+#"%(site_domain)s"
 
 #: people/templates/account/email/password_reset_key_subject.txt:3
 msgid "Password Reset E-mail"
-msgstr "He īmēra hei whakahōu i tō kupu huna"
+#msgstr "He īmēra hei whakahōu i tō kupu huna"
 
 #: people/templates/account/email_confirm.html:6
 #: people/templates/account/email_confirm.html:10
@@ -385,7 +385,7 @@ msgstr ""
 
 #: people/templates/account/login.html:121
 msgid "Forgot Password?"
-msgstr "Kua wareware koe ki tō kupu huna?"
+#msgstr "Kua wareware koe ki tō kupu huna?"
 
 #: people/templates/account/logout.html:5
 #: people/templates/account/logout.html:8
@@ -428,19 +428,19 @@ msgstr "Kua puta atu koe."
 
 #: people/templates/account/messages/password_changed.txt:2
 msgid "Password successfully changed."
-msgstr "Kua whakahōungia tō kupu huna."
+#msgstr "Kua whakahōungia tō kupu huna."
 
 #: people/templates/account/messages/password_set.txt:2
 msgid "Password successfully set."
-msgstr "Kua whakaritea tō kupu huna."
+#msgstr "Kua whakaritea tō kupu huna."
 
 #: people/templates/account/messages/primary_email_set.txt:2
 msgid "Primary e-mail address set."
-msgstr "Kua whakaritea tō īmēra matua."
+#msgstr "Kua whakaritea tō īmēra matua."
 
 #: people/templates/account/messages/unverified_primary_email.txt:2
 msgid "Your primary e-mail address must be verified."
-msgstr "Me whakapūmau tō īmēra."
+#msgstr "Me whakapūmau tō īmēra."
 
 #: people/templates/account/password_change.html:5
 #: people/templates/account/password_change.html:8
@@ -450,39 +450,39 @@ msgstr "Me whakapūmau tō īmēra."
 #: people/templates/account/password_reset_from_key_done.html:4
 #: people/templates/account/password_reset_from_key_done.html:7
 msgid "Change Password"
-msgstr "Whakarerekēngia tō kupu huna"
+#msgstr "Whakarerekēngia tō kupu huna"
 
 #: people/templates/account/password_reset.html:5
 #: people/templates/account/password_reset.html:10
 #: people/templates/account/password_reset_done.html:6
 #: people/templates/account/password_reset_done.html:9
 msgid "Password Reset"
-msgstr "Whakahōungia tō kupu huna"
+#msgstr "Whakahōungia tō kupu huna"
 
 #: people/templates/account/password_reset.html:19
 msgid "Enter your e-mail address and we'll send you a reset link."
-msgstr ""
-"Tuhia mai tō īmēra ka tukua atu ai he hononga hei whakahōu i tō kupu huna."
+#msgstr ""
+#"Tuhia mai tō īmēra ka tukua atu ai he hononga hei whakahōu i tō kupu huna."
 
 #: people/templates/account/password_reset.html:46
 msgid "Reset My Password"
-msgstr "Whakahōungia taku kupu huna"
+#msgstr "Whakahōungia taku kupu huna"
 
 #: people/templates/account/password_reset.html:56
 msgid ""
 "Please <a href=\"mailto:info@tehiku.nz\">contact us</a> if you have any "
 "trouble resetting your password."
-msgstr ""
-"<a href=\"mailto:info@tehiku.nz\">Whakapā mai koa</a> inā kore e taea e koe "
-"te whakahōu i tō kupu huna."
+#msgstr ""
+#"<a href=\"mailto:info@tehiku.nz\">Whakapā mai koa</a> inā kore e taea e koe "
+#"te whakahōu i tō kupu huna."
 
 #: people/templates/account/password_reset_done.html:15
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
-"Kua tukua atu e mātou he īmēra ki a koe. Whakapā mai koa inā kore e tae wawe "
-"atu ki a koe ā ngā mīneti tata e haere ake nei."
+#msgstr ""
+#"Kua tukua atu e mātou he īmēra ki a koe. Whakapā mai koa inā kore e tae wawe "
+#"atu ki a koe ā ngā mīneti tata e haere ake nei."
 
 #: people/templates/account/password_reset_from_key.html:7
 msgid "Bad Token"
@@ -494,25 +494,25 @@ msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
 "a>."
-msgstr ""
-"Kāhore i whakaaetia te whakahōutanga o tō kupu huna nā te mea pea kua "
-"whakamahia kētia. <a href=\"%(passwd_reset_url)s\">Whakaritea anō koa tētahi "
-"kupu huna mōu.</a>"
+#msgstr ""
+#"Kāhore i whakaaetia te whakahōutanga o tō kupu huna nā te mea pea kua "
+#"whakamahia kētia. <a href=\"%(passwd_reset_url)s\">Whakaritea anō koa tētahi "
+#"kupu huna mōu.</a>"
 
 #: people/templates/account/password_reset_from_key.html:17
 msgid "change password"
-msgstr "whakarerekēngia tō kupu huna"
+#msgstr "whakarerekēngia tō kupu huna"
 
 #: people/templates/account/password_reset_from_key.html:20
 #: people/templates/account/password_reset_from_key_done.html:8
 msgid "Your password is now changed."
-msgstr "Kua whakahōungia tō kupu huna."
+#msgstr "Kua whakahōungia tō kupu huna."
 
 #: people/templates/account/password_set.html:5
 #: people/templates/account/password_set.html:8
 #: people/templates/account/password_set.html:13
 msgid "Set Password"
-msgstr "Whakaritea he kupu huna"
+#msgstr "Whakaritea he kupu huna"
 
 #: people/templates/account/signup.html:5
 #: people/templates/socialaccount/signup.html:6
