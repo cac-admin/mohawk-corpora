@@ -36,10 +36,13 @@ from corpora.mixins import SiteInfoMixin, EnsureCsrfCookieMixin
 
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
-
+from rest_framework.authtoken.models import Token
 from people.competition import get_valid_group_members
 
 from django.core.cache import cache
+from django.contrib.auth.models import User
+
+from django.core.signing import TimestampSigner, loads, SignatureExpired
 
 import logging
 logger = logging.getLogger('corpora')
@@ -425,5 +428,51 @@ class Help(SiteInfoMixin, ListView):
         context['qualified'] = qualified
         context['not_qualified'] = not_qualified
         # for group in groups:
+
+        return context
+
+
+
+class MagicLogin(TemplateView):
+    '''
+    View which processes our /macgic/ login stuff
+    '''
+    template_name = 'people/magic.html'
+
+    def get(self, request, *args, **kwargs):
+        key = request.GET.get('key')
+        signer = TimestampSigner()
+        try:
+            value = signer.unsign(key, max_age=1200)
+            payload = loads(value)
+            email = payload['email']
+            user = User.objects.get(email=email)
+            person = Person.objects.get(user=user)
+            token, created = Token.objects.get_or_create(user=user)
+            request.user = user
+            self.person = person
+            self.token = token
+
+            usa = request.META['HTTP_USER_AGENT'].lower()
+            if 'iphone' in usa or 'ipad' in usa:
+                url = "koreromaori://login/?token={0}".format(token)
+                response = HttpResponse("", status=302)
+                response['Location'] = url
+                return response
+
+        except SignatureExpired:
+            self.person = None
+            self.token = None
+        
+        return super(MagicLogin, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+
+        context = \
+            super(MagicLogin, self).get_context_data(**kwargs)
+
+        context['token'] = self.token
+        context['person'] = self.person
+        context['user'] = self.request.user
 
         return context

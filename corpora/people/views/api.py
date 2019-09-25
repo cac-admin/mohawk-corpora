@@ -19,6 +19,11 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
+from corpora.email_utils import EMail
+from django.contrib.sites.shortcuts import get_current_site
+
+from django.core.signing import TimestampSigner, dumps
+
 
 import logging
 logger = logging.getLogger('corpora')
@@ -175,9 +180,20 @@ class MagicLoginView(APIView):
         errors = {'error': 'You must post an email field.'}
         serializer = MagicLoginSerializer(data=request.data)
         if serializer.is_valid():
-            # Send an email to the user
             try:
                 user = User.objects.get(email=request.data["email"])
+                # request.user = user
+                signer = TimestampSigner()
+                payload = dumps({"email": user.email})
+                value = signer.sign(payload)
+                site = get_current_site(request)
+                link = "https://{0}/magic/?key={1}".format(site.domain, value)
+                email = EMail(to=user.email, subject='Login Link for {0}'.format(site.name), request=request)
+                ctx = {'email': user.email, 'link': link, 'request': request, 'site': site}
+                email.text('people/email/magiclogin.txt', ctx)
+                email.html('people/email/magiclogin.html', ctx)  # Optional
+                email.send()
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except ObjectDoesNotExist:
                 errors = {'error': 'Email does not exist.'}
