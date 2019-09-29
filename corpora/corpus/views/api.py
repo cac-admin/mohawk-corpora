@@ -286,12 +286,14 @@ class SentencesView(generics.ListCreateAPIView):
 
         person = get_person(self.request)
         language = get_current_language(self.request)
-
+        logger.debug(language)
         q = self.request.query_params.get('language', 'False')
         for l in LANGUAGES:
             if q in l[0]:
-                language = l
+                language = q
 
+
+        logger.debug(language)
         queryset = Sentence.objects.filter(language=language)\
             .order_by('quality_control__approved', 'quality_control__updated')
 
@@ -509,7 +511,7 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         q = self.request.query_params.get('language', 'False')
         for l in LANGUAGES:
             if q in l[0]:
-                language = l
+                language = q
 
         queryset = Recording.objects.filter(language=language)\
             .prefetch_related(
@@ -707,7 +709,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         q = self.request.query_params.get('language', 'False')
         for l in LANGUAGES:
             if q in l[0]:
-                language = l
+                language = q
 
         # we should treat all anonymous usesrs as the same so we dont' overload shit!
         awhi = self.request.query_params.get('awhi', False)
