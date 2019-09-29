@@ -47,6 +47,7 @@ logger = logging.getLogger('corpora')
 
 
 class ViewSetCacheMixin(object):
+    cache_length = 60
 
     def list(self, request, *args, **kwargs):
         sort_by = self.request.query_params.get('sort_by', None)
@@ -56,13 +57,13 @@ class ViewSetCacheMixin(object):
             return super(ViewSetCacheMixin, self)\
                 .list(request, *args, **kwargs)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(cache_length))
     @method_decorator(vary_on_headers('Authorization', 'Cookie'))
     def cached_list(self, request, *args, **kwargs):
         return super(ViewSetCacheMixin, self)\
             .list(request, *args, **kwargs)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(cache_length))
     @method_decorator(vary_on_headers('Authorization', 'Cookie'))
     def retrieve(self, request, *args, **kwargs):
         return super(ViewSetCacheMixin, self)\
@@ -660,6 +661,7 @@ class ListenPermissions(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
+        logger.debug("listen perm has perm")
         if request.method in permissions.SAFE_METHODS:
             # Unregisted people can only listen up to 100 recordings
             return True
@@ -671,6 +673,7 @@ class ListenPermissions(permissions.BasePermission):
             return False
 
     def has_object_permission(self, request, view, obj):
+        logger.debug("listen perm has object perm")
         if request.method in permissions.SAFE_METHODS:
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
@@ -707,6 +710,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
+        logger.debug(person)
         language = get_current_language(self.request)
 
         q = self.request.query_params.get('language', None)
@@ -739,9 +743,14 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
         # ctm = ContentTypeManager()
 
+        if person:
+            queryset = Recording.objects\
+                .exclude(person=person)\
+                .exclude(quality_control__person=person)
+        else:
+            queryset = Recording.objects.all()
+
         queryset = Recording.objects\
-            .exclude(person=person)\
-            .exclude(quality_control__person=person)\
             .filter(language=language)\
             .filter(private=False)\
             .prefetch_related(
