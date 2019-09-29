@@ -250,8 +250,9 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         if 'username' in validated_data.keys():
             instance.username = validated_data['username']
 
-        logger.debug(demographic)
+        # logger.debug(demographic)
         # remove all current relations
+
         for tribe in demo.tribe.all():
             demo.tribe.remove(tribe)
 
