@@ -165,9 +165,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
-        return [person]
-
-
+        queryset = Person.objects.get(pk=person.pk)
+        return queryset
 
 
 class MagicLoginView(APIView):
