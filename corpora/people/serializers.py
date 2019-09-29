@@ -146,19 +146,12 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         person_object = self.instance
         user_object = person_object.user
-        if 'full_name' in validated_data.keys():
-            instance.full_name = validated_data['full_name']
-        else:
-            instance.full_name = person_object.full_name
 
-        instance.receive_weekly_updates = \
-            validated_data['receive_weekly_updates']
-        instance.receive_daily_updates = \
-            validated_data['receive_daily_updates']
-        instance.receive_feedback = \
-            validated_data['receive_feedback']
-        instance.leaderboard = \
-            validated_data['leaderboard']
+        attrs = ['full_name', 'receive_weekly_updates', 'receive_daily_updates', 'receive_feedback', 'leaderboard']
+        for attr in attrs:
+            if attr in validated_data.keys():
+                setattr(instance, attr, validated_data[attr])
+            ## Do we need to set the old values???
 
         logger.debug('executing udpate on person model')
         demographic = validated_data['demographic']
