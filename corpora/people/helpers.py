@@ -11,6 +11,7 @@ from .models import Person, KnownLanguage
 
 from allauth.account.models import EmailAddress
 from rest_framework.authentication import TokenAuthentication
+from reo_api.authentication import ApplicationAPITokenAuthentication
 
 import logging
 logger = logging.getLogger('corpora')
@@ -18,7 +19,7 @@ logger = logging.getLogger('corpora')
 
 def get_user(request):
     user = request.user
-
+    logger.debug("GET USER? {0}".format(user))
     if user is None or user.is_anonymous:
         try:
             token_auth = TokenAuthentication()
@@ -26,6 +27,14 @@ def get_user(request):
             logger.debug('get user from token, {0} {1}'.format(user, token))
         except:
             pass
+
+    if user is None or user.is_anonymous:
+        try:
+            token_auth = ApplicationAPITokenAuthentication()
+            user, token = token_auth.authenticate(request)
+            logger.debug('get user from token, {0} {1}'.format(user, token))
+        except:
+            pass            
 
     return user
 
