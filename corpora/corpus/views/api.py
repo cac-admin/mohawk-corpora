@@ -38,7 +38,8 @@ from django.core.cache import cache
 import random
 import logging
 
-from django.conf.settings import LANGUAGES
+from django.conf import settings
+LANGUAGES = settings.LANGUAGES
 
 from django.utils.dateparse import parse_datetime
 
