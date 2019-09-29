@@ -692,7 +692,7 @@ class ListenPermissions(permissions.BasePermission):
             return False
 
 
-class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+class ListenViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows a single recording to be viewed.
     This api obfuscates extra recording information and only provides the
@@ -777,8 +777,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 .exclude(quality_control__approved=True) \
                 .exclude(quality_control__trash=True) \
                 .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__person=person)
+                .exclude(quality_control__good__gte=1)
 
         elif test_query == 'when':
             queryset = queryset.annotate(reviewed=Sum(
@@ -863,6 +862,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
             return [Recording.objects.get(pk=pk)]
 
+        logger.debug(queryset.count())
         return queryset
 
 
