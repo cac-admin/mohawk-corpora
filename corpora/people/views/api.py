@@ -148,7 +148,7 @@ class ProfilePermissions(PersonPermissions):
         return True
 
     def has_object_permission(self, request, view, obj):
-        person = get_person(self.request)
+        person = get_person(request)
         if obj.id == person.id:
             return True
         return False
