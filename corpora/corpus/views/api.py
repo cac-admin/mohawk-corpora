@@ -38,6 +38,8 @@ from django.core.cache import cache
 import random
 import logging
 
+from django.conf.settings import LANGUAGES
+
 from django.utils.dateparse import parse_datetime
 
 logger = logging.getLogger('corpora')
@@ -283,6 +285,13 @@ class SentencesView(generics.ListCreateAPIView):
 
         person = get_person(self.request)
         language = get_current_language(self.request)
+
+        q = self.request.query_params.get('language', 'False')
+        for l in LANGUAGES:
+            if q in l[0]:
+                language = l
+                break
+
         queryset = Sentence.objects.filter(language=language)\
             .order_by('quality_control__approved', 'quality_control__updated')
 
@@ -497,6 +506,12 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         language = get_current_language(self.request)
 
+        q = self.request.query_params.get('language', 'False')
+        for l in LANGUAGES:
+            if q in l[0]:
+                language = l
+                break
+
         queryset = Recording.objects.filter(language=language)\
             .prefetch_related(
                 Prefetch(
@@ -689,6 +704,12 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         person = get_person(self.request)
         language = get_current_language(self.request)
+
+        q = self.request.query_params.get('language', 'False')
+        for l in LANGUAGES:
+            if q in l[0]:
+                language = l
+                break
 
         # we should treat all anonymous usesrs as the same so we dont' overload shit!
         awhi = self.request.query_params.get('awhi', False)
