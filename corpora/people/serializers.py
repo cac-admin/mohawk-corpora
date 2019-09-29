@@ -169,6 +169,8 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                 demo.age = demographic['age']
             except KeyError:
                 demo.age = None
+        else:
+            demographic = None
 
         # I found my problem. I first need to check the the value of the
         # validated data isn't '' - because if it is we shoulnd't be
@@ -253,13 +255,14 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         # logger.debug(demographic)
         # remove all current relations
 
-        for tribe in demo.tribe.all():
-            demo.tribe.remove(tribe)
+        if demographic:
+            for tribe in demo.tribe.all():
+                demo.tribe.remove(tribe)
 
-        for tribe in demographic['tribe']:
-            logger.debug(tribe)
-            t = Tribe.objects.get(name=tribe['name'])
-            demo.tribe.add(t)
+            for tribe in demographic['tribe']:
+                logger.debug(tribe)
+                t = Tribe.objects.get(name=tribe['name'])
+                demo.tribe.add(t)
 
         if 'known_languages' in validated_data.keys():
             validated_languages = validated_data['known_languages']
