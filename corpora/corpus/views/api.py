@@ -681,6 +681,7 @@ class ListenPermissions(permissions.BasePermission):
                 uuid = 'None-Person-Object'
             key = '{0}:{1}:listen'.format(uuid, obj.id)
             cache.set(key, True, 15)
+            logger.debug('   CAN VIEW: {0} {1}'.format(key, True))
             return True
         else:
             self.message = _("{0} not allowed with this API\
