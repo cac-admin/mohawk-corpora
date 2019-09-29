@@ -12,7 +12,7 @@ from .models import Person, KnownLanguage
 from allauth.account.models import EmailAddress
 from rest_framework.authentication import TokenAuthentication
 from reo_api.authentication import ApplicationAPITokenAuthentication
-
+from django.contrib.auth.models import AnonymousUser 
 import logging
 logger = logging.getLogger('corpora')
 
@@ -28,13 +28,15 @@ def get_user(request):
         except:
             pass
 
-    if user is None or user.is_anonymous:
-        try:
-            token_auth = ApplicationAPITokenAuthentication()
-            user, token = token_auth.authenticate(request)
-            logger.debug('get user from token, {0} {1}'.format(user, token))
-        except:
-            pass            
+    # If we're using an AppToken, return an anonymous user
+    try:
+        token_auth = ApplicationAPITokenAuthentication()
+        AppUser, token = token_auth.authenticate(request)
+        if AppUser:
+            logger.debug("SET ANON USER {0}".format(AnonymousUser()))
+            return AnonymousUser()
+    except:
+        pass           
 
     return user
 
