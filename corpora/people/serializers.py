@@ -147,26 +147,28 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         person_object = self.instance
         user_object = person_object.user
 
-        attrs = ['full_name', 'receive_weekly_updates', 'receive_daily_updates', 'receive_feedback', 'leaderboard']
+        attrs = [
+            'full_name', 'receive_weekly_updates', 
+            'receive_daily_updates', 'receive_feedback', 'leaderboard',
+        ]
         for attr in attrs:
             if attr in validated_data.keys():
                 setattr(instance, attr, validated_data[attr])
             ## Do we need to set the old values???
 
-        logger.debug('executing udpate on person model')
-        demographic = validated_data['demographic']
-
         demo, created = Demographic.objects.get_or_create(person=instance)
+        if 'demographic' in validated_data.keys():
+            demographic = validated_data['demographic']
 
-        try:
-            demo.gender = demographic['gender']
-        except KeyError:
-            demo.gender = None
+            try:
+                demo.gender = demographic['gender']
+            except KeyError:
+                demo.gender = None
 
-        try:
-            demo.age = demographic['age']
-        except KeyError:
-            demo.age = None
+            try:
+                demo.age = demographic['age']
+            except KeyError:
+                demo.age = None
 
         # I found my problem. I first need to check the the value of the
         # validated data isn't '' - because if it is we shoulnd't be
@@ -258,39 +260,41 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             t = Tribe.objects.get(name=tribe['name'])
             demo.tribe.add(t)
 
-        validated_languages = validated_data['known_languages']
-        # logger.debug(validated_languages)
-        # logger.debug(validated_data)
-        for vl in validated_languages:
-            logger.debug(vl)
-            try:
-                kl = KnownLanguage.objects.get(
-                    person=instance,
-                    language=vl['language']
-                )
+        if 'known_languages' in validated_data.keys():
+            validated_languages = validated_data['known_languages']
+            # logger.debug(validated_languages)
+            # logger.debug(validated_data)
+            for vl in validated_languages:
+                logger.debug(vl)
+                try:
+                    kl = KnownLanguage.objects.get(
+                        person=instance,
+                        language=vl['language']
+                    )
 
-                kl.level_of_proficiency = vl['level_of_proficiency']
-                # kl.accent = vl['accent']
-                kl.dialect = vl['dialect']
+                    kl.level_of_proficiency = vl['level_of_proficiency']
+                    # kl.accent = vl['accent']
+                    kl.dialect = vl['dialect']
 
-            except ObjectDoesNotExist:
-                kl = KnownLanguage.objects.create(
-                    person=instance,
-                    level_of_proficiency=vl['level_of_proficiency'],
-                    dialect=vl['dialect'],
-                    # accent=vl['accent'],
-                    language=vl['language']
-                )
-            kl.save()
-
-        instance.demographic = demo
+                except ObjectDoesNotExist:
+                    kl = KnownLanguage.objects.create(
+                        person=instance,
+                        level_of_proficiency=vl['level_of_proficiency'],
+                        dialect=vl['dialect'],
+                        # accent=vl['accent'],
+                        language=vl['language']
+                    )
+                kl.save()
 
         # TODO not sure if this is the correct approach?
-        instance.groups.set(validated_data['groups'])
+        if 'groups' in validated_data.keys():
+            instance.groups.set(validated_data['groups'])
 
+        if 'demographic' in validated_data.keys():
+            instance.demographic = demo
+            instance.demographic.save()
         instance.save()
-        instance.demographic.save()
-
+        
         return instance
 
 
