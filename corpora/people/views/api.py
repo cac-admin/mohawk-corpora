@@ -147,6 +147,11 @@ class ProfilePermissions(PersonPermissions):
     def has_permission(self, request, view):
         return True
 
+    def has_object_permission(self, request, view, obj):
+        person = get_person(self.request)
+        if obj.id = person.id:
+            return True
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
