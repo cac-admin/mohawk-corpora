@@ -197,11 +197,11 @@ class RecordingFileView(RedirectView):
 
         p1 = get_or_create_person(request)
         p2 = get_person(request)
-        logger.debug(p1)
-        logger.debug(p2)
+        logger.debug(p1.uuid)
+        logger.debug(p2.uuid)
         logger.debug(p1.user)
         logger.debug(p2.user)
-        logger.debug(user)
+        logger.debug(u)
 
         rType = request.GET.get('json', False)
         audio_file = m.audio_file

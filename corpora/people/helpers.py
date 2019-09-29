@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger('corpora')
 
 
-def get_or_create_person(request):
+def get_user(request):
     user = request.user
 
     if user is None or user.is_anonymous:
@@ -26,6 +26,12 @@ def get_or_create_person(request):
             logger.debug('get user from token, {0} {1}'.format(user, token))
         except:
             pass
+
+    return user
+
+
+def get_or_create_person(request):
+    user = get_user(request)
 
     if user.is_anonymous:
         # Check if a session cookie exists
@@ -78,14 +84,7 @@ def get_or_create_person(request):
 
 
 def get_person(request):
-    user = request.user
-
-    if user is None or user.is_anonymous:
-        try:
-            token_auth = TokenAuthentication()
-            user, token = token_auth.authenticate(request)
-        except:
-            pass
+    user = get_user(request)
 
     if user.is_anonymous:
         # Check if a session cookie exists
