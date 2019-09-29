@@ -146,7 +146,10 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         person_object = self.instance
         user_object = person_object.user
-        instance.full_name = validated_data['full_name']
+        if 'full_name' in validated_data.keys():
+            instance.full_name = validated_data['full_name']
+        else:
+            instance.full_name = person_object.full_name
 
         instance.receive_weekly_updates = \
             validated_data['receive_weekly_updates']
