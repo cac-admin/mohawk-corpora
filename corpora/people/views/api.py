@@ -149,8 +149,9 @@ class ProfilePermissions(PersonPermissions):
 
     def has_object_permission(self, request, view, obj):
         person = get_person(self.request)
-        if obj.id = person.id:
+        if obj.id == person.id:
             return True
+        return False
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
