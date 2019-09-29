@@ -171,7 +171,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         person = get_person(self.request)
-        queryset = Person.objects.get(pk=person.pk)
+        queryset = Person.objects.filter(pk=person.pk)
         return queryset
 
 
