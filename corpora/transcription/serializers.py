@@ -165,6 +165,11 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             except KeyError:
                 pass
 
+            try:
+                aft.save()
+            except:
+                pass
+
             return aft
 
         if 'name' not in validated_data.keys():
