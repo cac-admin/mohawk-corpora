@@ -170,7 +170,7 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
             # except:
             #     pass
 
-            # return aft
+            return aft
 
         if 'name' not in validated_data.keys():
             fname = validated_data['audio_file'].name
