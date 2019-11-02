@@ -19,12 +19,12 @@ logger = logging.getLogger('corpora')
 
 def get_user(request):
     user = request.user
-    logger.debug("GET USER? {0}".format(user))
+    # logger.debug("GET USER? {0}".format(user))
     if user is None or user.is_anonymous:
         try:
             token_auth = TokenAuthentication()
             user, token = token_auth.authenticate(request)
-            logger.debug('get user from token, {0} {1}'.format(user, token))
+            # logger.debug('get user from token, {0} {1}'.format(user, token))
         except:
             pass
 
@@ -33,7 +33,7 @@ def get_user(request):
         token_auth = ApplicationAPITokenAuthentication()
         AppUser, token = token_auth.authenticate(request)
         if AppUser:
-            logger.debug("SET ANON USER {0}".format(AnonymousUser()))
+            # logger.debug("SET ANON USER {0}".format(AnonymousUser()))
             return AnonymousUser()
     except:
         pass           
@@ -177,7 +177,7 @@ def get_current_language(request):
         except KeyError:
             language = settings.LANGUAGE_CODE
 
-        logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
+        # logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
 
         return language
 
