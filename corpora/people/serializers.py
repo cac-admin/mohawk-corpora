@@ -84,10 +84,13 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             user = None
 
         try:
+            logger.debug(user)
+            logger.debug(validated_data)
             person, created = Person.objects.get_or_create(
                 user=user, **validated_data)
             logger.debug(person.user)
         except Exception as e:
+            logger.error(e)
             raise Exception(e)
         return person
 
