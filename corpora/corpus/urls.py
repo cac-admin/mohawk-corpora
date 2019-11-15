@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import url, include
 from corpus.views import views
 from corpus.views.views import SentenceListView, StatsView, ListenView, PronunciationView
+from corpus.views.static import WaveWorker, EncoderWorker, EncoderWorkerWasm
 
 urlpatterns = [
     url(_(r'^record/'), views.record, name='record'),
@@ -24,4 +25,8 @@ urlpatterns = [
 
     url(_(r'^pronunciation/'), PronunciationView.as_view(), name='pronunciation'),
 
+
+    url((r'^workers/waveWorker\.min\.js'), WaveWorker.as_view(), name='waveworker'),
+    url((r'^workers/encoderWorker\.min\.js'), EncoderWorker.as_view(), name='encoderworker'),
+    url((r'^workers/encoderWorker\.min\.wasm'), EncoderWorkerWasm.as_view(), name='encoderworkerwasm'),
 ]

@@ -61,6 +61,7 @@ var csrftoken = getCookie('csrftoken');
 
 {% addtoblock "js-end" %}
 <script type="text/javascript">
+{% include 'corpus/js/recorder.min.js' %}
 
 
 $('button#record, pulse').on('mousedown touchstart', function(event){

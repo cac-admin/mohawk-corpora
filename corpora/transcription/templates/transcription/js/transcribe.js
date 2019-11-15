@@ -230,7 +230,7 @@ class MyTranscriber extends Player{
         if (self.recorder == null){
 
             self.recorder = new Recorder({
-                    encoderPath: "{% static 'corpus/js/waveWorker.min.js' %}",
+                    encoderPath: "{% url 'corpus:waveworker' %}",
                     bufferLength: 1024*8, // Increasing this seems to improve performance on andoird chrome.
                     // encoderSampleRate: self.sampleRate, // THIS IS THE SAMPLE RATE REQUIRED BY CMUSPHINX
                     // wavSampleRate: self.sampleRate, // THIS IS THE SAMPLE RATE REQUIRED BY CMUSPHINX                    
