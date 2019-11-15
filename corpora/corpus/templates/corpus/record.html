@@ -145,13 +145,14 @@ a.btn{
 
 {% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'third_party/jquery.textfill.min.js' %}"></script>{% endaddtoblock %}
 
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/record.3.js' %}"></script>{% endaddtoblock %}
 {% addtoblock "js-end" %}
 <script type="text/javascript">
 
 {% include 'corpus/js/sentence.js' %}
 {% include 'corpus/js/player.js' %}
 {% include 'corpus/js/visualize.js' %}
-{% include 'corpus/js/record.3.js' %}
+{% comment %}{% include 'corpus/js/record.3.js' %}{% endcomment %}
 
 var visRecorder;
 
