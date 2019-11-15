@@ -1,5 +1,3 @@
-{% load static %}
-
 
 class MyRecorder extends Player{
     constructor(target_element_selector, audio_element_id='play-audio', person_pk, debug=false){
@@ -223,7 +221,7 @@ class MyRecorder extends Player{
         if (self.recorder == null){
 
             self.recorder = new Recorder({
-                    encoderPath: "{% static 'bower_components/opus-recorder/dist/waveWorker.min.js' %}",
+                    encoderPath: "/bower_components/opus-recorder/dist/waveWorker.min.js",
                     bufferLength: 1024*8, // Increasing this seems to improve performance on andoird chrome.
                     // encoderSampleRate: self.sample_rate // THIS NEEDS TO BE THE SAMPLE RATE OF THE MICROPHONE
                 }); 
@@ -346,7 +344,7 @@ class MyRecorder extends Player{
         $.ajax({
 
             type: 'POST',
-            url: "{% url 'corpus:record' %}",
+            url: "/record/",
             data: self.fd,
             processData: false,
             contentType: false,
