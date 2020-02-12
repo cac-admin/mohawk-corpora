@@ -1,6 +1,6 @@
 # pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
 
-Django==1.11.24
+Django==1.11.28
 boto
 boto3
 Pillow
