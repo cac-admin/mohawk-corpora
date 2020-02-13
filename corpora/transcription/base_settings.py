@@ -18,7 +18,7 @@ DEEPSPEECH_URL_PRIVATE = \
 
 
 DEEPSPEECH_URL_BETA = \
-    "http://172.31.41.4:5000/transcribe_with_metadata"
+    "http://lb-deepspeech-51-gpu-d8cae68c73c8cb63.elb.ap-southeast-2.amazonaws.com/transcribe_with_metadata"
 
 DEEPSPEECH_URL_BETA_PUBLIC = \
     "http://3.106.164.59:5000/transcribe_with_metadata"
