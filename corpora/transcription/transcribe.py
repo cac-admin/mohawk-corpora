@@ -144,7 +144,7 @@ def transcribe_audio_quick(file_object):
             uuid.uuid4(), file_object.name.split('.')[-1])
         )
 
-    f = file(tmp_file, 'wb')
+    f = open(tmp_file, 'wb')
     for chunk in file_object.chunks():
         f.write(chunk)
     f.close()

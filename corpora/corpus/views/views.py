@@ -34,6 +34,7 @@ from corpus.aggregate import get_num_approved, get_net_votes
 
 from corpora.mixins import SiteInfoMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -192,7 +193,7 @@ class RecordingFileView(RedirectView):
     def get(self, request, *args, **kwargs):
         m = get_object_or_404(Recording, pk=kwargs['pk'])
         u = request.user
-        p = get_or_create_person(request)
+        p = get_person(request)
 
         rType = request.GET.get('json', False)
         audio_file = m.audio_file
@@ -201,6 +202,12 @@ class RecordingFileView(RedirectView):
         if f in 'wav':
             if m.audio_file_wav:
                 audio_file = m.audio_file_wav
+            else:
+                # Let's try to create the wave file
+                from corpus.tasks import encode_audio
+                result = encode_audio(m, codec='wav')
+                if m.audio_file_wav:
+                    audio_file = m.audio_file_wav
         else:
             if m.audio_file_aac:
                 audio_file = m.audio_file_aac
@@ -211,12 +218,13 @@ class RecordingFileView(RedirectView):
             uuid = 'None-Person-Object'
         key = '{0}:{1}:listen'.format(uuid, m.id)
         access = cache.get(key)
-        # logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
+        logger.debug('   CAN VIEW: {0} {1}'.format(key, access))
 
-        logger.debug(access)
 
         url = ''
         if (u.is_authenticated and u.is_staff) or (p == m.person) or (access):
+            
+            # This code in mental!
             try:
                 url = audio_file.path
                 url = audio_file.url
@@ -225,10 +233,13 @@ class RecordingFileView(RedirectView):
                     url = self.get_redirect_url(filepath=audio_file.name)
                 except:
                     url = audio_file.url
-
+            if 'http' not in url:
+                url = 'https://'+ request.META['HTTP_HOST']+ url
             logger.debug(url)
             if url:
                 if rType:
+                    if 'http' not in url:
+                        pass
                     return http.HttpResponse(
                         json.dumps({'url': url}),
                         content_type="application/json")
@@ -375,3 +386,17 @@ the quality of recordings we use.')
         context['show_qc_stats'] = True
 
         return context
+
+
+class PronunciationView(SiteInfoMixin, UserPassesTestMixin, TemplateView):
+    template_name = "corpus/pronunciation.html"
+    x_title = _('Pronunciation')
+    x_description = _('Developing pronunciation...')
+
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+
+
+

@@ -6,7 +6,7 @@
 
 {% addtoblock "css" %}
 
-<link href="{% static 'transcription/vad-korero/css/app.9cb5.css' %}" rel=stylesheet>
+<link href="{% static 'transcription/vad-korero/css/app.2fcf.css' %}" rel=stylesheet>
 <style type="text/css">
 div.Korero div.header{
 	border: 0;
@@ -22,9 +22,9 @@ div.Korero{
 <div class="container-fluid" style="height: 100vh;">
 
   <vue-widget></vue-widget>
-  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/manifest.9cb5.js' %}"></script>
-  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/vendor.9cb5.js' %}"></script>
-  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/app.9cb5.js' %}"></script>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/manifest.2fcf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/vendor.2fcf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'transcription/vad-korero/js/app.2fcf.js' %}"></script>
 
 
 
@@ -51,6 +51,163 @@ var csrftoken = getCookie('csrftoken');
 // }
 	
 </script>{% endaddtoblock %}
+
+
+
+{% comment %}
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'corpus/js/ajax.post.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js-include" %}<script type="text/javascript" src="{% static 'bower_components/opus-recorder/dist/recorder.min.js' %}"></script>{% endaddtoblock %}
+
+{% addtoblock "js-end" %}
+<script type="text/javascript">
+{% include 'corpus/js/recorder.min.js' %}
+
+
+$('button#record, pulse').on('mousedown touchstart', function(event){
+	$(event.delegateTarget).addClass('active')
+	$('.pulse').addClass('active')
+})
+
+$('button#record, pulse').on('mouseup touchend touchcancel blur mouseexit', function(event){
+	$(event.delegateTarget).removeClass('active')
+	$('.pulse').removeClass('active')
+})
+
+$('button#record .fa-microphone-alt').on('mousedown touchstart click', function(event){
+	event.preventDefault();
+})
+
+
+window.setInterval(function(){
+	$('#audioArea .row').each(function(index, element){
+		var id = $(element).data('pk');
+		var textElm = $(element).find('.text').get(0)
+		if (id){
+			if ( $(textElm).find('.wait').length > 0 ){
+					console.log('check')
+
+					$.ajax({
+				        url: '/api/transcription/'+id+'/',
+				        type: 'GET',
+				    }).done(function(d){
+				    	if (d['transcription']){
+					      $(textElm).find('.wait').each(function(i,e){$(e).remove()});
+					      $(textElm).prepend(`<p>${d['transcription']}</p>`)
+					  }
+				    }).fail(function(){
+				    	console.log('auē')
+				    });
+			}			
+		}
+
+	})
+}, 1500)
+
+var rec;
+if (Recorder.isRecordingSupported()){
+	var file_type = 'audio/ogg'
+	var encoderPath = "{% static 'bower_components/opus-recorder/dist/encoderWorker.min.js' %}"
+	
+	if (navigator.userAgent.search('Safari')>0){
+		if (navigator.userAgent.search('Chrome')<0){
+			encoderPath = "{% static 'bower_components/opus-recorder/dist/waveWorker.min.js' %}"
+			file_type = 'audio/wav'
+		}
+	}
+	
+	$("button#record").on( 'mousedown touchstart', function(event){
+		event.preventDefault();
+		console.log('start')
+		rec = new Recorder({
+			encoderPath: encoderPath,
+		});
+
+		rec.ondataavailable = function(data){
+			console.log('data ready')
+			var dataBlob = new Blob( [data], { type: file_type } );
+			var fileName = new Date().toISOString() + ".opus";
+			var name = new Date().toISOString() 
+			name = "speak_demo_"+name
+			var url = URL.createObjectURL( dataBlob );
+			
+			var form =`
+		        <form id='fileUpload' action="/api/transcription/" method="post" enctype="multipart/form-data" style="display: none;">
+		          <input type="text" id="name" name="name" value="${name}" />
+		        </form>`
+
+		    $(document.body).append($(form))
+
+		    var audioDiv=$(`
+		    	<div class="row">
+		    	  <div class="col-12 col-sm-6 col-md-5 audio"></div>
+		    	  <div class="col-12 col-sm-6 col-md-7 text"></div>
+		    	</div>`)
+
+		    var audioElm = document.createElement('audio');
+		    audioElm.src = url
+		    audioElm.controls = true
+		    audioElm.style.display='none'
+		    audioElm.load()
+		    $('#audioArea').prepend(audioDiv)
+		    $(audioDiv).find('.audio').append(audioElm)
+		    $(audioDiv).find('.text').append("<p class='wait'><i class='fas fa-spinner fa-spin'></i> transcribing...</p>")
+		    audioElm.oncanplay=function(){
+				if (audioElm.duration>1){
+					console.log('Posting recordings')
+					audioElm.style.display = 'initial'
+		            var fd = new FormData(document.getElementById('fileUpload'));
+		            fd.append('audio_file', dataBlob, fileName)
+				    $.ajax({
+				        url: '/api/transcription/?method=stream',
+				        type: 'POST',
+				        data: fd,
+				        cache: false,
+				        contentType: false,
+				        processData: false,
+				    }).done(function(data){
+				      // console.log(data)
+				      $(audioDiv).data(data);
+				      if (data['transcription']){
+				      	$(audioDiv).find('.text .wait').each(function(i,e){$(e).remove()})
+				      	$(audioDiv).find('.text').prepend(`<p>${data['transcription']}</p>`)
+				      }
+				      $('#fileUpload').remove()
+
+				    }).fail(function(){
+				    	$(audioDiv).remove()
+						$('#fileUpload').remove()
+				    });
+				} else{
+					console.log('Please record longer.')
+					$(audioDiv).remove()
+					$('#fileUpload').remove()
+				}
+
+				delete rec;
+		    }
+		    
+
+
+		}
+
+		$("button#record").on('mouseup touchend touchcancel mouseexit blur', function(){
+			console.log('Stopped')
+			rec.pause();
+			rec.stop();
+		})		
+
+		rec.start()
+	});
+
+}
+
+
+
+</script>
+
+{% endaddtoblock %}
+  {% endcomment %}
 
 
 {% endblock %}

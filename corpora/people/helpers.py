@@ -11,20 +11,38 @@ from .models import Person, KnownLanguage
 
 from allauth.account.models import EmailAddress
 from rest_framework.authentication import TokenAuthentication
-
+from reo_api.authentication import ApplicationAPITokenAuthentication
+from django.contrib.auth.models import AnonymousUser 
 import logging
 logger = logging.getLogger('corpora')
 
 
-def get_or_create_person(request):
+def get_user(request):
     user = request.user
-
+    # logger.debug("GET USER? {0}".format(user))
     if user is None or user.is_anonymous:
         try:
             token_auth = TokenAuthentication()
             user, token = token_auth.authenticate(request)
+            # logger.debug('get user from token, {0} {1}'.format(user, token))
         except:
             pass
+
+    # If we're using an AppToken, return an anonymous user
+    try:
+        token_auth = ApplicationAPITokenAuthentication()
+        AppUser, token = token_auth.authenticate(request)
+        if AppUser:
+            # logger.debug("SET ANON USER {0}".format(AnonymousUser()))
+            return AnonymousUser()
+    except:
+        pass           
+
+    return user
+
+
+def get_or_create_person(request):
+    user = get_user(request)
 
     if user.is_anonymous:
         # Check if a session cookie exists
@@ -77,14 +95,7 @@ def get_or_create_person(request):
 
 
 def get_person(request):
-    user = request.user
-
-    if user is None or user.is_anonymous:
-        try:
-            token_auth = TokenAuthentication()
-            user, token = token_auth.authenticate(request)
-        except:
-            pass
+    user = get_user(request)
 
     if user.is_anonymous:
         # Check if a session cookie exists
@@ -166,7 +177,7 @@ def get_current_language(request):
         except KeyError:
             language = settings.LANGUAGE_CODE
 
-        logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
+        # logger.debug('Explicitly setting language from domain: {0}:{1}'.format(domain, language))
 
         return language
 

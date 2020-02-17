@@ -1,6 +1,5 @@
 # pip # ensure we use the latest pip = we should update the BASE pip - not the virtual env one!
-
-Django>=1.11.22
+Django~=2.2
 boto
 boto3
 Pillow
@@ -54,7 +53,7 @@ lxml
 premailer
 
 # API
-djangorestframework==3.8.2
+djangorestframework==3.11.0
 # API Docs
 django-coreapi
 pygments

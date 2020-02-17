@@ -8,6 +8,8 @@ from .models import \
     RecordingQualityControl, Sentence, Recording, Source, Text, \
     SentenceQualityControl
 
+from corpus.tasks import transcode_audio
+import time
 from corpus.views.views import RecordingFileView
 from .parser import save_sentences_from_text
 from .helpers import approve_sentence
@@ -142,6 +144,7 @@ class RecordingAdmin(admin.ModelAdmin):
         'duration',
         'audio_file',
         'audio_file_aac',
+        'audio_file_wav',
         'audio_file_admin',
         'updated',
         'created',
@@ -156,6 +159,8 @@ class RecordingAdmin(admin.ModelAdmin):
         'person__user__email',
         'person__full_name',
         'person__user__username']
+
+    actions = ('encode_audio',)
 
     def audio_file_aac(self, obj):
         return 'test'
@@ -198,6 +203,20 @@ class RecordingAdmin(admin.ModelAdmin):
             return _("None")
     get_approved_by.short_description = 'Approved By'
     get_approved_by.admin_order_field = 'quality_control__approved'
+
+    def encode_audio(self, request, queryset):
+        for obj in queryset:
+            transcode_audio.apply_async(
+                    args=[obj.pk, ],
+                    task_id='transcode_audio-{0}-{1}'.format(
+                        obj.pk,
+                        time.strftime('%d%m%y%H%M%S'))
+                    )
+            messages.add_message(
+                request, messages.INFO,
+                'Sent encode task for {0}.'.format(obj))
+    encode_audio.short_description = "Encode audio"
+
 
 
 @admin.register(Source)

@@ -38,12 +38,16 @@ from django.core.cache import cache
 import random
 import logging
 
+from django.conf import settings
+LANGUAGES = settings.LANGUAGES
+
 from django.utils.dateparse import parse_datetime
 
 logger = logging.getLogger('corpora')
 
 
 class ViewSetCacheMixin(object):
+    cache_length = 60
 
     def list(self, request, *args, **kwargs):
         sort_by = self.request.query_params.get('sort_by', None)
@@ -53,13 +57,13 @@ class ViewSetCacheMixin(object):
             return super(ViewSetCacheMixin, self)\
                 .list(request, *args, **kwargs)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(cache_length))
     @method_decorator(vary_on_headers('Authorization', 'Cookie'))
     def cached_list(self, request, *args, **kwargs):
         return super(ViewSetCacheMixin, self)\
             .list(request, *args, **kwargs)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(cache_length))
     @method_decorator(vary_on_headers('Authorization', 'Cookie'))
     def retrieve(self, request, *args, **kwargs):
         return super(ViewSetCacheMixin, self)\
@@ -188,6 +192,7 @@ class TextViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     pagination_class = OneHundredResultPagination
 
 
+## OBSOLETE???
 class SentenceViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows sentences to be viewed or edited.
@@ -214,29 +219,83 @@ class IsStaffOrReadOnly(permissions.BasePermission):
             self.message = _("Only staff can post/put sentences.")
             return request.user.is_staff
 
+class SentencePermission(permissions.BasePermission):
+    """
+    Model permission to only allow staff the ability to
+    edit and post new sentences.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            q = request.query_params.get('recording', 'False')
+            if eval(q):
+                return True
+            self.message = _("Only staff can get sentence lists.")
+            return request.user.is_staff
+        else:
+            # Anyone can post a recording
+            if request.method in ['POST', 'PUT']:
+                return True
+        self.message = _("Reading recording lists not allowed.")
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        person = get_person(request)
+
+        if request.method in permissions.SAFE_METHODS:
+            self.message = _("Only staff can read recordings.")
+            if request.user.is_staff:
+                person = get_person(request)
+                cache.set('{0}:{1}:listen'.format(person.uuid, obj.id), True, 15)
+                logger.debug('SET KEY '+'{0}:{1}:listen'.format(person.uuid, obj.id))
+                return True
+            elif person is not None:
+                # Allow people to get their own recordings.
+                return person == obj.person
+        else:
+            if request.method in ['PUT']:
+                if request.user.is_staff:
+                    return True
+                if person is not None:
+                    self.message = _("You're not allowed to edit this recording.")
+                    return obj.person == person
+        self.message = _("Reading recording is not allowed.")
+        return False
+
 
 class SentencesView(generics.ListCreateAPIView):
     """
     API endpoint that allows sentences to be viewed or edited.
 
-    To get sentences for recording, use the query parameter `recording=True`.
-    This will return a random, approved sentence that the person hasn't read.
+    ### Supported Query Parameters
+      - `recording=True`: This will return a random, approved sentence that a person hasn't read.
+      - `recording_paginated=True`: This will return multiple sentences that a person hasn't read.
+      - `quality_control__approved=True`: This returns all approved sentences.
+      - `sort_by`: The following sorting options are implemented. Use `-` in front of the string to reverse.
+        - `num_recordings`
 
-    To get all of the approved sentences, use the query parameter
-    `quality_control__approved=True`. These will be paginated results,
-    so you will need to follow the `next` url to load all available sentences.
 
     """
 
     queryset = Sentence.objects.all()
     serializer_class = SentenceSerializer
     pagination_class = OneHundredResultPagination
-    permission_classes = (IsStaffOrReadOnly,)
+    permission_classes = (SentencePermission,IsStaffOrReadOnly)
+    throttle_scope = 'sentence'
 
     def get_queryset(self):
 
         person = get_person(self.request)
         language = get_current_language(self.request)
+
+        q = self.request.query_params.get('language', None)
+        if q:
+            for l in LANGUAGES:
+                if q == l[0]:
+                    language = q
+
+
+        logger.debug(language)
         queryset = Sentence.objects.filter(language=language)\
             .order_by('quality_control__approved', 'quality_control__updated')
 
@@ -253,7 +312,7 @@ class SentencesView(generics.ListCreateAPIView):
 
             query = self.request.query_params.get(
                 'quality_control__approved')
-            if query is not None:
+            if query:
                 queryset = queryset.annotate(sum_approved=Sum(
                     Case(
                         When(
@@ -289,6 +348,43 @@ class SentencesView(generics.ListCreateAPIView):
                         "Specify either True or False for \
                         quality_control__approved=")
 
+            query = self.request.query_params.get('recording_paginated', 'False')        
+            if eval(query):
+                queryset = queryset.exclude(recording__person=person)
+
+            query = self.request.query_params.get(
+                'sort_by', '')
+        
+            if query in 'num_recordings -num_recordings':
+                queryset = queryset.annotate(Count('recording'))
+                if query == '-num_recordings':
+                    queryset = queryset.order_by('-recording__count')
+                else:
+                    queryset = queryset.order_by('recording__count')
+
+            if query in 'num_approved_recordings -num_approved_recordings':
+                queryset = queryset\
+                    .annotate(Count('recording'))\
+                    .annotate(num_approved_recordings=Sum(
+                        Case(
+                            When(
+                                recording__quality_control__approved=True,
+                                then=Value(1)),
+                            When(
+                                recording__quality_control__approved=False,
+                                then=Value(0)),
+                            When(
+                                recording__quality_control__isnull=True,
+                                then=Value(0)),
+                            default=Value(0),
+                            output_field=IntegerField())
+                    ))
+                if query == '-num_approved_recordings':
+                    queryset = queryset.order_by('-recording__count', '-num_approved_recordings')
+                else:
+                    queryset = queryset.order_by('recording__count', 'num_approved_recordings')
+
+
         return queryset
 
 
@@ -313,12 +409,12 @@ class RecordingPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         person = get_person(request)
-
         if request.method in permissions.SAFE_METHODS:
             self.message = _("Only staff can read recordings.")
             if request.user.is_staff:
                 person = get_person(request)
-                cache.set('{0}:{0}:listen'.format(person.uuid, obj.id), True, 15)
+                cache.set('{0}:{1}:listen'.format(person.uuid, obj.id), True, 15)
+                logger.debug('SET KEY '+'{0}:{1}:listen'.format(person.uuid, obj.id))
                 return True
             elif person is not None:
                 # Allow people to get their own recordings.
@@ -343,18 +439,6 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     If a `sort_by` query is provided, we exclude recordings that have have
     one or more reviews.
 
-    ### Custom Query Parameters
-    The following query parameters are implemented.
-
-
-    - `updated_after`
-
-        Get recording objects that were updated after the provided datetime.
-        Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
-        assume local time for the machine (likely +1200).
-
-            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
-
     read:
     This api provides acces to a `audio_file_url` field. This allows the
     retrival of an audio file in the m4a container with the aac audio codec.
@@ -369,8 +453,26 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     `person="self"` which will assign the person of the token to the posted
     recording.
 
-    ### Custom Query Parameters
+    ### Query Parameters
     The following query parameters are implemented.
+
+    - `sort_by`: A number of sorting options are provided.
+
+        The following will exclude Recordings that have one or more reviews.
+        
+        - `listen`, `random`, `recent`, `wer`, `-wer
+
+        These will not exclude results
+
+        - `num_approved`, `-num_approved`
+
+    - `updated_after`
+
+        Get recording objects that were updated after the provided datetime.
+        Format is `'%Y-%m-%dT%H:%M:%S%z'`. If time zone offset is omited, we
+        assume local time for the machine (likely +1200).
+
+            /api/recordings/?updated_after=2016-10-03T19:00:00%2B0200
 
     - `encoding`
 
@@ -378,6 +480,9 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         `?encoding=base64` which will allow you to base64 encode a file
         and post as a normal string field for example when doing a json
         type post.
+
+    - `filter` You can pass the following filters
+        - `sentence:ID` - this returns recordings from a particular sentence.
 
     """
 
@@ -405,6 +510,12 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         language = get_current_language(self.request)
 
+        q = self.request.query_params.get('language', None)
+        if q:
+            for l in LANGUAGES:
+                if q == l[0]:
+                    language = q
+
         queryset = Recording.objects.filter(language=language)\
             .prefetch_related(
                 Prefetch(
@@ -426,12 +537,6 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         sort_by = self.request.query_params.get('sort_by', '')
         sort_by = sort_by.lower()
         person = get_person(self.request)
-
-
-        # from old branch
-        # if queryset.count() == 0:
-        #     return []
-
 
         if sort_by in ['listen', 'random', 'recent', 'wer', '-wer']:
 
@@ -521,6 +626,32 @@ class RecordingViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 .filter(changed__gte=date)
             queryset = q1.union(q2)
 
+        filter_by = self.request.query_params.get('filter')
+        if filter_by:
+            parts = filter_by.split(':')
+            if len(parts)==2:
+                filt = parts[0].lower()
+                value = parts[1]
+                if filt == 'sentence':
+                    queryset = queryset.filter(sentence__pk=value)
+
+        if sort_by in ['num_approved', '-num_approved']:
+            queryset = queryset.annotate(num_approved=Sum(
+                Case(
+                    When(
+                        quality_control__approved=True,
+                        then=Value(1)),
+                    When(
+                        quality_control__approved=False,
+                        then=Value(0)),
+                    When(
+                        quality_control__isnull=True,
+                        then=Value(0)),
+                    default=Value(0),
+                    output_field=IntegerField())
+            ))
+            queryset = queryset.order_by(sort_by)
+
         return queryset
 
 
@@ -530,19 +661,20 @@ class ListenPermissions(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
+        logger.debug("listen perm has perm")
         if request.method in permissions.SAFE_METHODS:
             # Unregisted people can only listen up to 100 recordings
-
-            # Registered people can only listen up to 1000 recordings
             return True
+            # Registered people can only listen up to 1000 recordings
+            # return request.user.is_staff
         else:
             self.message = _("{0} not allowed with this API\
                              endpoint.".format(request.method))
             return False
 
     def has_object_permission(self, request, view, obj):
+        logger.debug("listen perm has object perm")
         if request.method in permissions.SAFE_METHODS:
-
             # We can create a short lived token here to allow someone to access
             # the file URL. We will need to store in the cache framework.
             person = get_person(request)
@@ -552,8 +684,7 @@ class ListenPermissions(permissions.BasePermission):
                 uuid = 'None-Person-Object'
             key = '{0}:{1}:listen'.format(uuid, obj.id)
             cache.set(key, True, 15)
-            # logger.debug('  CACHE KEY: {0}'.format(key))
-
+            logger.debug('   CAN VIEW: {0} {1}'.format(key, True))
             return True
         else:
             self.message = _("{0} not allowed with this API\
@@ -561,25 +692,32 @@ class ListenPermissions(permissions.BasePermission):
             return False
 
 
-class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
+class ListenViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows a single recording to be viewed.
     This api obfuscates extra recording information and only provides the
     recording file link and the id.
 
     By default we exclude approved recordings, and we exclude listening to
-    one's own recordings
-
-    TODO: Add a query so we can get all recordings (or just approved ones).
+    ones own recordings
     """
+
     queryset = Recording.objects.exclude(private=True)
     pagination_class = TenResultPagination
     serializer_class = ListenSerializer
     permission_classes = (ListenPermissions,)
+    # throttle_scope = 'listen'
 
     def get_queryset(self):
         person = get_person(self.request)
+        logger.debug(person)
         language = get_current_language(self.request)
+
+        q = self.request.query_params.get('language', None)
+        if q:
+            for l in LANGUAGES:
+                if q == l[0]:
+                    language = q
 
         # we should treat all anonymous usesrs as the same so we dont' overload shit!
         awhi = self.request.query_params.get('awhi', False)
@@ -605,9 +743,14 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
 
         # ctm = ContentTypeManager()
 
+        if person:
+            queryset = Recording.objects\
+                .exclude(person=person)\
+                .exclude(quality_control__person=person)
+        else:
+            queryset = Recording.objects.all()
+
         queryset = Recording.objects\
-            .exclude(person=person)\
-            .exclude(quality_control__person=person)\
             .filter(language=language)\
             .filter(private=False)\
             .prefetch_related(
@@ -634,8 +777,7 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
                 .exclude(quality_control__approved=True) \
                 .exclude(quality_control__trash=True) \
                 .exclude(quality_control__bad__gte=1)\
-                .exclude(quality_control__good__gte=1)\
-                .exclude(quality_control__person=person)
+                .exclude(quality_control__good__gte=1)
 
         elif test_query == 'when':
             queryset = queryset.annotate(reviewed=Sum(
@@ -688,7 +830,21 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
         if queryset.count() == 0:
             return []
 
-        if 'random' in sort_by.lower():
+
+        # Check if this is a /listen/ID url
+        # logger.debug(self.request.path)
+        # logger.debug(self.lookup_url_kwarg)
+        # logger.debug(self.lookup_field)
+        # logger.debug(self.kwargs)
+        if self.lookup_field in self.kwargs.keys():
+            return queryset
+
+        if 'random' in sort_by.lower() or not self.request.user.is_staff:
+            queryset = queryset \
+                .filter(quality_control__isnull=True)
+
+            logger.debug('this many without review: ' + str(queryset.count()))
+
             if person is not None:
                 uuid = person.uuid
             else:
@@ -700,11 +856,13 @@ class ListenViewSet(ViewSetCacheMixin, viewsets.ModelViewSet):
             except IndexError:
                 return queryset
 
+            # This meanms we don't ahve to do the extra call
             key = '{0}:{1}:listen'.format(uuid, pk)
             cache.set(key, True, 15)
 
             return [Recording.objects.get(pk=pk)]
 
+        logger.debug(queryset.count())
         return queryset
 
 

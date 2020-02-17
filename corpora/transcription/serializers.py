@@ -61,19 +61,14 @@ class TranscriptionQualityControRelatedField(serializers.RelatedField):
 
 
 class TranscriptionSerializer(serializers.ModelSerializer):
-    recording = RecordingSerializer(
-        many=False,
-        read_only=False
-    )
-    quality_control = TranscriptionQualityControRelatedField(
-        many=True,
-        read_only=True,
-    )
-
     class Meta:
         model = Transcription
-        fields = ('recording', 'text', 'corrected_text', 'quality_control',
-                  'id', 'source', 'updated')
+        fields = (
+            'recording', 'text', 'corrected_text',
+            'id', 'source', 'updated',
+            'transcriber_log', 'word_error_rate',
+            'words', 'metadata')
+
 
 
 class TranscriptionSegmentSerializer(serializers.ModelSerializer):
@@ -89,12 +84,14 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField(read_only=True)
     metadata = serializers.SerializerMethodField(read_only=True)
     words = serializers.SerializerMethodField(read_only=True)
+    model_version = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = AudioFileTranscription
         fields = (
             'uploaded_by', 'audio_file', 'pk', 'name',
-            'transcription', 'segments', 'status', 'metadata', 'words')
+            'transcription', 'segments', 'status', 'metadata', 'words',
+            'model_version')
         read_only_fields = ('uploaded_by',)
 
     def get_segments(self, obj):
@@ -129,6 +126,12 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
         except AttributeError:
             return None
 
+    def get_model_version(self, obj):
+        try:
+            return obj.model_version
+        except AttributeError:
+            return None
+
     def validate_uploaded_by(self, validated_data):
         # if validated_data is None:
         return get_person(self.context['request'])
@@ -156,6 +159,16 @@ class AudioFileTranscriptionSerializer(serializers.ModelSerializer):
                 aft.metadata = result['metadata']
             except KeyError:
                 pass
+
+            try:
+                aft.model_version = result['model_version']
+            except KeyError:
+                pass
+
+            # try:
+            #     aft.save()
+            # except:
+            #     pass
 
             return aft
 

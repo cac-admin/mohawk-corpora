@@ -24,6 +24,8 @@ from django.conf.urls import include, url
 
 urlpatterns = [
 
+    url(r'^magic', people_views.MagicLogin.as_view(), name="magic"),
+
     url(r'^$',
         views.HomeView.as_view(),
         name='home'),

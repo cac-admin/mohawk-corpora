@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'message',
     'transcription',
     'reo_api',
+    'helpers',
 
     'storages',
     'djangobower',
@@ -464,6 +465,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'reo_api.authentication.ApplicationAPITokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_RENDERER_CLASSES': (
@@ -474,6 +476,13 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 10,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'listen': '200/day',
+        'sentence': '400/day'
+    }
 }
 
 

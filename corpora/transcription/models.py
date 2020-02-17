@@ -171,6 +171,14 @@ class Transcription(models.Model):
     # meta_data = models.
     # times = words and the time the start? JSON?
 
+    metadata = JSONField(
+        null=True, blank=True,
+        help_text='Extra metadata returned from transcriber.')
+
+    words = JSONField(null=True, blank=True,
+        help_text='Words and their probabilities calculated from metadata.')
+
+
     class Meta:
         unique_together = (("recording", "source",),)
 
