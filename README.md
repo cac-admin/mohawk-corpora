@@ -28,6 +28,23 @@ Then visit https://localhost:8002/ to access the Django site. You'll need to log
 
 The license will show up when users start to record. How and why we collect data is essential to this project. See the "License: Kaitiakitanga" below.
 
+## Building/Updating the docker container
+
+To build the docker container you need to be in the root project directory and run,
+```bash
+docker build . -t corpora
+```
+This will install the latest python packages from the `requirements.txt` file.
+
+## Running Django manually
+You might need to run django administration commands such as makemessages which is used to create locale files for multi-language support. In order to do this you should mount your repo into the docker image,
+To run the corpora container so you can do things like build your django language files,
+
+```bash
+docker run -it --env-file=local.env --mount type=bind,source="$(pwd)"/corpora,target=/webapp/corpora/corpora corpora /bin/bash
+```
+The `local.env` file has all the environment variables required to get django running.
+
 # Kōrero Māori
 Kōrero Māori is the project that's funding the build of corpora. Kōrero Māori is an initiative started by Te Hiku Media and supported by a number of organizations. The goal is to train machines to transcribe thousands of hours or native language speaker audio recordings to make native te reo Māori more accessible to language learners as our native speaker population is in decline.
 
