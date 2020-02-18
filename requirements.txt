@@ -16,7 +16,7 @@ gunicorn
 psycopg2-binary
 pycrypto
 pytz
-django-storages
+django-storages==1.9.0
 django-bower
 # django-yarn
 
