@@ -250,14 +250,14 @@ msgid ""
 "Kōrero Māori is teaching computers indigenous languages.        We've "
 "created an open sourced web app to help indigenous        communities "
 "strealine their work in language revitalisation."
-msgstr ""
+msgstr "You can write something here about your project."
 
 #: corpora/views/views.py:62
 msgid ""
 "Kōrero Māori is teaching computers indigenous languages.            We've "
 "created an open sourced web app to help indigenous            communities "
 "strealine their work in language revitalisation."
-msgstr ""
+msgstr "You can write something here about your project."
 
 #: corpora/views/views.py:78
 msgid "Privacy policy for this website."
