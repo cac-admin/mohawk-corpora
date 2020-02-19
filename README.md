@@ -18,6 +18,7 @@ Theoretically all you need to do is:
 git clone https://github.com/TeHikuMedia/corpora.git
 cd corpora
 git checkout docker
+docker pull tehiku/corpora
 docker-compose up
 ```
 Then visit https://localhost:8002/ to access the Django site. You'll need to login and create some things in the databse to get started.
