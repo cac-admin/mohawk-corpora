@@ -33,6 +33,15 @@ RUN pip install -r requirements.txt
 # We need to install the wahi-korero package
 RUN pip install pydub webrtcvad
 
+# Manual install wahi_korero
+WORKDIR /webapp/corpora/corpora/
+RUN curl -L -o wahi_korero.tar.gz https://github.com/TeHikuMedia/wahi-korero/archive/v0.5.1.tar.gz 
+RUN tar -xzvf wahi_korero.tar.gz
+RUN rm -rf wahi_korero
+RUN mv wahi-korero-0.5.1/wahi_korero/ wahi_korero || true
+RUN rm wahi_korero.tar.gz
+RUN rm -r wahi-korero-0.5.1
+
 # Make port 80 available to the world outside this container
 # EXPOSE 80
 
@@ -41,3 +50,6 @@ RUN pip install pydub webrtcvad
 COPY corpora /webapp/corpora/corpora
 COPY local.env /webapp/local.env
 COPY entry.sh /webapp/corpora/
+
+COPY django.sh /webapp/django.sh
+RUN /bin/sh /webapp/django.sh

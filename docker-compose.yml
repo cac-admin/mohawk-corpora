@@ -6,7 +6,7 @@ services:
     depends_on:
       - rabbitmq
       - db
-      #- initialise
+      - initialise
     env_file: local.env
     working_dir: /webapp/corpora/corpora/
     command: celery -A corpora flower --persistent=False --max_tasks=1000
@@ -22,7 +22,7 @@ services:
     depends_on:
       - rabbitmq
       - db
-      #- initialise
+      - initialise
     env_file: local.env
     working_dir: /webapp/corpora/corpora/
     command: >
@@ -49,7 +49,7 @@ services:
       - rabbitmq
       - memcached
       - db
-      # - initialise
+      - initialise
     env_file: local.env
     links:
       - db
@@ -64,7 +64,7 @@ services:
     entrypoint: /webapp/corpora/entry.sh
     depends_on:
       - db
-    env_file: local.env 
+     
   db:
     build: ./postgres
     # image: postgres

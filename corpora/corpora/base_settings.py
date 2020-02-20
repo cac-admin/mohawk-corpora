@@ -31,7 +31,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(os.environ['DJANGO_ISNOT_PRODUCTION'])
 
-ALLOWED_HOSTS = ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+ALLOWED_HOSTS = ['{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(',')]
 
 # Manual for now
 ALLOWED_HOSTS.append('olelohawaii.com')
@@ -158,7 +158,7 @@ WSGI_APPLICATION = 'corpora.wsgi.application'
 
 # CORS
 CORS_ORIGIN_WHITELIST = \
-    ['https://{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(' ')]
+    ['https://{0}'.format(i) for i in os.environ['ALLOWED_HOSTS'].split(',')]
 CORS_ORIGIN_WHITELIST = tuple(CORS_ORIGIN_WHITELIST)
 
 
@@ -305,7 +305,7 @@ BOWER_INSTALLED_APPS = {
     'jquery',
     'jquery-ui',
     'bootstrap',
-    'opus-recorderjs#v5.0.0',
+    #'opus-recorderjs#v5.1.1',
     'js-cookie',
     'popper.js',
     'chart.js',
