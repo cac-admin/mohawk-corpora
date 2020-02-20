@@ -4,8 +4,9 @@ services:
   flower:
     image: "tehiku/corpora:local-dev"
     depends_on:
-      - initialise
       - rabbitmq
+      - db
+      #- initialise
     env_file: local.env
     working_dir: /webapp/corpora/corpora/
     command: celery -A corpora flower --persistent=False --max_tasks=1000
@@ -19,8 +20,9 @@ services:
   celery:
     image: "tehiku/corpora:local-dev"
     depends_on:
-      - initialise
       - rabbitmq
+      - db
+      #- initialise
     env_file: local.env
     working_dir: /webapp/corpora/corpora/
     command: >
@@ -44,9 +46,10 @@ services:
     working_dir: /webapp/corpora/corpora/
     command: gunicorn --name corpora --max-requests 3 --log-level=debug --bind=0.0.0.0:8000 corpora.wsgi:application
     depends_on:
-      - initialise
       - rabbitmq
       - memcached
+      - db
+      # - initialise
     env_file: local.env
     links:
       - db
