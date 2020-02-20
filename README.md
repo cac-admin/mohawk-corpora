@@ -19,7 +19,7 @@ git clone https://github.com/TeHikuMedia/corpora.git
 cd corpora
 git checkout docker
 docker pull tehiku/corpora:local-dev
-docker-compose up
+docker-compose up web
 ```
 Then visit https://localhost:8002/ to access the Django site. You'll need to login and create some things in the databse to get started.
 
@@ -35,7 +35,7 @@ To build the docker containers you need to be in the root project directory and 
 ```bash
 docker build-compose build
 ```
-This modifies a canonical postgresql docker image to support unaccent of strings for searching. It also builds the docker image for this repository.
+This modifies a canonical postgresql docker image to support unaccent of strings for searching. It also builds the docker image for this repository. This calls the `initialise` service which does some django management commands.
 
 ## Running Django manually
 You might need to run django administration commands such as makemessages which is used to create locale files for multi-language support. In order to do this you should mount your repo into the docker image when you run it so those changes are reflected in your local files,
