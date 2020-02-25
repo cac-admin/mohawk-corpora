@@ -7,4 +7,4 @@ done < "$input"
 
 python /webapp/corpora/corpora/manage.py compilemessages
 python /webapp/corpora/corpora/manage.py bower_install --allow-root
-
+python /webapp/corpora/corpora/manage.py collectstatic --clear --noinput

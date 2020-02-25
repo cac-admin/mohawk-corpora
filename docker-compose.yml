@@ -62,6 +62,7 @@ services:
       - .:/webapp/corpora/
     working_dir: /webapp/corpora/corpora/
     entrypoint: /webapp/corpora/entry.sh
+    env_file: local.env
     depends_on:
       - db
      
